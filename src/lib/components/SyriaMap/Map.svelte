@@ -22,14 +22,35 @@
 
 	$effect(() => {
 		markerClickHandler(openPopupId);
-		console.log(openPopupId);
-		// setTimeout(() => {
-		// 	// ...but not when `size` changes
-		// 	context.fillRect(0, 0, size, size);
-		// }, 0);
 	});
 
-	const { data, markerClickHandler } = $props() as {
+	$effect(() => {
+		if (selectedMarkerId !== -1 && selectedMarkerId !== openPopupId) {
+			console.log('Map received new ID', selectedMarkerId);
+			openPopupId = selectedMarkerId;
+
+			const marker = data.markers.find((marker) => marker.popup.id === selectedMarkerId);
+
+			// Close all popups
+			for (const popup of document.querySelectorAll('.mapboxgl-popup')) {
+				popup.remove();
+			}
+
+			if (marker) {
+				const popup = new mapboxgl.Popup({ offset: 15 }).setHTML(`
+						<h3 class="mb-0 text-2xl">${marker.popup.name}</h3>
+						<h4 class="mb-2 text-xl">${marker.popup.profession}</h4>
+						<p>${marker.popup.text}</p>
+					`);
+
+				const mapMarker = new mapboxgl.Marker().setLngLat(marker.coords).addTo(map);
+				mapMarker.setPopup(popup);
+				popup.addTo(map);
+			}
+		}
+	});
+
+	const { data, markerClickHandler, selectedMarkerId } = $props() as {
 		data: MapData;
 		markerClickHandler: (popupData: {
 			id: string;
@@ -146,6 +167,13 @@
 		border-radius: 10px;
 		padding: 10px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	}
+	:global(.mapboxgl-marker) {
+		display: none;
+	}
+
+	:global(.custom-marker) {
+		display: block;
 	}
 
 	:global(.mapboxgl-popup-close-button) {
