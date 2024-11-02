@@ -88,7 +88,7 @@
 			// Adding markers from data.markers
 			data.markers.forEach((marker) => {
 				const el = document.createElement('div');
-				el.className = 'custom-marker';
+				el.className = 'custom-marker relative animate-pulse duration-75 hover:animate-none';
 				const mapMarker = new mapboxgl.Marker(el).setLngLat(marker.coords).addTo(map);
 
 				const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
@@ -149,6 +149,5 @@
 		border-radius: 50%;
 		cursor: pointer;
 		border: 3px solid white;
-		transition: transform 0.3s;
 	}
 </style>

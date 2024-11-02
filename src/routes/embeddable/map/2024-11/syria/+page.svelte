@@ -11,6 +11,7 @@
 	}
 </script>
 
+<main data-iframe-height={true}></main>
 <section class="w-full">
 	<!-- Pass the callback to SyriaMap as markerClickHandler -->
 	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} />
