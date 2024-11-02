@@ -90,6 +90,19 @@
 		[42.377731, 37.319319] // northeast corner (lng, lat)
 	];
 
+	// Function to calculate an expanded bounding box
+	function expandBounds(bounds, marginPercent = 0.25) {
+		const [sw, ne] = bounds;
+		const lngOffset = (ne[0] - sw[0]) * marginPercent;
+		const latOffset = (ne[1] - sw[1]) * marginPercent;
+
+		const expandedSw = [sw[0] - lngOffset, sw[1] - latOffset];
+		const expandedNe = [ne[0] + lngOffset, ne[1] + latOffset];
+
+		return new mapboxgl.LngLatBounds(expandedSw, expandedNe);
+	}
+
+	const expandedSyriaBounds = expandBounds(syriaBounds, 0.05);
 	// Function to calculate bounds based on a 15% margin from the center
 	function calculateBounds(center: [number, number], marginPercent: number = 0.15) {
 		const latOffset = marginPercent * 180; // Approximate margin based on degrees
@@ -112,12 +125,9 @@
 			center: data.center,
 			zoom: data.zoom || 10,
 			maxZoom: 8,
-			minZoom: 5
+			minZoom: 5,
+			maxBounds: expandedSyriaBounds // Restrict panning to expanded Syria bounds
 		});
-
-		// Set max bounds to prevent panning more than 15% in each direction
-		const bounds = calculateBounds(data.center, 0.15);
-		map.setMaxBounds(bounds);
 
 		map.on('load', () => {
 			map.resize();
@@ -260,6 +270,6 @@
 		border-radius: 50%;
 		cursor: pointer;
 		border: 3px solid white;
-		z-index: 999;
+		/* z-index: 999; */
 	}
 </style>
