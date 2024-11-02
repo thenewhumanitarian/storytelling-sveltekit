@@ -1,6 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	import { onMount } from 'svelte';
+
+	import '@iframe-resizer/child'
+
 	export let data;
 
 	onMount(async () => {
