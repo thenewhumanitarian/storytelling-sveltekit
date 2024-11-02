@@ -51,6 +51,9 @@
 		map.on('load', () => {
 			map.resize();
 
+			// Disable scroll zoom
+			map.scrollZoom.disable();
+
 			// Add navigation controls
 			map.addControl(new mapboxgl.NavigationControl({ showCompass: false }));
 
