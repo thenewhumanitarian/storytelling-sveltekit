@@ -18,6 +18,13 @@
 		}>;
 	}
 
+	const flyToOptions = {
+		zoom: 7, // Adjust zoom level as needed
+		speed: 0.8,
+		curve: 1.42,
+		essential: true
+	};
+
 	let openPopupId = $state(-1);
 
 	$effect(() => {
@@ -34,9 +41,20 @@
 			// Close all popups
 			for (const popup of document.querySelectorAll('.mapboxgl-popup')) {
 				popup.remove();
+
+				// Fit the map to the bounds
+				map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
+					padding: 20 // Optional padding around the bounds
+				});
 			}
 
 			if (marker) {
+				// Fly to the marker's location
+				map.flyTo({
+					...flyToOptions,
+					center: marker.coords
+				});
+
 				const popup = new mapboxgl.Popup({ offset: 15 }).setHTML(`
 						<h3 class="mb-0 text-2xl">${marker.popup.name}</h3>
 						<h4 class="mb-2 text-xl">${marker.popup.profession}</h4>
@@ -66,6 +84,23 @@
 
 	let map: mapboxgl.Map;
 
+	// Define the bounding box for Syria (southwest and northeast corners)
+	const syriaBounds = [
+		[35.628316, 32.311062], // southwest corner (lng, lat)
+		[42.377731, 37.319319] // northeast corner (lng, lat)
+	];
+
+	// Function to calculate bounds based on a 15% margin from the center
+	function calculateBounds(center: [number, number], marginPercent: number = 0.15) {
+		const latOffset = marginPercent * 180; // Approximate margin based on degrees
+		const lngOffset = marginPercent * 360;
+
+		const southWest = [center[0] - lngOffset, center[1] - latOffset] as [number, number];
+		const northEast = [center[0] + lngOffset, center[1] + latOffset] as [number, number];
+
+		return new mapboxgl.LngLatBounds(southWest, northEast);
+	}
+
 	onMount(async () => {
 		// Wait for the DOM to update before initializing the map
 		await tick();
@@ -77,11 +112,20 @@
 			center: data.center,
 			zoom: data.zoom || 10,
 			maxZoom: 8,
-			minZoom: 6
+			minZoom: 5
 		});
+
+		// Set max bounds to prevent panning more than 15% in each direction
+		const bounds = calculateBounds(data.center, 0.15);
+		map.setMaxBounds(bounds);
 
 		map.on('load', () => {
 			map.resize();
+
+			// Fit the map to the bounds
+			map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
+				padding: 20 // Optional padding around the bounds
+			});
 
 			map.scrollZoom.disable();
 
@@ -93,6 +137,7 @@
 				type: 'vector',
 				url: 'mapbox://mapbox.country-boundaries-v1'
 			});
+			// Add the satellite layer
 			map.addSource('satellite', {
 				type: 'raster',
 				url: 'mapbox://mapbox.satellite',
@@ -104,7 +149,7 @@
 				source: 'satellite',
 				filter: ['==', ['get', 'name_en'], 'Syria'],
 				paint: {
-					'raster-opacity': 1
+					'raster-opacity': 0.8
 				}
 			});
 			map.addLayer({
@@ -115,14 +160,15 @@
 				filter: ['!=', ['get', 'name_en'], 'Syria'],
 				paint: {
 					'fill-color': '#000000',
-					'fill-opacity': 0.8
+					'fill-opacity': 0.5
 				}
 			});
 
 			// Adding markers from data.markers
 			data.markers.forEach((marker) => {
 				const el = document.createElement('div');
-				el.className = 'custom-marker relative animate-pulse duration-75 hover:animate-none';
+				el.className = 'custom-marker relative bg-gradient-to-br from-burgundy to-red-700';
+
 				const mapMarker = new mapboxgl.Marker(el).setLngLat(marker.coords).addTo(map);
 
 				const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
@@ -133,14 +179,25 @@
 
 				// Open the popup on marker click and notify the parent component
 				mapMarker.setPopup(popup);
-				mapMarker.getElement().addEventListener('click', (e) => {
+				mapMarker.getElement().addEventListener('click', () => {
 					openPopupId = marker.popup.id;
+
+					// Fly to the marker's location when clicked
+					map.flyTo({
+						...flyToOptions,
+						center: marker.coords
+					});
 				});
 
 				// Listen for popup close and reset marker selection in the parent component
 				popup.on('close', (e) => {
 					if (openPopupId === marker.popup.id) {
 						openPopupId = -1;
+
+						// Fit the map to the bounds
+						map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
+							padding: 20 // Optional padding around the bounds
+						});
 					}
 				});
 			});
@@ -164,10 +221,21 @@
 	:global(.mapboxgl-popup-content) {
 		background-color: #ffffff;
 		color: #333;
-		border-radius: 10px;
+		border-radius: 0;
 		padding: 10px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 	}
+
+	@media (width <= 500px) {
+		:global(.mapboxgl-popup-content) {
+			display: none;
+		}
+
+		:global(.mapboxgl-popup-tip) {
+			display: none;
+		}
+	}
+
 	:global(.mapboxgl-marker) {
 		display: none;
 	}
@@ -186,11 +254,12 @@
 	}
 
 	:global(.custom-marker) {
-		background-color: #9f3e52; /* Marker color */
+		/* background-color: #9f3e52;  */
 		width: 25px;
 		height: 25px;
 		border-radius: 50%;
 		cursor: pointer;
 		border: 3px solid white;
+		z-index: 999;
 	}
 </style>

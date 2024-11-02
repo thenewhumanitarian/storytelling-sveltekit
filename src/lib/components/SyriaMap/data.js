@@ -1,6 +1,7 @@
 export const MAP_DATA = {
   center: [38.9968, 34.8021],
   zoom: 6,
+  // mapStyle: 'mapbox://styles/tnh-storytelling/cm309p8hh00ts01pi598x56fh',
   mapStyle: 'mapbox://styles/tnh-storytelling/cm2zyeivu00su01qw4lvjbylv',
   markers: [
     {
