@@ -12,7 +12,7 @@
 </script>
 
 <main data-iframe-height={true}></main>
-<section class="w-full">
+<section class="w-full" data-iframe-height={true}>
 	<!-- Pass the callback to SyriaMap as markerClickHandler -->
 	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} />
 </section>

@@ -12,6 +12,6 @@
 	});
 </script>
 
-<main data-iframe-height={true}>
+<main>
 	<slot />
 </main>
