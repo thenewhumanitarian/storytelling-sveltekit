@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 
-	import '@iframe-resizer/child'
+	// import '@iframe-resizer/child';
 
 	export let data;
 
@@ -15,6 +15,6 @@
 	});
 </script>
 
-<main>
+<div data-iframe-height={true}>
 	<slot />
-</main>
+</div>

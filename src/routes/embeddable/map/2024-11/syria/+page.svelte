@@ -3,11 +3,12 @@
 	import { MAP_DATA } from '$lib/components/SyriaMap/data.js';
 
 	// Variable to store the selected marker data
-	let selectedMarker = null;
+	let selectedMarker = $state(null);
 
 	// Callback function to handle marker clicks
-	function handleMarkerClick(markerData) {
-		selectedMarker = markerData;
+	function handleMarkerClick(markerId: number) {
+		// Find the marker in MAP_DATA by its ID
+		selectedMarker = MAP_DATA.markers.find(marker => marker.popup.id === markerId) || null;
 	}
 </script>
 
@@ -20,9 +21,9 @@
 <!-- Display the selected marker information or a default message -->
 <div class="marker-info">
 	{#if selectedMarker}
-		<h3 class="mb-0 text-2xl">{selectedMarker.name}</h3>
-		<h4 class="mb-2 mt-0 text-xl">{selectedMarker.profession}</h4>
-		<p>{selectedMarker.text}</p>
+		<h3 class="mb-0 text-2xl">{selectedMarker.popup.name}</h3>
+		<h4 class="mb-2 mt-0 text-xl">{selectedMarker.popup.profession}</h4>
+		<p>{selectedMarker.popup.text}</p>
 	{:else}
 		<p>Click on the markers to read more about the people.</p>
 	{/if}

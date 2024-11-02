@@ -10,13 +10,24 @@
 		markers: Array<{
 			coords: [number, number];
 			popup: {
-				id: string;
+				id: number;
 				name: string;
 				profession: string;
 				text: string;
 			};
 		}>;
 	}
+
+	let openPopupId = $state(-1);
+
+	$effect(() => {
+		markerClickHandler(openPopupId);
+		console.log(openPopupId);
+		// setTimeout(() => {
+		// 	// ...but not when `size` changes
+		// 	context.fillRect(0, 0, size, size);
+		// }, 0);
+	});
 
 	const { data, markerClickHandler } = $props() as {
 		data: MapData;
@@ -51,7 +62,6 @@
 		map.on('load', () => {
 			map.resize();
 
-			// Disable scroll zoom
 			map.scrollZoom.disable();
 
 			// Add navigation controls
@@ -84,7 +94,7 @@
 				filter: ['!=', ['get', 'name_en'], 'Syria'],
 				paint: {
 					'fill-color': '#000000',
-					'fill-opacity': 0.5
+					'fill-opacity': 0.8
 				}
 			});
 
@@ -102,13 +112,15 @@
 
 				// Open the popup on marker click and notify the parent component
 				mapMarker.setPopup(popup);
-				mapMarker.getElement().addEventListener('click', () => {
-					markerClickHandler && markerClickHandler(marker.popup);
+				mapMarker.getElement().addEventListener('click', (e) => {
+					openPopupId = marker.popup.id;
 				});
 
 				// Listen for popup close and reset marker selection in the parent component
-				popup.on('close', () => {
-					markerClickHandler && markerClickHandler(null);
+				popup.on('close', (e) => {
+					if (openPopupId === marker.popup.id) {
+						openPopupId = -1;
+					}
 				});
 			});
 		});
