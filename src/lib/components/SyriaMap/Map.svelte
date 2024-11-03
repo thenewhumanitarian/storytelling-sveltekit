@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { onDestroy, setContext, onMount, tick } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
+
+	import { GeoJSON } from './syria_populated_places';
 
 	interface MapData {
 		mapStyle?: string;
@@ -85,34 +87,24 @@
 	let map: mapboxgl.Map;
 
 	// Define the bounding box for Syria (southwest and northeast corners)
-	const syriaBounds = [
+	const syriaBounds: [[number, number], [number, number]] = [
 		[35.628316, 32.311062], // southwest corner (lng, lat)
 		[42.377731, 37.319319] // northeast corner (lng, lat)
 	];
 
 	// Function to calculate an expanded bounding box
-	function expandBounds(bounds, marginPercent = 0.25) {
+	function expandBounds(bounds: [number, number][], marginPercent = 0.25) {
 		const [sw, ne] = bounds;
 		const lngOffset = (ne[0] - sw[0]) * marginPercent;
 		const latOffset = (ne[1] - sw[1]) * marginPercent;
 
-		const expandedSw = [sw[0] - lngOffset, sw[1] - latOffset];
-		const expandedNe = [ne[0] + lngOffset, ne[1] + latOffset];
+		const expandedSw: [number, number] = [sw[0] - lngOffset, sw[1] - latOffset];
+		const expandedNe: [number, number] = [ne[0] + lngOffset, ne[1] + latOffset];
 
-		return new mapboxgl.LngLatBounds(expandedSw, expandedNe);
+		return new mapboxgl.LngLatBounds([expandedSw, expandedNe]);
 	}
 
-	const expandedSyriaBounds = expandBounds(syriaBounds, 0.05);
-	// Function to calculate bounds based on a 15% margin from the center
-	function calculateBounds(center: [number, number], marginPercent: number = 0.15) {
-		const latOffset = marginPercent * 180; // Approximate margin based on degrees
-		const lngOffset = marginPercent * 360;
-
-		const southWest = [center[0] - lngOffset, center[1] - latOffset] as [number, number];
-		const northEast = [center[0] + lngOffset, center[1] + latOffset] as [number, number];
-
-		return new mapboxgl.LngLatBounds(southWest, northEast);
-	}
+	const expandedSyriaBounds = expandBounds(syriaBounds, 0.015);
 
 	onMount(async () => {
 		// Wait for the DOM to update before initializing the map
@@ -125,16 +117,15 @@
 			center: data.center,
 			zoom: data.zoom || 10,
 			maxZoom: 8,
-			minZoom: 5,
+			minZoom: 4.5,
 			maxBounds: expandedSyriaBounds // Restrict panning to expanded Syria bounds
 		});
 
 		map.on('load', () => {
 			map.resize();
-
 			// Fit the map to the bounds
 			map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
-				padding: 20 // Optional padding around the bounds
+				padding: { top: 10, right: 20, bottom: 60, left: 20 }
 			});
 
 			map.scrollZoom.disable();
@@ -153,6 +144,7 @@
 				url: 'mapbox://mapbox.satellite',
 				tileSize: 256
 			});
+			// Adds satellite layer for Syria
 			map.addLayer({
 				id: 'syria-satellite',
 				type: 'raster',
@@ -162,6 +154,7 @@
 					'raster-opacity': 0.8
 				}
 			});
+			// Add the country boundaries layer
 			map.addLayer({
 				id: 'country-mask',
 				type: 'fill',
@@ -173,6 +166,51 @@
 					'fill-opacity': 0.5
 				}
 			});
+
+			// map.addSource('population', {
+			// 	type: 'geojson',
+			// 	data: GeoJSON
+			// });
+
+			// // Add heatmap layer
+			// map.addLayer({
+			// 	id: 'population-heat',
+			// 	type: 'heatmap',
+			// 	source: 'population',
+			// 	maxzoom: 9,
+			// 	paint: {
+			// 		// Adjust the heatmap weight based on 'population' to increase visibility
+			// 		'heatmap-weight': ['interpolate', ['linear'], ['get', 'population'], 0, 0, 1000, 1.5],
+
+			// 		// Increase the heatmap intensity to make the heatmap more visible
+			// 		'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 5],
+
+			// 		// Change color ramp to green -> blue, with higher transparency at lower density
+			// 		'heatmap-color': [
+			// 			'interpolate',
+			// 			['linear'],
+			// 			['heatmap-density'],
+			// 			0,
+			// 			'rgba(0, 128, 0, 0)', // Transparent green for low density
+			// 			0.2,
+			// 			'rgb(34, 139, 34)', // Forest green
+			// 			0.4,
+			// 			'rgb(60, 179, 113)', // Medium sea green
+			// 			0.6,
+			// 			'rgb(0, 191, 255)', // Deep sky blue
+			// 			0.8,
+			// 			'rgb(30, 144, 255)', // Dodger blue
+			// 			1,
+			// 			'rgb(0, 0, 139)' // Dark blue
+			// 		],
+
+			// 		// Adjust the heatmap radius by zoom level to expand visible area
+			// 		'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 9, 30],
+
+			// 		// Control heatmap opacity to keep it more visible at higher zoom levels
+			// 		'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.9, 9, 0.3]
+			// 	}
+			// });
 
 			// Adding markers from data.markers
 			data.markers.forEach((marker) => {
@@ -206,7 +244,7 @@
 
 						// Fit the map to the bounds
 						map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
-							padding: 20 // Optional padding around the bounds
+							padding: { top: 10, right: 20, bottom: 60, left: 20 }
 						});
 					}
 				});

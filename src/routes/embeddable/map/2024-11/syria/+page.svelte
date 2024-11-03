@@ -35,34 +35,34 @@
 </script>
 
 <main data-iframe-height={true}></main>
-<section class="w-full" data-iframe-height={true}>
+<section class="relative w-full" data-iframe-height={true}>
 	<!-- Pass selectedMarkerId to SyriaMap as a prop -->
 	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
-</section>
-
-<!-- Display the selected marker information or a default message -->
-<div class="marker-info">
+	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
-		<div class="flex w-full flex-col">
-			<div class="flex w-full justify-between">
-				<button on:click={previousMarker}>← Previous</button>
-				<button on:click={nextMarker}>Next →</button>
-			</div>
-			<div class="mt-3">
-				<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
-				<h4 class="mb-2 mt-0 text-xl">{getSelectedMarker().popup.profession}</h4>
-				<p>{getSelectedMarker().popup.text}</p>
+		<div class="marker-info">
+			<div class="flex w-full flex-col">
+				<div class="flex w-full justify-between">
+					<button on:click={previousMarker}>← Previous</button>
+					<button on:click={nextMarker}>Next →</button>
+				</div>
+				<div class="mt-3">
+					<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
+					<h4 class="mb-2 mt-0 text-xl">{getSelectedMarker()?.popup?.profession}</h4>
+					<p>{getSelectedMarker().popup.text}</p>
+				</div>
 			</div>
 		</div>
 	{:else}
-		<p>Click on the markers to read more about the people.</p>
+		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 opacity-90 p-2 sm:p-3">
+			<p class="text-center">Click on the red circles to find out more.</p>
+		</div>
 	{/if}
-</div>
+</section>
 
 <style>
 	.marker-info {
 		padding: 1rem;
-		background-color: #f6f6f6;
 		margin-top: 0;
 	}
 </style>
