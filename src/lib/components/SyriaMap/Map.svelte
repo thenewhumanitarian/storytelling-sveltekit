@@ -21,8 +21,8 @@
 	}
 
 	const flyToOptions = {
-		zoom: 7, // Adjust zoom level as needed
-		speed: 0.8,
+		zoom: 7,
+		speed: 0.6,
 		curve: 1.42,
 		essential: true
 	};
@@ -46,7 +46,7 @@
 
 				// Fit the map to the bounds
 				map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
-					padding: 20 // Optional padding around the bounds
+					padding: { top: 10, right: 20, bottom: 60, left: 20 }
 				});
 			}
 
