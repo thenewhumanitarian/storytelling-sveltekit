@@ -3,7 +3,7 @@
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
 
-	import { GeoJSON } from './syria_populated_places';
+	// import { GeoJSON } from './syria_populated_places';
 
 	interface MapData {
 		mapStyle?: string;
@@ -293,12 +293,26 @@
 	}
 
 	:global(.mapboxgl-popup-close-button) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 20px;
 		height: 20px;
-		padding-top: 0.1rem;
-		font-size: 1.55rem;
-		padding-right: 0.3rem;
+		padding: 0;
+		font-size: 1.6rem;
 		color: #9f3e52;
+		padding: 0;
+		top: 0.1rem;
+		right: 0.2rem;
+	}
+
+	:global(.mapboxgl-popup-close-button:hover) {
+		background-color: transparent;
+		color: black;
+	}
+
+	:global(.mapboxgl-popup-close-button:focus-visible) {
+		outline: none;
 	}
 
 	:global(.custom-marker) {

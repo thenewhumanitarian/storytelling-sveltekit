@@ -40,11 +40,11 @@
 	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
-		<div class="marker-info">
+		<div class="marker-info bg-zinc-100">
 			<div class="flex w-full flex-col">
 				<div class="flex w-full justify-between">
-					<button on:click={previousMarker}>← Previous</button>
-					<button on:click={nextMarker}>Next →</button>
+					<button onclick={previousMarker}>← Previous</button>
+					<button onclick={nextMarker}>Next →</button>
 				</div>
 				<div class="mt-3">
 					<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
@@ -54,7 +54,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 opacity-90 p-2 sm:p-3">
+		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 opacity-100 p-2 sm:p-3">
 			<p class="text-center">Click on the red circles to find out more.</p>
 		</div>
 	{/if}

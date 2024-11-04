@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+/* purgecss start ignore */
+@tailwind base;
+
+@layer base {
+  @font-face {
+    font-family: GT Sectra Bold;
+    font-weight: 700;
+    src: url(/fonts/GT-Sectra-Fine-Bold.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: GT Sectra Medium;
+    font-weight: 500;
+    src: url(/fonts/GT-Sectra-Fine-Medium.woff) format('woff');
+  }
+
+  @font-face {
+    font-family: GT Sectra Regular;
+    font-weight: 400;
+    src: url(/fonts/GT-Sectra-Fine-Regular.woff) format('woff');
+  }
+
+  h1 {
+    @apply font-serif font-normal text-3xl mb-2;
+  }
+
+  h2 {
+    @apply font-serif font-normal text-3xl sm:text-2xl mb-3;
+  }
+
+  h3 {
+    @apply font-serif font-normal text-xl mb-2;
+  }
+
+  h4 {
+    @apply font-serif text-xl text-burgundy;
+  }
+
+  h6 {
+    @apply text-burgundy;
+  }
+
+  body,
+  p {
+    @apply font-body text-base;
+  }
+
+  a {
+    @apply no-underline font-medium text-burgundy;
+  }
+
+  a:hover {
+    @apply underline;
+  }
+
+  a:active,
+  a:focus {
+    @apply bg-transparent text-burgundy;
+  }
+
+  iframe {
+    @apply w-full top-0 left-0 absolute h-full;
+  }
+
+  b,
+  strong {
+    font-weight: bold;
+  }
+}
+
+@tailwind components;
+/* purgecss end ignore */
+@tailwind utilities;
