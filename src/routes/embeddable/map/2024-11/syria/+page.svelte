@@ -92,6 +92,7 @@
 				<div>
 					<p>
 						<button
+						  class="text-burgundy font-bold pt-5"
 							onclick={(event) => {
 								event.preventDefault(); // Prevent default link navigation
 								sendScrollMessage(getSelectedMarker().slug); // Send scroll message to parent
