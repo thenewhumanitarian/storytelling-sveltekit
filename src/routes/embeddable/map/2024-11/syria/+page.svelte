@@ -5,7 +5,7 @@
 	import { MAP_DATA } from '$lib/components/SyriaMap/data.js';
 
 	// Function to send the message to the parent if we're in a browser environment
-	function sendScrollMessage(slug) {
+	function sendScrollMessage(slug: string) {
 		if (typeof window !== 'undefined') {
 			window.parent.postMessage(
 				{ action: 'scrollToSection', id: slug },
@@ -13,20 +13,6 @@
 			);
 		}
 	}
-
-	// Run only in the browser after mount
-	onMount(() => {
-		if (typeof window !== 'undefined') {
-			// Add event listener to handle smooth scrolling if JavaScript is enabled
-			document.querySelectorAll('.scroll-link').forEach((link) => {
-				link.addEventListener('click', (event) => {
-					event.preventDefault(); // Prevent default link navigation
-					const slug = link.getAttribute('href').slice(1); // Extract the id from the href
-					sendScrollMessage(slug); // Send scroll message to parent
-				});
-			});
-		}
-	});
 
 	// Variable to store the selected marker ID
 	let selectedMarkerId = $state(-1);
@@ -105,7 +91,12 @@
 				</div>
 				<div>
 					<p>
-						<a href={`#${getSelectedMarker().slug}`} target="_parent">Read more...</a>
+						<button
+							onclick={(event) => {
+								event.preventDefault(); // Prevent default link navigation
+								sendScrollMessage(getSelectedMarker().slug); // Send scroll message to parent
+							}}>Read more...</button
+						>
 					</p>
 				</div>
 			</div>
