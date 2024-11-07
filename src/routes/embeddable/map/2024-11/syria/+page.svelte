@@ -37,10 +37,18 @@
 <main data-iframe-height={true}></main>
 <section class="relative w-full" data-iframe-height={true}>
 	<!-- Pass selectedMarkerId to SyriaMap as a prop -->
+	<!-- <div class="max-w-[700px] mx-auto"> -->
 	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
+	<!-- </div> -->
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
-		<div class="marker-info bg-zinc-100">
+		<div class="marker-info flex gap-5 bg-zinc-100">
+			<div>
+				<img
+					src={`/assets/syria-map/${getSelectedMarker().popup.avatarPhoto}`}
+					alt={getSelectedMarker().popup.name}
+				/>
+			</div>
 			<div class="flex w-full flex-col">
 				<div class="flex w-full justify-between">
 					<button onclick={previousMarker}>← Previous</button>
@@ -54,7 +62,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 opacity-100 p-2 sm:p-3">
+		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 p-2 opacity-100 sm:p-3">
 			<p class="text-center">Click on the red circles to find out more.</p>
 		</div>
 	{/if}

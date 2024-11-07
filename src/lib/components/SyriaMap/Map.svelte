@@ -3,6 +3,13 @@
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
 
+	// Import avatar photos
+	// import person1Avatar from '$lib/person1.png';
+	// import person2Avatar from '$lib/person2.png';
+	// import person3Avatar from '$lib/person3.png';
+	// import person4Avatar from '$lib/person4.png';
+	// import person5Avatar from '$lib/person5.png';
+
 	// import { GeoJSON } from './syria_populated_places';
 
 	interface MapData {
@@ -16,6 +23,7 @@
 				name: string;
 				profession: string;
 				text: string;
+				avatarPhoto: string;
 			};
 		}>;
 	}
@@ -57,7 +65,9 @@
 					center: marker.coords
 				});
 
-				const popup = new mapboxgl.Popup({ offset: 15 }).setHTML(`
+				const popup = new mapboxgl.Popup({
+					offset: { top: [0, 50], bottom: [0, -10], left: [10, 0], right: [-10, 0] }
+				}).setHTML(`
 						<h3 class="mb-0 text-2xl">${marker.popup.name}</h3>
 						<h4 class="mb-2 text-xl">${marker.popup.profession}</h4>
 						<p>${marker.popup.text}</p>
@@ -213,9 +223,12 @@
 			// });
 
 			// Adding markers from data.markers
-			data.markers.forEach((marker) => {
+			data.markers.forEach((marker, i) => {
 				const el = document.createElement('div');
-				el.className = 'custom-marker relative bg-gradient-to-br from-burgundy to-red-700';
+				el.className = `custom-marker marker-${i}`;
+
+				// Set the marker to display the avatar image
+				el.style.backgroundImage = `url(/assets/syria-map/${marker.popup.avatarPhoto})`;
 
 				const mapMarker = new mapboxgl.Marker(el).setLngLat(marker.coords).addTo(map);
 
@@ -290,6 +303,53 @@
 
 	:global(.custom-marker) {
 		display: block;
+		background-size: cover;
+		background-position: center;
+		border-radius: 50%;
+		border: 0.3rem solid white;
+		width: 5rem;
+		height: 5rem;
+		cursor: pointer;
+		background-size: center; /* Larger background size for smooth animation */
+		animation: borderPulse 5s ease-in-out infinite; /* Infinite animation for border colour change */
+		will-change: border-color; /* Optimise for smoother animation */
+	}
+
+	:global(.custom-marker:hover) {
+		animation: none;
+	}
+
+	/* Adding slight delays to each marker */
+	:global(.marker-0) {
+		animation-delay: 0.5s;
+	}
+
+	:global(.marker-1) {
+		animation-delay: 0.2s;
+	}
+
+	:global(.marker-2) {
+		animation-delay: 0.1s;
+	}
+
+	:global(.marker-3) {
+		animation-delay: 0.34s;
+	}
+
+	:global(.marker-4) {
+		animation-delay: 0.3;
+	}
+
+	@keyframes borderPulse {
+		0% {
+			border-color: #9f3e52;
+		}
+		50% {
+			border-color: #f2b0b8; /* Lighter shade */
+		}
+		100% {
+			border-color: #9f3e52;
+		}
 	}
 
 	:global(.mapboxgl-popup-close-button) {
@@ -315,13 +375,7 @@
 		outline: none;
 	}
 
-	:global(.custom-marker) {
-		/* background-color: #9f3e52;  */
-		width: 25px;
-		height: 25px;
-		border-radius: 50%;
-		cursor: pointer;
-		border: 3px solid white;
-		/* z-index: 999; */
+	:global(.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip) {
+		margin-top: -1px;
 	}
 </style>

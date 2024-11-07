@@ -9,6 +9,7 @@ export const MAP_DATA = {
       popup: {
         id: '0',
         name: 'Khaled Al-Faris',
+        avatarPhoto: 'person1.png',
         profession: 'Olive farmer',
         text: 'Khaled has been cultivating olives on his family’s land for over 20 years, supplying local markets.'
       }
@@ -18,6 +19,7 @@ export const MAP_DATA = {
       popup: {
         id: '1',
         name: 'Layla Hammoud',
+        avatarPhoto: 'person2.png',
         profession: 'Vegetable farmer',
         text: 'Layla grows tomatoes, cucumbers, and peppers, which she sells to nearby villages.'
       }
@@ -27,6 +29,7 @@ export const MAP_DATA = {
       popup: {
         id: '2',
         name: 'Ahmad Talal',
+        avatarPhoto: 'person3.png',
         profession: 'Wheat farmer',
         text: 'Ahmad manages a wheat farm, contributing to local grain production for bread-making.'
       }
@@ -36,6 +39,7 @@ export const MAP_DATA = {
       popup: {
         id: '3',
         name: 'Maha Kassem',
+        avatarPhoto: 'person4.png',
         profession: 'Dairy farmer',
         text: 'Maha raises goats and cows, producing milk and cheese sold in the Aleppo markets.'
       }
@@ -45,6 +49,7 @@ export const MAP_DATA = {
       popup: {
         id: '4',
         name: 'Youssef Daoud',
+        avatarPhoto: 'person5.png',
         profession: 'Sheep farmer',
         text: 'Youssef tends to a flock of sheep, producing wool and meat for the community.'
       }
