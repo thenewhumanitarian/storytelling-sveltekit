@@ -317,6 +317,7 @@
 
 	:global(.custom-marker:hover) {
 		animation: none;
+		z-index: 9999;
 	}
 
 	/* Adding slight delays to each marker */
