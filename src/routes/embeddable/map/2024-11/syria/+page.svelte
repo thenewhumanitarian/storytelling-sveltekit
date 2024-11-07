@@ -2,6 +2,30 @@
 	import SyriaMap from '$lib/components/SyriaMap/Map.svelte';
 	import { MAP_DATA } from '$lib/components/SyriaMap/data.js';
 
+	  import { onMount } from 'svelte';
+
+  // Function to send the message to the parent if we're in a browser environment
+  function sendScrollMessage(slug) {
+    if (typeof window !== 'undefined') {
+      window.parent.postMessage({ action: 'scrollToSection', id: slug }, 'https://www.thenewhumanitarian.org');
+    }
+  }
+
+  // Run only in the browser after mount
+  onMount(() => {
+    if (typeof window !== 'undefined') {
+      // Add event listener to handle smooth scrolling if JavaScript is enabled
+      document.querySelectorAll('.scroll-link').forEach(link => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault(); // Prevent default link navigation
+          const slug = link.getAttribute('href').slice(1); // Extract the id from the href
+          sendScrollMessage(slug); // Send scroll message to parent
+        });
+      });
+    }
+  });
+</script>
+
 	// Variable to store the selected marker ID
 	let selectedMarkerId = $state(-1);
 
@@ -79,7 +103,7 @@
 				</div>
 				<div>
 					<p>
-						<a href={`#${getSelectedMarker().slug}`} target="_parent">Read more...</a>
+						<a class="scroll-link" href={`#${getSelectedMarker().slug}`} target="_parent">Read more...</a>
 					</p>
 				</div>
 			</div>
