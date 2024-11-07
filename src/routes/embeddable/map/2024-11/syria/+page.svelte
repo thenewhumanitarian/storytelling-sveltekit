@@ -42,11 +42,12 @@
 	<!-- </div> -->
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
-		<div class="marker-info flex gap-5 bg-zinc-100">
+		<div class="marker-info flex flex-col sm:flex-row gap-5 bg-zinc-100">
 			<div>
 				<img
 					src={`/assets/syria-map/${getSelectedMarker().popup.avatarPhoto}`}
 					alt={getSelectedMarker().popup.name}
+					class="sm: mx-auto max-w-[240px] sm:max-w-2xs"
 				/>
 			</div>
 			<div class="flex w-full flex-col">
@@ -63,7 +64,8 @@
 		</div>
 	{:else}
 		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 p-2 opacity-100 sm:p-3">
-			<p class="text-center">Click on the red circles to find out more.</p>
+			<p class="hidden text-center sm:block">Click on the map markers to find out more.</p>
+			<p class="block text-center sm:hidden">Tap on the map markers to find out more.</p>
 		</div>
 	{/if}
 </section>

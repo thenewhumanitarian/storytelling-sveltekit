@@ -223,6 +223,7 @@
 			// });
 
 			// Adding markers from data.markers
+
 			data.markers.forEach((marker, i) => {
 				const el = document.createElement('div');
 				el.className = `custom-marker marker-${i}`;
@@ -313,6 +314,13 @@
 		background-size: center; /* Larger background size for smooth animation */
 		animation: borderPulse 5s ease-in-out infinite; /* Infinite animation for border colour change */
 		will-change: border-color; /* Optimise for smoother animation */
+	}
+
+	@media (max-width: 500px) {
+		:global(.custom-marker) {
+			width: 3rem;
+			height: 3rem;
+		}
 	}
 
 	:global(.custom-marker:hover) {
