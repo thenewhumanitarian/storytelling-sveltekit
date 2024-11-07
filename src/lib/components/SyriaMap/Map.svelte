@@ -3,15 +3,6 @@
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
 
-	// Import avatar photos
-	// import person1Avatar from '$lib/person1.png';
-	// import person2Avatar from '$lib/person2.png';
-	// import person3Avatar from '$lib/person3.png';
-	// import person4Avatar from '$lib/person4.png';
-	// import person5Avatar from '$lib/person5.png';
-
-	// import { GeoJSON } from './syria_populated_places';
-
 	interface MapData {
 		mapStyle?: string;
 		center: [number, number];
@@ -24,6 +15,7 @@
 				profession: string;
 				text: string;
 				avatarPhoto: string;
+				slug: string;
 			};
 		}>;
 	}

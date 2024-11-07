@@ -6,6 +6,7 @@ export const MAP_DATA = {
   markers: [
     {
       coords: [36.356273934384646, 35.58666464764166], // Near Homs, central Syria
+      slug: 'khaled-al-faris',
       popup: {
         id: '0',
         name: 'Khaled Al-Faris',
@@ -16,6 +17,7 @@ export const MAP_DATA = {
     },
     {
       coords: [36.48744108890202, 33.51351189644581], // Near Idlib, northwest Syria
+      slug: 'layla-hammoud',
       popup: {
         id: '1',
         name: 'Layla Hammoud',
@@ -26,6 +28,7 @@ export const MAP_DATA = {
     },
     {
       coords: [35.92074932389779, 34.99813885567918], // Near Al-Hasakah, northeast Syria
+      slug: 'ahmad-talal',
       popup: {
         id: '2',
         name: 'Ahmad Talal',
@@ -36,6 +39,7 @@ export const MAP_DATA = {
     },
     {
       coords: [40.70782186626749, 36.192558428838694], // Near Aleppo, northern Syria
+      slug: 'maha-kassem',
       popup: {
         id: '3',
         name: 'Maha Kassem',
@@ -46,6 +50,7 @@ export const MAP_DATA = {
     },
     {
       coords: [36.724977485074405, 35.90521349716556], // Near Qamishli, far northeast Syria
+      slug: 'youssef-daoud',
       popup: {
         id: '4',
         name: 'Youssef Daoud',

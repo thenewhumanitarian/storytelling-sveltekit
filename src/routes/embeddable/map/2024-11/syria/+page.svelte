@@ -10,6 +10,23 @@
 		selectedMarkerId = markerId;
 	}
 
+	interface MapData {
+		mapStyle?: string;
+		center: [number, number];
+		zoom: number;
+		markers: Array<{
+			coords: [number, number];
+			popup: {
+				id: number;
+				name: string;
+				profession: string;
+				text: string;
+				avatarPhoto: string;
+				slug: string;
+			};
+		}>;
+	}
+
 	// Function to get the currently selected marker data
 	function getSelectedMarker() {
 		return MAP_DATA.markers.find((marker) => marker.popup.id === selectedMarkerId) || null;
@@ -38,16 +55,16 @@
 <section class="relative w-full" data-iframe-height={true}>
 	<!-- Pass selectedMarkerId to SyriaMap as a prop -->
 	<!-- <div class="max-w-[700px] mx-auto"> -->
-	<SyriaMap data={MAP_DATA} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
+	<SyriaMap data={MAP_DATA as MapData} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
 	<!-- </div> -->
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
-		<div class="marker-info flex flex-col sm:flex-row gap-5 bg-zinc-100">
+		<div class="marker-info flex flex-col gap-5 bg-zinc-100 sm:flex-row">
 			<div>
 				<img
 					src={`/assets/syria-map/${getSelectedMarker().popup.avatarPhoto}`}
 					alt={getSelectedMarker().popup.name}
-					class="sm: mx-auto max-w-[240px] sm:max-w-2xs"
+					class="sm: sm:max-w-2xs mx-auto max-w-[240px]"
 				/>
 			</div>
 			<div class="flex w-full flex-col">
@@ -59,6 +76,11 @@
 					<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
 					<h4 class="mb-2 mt-0 text-xl">{getSelectedMarker()?.popup?.profession}</h4>
 					<p>{getSelectedMarker().popup.text}</p>
+				</div>
+				<div>
+					<p>
+						<a href={`#${getSelectedMarker().slug}`} target="_parent">Read more...</a>
+					</p>
 				</div>
 			</div>
 		</div>
