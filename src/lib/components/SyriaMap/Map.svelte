@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount, tick } from 'svelte';
+
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
 
@@ -27,6 +28,16 @@
 		essential: true
 	};
 
+	const { data, markerClickHandler, selectedMarkerId } = $props() as {
+		data: MapData;
+		markerClickHandler: (popupData: {
+			id: string;
+			name: string;
+			profession: string;
+			text: string;
+		}) => void;
+	};
+
 	let openPopupId = $state(-1);
 
 	$effect(() => {
@@ -35,7 +46,6 @@
 
 	$effect(() => {
 		if (selectedMarkerId !== -1 && selectedMarkerId !== openPopupId) {
-			console.log('Map received new ID', selectedMarkerId);
 			openPopupId = selectedMarkerId;
 
 			const marker = data.markers.find((marker) => marker.popup.id === selectedMarkerId);
@@ -72,21 +82,12 @@
 		}
 	});
 
-	const { data, markerClickHandler, selectedMarkerId } = $props() as {
-		data: MapData;
-		markerClickHandler: (popupData: {
-			id: string;
-			name: string;
-			profession: string;
-			text: string;
-		}) => void;
-	};
-
 	// Use your Mapbox token here
 	mapboxgl.accessToken =
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
 
 	let map: mapboxgl.Map;
+	let mapLoaded = false;
 
 	// Define the bounding box for Syria (southwest and northeast corners)
 	const syriaBounds: [[number, number], [number, number]] = [
@@ -124,7 +125,9 @@
 		});
 
 		map.on('load', () => {
+			mapLoaded = true;
 			map.resize();
+
 			// Fit the map to the bounds
 			map.fitBounds(new mapboxgl.LngLatBounds(syriaBounds), {
 				padding: { top: 10, right: 20, bottom: 60, left: 20 }
@@ -260,6 +263,37 @@
 
 	onDestroy(() => {
 		if (map) map.remove();
+	});
+
+	// Reactive effect to handle opening the correct popup based on selectedMarkerId
+	$effect(() => {
+		if (mapLoaded && selectedMarkerId !== -1 && selectedMarkerId !== openPopupId) {
+			const marker = data.markers.find((marker) => marker.popup.id === selectedMarkerId);
+			if (marker) {
+				openPopupId = selectedMarkerId;
+
+				// Close all existing popups
+				for (const popup of document.querySelectorAll('.mapboxgl-popup')) {
+					popup.remove();
+				}
+
+				// Fly to the marker's location
+				map.flyTo({
+					...flyToOptions,
+					center: marker.coords
+				});
+
+				// Open a new popup for the selected marker
+				const popup = new mapboxgl.Popup({
+					offset: { top: [0, 50], bottom: [0, -10], left: [10, 0], right: [-10, 0] }
+				}).setHTML(`
+					<h3 class="mb-0 text-2xl">${marker.popup.name}</h3>
+					<h4 class="mb-2 text-xl">${marker.popup.profession}</h4>
+					<p>${marker.popup.text}</p>
+				`);
+				popup.setLngLat(marker.coords).addTo(map);
+			}
+		}
 	});
 </script>
 

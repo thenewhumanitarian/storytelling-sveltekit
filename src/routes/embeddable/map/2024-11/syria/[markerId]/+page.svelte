@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	import SyriaMap from '$lib/components/SyriaMap/Map.svelte';
 	import { MAP_DATA } from '$lib/components/SyriaMap/data.js';
+
+	// Reactive state for selected marker ID
+	let selectedMarkerId = -1;
 
 	// Function to send the message to the parent if we're in a browser environment
 	function sendScrollMessage(slug: string) {
@@ -14,12 +17,21 @@
 		}
 	}
 
-	// Variable to store the selected marker ID
-	let selectedMarkerId = $state(-1);
+	let markerId: number = parseInt($page.params.markerId);
+	console.log(markerId);
+
+	if (!markerId || markerId < 0) {
+		markerId = -1;
+	}
 
 	// Callback function to handle marker clicks
 	function handleMarkerClick(markerId: number) {
+		sendScrollMessage('map');
 		selectedMarkerId = markerId;
+	}
+
+	if (markerId >= 0) {
+		openMarker(markerId);
 	}
 
 	interface MapData {
@@ -61,6 +73,10 @@
 		const newIndex = currentIndex < MAP_DATA.markers.length - 1 ? currentIndex + 1 : 0;
 		selectedMarkerId = MAP_DATA.markers[newIndex].popup.id;
 	}
+
+	function openMarker(markerId: number) {
+		selectedMarkerId = markerId;
+	}
 </script>
 
 <main data-iframe-height={true}></main>
@@ -72,7 +88,7 @@
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}
 		<div class="marker-info flex flex-col gap-5 bg-zinc-100 sm:flex-row">
-			<div>
+			<div class="hidden sm:block">
 				<img
 					src={`/assets/syria-map/${getSelectedMarker().popup.avatarPhoto}`}
 					alt={getSelectedMarker().popup.name}
@@ -85,27 +101,36 @@
 					<button onclick={nextMarker}>Next →</button>
 				</div>
 				<div class="mt-3">
-					<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
-					<h4 class="mb-2 mt-0 text-xl">{getSelectedMarker()?.popup?.profession}</h4>
-					<p>{getSelectedMarker().popup.text}</p>
+					<div class="flex flex-row gap-3">
+						<div class="block flex-none sm:hidden">
+							<img
+								src={`/assets/syria-map/${getSelectedMarker().popup.avatarPhoto}`}
+								alt={getSelectedMarker().popup.name}
+								class="h-12 w-12 rounded-full"
+							/>
+						</div>
+						<div>
+							<h3 class="mb-0 text-2xl">{getSelectedMarker().popup.name}</h3>
+							<h4 class="mb-2 mt-0 text-xl">{getSelectedMarker()?.popup?.profession}</h4>
+							<p>{getSelectedMarker().popup.text}</p>
+						</div>
+					</div>
 				</div>
 				<div>
-					<p>
-						<button
-						  class="text-burgundy font-bold mt-5"
-							onclick={(event) => {
-								event.preventDefault(); // Prevent default link navigation
-								sendScrollMessage(getSelectedMarker().slug); // Send scroll message to parent
-							}}>Read more...</button
-						>
-					</p>
+					<button
+						class="mt-5 font-bold text-burgundy"
+						onclick={(event) => {
+							event.preventDefault(); // Prevent default link navigation
+							sendScrollMessage(getSelectedMarker().slug); // Send scroll message to parent
+						}}>Read more...</button
+					>
 				</div>
 			</div>
 		</div>
 	{:else}
 		<div class="absolute bottom-0 left-0 z-50 w-full bg-zinc-100 p-2 opacity-100 sm:p-3">
-			<p class="hidden text-center sm:block">Click on the map markers to find out more.</p>
-			<p class="block text-center sm:hidden">Tap on the map markers to find out more.</p>
+			<p class="hidden text-center sm:block">Click on the map markers to find out more</p>
+			<p class="block text-center sm:hidden">Tap on the map markers to find out more</p>
 		</div>
 	{/if}
 </section>
