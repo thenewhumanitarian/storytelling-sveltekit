@@ -47,6 +47,7 @@
 				text: string;
 				avatarPhoto: string;
 				slug: string;
+				nodeId: string;
 			};
 		}>;
 	}
@@ -117,12 +118,17 @@
 					</div>
 				</div>
 				<div>
-					<button
+					<!-- <button
 						class="mt-5 font-bold text-burgundy"
 						onclick={(event) => {
 							event.preventDefault(); // Prevent default link navigation
 							sendScrollMessage(getSelectedMarker().slug); // Send scroll message to parent
 						}}>Read more...</button
+					> -->
+					<button class="mt-5 font-bold text-burgundy">
+						<a target="_parent" href={`https://www.thenewhumanitarian.org/node/${getSelectedMarker().popup.nodeId}`}
+							>Go to article</a
+						></button
 					>
 				</div>
 			</div>

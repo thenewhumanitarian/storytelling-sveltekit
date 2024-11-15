@@ -17,6 +17,7 @@
 				text: string;
 				avatarPhoto: string;
 				slug: string;
+				nodeId: string;
 			};
 		}>;
 	}

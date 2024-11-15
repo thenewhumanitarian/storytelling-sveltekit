@@ -10,9 +10,10 @@ export const MAP_DATA = {
       popup: {
         id: '0',
         name: 'Khaled Al-Faris',
-        avatarPhoto: 'person1.png',
+        avatarPhoto: 'person1.png', // male photo
         profession: 'Olive farmer',
-        text: 'Khaled has been cultivating olives on his family’s land for over 20 years, supplying local markets.'
+        text: 'Khaled has been cultivating olives on his family’s land for over 20 years, supplying local markets.',
+        nodeId: '263761'
       }
     },
     {
@@ -21,9 +22,10 @@ export const MAP_DATA = {
       popup: {
         id: '1',
         name: 'Layla Hammoud',
-        avatarPhoto: 'person2.png',
+        avatarPhoto: 'person2.png', // female photo
         profession: 'Vegetable farmer',
-        text: 'Layla grows tomatoes, cucumbers, and peppers, which she sells to nearby villages.'
+        text: 'Layla grows tomatoes, cucumbers, and peppers, which she sells to nearby villages.',
+        nodeId: '263761'
       }
     },
     {
@@ -32,9 +34,10 @@ export const MAP_DATA = {
       popup: {
         id: '2',
         name: 'Ahmad Talal',
-        avatarPhoto: 'person3.png',
+        avatarPhoto: 'person4.png', // swapped to male photo
         profession: 'Wheat farmer',
-        text: 'Ahmad manages a wheat farm, contributing to local grain production for bread-making.'
+        text: 'Ahmad manages a wheat farm, contributing to local grain production for bread-making.',
+        nodeId: '263761'
       }
     },
     {
@@ -43,20 +46,22 @@ export const MAP_DATA = {
       popup: {
         id: '3',
         name: 'Maha Kassem',
-        avatarPhoto: 'person4.png',
+        avatarPhoto: 'person3.png', // swapped to female photo
         profession: 'Dairy farmer',
-        text: 'Maha raises goats and cows, producing milk and cheese sold in the Aleppo markets.'
+        text: 'Maha raises goats and cows, producing milk and cheese sold in the Aleppo markets.',
+        nodeId: '263761'
       }
     },
     {
       coords: [36.724977485074405, 35.90521349716556], // Near Qamishli, far northeast Syria
-      slug: 'youssef-daoud',
+      slug: 'yasmin-daoud',
       popup: {
         id: '4',
-        name: 'Youssef Daoud',
-        avatarPhoto: 'person5.png',
+        name: 'Yasmin Daoud', // changed name to female
+        avatarPhoto: 'person5.png', // female photo
         profession: 'Sheep farmer',
-        text: 'Youssef tends to a flock of sheep, producing wool and meat for the community.'
+        text: 'Yasmin tends to a flock of sheep, producing wool and meat for the community.',
+        nodeId: '263761'
       }
     }
   ]
