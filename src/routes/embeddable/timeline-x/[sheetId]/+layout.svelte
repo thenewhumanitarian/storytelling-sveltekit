@@ -12,51 +12,6 @@
 </div>
 
 <style>
-	/*	Font Abril Fatface & Droid Sans
-
-https://www.google.com/fonts/specimen/Abril+Fatface
-https://www.google.com/fonts/specimen/Droid+Sans
------------------------------------------------------ */
-	/*	VARIABLES
-	BASE
------------------------------------------------------ */
-	/* ICON PATH
-================================================== */
-	/* TYPEFACE
-================================================== */
-	/* COLOR SCHEME
-================================================== */
-	/* UI COLOR
-================================================== */
-	/* UI
-================================================== */
-	/* Animation
-================================================== */
-	/* GFX
-================================================== */
-	@font-face {
-		font-family: 'Abril Fatface';
-		font-style: normal;
-		font-weight: 400;
-		src: url(https://fonts.gstatic.com/s/abrilfatface/v19/zOL64pLDlL1D99S8g8PtiKchq-dmiA.ttf)
-			format('truetype');
-	}
-	@font-face {
-		font-family: 'Droid Sans';
-		font-style: normal;
-		font-weight: 400;
-		src: url(https://fonts.gstatic.com/s/droidsans/v18/SlGVmQWMvZQIdix7AFxXkHNSaA.ttf)
-			format('truetype');
-	}
-	@font-face {
-		font-family: 'Droid Sans';
-		font-style: normal;
-		font-weight: 700;
-		src: url(https://fonts.gstatic.com/s/droidsans/v18/SlGWmQWMvZQIdix7AFxXmMh3eDs1Yg.ttf)
-			format('truetype');
-	}
-	/*	Font Base
------------------------------------------------------ */
 	.tl-timeline {
 		font-family: 'Droid Sans', sans-serif;
 		font-weight: 400;

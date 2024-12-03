@@ -32,5 +32,12 @@
   #timeline--wrapper {
     width: 100%;
     height: 100%;
+    aspect-ratio: 1/1;
+  }
+
+  @media screen and (max-width: 600px) {
+    #timeline--wrapper {
+      aspect-ratio: 1/2;
+    }
   }
 </style>
