@@ -40,4 +40,23 @@
 		border-top: 1px solid white;
 		padding-top: 0.6rem;
 	}
+
+	@media screen and (max-width: 600px) {
+		:global(.tl-skinny .tl-slide .tl-slide-content-container .tl-slide-content) {
+			padding-bottom: 10px;
+		}
+		:global(
+				.tl-skinny
+					.tl-slide.tl-slide.tl-full-color-background
+					.tl-slide-content-container
+					.tl-slide-content
+					.tl-media,
+				.tl-skinny .tl-slide .tl-slide-content-container .tl-slide-content .tl-media
+			) {
+			display: flex;
+			justify-content: center;
+			padding-bottom: 20px;
+			align-items: center;
+		}
+	}
 </style>
