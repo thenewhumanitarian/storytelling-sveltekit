@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import '$lib/components/knightlab-timeline/dist/css/timeline.css';
+  import '@knight-lab/timelinejs/dist/css/timeline.css';
 
   let timelineContainer;
   let sheetId;
