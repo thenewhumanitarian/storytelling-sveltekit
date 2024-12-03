@@ -19,11 +19,11 @@
 			.tl-timeline .tl-slidenav-previous
 		) {
 		font-size: 14px !important;
-		line-height: 17px !important;
+		line-height: 16px !important;
 	}
 
 	:global(.tl-timeline p) {
-		font-size: 17px !important;
+		font-size: 16px !important;
 		line-height: 1.25 !important;
 	}
 
@@ -32,8 +32,8 @@
 	}
 
 	:global(.tl-medium .tl-text h2.tl-headline-title, .tl-medium .tl-text h2.tl-headline) {
-		font-size: 28px;
-		line-height: 32px;
+		font-size: 28px !important;
+		line-height: 32px !important;
 	}
 
 	:global(.tl-slide.tl-full-image-background .tl-caption) {
@@ -58,5 +58,9 @@
 			padding-bottom: 20px;
 			align-items: center;
 		}
+	}
+
+	:global(.tl-slide .tl-slide-content-container .tl-slide-content .tl-text) {
+		padding: 0 0px 0 20px !important;
 	}
 </style>
