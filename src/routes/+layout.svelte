@@ -4,8 +4,7 @@
 	import { onMount } from 'svelte';
 
 	// import '@iframe-resizer/child';
-
-	export let data;
+	// export let data;
 
 	onMount(async () => {
 		// Dynamically load the script
