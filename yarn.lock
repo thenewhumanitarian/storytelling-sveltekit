@@ -673,6 +673,26 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.34.6.tgz#f3d03ce2d82723eb089188ea1494a719b09e1561"
   integrity sha512-0PVwmgzZ8+TZ9oGBmdZoQVXflbvuwzN/HRclujpl4N/q3i+y0lqLw8n1bXA8ru3sApDjlmONaNAuYr38y1Kr9w==
 
+"@storyblok/js@3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@storyblok/js/-/js-3.2.1.tgz#a9129afd98ac21980d4ff42255b34e0be41473f6"
+  integrity sha512-oi6vynMfCrCQQYZohNLS7YT00izFaXC7VIuQmHfqJx8nu9dUUYtiStPE9b1OjxlbX+TDpzuxTGxK1lhfFbBRyw==
+  dependencies:
+    "@storyblok/richtext" "3.0.2"
+    storyblok-js-client "6.10.6"
+
+"@storyblok/richtext@3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@storyblok/richtext/-/richtext-3.0.2.tgz#98b85029aa62a79ea0191708f7d924e25d37f176"
+  integrity sha512-KBLx9ycNVMyVnNyPiwBH5g9uWmiJpMzp9YvpnnADXlPLoksusrwI56BusSM8HaIgJgcnB5RR0LvhySkPFdC8Zg==
+
+"@storyblok/svelte@^4.0.11":
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/@storyblok/svelte/-/svelte-4.0.11.tgz#90224bcfd0b4ef9d5ae10d65ba578c5ae7f3053e"
+  integrity sha512-xYfJWv+W3txMyjYAESG50pHqd8LPxRH807JrTFdJr07ULGNkCOlFmGqvNMldHkAZ92aCqQxqxkTYmGcRTkuXYQ==
+  dependencies:
+    "@storyblok/js" "3.2.1"
+
 "@storybook/addon-actions@8.5.3":
   version "8.5.3"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-8.5.3.tgz#09086c0309220610759d63e201915b3b2e551f5f"
@@ -3997,6 +4017,11 @@ source-map@~0.6.0, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+
+storyblok-js-client@6.10.6:
+  version "6.10.6"
+  resolved "https://registry.yarnpkg.com/storyblok-js-client/-/storyblok-js-client-6.10.6.tgz#951bd131ae8db34e1b8e67e1ee41f2c5e0da5dbb"
+  integrity sha512-4n/n6tkLu3kmZwb2aSZgwqGta8DodbQbGjuclWY+A6xsmrVWrRBytUs+5lvJVTGkshLflVPhufeO4j/1zvVSPQ==
 
 storybook@^8.4.0:
   version "8.5.3"
