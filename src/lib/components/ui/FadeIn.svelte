@@ -5,7 +5,7 @@
 
 	export let delay: number = 0;
 	export let duration: number = 500;
-	export let initialOpacity: number = 0;
+	export let initialOpacity: number = 0.5;
 	export let finalOpacity: number = 1;
 	export let xOffset: number = -50; // Moves up on enter
 	// export let offset: string = '-10%'; // Root margin for in-view detection
