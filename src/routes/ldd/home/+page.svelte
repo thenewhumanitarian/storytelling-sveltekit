@@ -34,7 +34,7 @@
 
 <HorizontalScroll />
 
-<div>
+<!-- <div>
 	<h2>From the right with early onset</h2>
 	<FadeIn xOffset={500} blurAmount={10} inViewOffset={'-25%'}>
 		<p>
@@ -45,7 +45,7 @@
 	<code>
 		xOffset={500} blurAmount={10} inViewOffset={'-25%'}
 	</code>
-</div>
+</div> -->
 
 <div>
 	<h2>From the far left</h2>
