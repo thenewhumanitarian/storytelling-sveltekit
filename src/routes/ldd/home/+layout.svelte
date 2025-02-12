@@ -31,6 +31,7 @@
 	main {
 		margin: 0 3rem 3rem;
 		border: 1px solid #ccc;
+		overflow: hidden;
 	}
 
 	.background-image {

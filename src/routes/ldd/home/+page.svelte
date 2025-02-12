@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+  import HorizontalScroll from '$lib/components/sections/HorizontalScroll.svelte';
 </script>
 
 <div>
@@ -30,6 +31,8 @@
 	</FadeIn>
 	<code>delay={1000} duration={1000} blurAmount={10}</code>
 </div>
+
+<HorizontalScroll />
 
 <div>
 	<h2>From the right with early onset</h2>
