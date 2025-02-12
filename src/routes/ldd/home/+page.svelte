@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FadeIn from '$lib/components/ui/FadeIn.svelte';
+	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 </script>
 
 <div>
@@ -80,6 +80,7 @@
 		margin: 0;
 	}
 	code {
-		color: salmon;
+		color: #282828;
+    background: #ddd; padding: 0.5rem 1rem;
 	}
 </style>
