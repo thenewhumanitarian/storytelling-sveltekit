@@ -35,16 +35,16 @@
 <div class="horizontal-scroll-wrapper">
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside">Section 1</div>
+			<div class="horizontal-section--inside"><h3>Section 1</h3></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside">Section 2</div>
+			<div class="horizontal-section--inside"><h3>Section 2</h3></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside">Section 3</div>
+			<div class="horizontal-section--inside"><h3>Section 3</h3></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside">Section 4</div>
+			<div class="horizontal-section--inside"><h3>Section 4</h3></div>
 		</div>
 	</div>
 </div>
@@ -56,9 +56,11 @@
 		overflow: hidden;
 		display: flex;
 		align-items: center;
+		z-index: -1;
 	}
 
 	.horizontal-scroll-container {
+		margin-top: 3rem;
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;
@@ -73,9 +75,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 2rem;
-		font-weight: bold;
-		color: black;
 		/* border-radius: 20px; */
 	}
 
@@ -88,7 +87,7 @@
 		color: black;
 		position: static;
 		width: 100%;
-		height: 95%;
-		background: white;
+		height: 98%;
+		background: rgba(255, 255, 255, 0.95);
 	}
 </style>

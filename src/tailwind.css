@@ -4,6 +4,15 @@
 
 @layer base {
   @font-face {
+    font-family: 'Pacifico';
+    src: url('/fonts/Pacifico-Regular.woff2') format('woff2'),
+      url('/fonts/Pacifico-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
     font-family: 'GT Sectra Bold';
     font-weight: 700;
     src: url('/fonts/GT-Sectra-Fine-Bold.woff') format('woff');

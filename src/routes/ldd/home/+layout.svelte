@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Logo from '$lib/components/icons/LogoInverted.svelte';
+	// import Logo from '$lib/components/icons/LogoInverted.svelte';
+	import Logo from '$lib/components/icons/Logo.svelte';
 </script>
 
 <svelte:head>
@@ -10,7 +11,7 @@
 </svelte:head>
 
 <div class="background-image">
-	<enhanced:img src="$lib/assets/ldd/example-background.jpg" alt="Scrapbook background example" />
+	<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
 </div>
 
 <header>
@@ -23,14 +24,20 @@
 
 <style>
 	header {
+		position: fixed;
 		display: flex;
 		justify-content: center;
-		padding: 1rem;
+		padding: 0.75rem;
+		width: 100%;
+		top: 0;
+		background: rgba(232, 193, 136, 1);
+		/* backdrop-filter: blur(10px); */
 	}
 
 	main {
 		margin: 0 3rem 3rem;
-		border: 1px solid #ccc;
+		padding-top: 6rem;
+		border: 1px solid #eee;
 		overflow: hidden;
 	}
 

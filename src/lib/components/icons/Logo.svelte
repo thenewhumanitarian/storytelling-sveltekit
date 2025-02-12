@@ -1,7 +1,7 @@
 <a href="https://www.thenewhumanitarian.org/" title="The New Humanitarian">
 	<div class="logo">
-		<svg xmlns="http://www.w3.org/2000/svg" id="ANIMATED-LOGO" viewBox="0 0 405.32 109.7"
-			><defs
+		<svg xmlns="http://www.w3.org/2000/svg" id="ANIMATED-LOGO" viewBox="0 0 405.32 109.7">
+			<defs
 				><style>
 					.cls-1 {
 						fill: #282828;
@@ -10,7 +10,9 @@
 						fill: #a03c50;
 					}
 				</style></defs
-			><title>The New Humanitarian</title><path
+			>
+			<title>The New Humanitarian</title>
+			<path
 				class="cls-1"
 				d="M176.13,87.43l-6.74.13-.12-2,2.41-.61V66.47c0-2.6-1.11-3.71-3.09-3.71-1.67,0-3.22.93-5.07,2.1l-1.55.93V84.9l2.48.61-.13,2-6.8-.13-7.36.13-.12-2,3.28-.61V46.25l-2.11.37L141,46.56V84.9l5.81.61-.12,2-10.51-.13-10.51.13-.19-2,5.94-.61V46.56l-6.87.06-4.2,10.14h-2V44.15l18.11.12L152,44.21l7.79-.74,2.22-.06v20l10.14-6.31c3.28,0,5.26.62,6.56,2s2,3.46,2,7.23V84.9l3.58.61-.12,2Z"
 				transform="translate(-43.9 -43.41)"
@@ -86,13 +88,13 @@
 				y="48.81"
 				width="5.79"
 				height="60.89"
-			></rect></svg
-		>
+			></rect>
+		</svg>
 	</div>
 </a>
 
 <style>
 	.logo {
-		width: 180px;
+		width: 160px;
 	}
 </style>

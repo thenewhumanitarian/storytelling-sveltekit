@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-  import HorizontalScroll from '$lib/components/sections/HorizontalScroll.svelte';
+	import HorizontalScroll from '$lib/components/sections/HorizontalScroll.svelte';
 </script>
 
 <div>
@@ -75,17 +75,26 @@
 		flex-direction: column;
 		row-gap: 1rem;
 	}
+
+	div:not(:first-child) {
+		margin-top: 2rem;
+	}
 	div:nth-child(odd) {
 		background-color: cornsilk;
-    background-color: rgba(255, 248, 220, 0.95);
+		/* background-color: rgba(232, 193, 136, 0.95); */
+		background-color: rgba(255, 255, 255, 0.95);
 	}
 
 	div:nth-child(even) {
-		background-color: white;
+		background-color: rgba(255, 255, 255, 0.95);
 	}
 	h1,
 	h2 {
 		margin: 0;
+	}
+	h2,
+	h3 {
+		font-family: 'Pacifico', cursive;
 	}
 	code {
 		color: #282828;
