@@ -3,43 +3,61 @@
 </script>
 
 <div>
-	<h1>Testing a few inView animations.</h1>
+	<h1>A few simple FadeIn animations triggered by the viewport using svelte-inview.</h1>
 </div>
 
 <div>
+	<h2>From the bottom.</h2>
+	<FadeIn yOffset={50} blurAmount={10}>
+		<p>Hello, I fade in smoothly!</p>
+	</FadeIn>
+	<code>
+		yOffset={50} blurAmount={10}
+	</code>
+</div>
+
+<div>
+	<h2>Default</h2>
 	<FadeIn>
 		<p>This is the default without setting anything special.</p>
 	</FadeIn>
 </div>
 
 <div>
-	<FadeIn yOffset={50} blurAmount={10}>
-		<h1>Hello, I fade in smoothly! From the bottom.</h1>
-	</FadeIn>
-</div>
-
-<div>
+	<h2>With delay...</h2>
 	<FadeIn delay={1000} duration={1000} blurAmount={10}>
-		<p>This paragraph fades in slightly later – 200ms delay and 1,000ms duration...</p>
+		<p>This paragraph fades in slightly later.</p>
 	</FadeIn>
+	<code>delay={1000} duration={1000} blurAmount={10}</code>
 </div>
 
 <div>
-	<FadeIn xOffset={500} blurAmount={10}>
-		<p>This here comes from the right (xOffset = 500).</p>
+	<h2>From the right with early onset</h2>
+	<FadeIn xOffset={500} blurAmount={10} inViewOffset={'-25%'}>
+		<p>
+			This here comes from the right and also uses inViewOffset to trigger the animation slightly
+			later.
+		</p>
 	</FadeIn>
+	<code>
+		xOffset={500} blurAmount={10} inViewOffset={'-25%'}
+	</code>
 </div>
 
 <div>
+	<h2>From the far left</h2>
 	<FadeIn xOffset={-1000}>
-		<p>This here comes from the (far) left) (xOffset = -1000).</p>
+		<p>This here comes from the far left.</p>
 	</FadeIn>
+	<code>xOffset=-1000</code>
 </div>
 
 <div>
+	<h2>From the top left</h2>
 	<FadeIn blurAmount={10} xOffset={-50} yOffset={-50}>
-		<p>This here comes from the top left (xOffset = -50, yOffset = -50).</p>
+		<p>This here comes from the top left and is also un-blurring.</p>
 	</FadeIn>
+	<code>blurAmount={10} xOffset={-50} yOffset={-50}</code>
 </div>
 
 <style>
@@ -49,8 +67,19 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		overflow-x: hidden;
+		text-align: center;
+		flex-direction: column;
+		row-gap: 1rem;
 	}
 	div:nth-child(odd) {
-		background-color: #ffee99;
+		background-color: cornsilk;
+	}
+	h1,
+	h2 {
+		margin: 0;
+	}
+	code {
+		color: salmon;
 	}
 </style>
