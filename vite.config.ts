@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import fs from 'fs';
+import { enhancedImages } from '@sveltejs/enhanced-img';
 
 export default defineConfig({
 	server: {
@@ -9,5 +10,5 @@ export default defineConfig({
 			cert: fs.readFileSync('./cert/localhost.pem')
 		}
 	},
-	plugins: [sveltekit()]
+	plugins: [sveltekit(), enhancedImages()]
 });

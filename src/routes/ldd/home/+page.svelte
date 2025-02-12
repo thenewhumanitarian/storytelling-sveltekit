@@ -74,6 +74,11 @@
 	}
 	div:nth-child(odd) {
 		background-color: cornsilk;
+    background-color: rgba(255, 248, 220, 0.95);
+	}
+
+	div:nth-child(even) {
+		background-color: white;
 	}
 	h1,
 	h2 {
@@ -81,6 +86,7 @@
 	}
 	code {
 		color: #282828;
-    background: #ddd; padding: 0.5rem 1rem;
+		background: #ddd;
+		padding: 0.5rem 1rem;
 	}
 </style>

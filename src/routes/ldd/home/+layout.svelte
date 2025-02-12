@@ -9,6 +9,10 @@
 	<!-- Need to add more meta data here later -->
 </svelte:head>
 
+<div class="background-image">
+	<enhanced:img src="$lib/assets/ldd/example-background.jpg" alt="Scrapbook background example" />
+</div>
+
 <header>
 	<Logo />
 </header>
@@ -27,5 +31,20 @@
 	main {
 		margin: 0 3rem 3rem;
 		border: 1px solid #ccc;
+	}
+
+	.background-image {
+		position: fixed;
+		z-index: -1;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+	}
+
+	.background-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 </style>
