@@ -53,7 +53,7 @@
 <style>
 	.content-wrapper {
 		padding: 1rem;
-		height: 80vh;
+    aspect-ratio: 4/3;
 		display: flex;
 		align-items: center;
 		justify-content: center;
