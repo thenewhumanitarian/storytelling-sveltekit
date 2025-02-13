@@ -58,5 +58,9 @@
 				{@render children?.()}
 			</div>
 		</div>
+	{:else}
+		<div style="opacity: 0;">
+			{@render children?.()}
+		</div>
 	{/if}
 </div>

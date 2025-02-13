@@ -60,7 +60,7 @@
 	}
 
 	.horizontal-scroll-container {
-		margin-top: 3rem;
+		margin-top: 4rem; /* For the header */
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;
@@ -69,14 +69,22 @@
 	.horizontal-section {
 		width: 80vw;
 		height: 80vh;
-		margin: 2rem;
+		margin: 1rem;
 		background: linear-gradient(45deg, #d40000, #fff, #007a3d);
 		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* border-radius: 20px; */
+		border-radius: 5px;
 	}
+
+	/* .horizontal-section:first-child {
+		margin-left: 0;
+	}
+
+	.horizontal-section:last-child {
+		margin-right: 0;
+	} */
 
 	.horizontal-section--inside {
 		display: flex;

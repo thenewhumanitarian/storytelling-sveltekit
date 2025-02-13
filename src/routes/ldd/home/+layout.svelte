@@ -37,8 +37,8 @@
 	main {
 		margin: 0 3rem 3rem;
 		padding-top: 6rem;
-		border: 1px solid #eee;
 		overflow: hidden;
+		/* border: 1px solid #eee; */
 	}
 
 	.background-image {
