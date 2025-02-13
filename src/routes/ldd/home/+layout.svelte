@@ -22,6 +22,10 @@
 	<slot />
 </main>
 
+<footer>
+	<p>Footer tbd.</p>
+</footer>
+
 <style>
 	header {
 		position: fixed;
@@ -31,14 +35,26 @@
 		width: 100%;
 		top: 0;
 		background: rgba(232, 193, 136, 1);
+		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
 		/* backdrop-filter: blur(10px); */
 	}
 
 	main {
 		margin: 0 3rem 3rem;
-		padding-top: 6rem;
+		padding-top: 7rem;
 		overflow: hidden;
 		/* border: 1px solid #eee; */
+	}
+
+	footer {
+		display: flex;
+		justify-content: center;
+		padding: 0.75rem;
+		width: 100%;
+		bottom: 0;
+		background: black;
+		color: white;
+		box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.2);
 	}
 
 	.background-image {

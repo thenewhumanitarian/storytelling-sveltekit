@@ -35,21 +35,26 @@
 <div class="horizontal-scroll-wrapper">
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h3>Section 1</h3></div>
+			<div class="horizontal-section--inside"><h2>Section 1</h2></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h3>Section 2</h3></div>
+			<div class="horizontal-section--inside"><h2>Section 2</h2></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h3>Section 3</h3></div>
+			<div class="horizontal-section--inside"><h2>Section 3</h2></div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h3>Section 4</h3></div>
+			<div class="horizontal-section--inside"><h2>Section 4</h2></div>
 		</div>
 	</div>
 </div>
 
 <style>
+	h2,
+	h3 {
+		font-family: 'Pacifico', cursive;
+	}
+
 	.horizontal-scroll-wrapper {
 		width: 100%;
 		height: 100vh;
@@ -95,7 +100,8 @@
 		color: black;
 		position: static;
 		width: 100%;
-		height: 98%;
 		background: rgba(255, 255, 255, 0.95);
+		margin: 0.2rem;
+		height: calc(100% - 0.4rem);
 	}
 </style>
