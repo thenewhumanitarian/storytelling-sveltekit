@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	import SyriaMap from '$lib/components/SyriaMap/Map.svelte';
-	import { MAP_DATA } from '$lib/components/SyriaMap/data.js';
+	import SyriaMap from '$lib/components/projects/SyriaMap/Map.svelte';
+	import { MAP_DATA } from '$lib/components/projects/SyriaMap/data.js';
 
 	// Reactive state for selected marker ID
 	let selectedMarkerId = -1;

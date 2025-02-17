@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import '@knight-lab/timelinejs/dist/css/timeline.css';
 
-	let timelineContainer;
+	let timelineContainer: HTMLDivElement;
 	let sheetId;
 
 	$: sheetId = $page.params.sheetId; // Extract the sheetId from the URL

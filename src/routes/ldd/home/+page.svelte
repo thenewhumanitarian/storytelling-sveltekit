@@ -1,10 +1,15 @@
 <script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	import HorizontalScroll from '$lib/components/sections/HorizontalScroll.svelte';
+	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
+  import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
 </script>
 
 <div class="content-wrapper">
-	<h1>A few simple FadeIn animations triggered by the viewport using svelte-inview.</h1>
+	<h1>A few ideas and prototypes for this project.</h1>
+</div>
+
+<div class="content-wrapper transparent">
+  <MouseoverBox />
 </div>
 
 <div class="content-wrapper">
@@ -41,6 +46,7 @@
 	</FadeIn>
 	<code>xOffset=-1000</code>
 </div>
+x§
 
 <div class="content-wrapper">
 	<h2>From the top left</h2>
@@ -53,7 +59,7 @@
 <style>
 	.content-wrapper {
 		padding: 1rem;
-    aspect-ratio: 4/3;
+		aspect-ratio: 4/3;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -61,9 +67,13 @@
 		text-align: center;
 		flex-direction: column;
 		row-gap: 1rem;
-    max-width: 800px;
-    margin: 0 auto;
+		max-width: 800px;
+		margin: 0 auto;
 	}
+
+  .content-wrapper.transparent {
+    background-color: transparent;
+  }
 
 	div:not(:first-child) {
 		margin-top: 2rem;
