@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import MouseoverBox from './MouseoverBox.svelte';
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -35,7 +36,9 @@
 <div class="horizontal-scroll-wrapper">
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h2>Section 1</h2></div>
+			<div class="horizontal-section--inside">
+				<MouseoverBox />
+			</div>
 		</div>
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside"><h2>Section 2</h2></div>
@@ -72,21 +75,23 @@
 	}
 
 	.horizontal-section {
+		/* width: 80vw; */
 		width: 80vw;
 		height: 80vh;
 		margin: 1rem;
-		background: linear-gradient(45deg, #d40000, #fff, #007a3d);
-		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
+		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); */
+		/* background: linear-gradient(45deg, #d40000, #fff, #007a3d); */
 	}
 
-	/* .horizontal-section:first-child {
-		margin-left: 0;
+	.horizontal-section:first-child {
+		margin-left: 5vw;
 	}
 
+	/*
 	.horizontal-section:last-child {
 		margin-right: 0;
 	} */
@@ -95,13 +100,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 2rem;
+		/* font-size: 2rem; */
 		font-weight: bold;
 		color: black;
 		position: static;
 		width: 100%;
-		background: rgba(255, 255, 255, 0.95);
 		margin: 0.2rem;
 		height: calc(100% - 0.4rem);
+		/* background: rgba(255, 255, 255, 0.95); */
 	}
 </style>
