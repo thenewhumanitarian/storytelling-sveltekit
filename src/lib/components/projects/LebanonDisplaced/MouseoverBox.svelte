@@ -1,17 +1,26 @@
 <script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+
+	export let object = true;
+	export let photo = true;
+
+	const marginClasses = object || photo ? 'mt-20' : 'mt-6 mb-3';
 </script>
 
-<article>
-	<FadeIn duration={500} yOffset={-100}>
+<article class={`${marginClasses}`}>
+	<FadeIn duration={500} yOffset={-100} blurAmount={10}>
 		<div class="box--wrapper">
 			<div class="name">Layal Haddad</div>
 			<div>Text</div>
 			<div>Buttons</div>
-			<div class="personal-object">Object</div>
-			<div class="polaroid-photo">
-				<div class="polaroid-photo--inside">Image</div>
-			</div>
+			{#if object}
+				<div class="personal-object">Object</div>
+			{/if}
+			{#if photo}
+				<div class="polaroid-photo">
+					<div class="polaroid-photo--inside">Image</div>
+				</div>
+			{/if}
 		</div>
 	</FadeIn>
 </article>
@@ -19,11 +28,18 @@
 <style>
 	article {
 		width: 100%;
-		margin: 0 auto;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		/* margin: 5rem auto 2rem auto; */
 	}
+
+	@media screen and (max-width: 640px) {
+		article {
+			margin: 2rem auto 0.5rem auto;
+		}
+	}
+
 	.box--wrapper {
 		z-index: 1;
 		position: relative;
@@ -35,7 +51,7 @@
 		border: #ebe4cb 3px solid;
 		aspect-ratio: 3/2;
 		width: 100%;
-		max-width: 480px;
+		max-width: 640px;
 		padding: 2rem 1rem 1rem 1rem;
 		background-color: rgba(255, 255, 255, 0.95);
 	}
@@ -56,7 +72,7 @@
 		left: -20%;
 		width: 30%;
 		height: 80%;
-		background-color: #ebe4cb;
+		background-color: #bc3734;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		z-index: -1;
 	}

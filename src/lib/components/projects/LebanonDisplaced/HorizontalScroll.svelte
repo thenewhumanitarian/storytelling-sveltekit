@@ -19,7 +19,7 @@
 
 			gsap.to(scrollContainer, {
 				x: () => -(scrollWidth - viewportWidth),
-				ease: 'none',
+				ease: 'linear',
 				scrollTrigger: {
 					trigger: '.horizontal-scroll-wrapper',
 					start: 'top top',
@@ -33,7 +33,7 @@
 	});
 </script>
 
-<div class="horizontal-scroll-wrapper">
+<div class="horizontal-scroll-wrapper scroll-smooth">
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside">
@@ -66,7 +66,7 @@
 		display: flex;
 		align-items: center;
 		z-index: -1;
-		background-color: rgba(0, 0, 0, 0.6);
+		/* background-color: rgba(0, 0, 0, 0.8); */
 	}
 
 	.horizontal-scroll-container {
@@ -89,15 +89,6 @@
 		/* background: linear-gradient(45deg, #d40000, #fff, #007a3d); */
 	}
 
-	.horizontal-section:first-child {
-		margin-left: 5vw;
-	}
-
-	/*
-	.horizontal-section:last-child {
-		margin-right: 0;
-	} */
-
 	.horizontal-section--inside {
 		display: flex;
 		height: 100%;
@@ -108,8 +99,24 @@
 		width: 100%;
 		margin: 0.2rem;
 		height: calc(100% - 0.4rem);
-		/* background: rgba(255, 255, 255, 0.95); */
-		/* font-size: 2rem; */
-		/* position: static; */
+	}
+
+	@media screen and (max-width: 640px) {
+		.horizontal-scroll-container {
+			/* margin-left: 5rem; */
+			/* margin-right: 10vw; */
+		}
+
+		.horizontal-section {
+			margin-right: 5rem;
+		}
+
+		.horizontal-section:first-child {
+			margin-left: 5rem;
+		}
+
+		/* .horizontal-section:last-child {
+			margin-right: 5rem;
+		} */
 	}
 </style>

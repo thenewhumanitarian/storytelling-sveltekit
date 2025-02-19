@@ -5,11 +5,14 @@
 </script>
 
 <div class="content-wrapper">
-	<h1>A few ideas and prototypes for this project.</h1>
+	<h1 class="text-xl sm:text-3xl">A few ideas and prototypes for this project.</h1>
 </div>
 
 <div class="content-wrapper transparent">
-	<MouseoverBox />
+	<MouseoverBox
+		object={false}
+		photo={false}
+	/>
 </div>
 
 <div class="content-wrapper">
@@ -58,16 +61,16 @@
 <style>
 	.content-wrapper {
 		padding: 1rem;
-		aspect-ratio: 4/3;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		overflow-x: hidden;
 		text-align: center;
 		flex-direction: column;
 		row-gap: 1rem;
+		width: 80%;
 		max-width: 800px;
 		margin: 0 auto 2rem auto;
+		/* aspect-ratio: 3/2; */
 	}
 
 	/* Avoid margin-bottom when two .content-wrapper are next to each other */
@@ -93,12 +96,25 @@
 	div:nth-child(even) {
 		background-color: rgba(255, 255, 255, 0.95);
 	}
+
+	h1 {
+		font-weight: bold;
+	}
 	h1,
 	h2 {
 		margin: 0;
 	}
 	h2 {
 		font-family: 'Pacifico', cursive;
+		font-size: 1.8rem;
+		line-height: 1.25;
+	}
+
+	@media screen and (max-width: 640px) {
+		h2 {
+			font-size: 1.4rem;
+			line-height: 1;
+		}
 	}
 	code {
 		color: #282828;
