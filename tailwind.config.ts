@@ -28,6 +28,18 @@ export default {
         serif: ['GT Sectra Regular', 'ui-serif'],
         pacifico: ['Pacifico', 'ui-cursive'],
       },
+      container: {
+        center: false, // Prevents auto-centering
+        padding: '0', // Removes default padding
+        screens: {
+          xs: '100%', // Forces `.container` to be full width
+          sm: '100%',
+          md: '100%',
+          lg: '100%',
+          xl: '100%',
+          '2xl': '100%',
+        },
+      },
     },
   },
 

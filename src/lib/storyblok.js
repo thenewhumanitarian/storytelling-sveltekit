@@ -13,10 +13,9 @@ export async function useStoryblok(accessToken = "") {
     bridge: true,
     // 005 - Listing all the components
     components: {
-      feature: (await import("$lib/../components/Feature.svelte")).default,
-      grid: (await import("$lib/../components/Grid.svelte")).default,
-      page: (await import("$lib/../components/Page.svelte")).default,
-      teaser: (await import("$lib/../components/Teaser.svelte")).default,
+      page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
+      contentWrapper: (await import("$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte")).default,
+      richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
     },
     apiOptions: {
       https: true,
