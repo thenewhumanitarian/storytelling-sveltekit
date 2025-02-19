@@ -9,7 +9,7 @@
 </div>
 
 <style>
-	.storyblok--richtext {
+	:global(.storyblok--richtext) {
 		display: block;
 	}
 	.storyblok--richtext h1 {
@@ -23,6 +23,7 @@
 		font-family: 'Pacifico', cursive;
 		font-size: 1.8rem;
 		line-height: 1.25;
+		margin-bottom: 0;
 	}
 
 	@media screen and (max-width: 640px) {

@@ -70,8 +70,9 @@
 	}
 
 	.horizontal-scroll-container {
-		/* margin-top: 4rem; */
-		margin-top: 2rem; /* For the header */
+		margin-top: 4rem;
+		/* margin-top: 2rem;  */
+		/* ^ For the header */
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;

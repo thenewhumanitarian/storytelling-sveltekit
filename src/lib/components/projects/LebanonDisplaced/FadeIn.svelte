@@ -74,7 +74,7 @@
 					x: blok.xOffset || 0,
 					y: blok.yOffset || 0
 				}}
-				class="fade-in--wrapper_fly flex h-full w-full shrink-0 items-center justify-center"
+				class="fade-in--wrapper_fly h-full w-full shrink-0 items-center justify-center"
 			>
 				{#if blok}
 					{#each blok.items ?? [] as item (item._uid)}
