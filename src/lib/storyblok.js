@@ -15,6 +15,7 @@ export async function useStoryblok(accessToken = "") {
     components: {
       page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
       contentWrapper: (await import("$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte")).default,
+      fadeInWrapper: (await import("$lib/components/projects/LebanonDisplaced/FadeIn.svelte")).default,
       richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
     },
     apiOptions: {

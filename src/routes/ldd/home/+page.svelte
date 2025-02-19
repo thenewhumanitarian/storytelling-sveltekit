@@ -30,7 +30,7 @@
 	import ContentWrapper from '$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte';
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
-	import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
+	// import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
 </script>
 
 {#if data.error}

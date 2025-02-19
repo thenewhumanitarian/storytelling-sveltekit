@@ -14,7 +14,7 @@ export async function load({ params }) {
       version: "draft",
     });
 
-    console.log("Storyblok API response:", response.data);
+    // console.log("Storyblok API response:", response.data);
 
     return {
       story: response.data.story || null,

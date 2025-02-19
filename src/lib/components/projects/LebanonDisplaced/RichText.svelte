@@ -4,11 +4,14 @@
 	const { blok } = $props();
 </script>
 
-<article use:storyblokEditable={blok}>
+<div class="storyblok--richtext" use:storyblokEditable={blok}>
 	{@html renderRichText(blok.text)}
-</article>
+</div>
 
 <style>
+	.storyblok--richtext {
+		display: block;
+	}
 	h1 {
 		font-weight: bold;
 	}

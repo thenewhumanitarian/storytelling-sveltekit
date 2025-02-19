@@ -18,7 +18,7 @@
 	}
 
 	let markerId: number = parseInt($page.params.markerId);
-	console.log(markerId);
+	// console.log(markerId);
 
 	if (!markerId || markerId < 0) {
 		markerId = -1;
