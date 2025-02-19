@@ -1,28 +1,43 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { useStoryblok } from '$lib/storyblok';
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
 	import type { PageData } from './$types';
 
+	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+
 	const { data }: { data: PageData } = $props();
 
-	// ✅ Environment variable for SSR vs. Visual Editor
-	const ENABLE_VISUAL_EDITOR = import.meta.env.PUBLIC_ENABLE_VISUAL_EDITOR === 'true';
+	// Use `let` since these will be updated
+	let story = $state(data.story);
+	let loaded = $state(false);
 
-	// ✅ Reactive State
-	const story = $state(data.story);
-	const loaded = $state(false);
+	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
+	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR === 'true';
 
-	// ✅ Enable Storyblok Bridge *only* in preview mode
+	// onMount: Initialize Storyblok (client-side) and mark as loaded.
+	onMount(async () => {
+		await useStoryblok();
+		loaded = true;
+	});
+
+	// Reactive effect: Initialize the Storyblok Bridge when the story is available and the preview mode is enabled.
 	$effect(() => {
-		if (ENABLE_VISUAL_EDITOR && story?.id) {
-			useStoryblokBridge(story.id, (newStory) => {
-				story.content = newStory.content;
-			});
+		if (ENABLE_VISUAL_EDITOR && story && story.id) {
+			useStoryblokBridge(
+				story.id,
+				(newStory) => {
+					story.content = newStory.content;
+				},
+				{
+					// Optionally adjust or remove preventClicks if you want elements to be clickable
+					preventClicks: true,
+					resolveLinks: 'url'
+				}
+			);
 		}
 	});
 
-	import ContentWrapper from '$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte';
-	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 </script>
 
@@ -30,37 +45,12 @@
 	<div class="text-center text-red-600">⚠️ Error: {data.error.message}</div>
 {/if}
 
-{#if !story}
-	<div class="text-center">📦 Loading Story...</div>
-{:else}
+{#if !loaded}
+	<div class="text-center">Loading...</div>
+{:else if story && story.content}
 	<StoryblokComponent blok={story.content} />
+{:else}
+	<div>Getting Story</div>
 {/if}
 
 <HorizontalScroll />
-
-<style>
-	h1 {
-		font-weight: bold;
-	}
-	h1,
-	h2 {
-		margin: 0;
-	}
-	h2 {
-		font-family: 'Pacifico', cursive;
-		font-size: 1.8rem;
-		line-height: 1.25;
-	}
-
-	@media screen and (max-width: 640px) {
-		h2 {
-			font-size: 1.4rem;
-			line-height: 1;
-		}
-	}
-	code {
-		color: #282828;
-		background: #ddd;
-		padding: 0.5rem 1rem;
-	}
-</style>
