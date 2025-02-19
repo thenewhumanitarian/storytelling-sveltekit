@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import MouseoverBox from './MouseoverBox.svelte';
 
@@ -41,13 +41,14 @@
 			</div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h2>Section 2</h2></div>
+			<div class="horizontal-section--inside">
+				<MouseoverBox />
+			</div>
 		</div>
 		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h2>Section 3</h2></div>
-		</div>
-		<div class="horizontal-section">
-			<div class="horizontal-section--inside"><h2>Section 4</h2></div>
+			<div class="horizontal-section--inside">
+				<MouseoverBox />
+			</div>
 		</div>
 	</div>
 </div>
@@ -65,6 +66,7 @@
 		display: flex;
 		align-items: center;
 		z-index: -1;
+		background-color: rgba(0, 0, 0, 0.6);
 	}
 
 	.horizontal-scroll-container {
@@ -98,15 +100,16 @@
 
 	.horizontal-section--inside {
 		display: flex;
+		height: 100%;
 		align-items: center;
 		justify-content: center;
-		/* font-size: 2rem; */
 		font-weight: bold;
 		color: black;
-		position: static;
 		width: 100%;
 		margin: 0.2rem;
 		height: calc(100% - 0.4rem);
 		/* background: rgba(255, 255, 255, 0.95); */
+		/* font-size: 2rem; */
+		/* position: static; */
 	}
 </style>

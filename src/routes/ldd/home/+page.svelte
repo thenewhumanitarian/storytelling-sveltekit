@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
-  import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
+	import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
 </script>
 
 <div class="content-wrapper">
@@ -9,7 +9,7 @@
 </div>
 
 <div class="content-wrapper transparent">
-  <MouseoverBox />
+	<MouseoverBox />
 </div>
 
 <div class="content-wrapper">
@@ -37,6 +37,7 @@
 	<code>delay={1000} duration={1000} blurAmount={10}</code>
 </div>
 
+<!-- Add data of different stories (or so) in here as props -->
 <HorizontalScroll />
 
 <div class="content-wrapper">
@@ -71,9 +72,9 @@ x§
 		margin: 0 auto;
 	}
 
-  .content-wrapper.transparent {
-    background-color: transparent;
-  }
+	.content-wrapper.transparent {
+		background-color: transparent;
+	}
 
 	div:not(:first-child) {
 		margin-top: 2rem;

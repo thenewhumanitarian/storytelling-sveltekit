@@ -28,6 +28,7 @@
 
 <style>
 	header {
+		z-index: 9999;
 		position: fixed;
 		display: flex;
 		justify-content: center;
@@ -40,7 +41,7 @@
 	}
 
 	main {
-		margin: 0 3rem 3rem;
+		margin: 0 0 3rem 0;
 		padding-top: 7rem;
 		overflow: hidden;
 		/* border: 1px solid #eee; */

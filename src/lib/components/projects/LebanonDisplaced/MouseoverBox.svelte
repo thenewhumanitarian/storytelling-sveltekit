@@ -1,20 +1,31 @@
-<script>
+<script lang="ts">
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 </script>
 
-<div class="box--wrapper">
-	<div class="name">Layal Haddad</div>
-	<div>Text</div>
-	<div>Buttons</div>
-	<div class="personal-object">Object</div>
-	<div class="polaroid-photo">
-		<div class="polaroid-photo--inside">Image</div>
-	</div>
-</div>
+<article>
+	<FadeIn duration={500} yOffset={-100}>
+		<div class="box--wrapper">
+			<div class="name">Layal Haddad</div>
+			<div>Text</div>
+			<div>Buttons</div>
+			<div class="personal-object">Object</div>
+			<div class="polaroid-photo">
+				<div class="polaroid-photo--inside">Image</div>
+			</div>
+		</div>
+	</FadeIn>
+</article>
 
 <style>
+	article {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 	.box--wrapper {
-    z-index: -1;
+		z-index: 1;
 		position: relative;
 		background-color: transparent;
 		display: flex;
@@ -25,7 +36,8 @@
 		aspect-ratio: 3/2;
 		width: 100%;
 		max-width: 480px;
-    padding: 2rem 1rem 1rem 1rem;
+		padding: 2rem 1rem 1rem 1rem;
+		background-color: rgba(255, 255, 255, 0.95);
 	}
 
 	.box--wrapper .name {
@@ -46,6 +58,7 @@
 		height: 80%;
 		background-color: #ebe4cb;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+		z-index: -1;
 	}
 
 	.polaroid-photo {
@@ -56,6 +69,7 @@
 		aspect-ratio: 35/42;
 		background-color: #ebe4cb;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+		z-index: -1;
 	}
 
 	.polaroid-photo--inside {

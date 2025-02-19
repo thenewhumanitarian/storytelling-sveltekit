@@ -39,7 +39,7 @@
 	};
 </script>
 
-<div use:inview={options} oninview_change={handleChange}>
+<div use:inview={options} oninview_change={handleChange} class="relative w-full h-full block">
 	{#if isInView}
 		<div
 			in:blur={{
@@ -47,6 +47,7 @@
 				amount: blurAmount,
 				opacity: 0
 			}}
+			class="fade-in--wrapper_blur w-full h-full"
 		>
 			<div
 				in:fly={{
@@ -54,6 +55,7 @@
 					x: xOffset,
 					y: yOffset
 				}}
+				class="fade-in--wrapper_fly w-full h-full flex items-center justify-center shrink-0"
 			>
 				{@render children?.()}
 			</div>
