@@ -37,7 +37,6 @@
 	<code>delay={1000} duration={1000} blurAmount={10}</code>
 </div>
 
-<!-- Add data of different stories (or so) in here as props -->
 <HorizontalScroll />
 
 <div class="content-wrapper">
@@ -47,7 +46,6 @@
 	</FadeIn>
 	<code>xOffset=-1000</code>
 </div>
-x§
 
 <div class="content-wrapper">
 	<h2>From the top left</h2>
@@ -69,19 +67,26 @@ x§
 		flex-direction: column;
 		row-gap: 1rem;
 		max-width: 800px;
-		margin: 0 auto;
+		margin: 0 auto 2rem auto;
+	}
+
+	/* Avoid margin-bottom when two .content-wrapper are next to each other */
+	.content-wrapper + .content-wrapper {
+		margin: 0 auto 2rem auto;
 	}
 
 	.content-wrapper.transparent {
 		background-color: transparent;
 	}
 
+	.content-wrapper:last-child {
+		margin-bottom: 0;
+	}
+
 	div:not(:first-child) {
 		margin-top: 2rem;
 	}
 	div:nth-child(odd) {
-		/* background-color: cornsilk; */
-		/* background-color: rgba(232, 193, 136, 0.95); */ /* Cornsilk rgba version */
 		background-color: rgba(255, 255, 255, 0.95);
 	}
 
