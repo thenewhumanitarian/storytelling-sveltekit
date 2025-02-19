@@ -32,7 +32,8 @@
 				{
 					// Optionally adjust or remove preventClicks if you want elements to be clickable
 					preventClicks: true,
-					resolveLinks: 'url'
+					resolveLinks: 'url',
+					language: 'ar'
 				}
 			);
 		}
@@ -42,15 +43,15 @@
 </script>
 
 {#if data.error}
-	<div class="text-center text-red-600">⚠️ Error: {data.error.message}</div>
+	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
 {/if}
 
 {#if !loaded}
-	<div class="text-center">Loading...</div>
+	<div class="hidden text-center">Loading...</div>
 {:else if story && story.content}
 	<StoryblokComponent blok={story.content} />
 {:else}
-	<div>Getting Story</div>
+	<div class="hidden">Getting Story</div>
 {/if}
 
 <HorizontalScroll />

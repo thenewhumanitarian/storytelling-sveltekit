@@ -71,8 +71,6 @@
 
 	.horizontal-scroll-container {
 		margin-top: 4rem;
-		/* margin-top: 2rem;  */
-		/* ^ For the header */
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;
@@ -80,15 +78,39 @@
 
 	.horizontal-section {
 		/* width: 80vw; */
-		width: 80vw;
+		width: 800px;
+		margin: 0 4rem;
 		height: 80vh;
-		margin: 1rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
-		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); */
-		/* background: linear-gradient(45deg, #d40000, #fff, #007a3d); */
+		/* background: red; */
+	}
+
+	@media screen and (max-width: 1400px) {
+		.horizontal-section {
+			width: 800px;
+			margin: 0 4rem;
+		}
+	}
+
+	@media screen and (max-width: 1400px) {
+		.horizontal-section {
+			width: 600px;
+			margin: 0 8rem;
+		}
+	}
+
+	@media screen and (max-width: 1000px) {
+		.horizontal-section {
+			width: 460px;
+			margin: 0 6rem;
+		}
+
+		.horizontal-scroll-container {
+			margin-top: 4rem;
+		}
 	}
 
 	.horizontal-section--inside {
@@ -101,24 +123,5 @@
 		width: 100%;
 		margin: 0.2rem;
 		height: calc(100% - 0.4rem);
-	}
-
-	@media screen and (max-width: 640px) {
-		.horizontal-scroll-container {
-			/* margin-left: 5rem; */
-			/* margin-right: 10vw; */
-		}
-
-		.horizontal-section {
-			margin-right: 5rem;
-		}
-
-		.horizontal-section:first-child {
-			margin-left: 5rem;
-		}
-
-		/* .horizontal-section:last-child {
-			margin-right: 5rem;
-		} */
 	}
 </style>

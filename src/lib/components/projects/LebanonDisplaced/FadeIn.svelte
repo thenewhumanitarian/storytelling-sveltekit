@@ -45,7 +45,7 @@
 
 	// Handle inView state changes
 	const handleChange = ({ detail }: CustomEvent<ObserverEventDetails>) => {
-		console.log('InView changed:', detail.inView);
+		// console.log('InView changed:', detail.inView);
 		isInView = detail.inView;
 	};
 
