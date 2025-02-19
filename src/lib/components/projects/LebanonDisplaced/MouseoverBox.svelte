@@ -8,7 +8,7 @@
 </script>
 
 <article class={`${marginClasses}`}>
-	<FadeIn duration={500} yOffset={-100} blurAmount={10}>
+	<FadeIn duration={1000} yOffset={-100} blurAmount={20}>
 		<div class="box--wrapper">
 			<div class="name">Layal Haddad</div>
 			<div>Text</div>

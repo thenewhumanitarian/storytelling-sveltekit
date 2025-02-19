@@ -3,7 +3,10 @@
 	const { blok } = $props();
 </script>
 
-<div class="content-wrapper" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
+<div
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+	class={`content-wrapper ${blok?.backgroundColor || 'bg-white'} ${blok?.backgroundOpacity ? `bg-opacity-${blok?.backgroundOpacity}` : 'bg-opacity-90'}`}
+>
 	{#if blok}
 		{#each blok.items as item (item._uid)}
 			{#if item.component !== 'contentWrapper'}
@@ -35,18 +38,18 @@
 		margin: 0 auto 2rem auto;
 	}
 
-	.content-wrapper:last-child {
+	/* .content-wrapper:last-child {
 		margin-bottom: 0;
-	}
+	} */
 
 	div:not(:first-child) {
 		margin-top: 2rem;
 	}
-	div:nth-child(odd) {
+	/* div:nth-child(odd) {
 		background-color: rgba(255, 255, 255, 0.95);
 	}
 
 	div:nth-child(even) {
 		background-color: rgba(255, 255, 255, 0.95);
-	}
+	} */
 </style>

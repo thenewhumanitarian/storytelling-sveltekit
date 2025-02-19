@@ -4,7 +4,7 @@
 	const { blok } = $props();
 </script>
 
-<div class="storyblok--richtext" use:storyblokEditable={blok}>
+<div class="storyblok--richtext h2-pacifico" use:storyblokEditable={blok}>
 	{@html renderRichText(blok.text)}
 </div>
 
@@ -12,14 +12,14 @@
 	.storyblok--richtext {
 		display: block;
 	}
-	h1 {
+	.storyblok--richtext h1 {
 		font-weight: bold;
 	}
-	h1,
-	h2 {
+	.storyblok--richtext h1,
+	.storyblok--richtext h2 {
 		margin: 0;
 	}
-	h2 {
+	:global(.storyblok--richtext.h2-pacifico h2) {
 		font-family: 'Pacifico', cursive;
 		font-size: 1.8rem;
 		line-height: 1.25;
