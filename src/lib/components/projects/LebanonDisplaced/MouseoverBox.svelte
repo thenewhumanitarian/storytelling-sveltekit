@@ -59,7 +59,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: left;
-		padding: 15%;
+		padding: 10% 15% 8% 15%;
 	}
 
 	@media screen and (max-width: 640px) {
@@ -203,8 +203,8 @@
 		right: -5%;
 		width: 30%;
 		aspect-ratio: 35/42;
-		background-color: #ebe4cb;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+		background-color: white;
+		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 		z-index: -1;
 		transition: all 0.3s;
 		transition-delay: 0.2s;
@@ -214,7 +214,7 @@
 	.box--wrapper:hover .polaroid-photo {
 		top: -15%;
 		right: -10%;
-		scale: 1.5;
+		scale: 1.3;
 	}
 
 	@media screen and (max-width: 640px) {
