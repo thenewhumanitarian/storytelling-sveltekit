@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
-	const { blok } = $props();
+	const { blok, children } = $props();
 </script>
 
 <div
@@ -14,7 +14,7 @@
 			{/if}
 		{/each}
 	{:else}
-		<slot />
+		{@render children?.()}
 	{/if}
 </div>
 
@@ -34,7 +34,8 @@
 	}
 
 	/* Avoid margin-bottom when two .content-wrapper are next to each other */
-	.content-wrapper + .content-wrapper {
+	/* @css-ignore */
+	:global(.content-wrapper + .content-wrapper) {
 		margin: 0 auto 2rem auto;
 	}
 
