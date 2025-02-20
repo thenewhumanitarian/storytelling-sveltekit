@@ -4,7 +4,7 @@
 	const { blok } = $props();
 </script>
 
-<div use:storyblokEditable={blok} class="scroll-smooth">
+<div use:storyblokEditable={blok}>
 	{#each blok.body as item}
 		<div>
 			<StoryblokComponent blok={item} />

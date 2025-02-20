@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { storyblokEditable, renderRichText } from '@storyblok/svelte';
 
-	const { blok } = $props();
+	const { blok, className } = $props();
 </script>
 
-<div class="storyblok--richtext h2-pacifico" use:storyblokEditable={blok}>
+<div class={`storyblok--richtext h2-pacifico ${className}`} use:storyblokEditable={blok}>
 	{#if blok.text}
 		{@html renderRichText(blok.text)}
 	{:else if blok}

@@ -5,20 +5,18 @@
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import RichText from './RichText.svelte';
 
-	const marginClasses = blok.object || blok.photo ? 'mt-5' : 'mt-6 mb-3';
-
-	console.log(blok);
+	// const marginClasses = blok.object || blok.photo ? 'mt-5' : 'mt-6 mb-3';
 
 	const textObject = blok.text;
 </script>
 
-<article class={`${marginClasses}`}>
+<article>
 	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
 		<div class="box--wrapper" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
 			<div class="name">{blok.title}</div>
 			<div class="text-content">
 				{#if blok.text}
-					<RichText blok={textObject} />
+					<RichText blok={textObject} className="clamp-5" />
 				{/if}
 			</div>
 			<div class="text-content--hover">
@@ -66,8 +64,8 @@
 
 	@media screen and (max-width: 640px) {
 		article {
-			margin: 4rem auto 0.5rem auto;
-			padding: 1rem 2rem 0 2rem;
+			margin: 4rem auto 4rem auto;
+			padding: 1rem;
 		}
 	}
 
@@ -128,6 +126,12 @@
 		padding: 1.5rem 1.5rem 1rem 1.5rem;
 	}
 
+	@media screen and (max-width: 640px) {
+		.box--wrapper .text-content {
+			padding: 1rem 1rem 0.5rem 1rem;
+		}
+	}
+
 	.text-content {
 		display: block;
 		width: 100%;
@@ -168,7 +172,7 @@
 		height: 80%;
 		position: absolute;
 		z-index: -1;
-		will-change: bottom left;
+		will-change: bottom left scale transform;
 		transition: all 0.5s;
 	}
 
@@ -181,6 +185,15 @@
 	.box--wrapper:hover .personal-object {
 		bottom: -14%;
 		left: -16%;
+		scale: 1.5;
+	}
+
+	@media screen and (max-width: 640px) {
+		.box--wrapper:hover .personal-object {
+			left: -8%;
+			scale: 1.1;
+			bottom: -18%;
+		}
 	}
 
 	.polaroid-photo {
@@ -195,12 +208,20 @@
 		z-index: -1;
 		transition: all 0.3s;
 		transition-delay: 0.2s;
-		will-change: left top;
+		will-change: left top scale transform;
 	}
 
 	.box--wrapper:hover .polaroid-photo {
 		top: -15%;
-		right: -12%;
+		right: -10%;
+		scale: 1.5;
+	}
+
+	@media screen and (max-width: 640px) {
+		.box--wrapper:hover .polaroid-photo {
+			right: -4%;
+			scale: 1.25;
+		}
 	}
 
 	.polaroid-photo--inside {
@@ -214,18 +235,6 @@
 	}
 
 	/* Animations */
-
-	@keyframes floating {
-		0% {
-			transform: translateY(0);
-		}
-		50% {
-			transform: translateY(-8px);
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
 
 	.floating--delay {
 		animation-delay: 0.5s;
