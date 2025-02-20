@@ -35,6 +35,13 @@
 		font-family: 'Pacifico', cursive;
 	}
 
+	@media screen and (max-width: 640px) {
+		h2 {
+			font-size: 1.4rem;
+			line-height: 1;
+		}
+	}
+
 	article {
 		width: 100%;
 		display: flex;
@@ -74,13 +81,22 @@
 		position: absolute;
 		top: -1.5rem;
 		font-family: 'GT Sectra Fine', sans-serif;
+		font-weight: bold;
 		font-size: 2rem;
 		padding: 0.5rem 1rem;
 		z-index: 2;
-		/* color: #33765d; */
 		background-color: black;
 		color: white;
+		/* color: #33765d; */
 		/* background-color: #33765d; */
+	}
+
+	@media screen and (max-width: 640px) {
+		.box--wrapper .name {
+			top: -1rem;
+			font-size: 1rem;
+			padding: 0.2rem 0.5rem;
+		}
 	}
 
 	.box--wrapper .text-content {
