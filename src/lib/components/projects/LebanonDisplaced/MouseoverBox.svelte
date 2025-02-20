@@ -5,7 +5,7 @@
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import RichText from './RichText.svelte';
 
-	const marginClasses = blok.object || blok.photo ? 'mt-20' : 'mt-6 mb-3';
+	const marginClasses = blok.object || blok.photo ? 'mt-5' : 'mt-6 mb-3';
 
 	console.log(blok);
 
@@ -20,7 +20,6 @@
 				{#if blok.text}
 					<RichText blok={textObject} />
 				{/if}
-				<!-- <div>Buttons</div> -->
 			</div>
 			<div class="text-content--hover">
 				<h2>Read more →</h2>
@@ -63,7 +62,6 @@
 		align-items: center;
 		justify-content: left;
 		padding: 15%;
-		/* background: rgba(255, 0, 0, 0.5); */
 	}
 
 	@media screen and (max-width: 640px) {
@@ -102,8 +100,6 @@
 		z-index: 2;
 		background-color: black;
 		color: white;
-		/* color: #33765d; */
-		/* background-color: #33765d; */
 	}
 
 	@media screen and (max-width: 640px) {
@@ -130,6 +126,13 @@
 		z-index: 1;
 		background-color: rgba(255, 255, 255, 1);
 		padding: 1.5rem 1.5rem 1rem 1.5rem;
+	}
+
+	.text-content {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		text-align: left;
 	}
 
 	.box--wrapper:hover .text-content {
@@ -159,16 +162,14 @@
 	}
 
 	.box--wrapper .personal-object {
-		left: 0;
-		top: 30%;
+		left: -10%;
+		bottom: -20%;
 		width: 30%;
 		height: 80%;
 		position: absolute;
 		z-index: -1;
 		will-change: bottom left;
 		transition: all 0.5s;
-		/* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); */
-		/* background-color: #bc3734; */
 	}
 
 	.personal-object img {
@@ -178,8 +179,8 @@
 	}
 
 	.box--wrapper:hover .personal-object {
-		bottom: -12%;
-		left: -12%;
+		bottom: -14%;
+		left: -16%;
 	}
 
 	.polaroid-photo {

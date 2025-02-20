@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import MouseoverBox from './MouseoverBox.svelte';
+	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
+	// import { getContext } from 'svelte';
+
+	export let blok;
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -27,51 +30,41 @@
 					scrub: 1,
 					invalidateOnRefresh: true
 				},
-				force3D: true, // Helps with rendering
-				autoAlpha: 1 // Ensures visibility
+				force3D: true,
+				autoAlpha: 1
 			});
 		}
 	});
 </script>
 
-<div class="horizontal-scroll-wrapper hidden sm:flex">
+<div
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+	class="horizontal-scroll-wrapper hidden sm:flex"
+>
 	<div class="horizontal-scroll-container">
-		<div class="horizontal-section">
-			<div class="horizontal-section--inside">
-				<!-- <MouseoverBox /> -->
-			</div>
-		</div>
-		<div class="horizontal-section">
-			<div class="horizontal-section--inside">
-				<!-- <MouseoverBox /> -->
-			</div>
-		</div>
-		<div class="horizontal-section">
-			<div class="horizontal-section--inside">
-				<!-- <MouseoverBox /> -->
-			</div>
-		</div>
+		{#if blok?.items}
+			{#each blok.items as item (item._uid)}
+				<div class="horizontal-section">
+					<div class="horizontal-section--inside">
+						<StoryblokComponent blok={item} />
+					</div>
+				</div>
+			{/each}
+		{/if}
 	</div>
 </div>
 
 <div class="vertical-scroll-wrapper block sm:hidden">
-	<div class="vertical-scroll-container">
-		<!-- <MouseoverBox /> -->
-	</div>
-	<div class="vertical-scroll-container">
-		<!-- <MouseoverBox /> -->
-	</div>
-	<div class="vertical-scroll-container">
-		<!-- <MouseoverBox /> -->
-	</div>
+	{#if blok?.items}
+		{#each blok.items as item (item._uid)}
+			<div class="vertical-scroll-container">
+				<StoryblokComponent blok={item} />
+			</div>
+		{/each}
+	{/if}
 </div>
 
 <style>
-	h2,
-	h3 {
-		font-family: 'Pacifico', cursive;
-	}
-
 	.horizontal-scroll-wrapper {
 		width: 100%;
 		height: 100vh;
@@ -80,54 +73,38 @@
 	}
 
 	.horizontal-scroll-container {
-		/* margin: 0 4rem 0rem; */
 		display: flex;
 		flex-wrap: nowrap;
-		white-space: nowrap;
 	}
 
 	.horizontal-section {
-		/* width: 80vw; */
 		width: 800px;
 		height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
-		/* background: red; */
-	}
-
-	@media screen and (max-width: 1400px) {
-		.horizontal-section {
-			width: 800px;
-			/* margin: 0 4rem; */
-		}
 	}
 
 	@media screen and (max-width: 1400px) {
 		.horizontal-section {
 			width: 600px;
-			/* margin: 0 8rem; */
 		}
 	}
-
 	@media screen and (max-width: 1000px) {
 		.horizontal-section {
 			width: 460px;
-			/* margin: 0 6rem; */
 		}
 	}
 
 	.horizontal-section--inside {
 		display: flex;
-		height: 100%;
+		height: auto;
 		align-items: center;
 		justify-content: center;
-		font-weight: bold;
 		color: black;
 		width: 100%;
-		margin: 0.2rem;
-		height: calc(100% - 0.4rem);
+		/* font-weight: bold; */
 	}
 
 	.vertical-scroll-container {

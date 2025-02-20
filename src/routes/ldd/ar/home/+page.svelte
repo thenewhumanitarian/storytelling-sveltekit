@@ -38,8 +38,6 @@
 			);
 		}
 	});
-
-	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 </script>
 
 {#if data.error}
@@ -53,5 +51,3 @@
 {:else}
 	<div class="hidden">Getting Story</div>
 {/if}
-
-<HorizontalScroll />

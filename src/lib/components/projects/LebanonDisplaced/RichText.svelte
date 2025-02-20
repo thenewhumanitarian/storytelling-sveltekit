@@ -23,6 +23,12 @@
 	.storyblok--richtext h2 {
 		margin: 0;
 	}
+	.storyblok--richtext p {
+		display: block;
+		white-space: normal;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
 	:global(.storyblok--richtext.h2-pacifico h2) {
 		font-family: 'Pacifico', cursive;
 		font-size: 1.8rem;
