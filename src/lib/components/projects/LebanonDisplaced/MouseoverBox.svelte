@@ -8,7 +8,7 @@
 </script>
 
 <article class={`${marginClasses}`}>
-	<FadeIn duration={1000} yOffset={-100} blurAmount={20}>
+	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
 		<div class="box--wrapper">
 			<div class="name">Layal Haddad</div>
 			<div>Text</div>
@@ -31,7 +31,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* margin: 5rem auto 2rem auto; */
+		padding: 8rem;
+		background: rgba(255, 0, 0, 0.5);
 	}
 
 	@media screen and (max-width: 640px) {

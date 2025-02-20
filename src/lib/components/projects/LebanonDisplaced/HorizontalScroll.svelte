@@ -33,7 +33,7 @@
 	});
 </script>
 
-<div class="horizontal-scroll-wrapper scroll-smooth">
+<div class="horizontal-scroll-wrapper hidden sm:flex">
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside">
@@ -53,6 +53,18 @@
 	</div>
 </div>
 
+<div class="vertical-scroll-wrapper block sm:hidden">
+	<div class="vertical-scroll-container">
+		<MouseoverBox />
+	</div>
+	<div class="vertical-scroll-container">
+		<MouseoverBox />
+	</div>
+	<div class="vertical-scroll-container">
+		<MouseoverBox />
+	</div>
+</div>
+
 <style>
 	h2,
 	h3 {
@@ -63,24 +75,33 @@
 		width: 100%;
 		height: 100vh;
 		overflow: hidden;
-		display: flex;
 		align-items: center;
 		z-index: -1;
+		/* display: flex; */
 		/* background-color: rgba(0, 0, 0, 0.8); */
 	}
 
+	/* @media screen and (max-width: 640px) {
+		.horizontal-scroll-wrapper {
+			display: none;
+		}
+	} */
+
 	.horizontal-scroll-container {
-		margin-top: 4rem;
+		/* margin: 0 4rem 0rem; */
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;
 	}
 
+	.horizontal-scroll-container:last-of-type {
+		/* margin-right: 4rem; */
+	}
+
 	.horizontal-section {
 		/* width: 80vw; */
 		width: 800px;
-		margin: 0 4rem;
-		height: 80vh;
+		max-height: 80vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -91,25 +112,25 @@
 	@media screen and (max-width: 1400px) {
 		.horizontal-section {
 			width: 800px;
-			margin: 0 4rem;
+			/* margin: 0 4rem; */
 		}
 	}
 
 	@media screen and (max-width: 1400px) {
 		.horizontal-section {
 			width: 600px;
-			margin: 0 8rem;
+			/* margin: 0 8rem; */
 		}
 	}
 
 	@media screen and (max-width: 1000px) {
 		.horizontal-section {
 			width: 460px;
-			margin: 0 6rem;
+			/* margin: 0 6rem; */
 		}
 
 		.horizontal-scroll-container {
-			margin-top: 4rem;
+			/* margin-top: 4rem; */
 		}
 	}
 
@@ -123,5 +144,10 @@
 		width: 100%;
 		margin: 0.2rem;
 		height: calc(100% - 0.4rem);
+	}
+
+	.vertical-scroll-container {
+		max-width: 320px;
+		margin: 2rem auto;
 	}
 </style>
