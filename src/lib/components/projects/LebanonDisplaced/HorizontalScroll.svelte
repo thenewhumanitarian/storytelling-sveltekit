@@ -27,7 +27,9 @@
 					pin: true,
 					scrub: 1,
 					invalidateOnRefresh: true
-				}
+				},
+				force3D: true, // Helps with rendering
+				autoAlpha: 1 // Ensures visibility
 			});
 		}
 	});
@@ -76,7 +78,6 @@
 		height: 100vh;
 		overflow: hidden;
 		align-items: center;
-		z-index: -1;
 		/* display: flex; */
 		/* background-color: rgba(0, 0, 0, 0.8); */
 	}
@@ -101,7 +102,7 @@
 	.horizontal-section {
 		/* width: 80vw; */
 		width: 800px;
-		max-height: 80vh;
+		height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;

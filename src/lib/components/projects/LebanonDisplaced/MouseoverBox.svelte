@@ -11,13 +11,18 @@
 	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
 		<div class="box--wrapper">
 			<div class="name">Layal Haddad</div>
-			<div>Text</div>
-			<div>Buttons</div>
+			<div class="text-content">
+				<div>Text</div>
+				<div>Buttons</div>
+			</div>
+			<div class="text-content--hover">
+				<h2>Read more →</h2>
+			</div>
 			{#if object}
-				<div class="personal-object">Object</div>
+				<div class="personal-object floating-rotate-left floating--delay">Object</div>
 			{/if}
 			{#if photo}
-				<div class="polaroid-photo">
+				<div class="polaroid-photo floating-rotate-right">
 					<div class="polaroid-photo--inside">Image</div>
 				</div>
 			{/if}
@@ -26,23 +31,28 @@
 </article>
 
 <style>
+	h2 {
+		font-family: 'Pacifico', cursive;
+	}
+
 	article {
 		width: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 8rem;
-		background: rgba(255, 0, 0, 0.5);
+		padding: 15%;
+		/* background: rgba(255, 0, 0, 0.5); */
 	}
 
 	@media screen and (max-width: 640px) {
 		article {
 			margin: 4rem auto 0.5rem auto;
-			padding: 1rem 0;
+			padding: 1rem 2rem 0 2rem;
 		}
 	}
 
-	.box--wrapper {
+	article .box--wrapper {
+		will-change: background;
 		z-index: 1;
 		position: relative;
 		background-color: transparent;
@@ -50,44 +60,109 @@
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: center;
-		border: #ebe4cb 3px solid;
+		border: #ebe4cb 1px solid;
 		aspect-ratio: 3/2;
 		width: 100%;
 		max-width: 640px;
 		padding: 2rem 1rem 1rem 1rem;
-		background-color: rgba(255, 255, 255, 0.95);
+		transition: background 1s;
+		will-change: background;
+		cursor: pointer;
 	}
 
 	.box--wrapper .name {
 		position: absolute;
 		top: -1.5rem;
-		font-family: 'Pacifico', cursive;
-		background-color: #33765d;
-		color: white;
+		font-family: 'GT Sectra Fine', sans-serif;
 		font-size: 2rem;
 		padding: 0.5rem 1rem;
+		z-index: 2;
+		/* color: #33765d; */
+		background-color: black;
+		color: white;
+		/* background-color: #33765d; */
+	}
+
+	.box--wrapper .text-content {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: calc(100% - 0.6rem);
+		width: calc(100% - 0.6rem);
+		border: 1px solid #ebe4cb;
+		margin: 0.3rem;
+		text-align: center;
+		z-index: 1;
+		background-color: rgba(255, 255, 255, 1);
+		padding: 1.5rem 1.5rem 1rem 1.5rem;
+	}
+
+	.box--wrapper:hover .text-content {
+		opacity: 0;
+	}
+
+	.box--wrapper .text-content--hover {
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		top: 0;
+		left: 0;
+		height: calc(100% - 0.6rem);
+		width: calc(100% - 0.6rem);
+		margin: 0.3rem;
+		background-color: #e8c188;
+		opacity: 0;
+		transition: all 0.5s;
+		z-index: -1;
+		border: 1px solid #ebe4cb;
+	}
+
+	.box--wrapper:hover .text-content--hover {
+		opacity: 1;
 	}
 
 	.box--wrapper .personal-object {
-		position: absolute;
-		top: -20%;
-		left: -20%;
+		left: 0;
+		top: 30%;
 		width: 30%;
 		height: 80%;
+		position: absolute;
 		background-color: #bc3734;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		z-index: -1;
+		will-change: bottom left;
+		transition: all 0.5s;
+		/* transition-delay: 0.2s; */
+	}
+
+	.box--wrapper:hover .personal-object {
+		bottom: -12%;
+		left: -12%;
 	}
 
 	.polaroid-photo {
+		z-index: -1;
 		position: absolute;
-		top: -15%;
-		left: 85%;
+		top: 0;
+		right: -5%;
 		width: 30%;
 		aspect-ratio: 35/42;
 		background-color: #ebe4cb;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		z-index: -1;
+		transition: all 0.3s;
+		transition-delay: 0.2s;
+		will-change: left top;
+	}
+
+	.box--wrapper:hover .polaroid-photo {
+		top: -15%;
+		right: -12%;
 	}
 
 	.polaroid-photo--inside {
@@ -97,5 +172,60 @@
 		width: 90%;
 		aspect-ratio: 1/1;
 		background-color: white;
+		z-index: 1;
+	}
+
+	/* Animations */
+
+	@keyframes floating {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-8px);
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+
+	.floating--delay {
+		animation-delay: 0.5s;
+	}
+
+	.floating-rotate-left {
+		display: inline-block;
+		animation: floating-rotate-left 3s ease-in-out infinite;
+		will-change: transform;
+	}
+
+	.floating-rotate-right {
+		display: inline-block;
+		animation: floating-rotate-right 4s ease-in-out infinite;
+		will-change: transform;
+	}
+
+	@keyframes floating-rotate-left {
+		0% {
+			transform: translateY(0) rotate(-15deg);
+		}
+		50% {
+			transform: translateY(-8px) rotate(-14deg);
+		}
+		100% {
+			transform: translateY(0) rotate(-15deg);
+		}
+	}
+
+	@keyframes floating-rotate-right {
+		0% {
+			transform: translateY(0) rotate(20deg);
+		}
+		50% {
+			transform: translateY(-8px) rotate(19deg);
+		}
+		100% {
+			transform: translateY(0) rotate(20deg);
+		}
 	}
 </style>

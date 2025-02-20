@@ -7,6 +7,7 @@
 	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -53,5 +54,7 @@
 {:else}
 	<div class="hidden">Getting Story</div>
 {/if}
+
+<MouseoverBox />
 
 <HorizontalScroll />
