@@ -37,7 +37,8 @@
 
 	@media screen and (max-width: 640px) {
 		article {
-			margin: 2rem auto 0.5rem auto;
+			margin: 4rem auto 0.5rem auto;
+			padding: 1rem 0;
 		}
 	}
 
