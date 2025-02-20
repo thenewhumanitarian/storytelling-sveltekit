@@ -55,6 +55,4 @@
 	<div class="hidden">Getting Story</div>
 {/if}
 
-<MouseoverBox />
-
 <HorizontalScroll />

@@ -14,7 +14,6 @@
 			let scrollContainer = document.querySelector('.horizontal-scroll-container');
 			if (!scrollContainer) return;
 			let scrollWidth = scrollContainer.scrollWidth;
-			// let viewportWidth = window.innerWidth;
 			let viewportWidth = document.querySelector('main')?.offsetWidth || window.innerWidth;
 
 			gsap.to(scrollContainer, {
@@ -39,17 +38,17 @@
 	<div class="horizontal-scroll-container">
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside">
-				<MouseoverBox />
+				<!-- <MouseoverBox /> -->
 			</div>
 		</div>
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside">
-				<MouseoverBox />
+				<!-- <MouseoverBox /> -->
 			</div>
 		</div>
 		<div class="horizontal-section">
 			<div class="horizontal-section--inside">
-				<MouseoverBox />
+				<!-- <MouseoverBox /> -->
 			</div>
 		</div>
 	</div>
@@ -57,13 +56,13 @@
 
 <div class="vertical-scroll-wrapper block sm:hidden">
 	<div class="vertical-scroll-container">
-		<MouseoverBox />
+		<!-- <MouseoverBox /> -->
 	</div>
 	<div class="vertical-scroll-container">
-		<MouseoverBox />
+		<!-- <MouseoverBox /> -->
 	</div>
 	<div class="vertical-scroll-container">
-		<MouseoverBox />
+		<!-- <MouseoverBox /> -->
 	</div>
 </div>
 
@@ -78,25 +77,13 @@
 		height: 100vh;
 		overflow: hidden;
 		align-items: center;
-		/* display: flex; */
-		/* background-color: rgba(0, 0, 0, 0.8); */
 	}
-
-	/* @media screen and (max-width: 640px) {
-		.horizontal-scroll-wrapper {
-			display: none;
-		}
-	} */
 
 	.horizontal-scroll-container {
 		/* margin: 0 4rem 0rem; */
 		display: flex;
 		flex-wrap: nowrap;
 		white-space: nowrap;
-	}
-
-	.horizontal-scroll-container:last-of-type {
-		/* margin-right: 4rem; */
 	}
 
 	.horizontal-section {
@@ -128,10 +115,6 @@
 		.horizontal-section {
 			width: 460px;
 			/* margin: 0 6rem; */
-		}
-
-		.horizontal-scroll-container {
-			/* margin-top: 4rem; */
 		}
 	}
 

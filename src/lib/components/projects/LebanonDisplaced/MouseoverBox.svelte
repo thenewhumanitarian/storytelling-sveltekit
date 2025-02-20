@@ -1,29 +1,44 @@
 <script lang="ts">
+	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
+	const { blok } = $props();
+
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+	import RichText from './RichText.svelte';
 
-	export let object = true;
-	export let photo = true;
+	const marginClasses = blok.object || blok.photo ? 'mt-20' : 'mt-6 mb-3';
 
-	const marginClasses = object || photo ? 'mt-20' : 'mt-6 mb-3';
+	console.log(blok);
+
+	const textObject = blok.text;
 </script>
 
 <article class={`${marginClasses}`}>
 	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
-		<div class="box--wrapper">
-			<div class="name">Layal Haddad</div>
+		<div class="box--wrapper" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
+			<div class="name">{blok.title}</div>
 			<div class="text-content">
-				<div>Text</div>
-				<div>Buttons</div>
+				{#if blok.text}
+					<RichText blok={textObject} />
+				{/if}
+				<!-- <div>Buttons</div> -->
 			</div>
 			<div class="text-content--hover">
 				<h2>Read more →</h2>
 			</div>
-			{#if object}
-				<div class="personal-object floating-rotate-left floating--delay">Object</div>
+			{#if blok.object}
+				<div class="personal-object floating-rotate-left floating--delay">
+					{#if blok.object.filename}
+						<img src={blok.object.filename} alt={blok.object.alt || 'Object'} />
+					{:else}
+						<span>Object</span>
+					{/if}
+				</div>
 			{/if}
-			{#if photo}
+			{#if blok.photo}
 				<div class="polaroid-photo floating-rotate-right">
-					<div class="polaroid-photo--inside">Image</div>
+					<div class="polaroid-photo--inside">
+						<img src={blok.photo.filename} alt={blok.photo.alt || 'Photo'} />
+					</div>
 				</div>
 			{/if}
 		</div>
@@ -46,7 +61,7 @@
 		width: 100%;
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: left;
 		padding: 15%;
 		/* background: rgba(255, 0, 0, 0.5); */
 	}
@@ -66,7 +81,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		align-items: center;
+		align-items: start;
 		border: #ebe4cb 1px solid;
 		aspect-ratio: 3/2;
 		width: 100%;
@@ -111,7 +126,7 @@
 		width: calc(100% - 0.6rem);
 		border: 1px solid #ebe4cb;
 		margin: 0.3rem;
-		text-align: center;
+		text-align: left;
 		z-index: 1;
 		background-color: rgba(255, 255, 255, 1);
 		padding: 1.5rem 1.5rem 1rem 1.5rem;
@@ -126,6 +141,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		text-align: left;
 		top: 0;
 		left: 0;
 		height: calc(100% - 0.6rem);
@@ -148,12 +164,17 @@
 		width: 30%;
 		height: 80%;
 		position: absolute;
-		background-color: #bc3734;
-		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 		z-index: -1;
 		will-change: bottom left;
 		transition: all 0.5s;
-		/* transition-delay: 0.2s; */
+		/* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); */
+		/* background-color: #bc3734; */
+	}
+
+	.personal-object img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 
 	.box--wrapper:hover .personal-object {

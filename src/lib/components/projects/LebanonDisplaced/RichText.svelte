@@ -5,7 +5,11 @@
 </script>
 
 <div class="storyblok--richtext h2-pacifico" use:storyblokEditable={blok}>
-	{@html renderRichText(blok.text)}
+	{#if blok.text}
+		{@html renderRichText(blok.text)}
+	{:else if blok}
+		{@html renderRichText(blok)}
+	{/if}
 </div>
 
 <style>
