@@ -42,7 +42,7 @@
 	class="horizontal-scroll-wrapper hidden sm:flex"
 >
 	<div class="torn-paper torn-paper--top">
-		<h2 class="horizontal-scroll-wrapper--title">Stories</h2>
+		<h2 class="horizontal-scroll-wrapper--title pt-10">Stories</h2>
 	</div>
 	<div class="horizontal-scroll-container">
 		{#if blok?.items}
@@ -76,7 +76,7 @@
 		overflow: hidden;
 		align-items: center;
 		/* RGBA for #e3c09a */
-		background-color: rgba(227, 192, 154, 0.95);
+		background-color: rgba(227, 192, 154, 0.9);
 		/* background-color: rgba(0, 0, 0, 0.5); */
 		box-shadow:
 			0 4px 8px 0 rgba(0, 0, 0, 0.2),
@@ -119,6 +119,7 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
+		padding-top: 4rem;
 	}
 
 	.horizontal-scroll-wrapper--title {

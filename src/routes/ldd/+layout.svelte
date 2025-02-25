@@ -47,6 +47,13 @@
 		/* border: 1px solid #eee; */
 	}
 
+	@media screen and (max-width: 640px) {
+		main {
+			margin-top: 4rem;
+			padding-top: 0;
+		}
+	}
+
 	footer {
 		display: flex;
 		justify-content: center;

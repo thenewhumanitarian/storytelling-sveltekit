@@ -21,6 +21,7 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
+		font-family: '';
 	}
 	:global(.storyblok--richtext h1, .storyblok--richtext h2) {
 		margin: 0;

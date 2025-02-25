@@ -33,6 +33,12 @@
 		/* aspect-ratio: 3/2; */
 	}
 
+	@media screen and (max-width: 640px) {
+		.content-wrapper {
+			width: 90%;
+		}
+	}
+
 	/* Avoid margin-bottom when two .content-wrapper are next to each other */
 	/* @css-ignore */
 	:global(.content-wrapper + .content-wrapper) {
