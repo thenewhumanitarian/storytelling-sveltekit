@@ -4,7 +4,10 @@
 	const { blok, className } = $props();
 </script>
 
-<div class={`storyblok--richtext h2-pacifico ${className}`} use:storyblokEditable={blok}>
+<div
+	class={`storyblok--richtext w-full ${className} ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'}`}
+	use:storyblokEditable={blok}
+>
 	{#if blok.text}
 		{@html renderRichText(blok.text)}
 	{:else if blok}
@@ -40,5 +43,15 @@
 			font-size: 1.4rem;
 			line-height: 1;
 		}
+	}
+
+	:global(.font-sans *) {
+		font-family: 'Roboto', sans-serif;
+	}
+	:global(.font-serif *) {
+		font-family: 'GT Sectra Fine', serif;
+	}
+	:global(.font-pacifico *) {
+		font-family: 'Pacifico', cursive;
 	}
 </style>

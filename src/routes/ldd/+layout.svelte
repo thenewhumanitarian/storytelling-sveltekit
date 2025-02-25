@@ -41,7 +41,7 @@
 	}
 
 	main {
-		margin: 0 0 2rem 0;
+		margin: 0;
 		padding-top: 7rem;
 		overflow: hidden;
 		/* border: 1px solid #eee; */

@@ -29,7 +29,7 @@
 		row-gap: 1rem;
 		width: 80%;
 		max-width: 800px;
-		margin: 0 auto 2rem auto;
+		margin: 2rem auto;
 		/* aspect-ratio: 3/2; */
 	}
 

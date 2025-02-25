@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
-	// import { getContext } from 'svelte';
+	import FadeIn from './FadeIn.svelte';
 
 	export let blok;
 
@@ -41,6 +41,9 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class="horizontal-scroll-wrapper hidden sm:flex"
 >
+	<div class="torn-paper torn-paper--top">
+		<h2 class="horizontal-scroll-wrapper--title">Stories</h2>
+	</div>
 	<div class="horizontal-scroll-container">
 		{#if blok?.items}
 			{#each blok.items as item (item._uid)}
@@ -52,6 +55,7 @@
 			{/each}
 		{/if}
 	</div>
+	<div class="torn-paper torn-paper--bottom"></div>
 </div>
 
 <div class="vertical-scroll-wrapper block sm:hidden">
@@ -66,10 +70,41 @@
 
 <style>
 	.horizontal-scroll-wrapper {
+		position: relative;
 		width: 100%;
 		height: 100vh;
 		overflow: hidden;
 		align-items: center;
+		/* RGBA for #e3c09a */
+		background-color: rgba(227, 192, 154, 0.95);
+		/* background-color: rgba(0, 0, 0, 0.5); */
+		box-shadow:
+			0 4px 8px 0 rgba(0, 0, 0, 0.2),
+			0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		margin: 5rem 0;
+	}
+
+	.torn-paper {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 25vh;
+		z-index: 1;
+		background-position: top center;
+		background-size: cover;
+	}
+	.torn-paper--top {
+		top: 0;
+		background-image: url('/assets/ldd/patterns/torn-paper--top@2x.png');
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.torn-paper--bottom {
+		bottom: 0;
+		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
+		height: calc(25vh - 4rem);
 	}
 
 	.horizontal-scroll-container {
@@ -84,6 +119,11 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
+	}
+
+	.horizontal-scroll-wrapper--title {
+		font-family: 'Pacifico', cursive;
+		font-size: 2rem;
 	}
 
 	@media screen and (max-width: 1400px) {

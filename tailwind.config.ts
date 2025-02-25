@@ -9,6 +9,12 @@ export default {
 
   safelist: [
     { pattern: /^bg-/ },
+    { pattern: /^text-/ },
+    { pattern: /^font-/ },
+    'text-right',
+    'font-sans',
+    'font-serif',
+    'font-pacifico',
   ],
 
   theme: {
