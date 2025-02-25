@@ -185,7 +185,7 @@
 	.box--wrapper:hover .personal-object {
 		bottom: -14%;
 		left: -16%;
-		scale: 1.5;
+		scale: 1.4;
 	}
 
 	@media screen and (max-width: 640px) {

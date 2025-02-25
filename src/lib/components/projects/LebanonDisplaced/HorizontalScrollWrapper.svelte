@@ -119,7 +119,7 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 5px;
-		padding-top: 4rem;
+		padding-top: 5rem;
 	}
 
 	.horizontal-scroll-wrapper--title {
