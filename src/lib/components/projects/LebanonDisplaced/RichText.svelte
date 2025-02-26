@@ -21,7 +21,7 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
-		font-family: '';
+		font-family: 'Pacifico', cursive;
 	}
 	:global(.storyblok--richtext h1, .storyblok--richtext h2) {
 		margin: 0;

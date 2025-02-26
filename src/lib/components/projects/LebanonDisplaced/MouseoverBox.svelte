@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
+	import { storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import RichText from './RichText.svelte';
-
-	// const marginClasses = blok.object || blok.photo ? 'mt-5' : 'mt-6 mb-3';
 
 	const textObject = blok.text;
 </script>

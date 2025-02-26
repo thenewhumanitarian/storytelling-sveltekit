@@ -1,6 +1,12 @@
-<script>
+<script lang="ts">
+	/* Storyblok and props */
+	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
+	const { blok } = $props();
+
+	/* Own components */
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import StoryGridPanel from '$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte';
+	import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
 
 	const panelsArray = [
 		{
@@ -48,14 +54,28 @@
 	];
 </script>
 
-<section class="story-grid--wrapper">
+<section
+	class="story-grid--wrapper"
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+>
 	<section class="story-grid--container">
 		<div class="story-grid--panel panel-title">
-			<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-				<h1>Barry’s Cushion</h1>
-				<p>A tale of lethargy and soft furnishings</p>
-			</FadeIn>
+			{#if blok.text}
+				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
+					<RichText
+						{blok}
+						className={'text-center prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-4'}
+					/>
+				</FadeIn>
+			{/if}
 		</div>
+
+		{#if blok.items}
+			{#each blok.items as item, i (item._uid)}
+				<StoryblokComponent blok={item} {i} />
+			{/each}
+		{/if}
+
 		{#each panelsArray as panel, i}
 			<StoryGridPanel
 				{i}
@@ -72,9 +92,6 @@
 <style>
 	/* The grid */
 	.story-grid--wrapper {
-		/* background: rgba(248, 247, 242, 0.5); */
-		/* background: rgba(227, 192, 154, 0.3); */
-		/* padding: 5rem; */
 		padding: 4rem 0 2rem 0;
 	}
 	:global(.story-grid--container) {
@@ -105,15 +122,6 @@
 	.panel-title {
 		box-shadow: none;
 		color: white;
-		text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-	}
-	.panel-title h1 {
-		font-family: 'Pacifico', cursive;
-		font-size: 3rem;
-	}
-	.panel-title p {
-		font-family: 'Roboto', sans-serif;
-		font-size: 1.5rem;
 	}
 
 	@media only screen and (min-width: 400px) {
