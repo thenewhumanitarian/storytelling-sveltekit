@@ -42,7 +42,7 @@
 
 	main {
 		margin: 0;
-		padding-top: 7rem;
+		padding-top: 4rem;
 		overflow: hidden;
 		/* border: 1px solid #eee; */
 	}

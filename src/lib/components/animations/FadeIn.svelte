@@ -11,6 +11,7 @@
 		blurAmount?: number;
 		inViewOffset?: string;
 		children?: import('svelte').Snippet;
+		containerClasses?: string;
 	}
 
 	let {
@@ -20,7 +21,8 @@
 		yOffset = 0,
 		blurAmount = 0,
 		inViewOffset = '0px',
-		children
+		children,
+		containerClasses = ''
 	}: Props = $props();
 
 	let isInView: boolean = $state(false);
@@ -39,7 +41,7 @@
 	};
 </script>
 
-<div use:inview={options} oninview_change={handleChange} class="relative w-full h-full block">
+<div use:inview={options} oninview_change={handleChange} class="relative block h-full w-full">
 	{#if isInView}
 		<div
 			in:blur={{
@@ -47,7 +49,7 @@
 				amount: blurAmount,
 				opacity: 0
 			}}
-			class="fade-in--wrapper_blur w-full h-full"
+			class="fade-in--wrapper_blur h-full w-full"
 		>
 			<div
 				in:fly={{
@@ -55,7 +57,7 @@
 					x: xOffset,
 					y: yOffset
 				}}
-				class="fade-in--wrapper_fly w-full h-full flex items-center justify-center shrink-0"
+				class={`fade-in--wrapper_fly h-full w-full shrink-0 ${containerClasses || 'flex flex-col items-center justify-center'}`}
 			>
 				{@render children?.()}
 			</div>

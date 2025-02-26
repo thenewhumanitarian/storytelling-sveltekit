@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	import StoryGrid from '$lib/components/projects/LebanonDisplaced/StoryGrid.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -39,6 +40,10 @@
 		}
 	});
 </script>
+
+<StoryGrid />
+
+<!-- <hr class="border-4 border-red-600" /> -->
 
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
