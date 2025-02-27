@@ -45,18 +45,7 @@
 		margin: 0 auto 2rem auto;
 	}
 
-	/* .content-wrapper:last-child {
-		margin-bottom: 0;
-	} */
-
 	div:not(:first-child) {
 		margin-top: 2rem;
 	}
-	/* div:nth-child(odd) {
-		background-color: rgba(255, 255, 255, 0.95);
-	}
-
-	div:nth-child(even) {
-		background-color: rgba(255, 255, 255, 0.95);
-	} */
 </style>

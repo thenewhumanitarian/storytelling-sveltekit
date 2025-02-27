@@ -32,9 +32,6 @@
 	// ✅ Convert string values to numbers and ensure non-negative values
 	const delay = blok.delay ? Math.max(parseInt(blok.delay, 10), 0) : 0;
 	const duration = blok.duration ? Math.max(parseInt(blok.duration, 10), 100) : 500; // ✅ Ensure duration is at least 100ms
-	const xOffset = blok.xOffset ? parseInt(blok.xOffset, 10) : 0;
-	const yOffset = blok.yOffset ? parseInt(blok.yOffset, 10) : 0;
-	const blurAmount = blok.blurAmount ? Math.max(parseInt(blok.blurAmount, 10), 0) : 0;
 	const inViewOffset = blok.inViewOffset ? parseInt(blok.inViewOffset, 10) : 0;
 
 	let isInView: boolean = $state(false);
@@ -45,7 +42,6 @@
 
 	// Handle inView state changes
 	const handleChange = ({ detail }: CustomEvent<ObserverEventDetails>) => {
-		// console.log('InView changed:', detail.inView);
 		isInView = detail.inView;
 	};
 
@@ -97,15 +93,3 @@
 		</div>
 	{/if}
 </div>
-
-<!--
-If issues with the horizontal sections arise anew...
-<div
-  in:fly={{
-    ...sharedOptions,
-    x: blok.xOffset || 0,
-    y: blok.yOffset || 0
-  }}
-  class="fade-in--wrapper_fly flex h-full w-full shrink-0 items-center justify-center"
->
--->

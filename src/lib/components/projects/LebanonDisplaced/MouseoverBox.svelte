@@ -14,7 +14,7 @@
 			<div class="name">{blok.title}</div>
 			<div class="text-content">
 				{#if blok.text}
-					<RichText blok={textObject} className="clamp-5" />
+					<RichText blok={textObject} className="prose-p:text-sm prose-p:lg:text-lg prose-p:xl:text-2xl" />
 				{/if}
 			</div>
 			<div class="text-content--hover">
@@ -62,7 +62,7 @@
 
 	@media screen and (max-width: 640px) {
 		article {
-			margin: 4rem auto 4rem auto;
+			margin: 3rem auto;
 			padding: 1rem;
 		}
 	}

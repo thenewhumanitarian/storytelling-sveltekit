@@ -1,64 +1,53 @@
 <script lang="ts">
-	/* Storyblok and props */
+	/* Svelte, Storyblok and props */
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 
 	/* Own components */
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	import StoryGridPanel from '$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte';
 	import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
 
-	const panelsArray = [
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-002.svg',
-			boxShadow: false
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-001.svg',
-			boxShadow: true
-		},
-		{
-			text: '“I should probably get up–things to do.”',
-			boxShadow: false,
-			gridColumn: 'auto',
-			textAlign: 'right'
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-003.svg',
-			boxShadow: true
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-004.sÈvg',
-			boxShadow: true
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-005.svg',
-			boxShadow: true,
-			gridColumn: 'auto'
-		},
-		{
-			text: '“Naaah.”',
-			boxShadow: false,
-			gridColumn: 'span 2',
-			textAlign: 'center'
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-007.svg',
-			boxShadow: true,
-			gridColumn: 'span 2'
-		},
-		{
-			image: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/cat-008.svg',
-			boxShadow: true
-		}
-	];
+	// Default row height
+	const rowHeight = blok.rowHeight ? blok.rowHeight + 'px' : '200px';
+
+	// Create state for totalRows and gridTemplateRows
+	const state = $state({
+		totalRows: 1,
+		gridTemplateRows: 'auto',
+		columns: blok.columns || 3
+	});
+
+	// Use $effect() to compute `totalRows` dynamically based on `colSpan`
+	$effect(() => {
+		if (!blok.items) return;
+
+		let rowCount = 0;
+		let currentRow = 0;
+
+		blok.items.forEach((item: any) => {
+			const span = Number(item.colSpan) || 1;
+			currentRow += span;
+
+			// Move to the next row if the current row exceeds columns
+			if (currentRow > state.columns) {
+				rowCount++;
+				currentRow = span;
+			}
+		});
+
+		// Update state with computed values
+		state.totalRows = rowCount + 1; // Adding 1 for any remaining panels
+		state.gridTemplateRows = `auto ${Array(state.totalRows).fill(rowHeight).join(' ')} auto`;
+	});
 </script>
 
+<!-- Desktop Grid -->
 <section
-	class="story-grid--wrapper"
+	class="story-grid--wrapper hidden sm:block"
+	style="--grid-rows: {state.gridTemplateRows};"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<section class="story-grid--container">
+	<div class="story-grid--container">
 		<div class="story-grid--panel panel-title">
 			{#if blok.text}
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
@@ -69,24 +58,37 @@
 				</FadeIn>
 			{/if}
 		</div>
-
 		{#if blok.items}
 			{#each blok.items as item, i (item._uid)}
-				<StoryblokComponent blok={item} {i} />
+				<StoryblokComponent blok={item} {i} style="grid-column: span {item.colSpan || 1};" />
 			{/each}
 		{/if}
+	</div>
+</section>
 
-		{#each panelsArray as panel, i}
-			<StoryGridPanel
-				{i}
-				bgImage={panel.image}
-				text={panel.text}
-				boxShadow={panel.boxShadow}
-				gridColumn={panel.gridColumn}
-				textAlign={panel.textAlign}
-			/>
-		{/each}
-	</section>
+<!-- Mobile Grid -->
+<section
+	class="story-grid--wrapper mobile sm:hidden"
+	style="--grid-rows: auto;"
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+>
+	<div class="story-grid--container mobile">
+		<div class="story-grid--panel panel-title">
+			{#if blok.text}
+				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
+					<RichText
+						{blok}
+						className={'text-center prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-4'}
+					/>
+				</FadeIn>
+			{/if}
+		</div>
+		{#if blok.items}
+			{#each blok.items as item, i (item._uid)}
+				<StoryblokComponent blok={item} {i} style="grid-column: span 1 !important;" />
+			{/each}
+		{/if}
+	</div>
 </section>
 
 <style>
@@ -94,14 +96,26 @@
 	.story-grid--wrapper {
 		padding: 4rem 0 2rem 0;
 	}
-	:global(.story-grid--container) {
+
+	.story-grid--wrapper.mobile {
+		padding: 2rem 0;
+	}
+
+	/* Default grid */
+	.story-grid--container {
 		display: grid;
 		width: 100%;
 		max-width: 770px;
 		margin: 0 auto;
-		grid-template-columns: 1fr;
-		grid-template-rows: auto 200px 200px auto 200px 200px 200px auto 200px 200px auto;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: var(--grid-rows);
 		grid-gap: 25px;
+	}
+
+	/* Force one column on mobile */
+	.story-grid--container.mobile {
+		grid-template-columns: 1fr !important;
+		grid-template-rows: auto !important;
 	}
 
 	/* General panel (global) class */
@@ -122,25 +136,18 @@
 	.panel-title {
 		box-shadow: none;
 		color: white;
+		grid-column: span 3;
+		padding-bottom: 1rem;
 	}
 
-	@media only screen and (min-width: 400px) {
-		.story-grid--container {
-			grid-template-columns: repeat(2, 1fr);
-			grid-template-rows: auto 200px auto 200px 200px auto 200px auto;
-		}
-		.panel-title {
-			grid-column: span 2;
-		}
+	/* Mobile Grid: Always One Column */
+	.story-grid--container.mobile {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto;
 	}
 
-	@media only screen and (min-width: 600px) {
-		.story-grid--container {
-			grid-template-columns: repeat(3, 1fr);
-			grid-template-rows: auto 200px 200px auto 200px auto;
-		}
-		.panel-title {
-			grid-column: span 3;
-		}
+	/* Ensure Every Item Stacks Correctly */
+	.story-grid--container.mobile .story-grid--panel {
+		grid-column: span 1 !important;
 	}
 </style>
