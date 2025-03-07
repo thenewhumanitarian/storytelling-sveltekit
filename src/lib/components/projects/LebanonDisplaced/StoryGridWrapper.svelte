@@ -105,11 +105,17 @@
 	.story-grid--container {
 		display: grid;
 		width: 100%;
-		max-width: 770px;
+		max-width: 800px;
 		margin: 0 auto;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: var(--grid-rows);
 		grid-gap: 25px;
+	}
+
+	@media screen and (max-width: 900px) {
+		.story-grid--container {
+			width: 80%;
+		}
 	}
 
 	/* Force one column on mobile */
@@ -120,16 +126,19 @@
 
 	/* General panel (global) class */
 	:global(.story-grid--panel) {
-		color: white;
+		color: inherit;
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
 		box-shadow: 0 0px 0px 5px #251b19;
 	}
-	:global(.story-grid--panel p) {
-		font-family: 'Pacifico', cursive;
-		font-size: 1.6rem;
-		line-height: 1.25;
+
+	:global(.story-grid--panel .storyblok--richtext *) {
+		margin: 0;
+	}
+
+	:global(.story-grid--panel .storyblok--richtext h1) {
+		margin-bottom: 0.5rem;
 	}
 
 	/* Individual panels */

@@ -14,7 +14,10 @@
 			<div class="name">{blok.title}</div>
 			<div class="text-content">
 				{#if blok.text}
-					<RichText blok={textObject} className="prose-p:text-sm prose-p:lg:text-lg prose-p:xl:text-2xl" />
+					<RichText
+						blok={textObject}
+						className="prose-p:text-sm prose-p:lg:text-lg prose-p:xl:text-2xl"
+					/>
 				{/if}
 			</div>
 			<div class="text-content--hover">

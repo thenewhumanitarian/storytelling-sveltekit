@@ -12,6 +12,7 @@
 		inViewOffset?: string;
 		children?: import('svelte').Snippet;
 		containerClasses?: string;
+		isAbsolute?: boolean;
 	}
 
 	let {
@@ -22,7 +23,8 @@
 		blurAmount = 0,
 		inViewOffset = '0px',
 		children,
-		containerClasses = ''
+		containerClasses = '',
+		isAbsolute = false
 	}: Props = $props();
 
 	let isInView: boolean = $state(false);
@@ -41,7 +43,11 @@
 	};
 </script>
 
-<div use:inview={options} oninview_change={handleChange} class="relative block h-full w-full">
+<div
+	use:inview={options}
+	oninview_change={handleChange}
+	class={`${isAbsolute ? 'absolute top-0 left-0' : 'relative'} block h-full w-full`}
+>
 	{#if isInView}
 		<div
 			in:blur={{

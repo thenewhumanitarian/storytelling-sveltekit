@@ -91,16 +91,17 @@
     @apply font-body text-base;
   }
 
-  a {
+  a:not('.font-reset') {
+    /* @apply no-underline font-medium text-burgundy; */
     @apply no-underline font-medium text-burgundy;
   }
 
-  a:hover {
+  a:not('.font-reset'):hover {
     @apply underline;
   }
 
-  a:active,
-  a:focus {
+  a:not('.font-reset'):active,
+  a:not('.font-reset'):focus {
     @apply bg-transparent text-burgundy;
   }
 
