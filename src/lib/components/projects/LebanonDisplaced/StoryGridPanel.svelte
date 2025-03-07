@@ -41,6 +41,7 @@
 			<div
 				class={`panel-object h-full w-full bg-cover bg-center bg-no-repeat ${blok.textAlign} ${blok.floatInPlace ? 'float-in-place' : ''}`}
 			>
+				<div class={`panel-object--inner`}></div>
 				<FadeIn yOffset={20} delay={10 * i + 100} blurAmount={20} isAbsolute={true}>
 					<img
 						class={`${blok.stretchImage ? 'object-cover' : 'object-contain'}`}
@@ -98,7 +99,7 @@
 	/* Default floating effect (Simulates previous floating animation) */
 	.story-grid--panel .panel-object.float-in-place {
 		transform: translateY(0);
-		transition: transform 2s ease-in-out;
+		transition: transform 2s ease-in-out infinite;
 	}
 
 	/* Simulate floating effect on hover */
@@ -162,5 +163,42 @@
 		transition:
 			box-shadow 0.3s ease-in-out,
 			transform 0.5s ease-in-out;
+	}
+
+	/* Floating effect */
+	@keyframes floating-left {
+		0% {
+			transform: translate(50%, 0) rotate(10deg);
+		}
+		50% {
+			transform: translate(50%, -8px) rotate(9deg);
+		}
+		100% {
+			transform: translate(50%, 0) rotate(10deg);
+		}
+	}
+
+	@keyframes floating-right {
+		0% {
+			transform: translate(-50%, 0) rotate(-10deg);
+		}
+		50% {
+			transform: translate(-50%, -8px) rotate(-9deg);
+		}
+		100% {
+			transform: translate(-50%, 0) rotate(-10deg);
+		}
+	}
+
+	@keyframes floating-center {
+		0% {
+			transform: translate(0, 0);
+		}
+		50% {
+			transform: translate(0, -8px);
+		}
+		100% {
+			transform: translate(0, 0);
+		}
 	}
 </style>
