@@ -23,8 +23,11 @@
 		font-weight: bold;
 		font-family: 'Pacifico', cursive;
 	}
-	:global(.storyblok--richtext h1, .storyblok--richtext h2) {
-		margin: 1rem;
+	:global(.storyblok--richtext h1) {
+		margin-bottom: 0.75rem;
+	}
+	:global(.storyblok--richtext h2) {
+		margin: 0;
 	}
 	:global(.storyblok--richtext p) {
 		display: block;

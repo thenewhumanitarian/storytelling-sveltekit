@@ -59,8 +59,9 @@
 		background-position: center center;
 		grid-column: var(--colSpan);
 		opacity: 0.9;
-		transition: opacity 0.25s;
-		transition-delay: 100ms;
+		transition:
+			opacity 0.3s ease-in-out,
+			z-index 0.3s ease-in-out;
 		z-index: 0;
 	}
 
@@ -78,24 +79,41 @@
 		height: 100%;
 	}
 
+	/* Wrapper for floating object */
+	.panel-object-wrapper {
+		display: inline-block;
+		position: relative;
+		transition: transform 0.3s ease-in-out;
+	}
+
+	/* Floating object */
 	.story-grid--panel .panel-object {
-		transition:
-			transform 0.4s ease-in-out,
-			rotate 0.4s ease-in-out,
-			box-shadow 0.3s ease-in-out;
-		transform: translate(0, 0);
-		will-change: transform, rotate;
-		z-index: 10;
 		pointer-events: none;
 		overflow: hidden;
+		z-index: 10;
+		will-change: transform, rotate;
+		transition: transform 0.5s ease-in-out;
 	}
 
-	/* Floating effect while in default state */
+	/* Default floating effect (Simulates previous floating animation) */
 	.story-grid--panel .panel-object.float-in-place {
-		animation: floating-center 6s ease-out infinite;
+		transform: translateY(0);
+		transition: transform 2s ease-in-out;
 	}
 
-	/* Move object to the side on hover */
+	/* Simulate floating effect on hover */
+	.story-grid--panel:hover .panel-object.float-in-place {
+		transform: translateY(-8px);
+	}
+
+	/* Smooth movement and rotation transition */
+	.story-grid--panel .panel-object.left,
+	.story-grid--panel .panel-object.right {
+		transform: translate(0, 0) rotate(0deg);
+		transition: transform 0.5s ease-in-out;
+	}
+
+	/* Move smoothly on hover */
 	.story-grid--panel:hover .panel-object.left {
 		transform: translate(50%, 0) rotate(10deg);
 	}
@@ -104,94 +122,45 @@
 		transform: translate(-50%, 0) rotate(-10deg);
 	}
 
-	/* Ensure smooth return when mouse leaves */
-	.story-grid--panel .panel-object {
-		transition:
-			transform 0.4s ease-in-out,
-			rotate 0.4s ease-in-out,
-			box-shadow 0.3s ease-in-out;
+	/* Reverse transition when mouse leaves */
+	.story-grid--panel .panel-object-wrapper {
+		transform: translateY(0);
 	}
 
-	/* Add box shadow effect on hover */
+	/* Fix for stretch-image elements: Slide out instead of scaling */
+	.story-grid--panel.stretch-image .panel-object {
+		transform: translate(0, 0);
+		transition: transform 0.5s ease-in-out;
+	}
+
+	/* Slide effect on hover */
+	.story-grid--panel.stretch-image:hover .panel-object.left {
+		transform: translateX(45%) rotate(10deg);
+	}
+
+	.story-grid--panel.stretch-image:hover .panel-object.right {
+		transform: translateX(-45%) rotate(-10deg);
+	}
+
+	/* Smooth revert effect */
+	.story-grid--panel.stretch-image .panel-object.left,
+	.story-grid--panel.stretch-image .panel-object.right {
+		transform: translateX(0) rotate(0deg);
+		transition: transform 0.5s ease-in-out;
+	}
+
+	/* Box shadow effect */
 	.story-grid--panel.stretch-image:hover .panel-object.left {
 		box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.2);
+		transition:
+			box-shadow 0.3s ease-in-out,
+			transform 0.5s ease-in-out;
 	}
 
 	.story-grid--panel.stretch-image:hover .panel-object.right {
 		box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
-	}
-
-	/* Add floating effect after movement */
-	.story-grid--panel:hover .panel-object.left {
-		animation:
-			side-move-left 0.2s ease-out forwards,
-			floating-left 2s infinite ease-in-out 0.2s;
-	}
-
-	.story-grid--panel:hover .panel-object.right {
-		animation:
-			side-move-right 0.2s ease-out forwards,
-			floating-right 2s infinite ease-in-out 0.2s;
-	}
-
-	/* Ensure animation resets properly when mouse leaves */
-	.story-grid--panel .panel-object {
-		animation: none;
-	}
-
-	/* Movement animation */
-	@keyframes side-move-left {
-		from {
-			transform: translate(0, 0);
-		}
-		to {
-			transform: translate(50%, 0) rotate(10deg);
-		}
-	}
-
-	@keyframes side-move-right {
-		from {
-			transform: translate(0, 0);
-		}
-		to {
-			transform: translate(-50%, 0) rotate(-10deg);
-		}
-	}
-
-	/* Floating effect */
-	@keyframes floating-left {
-		0% {
-			transform: translate(50%, 0) rotate(10deg) scale(1);
-		}
-		50% {
-			transform: translate(50%, -8px) rotate(9deg) scale(1);
-		}
-		100% {
-			transform: translate(50%, 0) rotate(10deg) scale(1);
-		}
-	}
-
-	@keyframes floating-right {
-		0% {
-			transform: translate(-50%, 0) rotate(-10deg) scale(1);
-		}
-		50% {
-			transform: translate(-50%, -8px) rotate(-9deg) scale(1);
-		}
-		100% {
-			transform: translate(-50%, 0) rotate(-10deg) scale(1);
-		}
-	}
-
-	@keyframes floating-center {
-		0% {
-			transform: translate(0, 0);
-		}
-		50% {
-			transform: translate(0, -8px);
-		}
-		100% {
-			transform: translate(0, 0);
-		}
+		transition:
+			box-shadow 0.3s ease-in-out,
+			transform 0.5s ease-in-out;
 	}
 </style>
