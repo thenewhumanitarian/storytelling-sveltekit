@@ -1,5 +1,6 @@
 <script lang="ts">
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
+	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
 </script>
 
 <svelte:head>
@@ -13,23 +14,20 @@
 
 <main>
 	<div class="intro-spacer"></div>
-	<div class="background-image">
+	<!-- <div class="background-image">
 		<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
-	</div>
+	</div> -->
 	<slot />
 </main>
 
-<footer>
-	<p>Footer tbd.</p>
-</footer>
+<FooterComponent />
 
 <style>
 	main {
 		margin: 0;
 		overflow: hidden;
-		/* padding-top: 7rem; */
-		/* padding-top: 7rem; */
-		/* border: 1px solid #eee; */
+		background-color: #f8cd4d;
+		margin-bottom: 4rem;
 	}
 
 	@media screen and (max-width: 640px) {
@@ -37,17 +35,6 @@
 			margin-top: 7rem;
 			padding-top: 0;
 		}
-	}
-
-	footer {
-		display: flex;
-		justify-content: center;
-		padding: 0.75rem;
-		width: 100%;
-		bottom: 0;
-		background: black;
-		color: white;
-		box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.2);
 	}
 
 	.background-image {

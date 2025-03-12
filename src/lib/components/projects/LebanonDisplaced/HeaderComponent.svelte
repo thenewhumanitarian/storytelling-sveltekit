@@ -39,12 +39,6 @@
 		align-items: center;
 		justify-content: center;
 	}
-
-	:globa(.torn-paper--bottom) {
-		bottom: 0;
-		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
-		height: calc(25vh - 4rem);
-	}
 	.background-image img {
 		width: 100%;
 		height: 100%;

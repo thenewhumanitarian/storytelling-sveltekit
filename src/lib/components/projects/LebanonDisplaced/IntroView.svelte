@@ -25,7 +25,7 @@
 		height: calc(100dvh - 6rem);
 		background-color: #ebe4cb;
 		padding: 2rem;
-		box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
+		box-shadow: 0px 10px 10px rgba(0,0,0,0.5);
 		border-bottom: 6px solid #003D14;
 	}
 	.top-left {
