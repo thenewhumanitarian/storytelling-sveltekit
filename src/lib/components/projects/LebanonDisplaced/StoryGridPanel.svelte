@@ -31,7 +31,7 @@
 				delay={30 * i + 100}
 				isAbsolute={true}
 			>
-				<div class={`line-clamp-6 w-full`}>
+				<div class={`line-clamp-6 flex h-full w-full flex-col justify-between`}>
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -81,6 +81,15 @@
 		padding: 1rem;
 	}
 
+	:global(.story-grid--panel .storyblok--richtext) {
+		word-wrap: break-word;
+		hyphens: auto;
+	}
+
+	:global(.story-grid--panel.has-image .storyblok--richtext) {
+		max-width: 90%;
+	}
+
 	.story-grid--panel.has-image img {
 		width: 100%;
 		height: 100%;
@@ -122,11 +131,10 @@
 
 	/* Move smoothly on hover */
 	.story-grid--panel:hover .panel-object.left {
-		transform: translate(50%, 0) rotate(10deg);
+		transform: translate(65%, 0) rotate(10deg);
 	}
-
 	.story-grid--panel:hover .panel-object.right {
-		transform: translate(-50%, 0) rotate(-10deg);
+		transform: translate(-65%, 0) rotate(-10deg);
 	}
 
 	/* Reverse transition when mouse leaves */
@@ -137,22 +145,6 @@
 	/* Fix for stretch-image elements: Slide out instead of scaling */
 	.story-grid--panel.stretch-image .panel-object {
 		transform: translate(0, 0);
-		transition: transform 0.5s ease-in-out;
-	}
-
-	/* Slide effect on hover */
-	.story-grid--panel.stretch-image:hover .panel-object.left {
-		transform: translateX(45%) rotate(10deg);
-	}
-
-	.story-grid--panel.stretch-image:hover .panel-object.right {
-		transform: translateX(-45%) rotate(-10deg);
-	}
-
-	/* Smooth revert effect */
-	.story-grid--panel.stretch-image .panel-object.left,
-	.story-grid--panel.stretch-image .panel-object.right {
-		transform: translateX(0) rotate(0deg);
 		transition: transform 0.5s ease-in-out;
 	}
 
@@ -169,61 +161,5 @@
 		transition:
 			box-shadow 0.3s ease-in-out,
 			transform 0.5s ease-in-out;
-	}
-
-	.hover-float:hover .panel-object {
-		transform: translate(0, -10px);
-		transition: transform 0.5s ease-in-out infinite;
-		will-change: transform;
-	}
-
-	/* Hovering in place */
-	@keyframes float-in-place {
-		0% {
-			transform: translateY(0);
-		}
-		50% {
-			transform: translateY(-8px);
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
-
-	/* Floating effect */
-	@keyframes floating-left {
-		0% {
-			transform: translate(50%, 0) rotate(10deg);
-		}
-		50% {
-			transform: translate(50%, -8px) rotate(9deg);
-		}
-		100% {
-			transform: translate(50%, 0) rotate(10deg);
-		}
-	}
-
-	@keyframes floating-right {
-		0% {
-			transform: translate(-50%, 0) rotate(-10deg);
-		}
-		50% {
-			transform: translate(-50%, -8px) rotate(-9deg);
-		}
-		100% {
-			transform: translate(-50%, 0) rotate(-10deg);
-		}
-	}
-
-	@keyframes floating-center {
-		0% {
-			transform: translate(0, 0);
-		}
-		50% {
-			transform: translate(0, -8px);
-		}
-		100% {
-			transform: translate(0, 0);
-		}
 	}
 </style>

@@ -5,7 +5,7 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`content-wrapper ${blok?.backgroundColor || 'bg-white'} ${blok?.backgroundOpacity || 'bg-opacity-90'} ${blok?.size}`}
+	class={`content-wrapper ${blok?.backgroundColor || 'bg-white'} ${blok?.backgroundOpacity || ''} ${blok?.size}`}
 >
 	<div class="content-wrapper--container">
 		{#if blok}
@@ -64,6 +64,6 @@
 	.content-wrapper.full > .content-wrapper--container {
 		max-width: 800px;
 		margin: 0 auto;
-		padding: 1rem 0;
+		padding: 3rem 0;
 	}
 </style>

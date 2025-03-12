@@ -32,6 +32,14 @@
 		font-weight: 900;
 		font-size: 2rem;
 	}
+
+	:global(.storyblok--richtext h3) {
+		margin: 0;
+		font-family: 'ff-amman-serif-pro', serif;
+		font-weight: 900;
+		font-size: 1.1rem;
+	}
+
 	:global(.storyblok--richtext p) {
 		display: block;
 		white-space: normal;

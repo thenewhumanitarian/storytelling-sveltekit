@@ -22,12 +22,14 @@
 		justify-content: center;
 		align-items: center;
 		width: 100%;
+		height: 100vh;
 		height: calc(100dvh - 6rem);
 		background-color: #ebe4cb;
 		padding: 2rem;
-		box-shadow: 0px 10px 10px rgba(0,0,0,0.5);
-		border-bottom: 6px solid #003D14;
+		border-bottom: 6px solid #003d14;
+		z-index: 0;
 	}
+
 	.top-left {
 		position: absolute;
 		top: 1rem;

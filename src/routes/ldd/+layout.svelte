@@ -53,6 +53,7 @@
 	}
 
 	.intro-spacer {
+		z-index: 1;
 		height: 7rem;
 		background-color: #ebe4cb;
 	}
