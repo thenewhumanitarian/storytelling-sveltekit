@@ -113,7 +113,7 @@
 
 	/* Default floating effect (Simulates previous floating animation) */
 	.story-grid--panel .panel-object.float-in-place {
-		transform: translateY(0);
+		/* transform: translateY(0); */
 		transition: transform 2s ease-in-out infinite;
 	}
 
