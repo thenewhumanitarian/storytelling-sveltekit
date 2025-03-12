@@ -1,7 +1,7 @@
 import { useStoryblok } from "$lib/storyblok";
 import { useStoryblokApi } from "@storyblok/svelte";
 
-export const prerender = true;
+// export const prerender = true;
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
