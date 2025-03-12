@@ -8,17 +8,22 @@
 	}
 
 	let { blok = {}, i = 0 }: Props = $props();
+
+	let baseUrl = 'https://localhost:5173';
 </script>
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''}`}
+	class={`story-grid--panel hover-float panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''}`}
 	style={`
     box-shadow: ${blok.borderColor ? `inset 0 0px 0px 5px ${blok.borderColor}` : 'none'};
 		--colSpan: span ${blok.colSpan || '1'};
   `}
 >
-	<a href={`#`} class="font-reset">
+	<a
+		href={`${blok.link ? `${baseUrl}/ldd/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+		class="font-reset"
+	>
 		{#if blok.text}
 			<FadeIn
 				yOffset={50}
@@ -26,7 +31,7 @@
 				delay={30 * i + 100}
 				isAbsolute={true}
 			>
-				<div class={`line-clamp-6 w-full sm:w-5/6`}>
+				<div class={`line-clamp-6 w-full`}>
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -62,7 +67,8 @@
 		opacity: 0.9;
 		transition:
 			opacity 0.3s ease-in-out,
-			z-index 0.3s ease-in-out;
+			z-index 0.3s ease-in-out,
+			transform 3s ease-in-out infinite;
 		z-index: 0;
 	}
 
@@ -163,6 +169,25 @@
 		transition:
 			box-shadow 0.3s ease-in-out,
 			transform 0.5s ease-in-out;
+	}
+
+	.hover-float:hover .panel-object {
+		transform: translate(0, -10px);
+		transition: transform 0.5s ease-in-out infinite;
+		will-change: transform;
+	}
+
+	/* Hovering in place */
+	@keyframes float-in-place {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-8px);
+		}
+		100% {
+			transform: translateY(0);
+		}
 	}
 
 	/* Floating effect */

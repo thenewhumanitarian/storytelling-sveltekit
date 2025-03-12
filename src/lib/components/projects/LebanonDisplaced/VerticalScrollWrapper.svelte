@@ -40,9 +40,9 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class="horizontal-scroll-wrapper hidden sm:flex"
 >
-	<!-- <div class="torn-paper torn-paper--top">
+	<div class="torn-paper torn-paper--top">
 		<h2 class="horizontal-scroll-wrapper--title pt-10">Stories</h2>
-	</div> -->
+	</div>
 	<div class="horizontal-scroll-container">
 		{#if blok?.items}
 			{#each blok.items as item (item._uid)}
@@ -97,10 +97,10 @@
 		padding-top: 5rem;
 	}
 
-	/* .horizontal-scroll-wrapper--title {
+	.horizontal-scroll-wrapper--title {
 		font-family: 'Pacifico', cursive;
 		font-size: 2rem;
-	} */
+	}
 
 	@media screen and (max-width: 1400px) {
 		.horizontal-section {

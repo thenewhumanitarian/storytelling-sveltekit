@@ -10,7 +10,9 @@ export async function useStoryblok(accessToken = "") {
     bridge: true,
     components: {
       page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
+      detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,
       contentWrapper: (await import("$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte")).default,
+      introView: (await import("$lib/components/projects/LebanonDisplaced/IntroView.svelte")).default,
       horizontalScrollWrapper: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte")).default,
       storyGrid: (await import("$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte")).default,
       storyGridPanel: (await import("$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte")).default,

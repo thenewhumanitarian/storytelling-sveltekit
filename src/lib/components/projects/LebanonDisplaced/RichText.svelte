@@ -21,13 +21,16 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
-		font-family: 'Pacifico', cursive;
+		font-family: 'ff-amman-serif-pro', serif;
 	}
 	:global(.storyblok--richtext h1) {
 		margin-bottom: 0.75rem;
 	}
 	:global(.storyblok--richtext h2) {
 		margin: 0;
+		font-family: 'ff-amman-serif-pro', serif;
+		font-weight: 900;
+		font-size: 2rem;
 	}
 	:global(.storyblok--richtext p) {
 		display: block;
@@ -35,11 +38,23 @@
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 	}
+
+	:global(.storyblok--richtext p:not(:last-child)) {
+		margin-bottom: 1rem;
+	}
+
+	:global(.storyblok--richtext p:not(:last-child)) {
+		margin-bottom: 1rem;
+	}
 	:global(.storyblok--richtext.h2-pacifico h2) {
-		font-family: 'Pacifico', cursive;
+		font-family: 'ff-amman-serif-pro', serif;
 		font-size: 1.8rem;
 		line-height: 1.25;
 		margin-bottom: 0;
+	}
+
+	:global(.storyblok--richtext .font-amman *) {
+		font-family: 'ff-amman-serif-pro', serif !important;
 	}
 
 	@media screen and (max-width: 640px) {
@@ -56,6 +71,6 @@
 		font-family: 'GT Sectra Fine', serif;
 	}
 	:global(.font-pacifico *) {
-		font-family: 'Pacifico', cursive;
+		font-family: 'ff-amman-serif-pro', serif;
 	}
 </style>

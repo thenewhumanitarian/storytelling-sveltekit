@@ -32,12 +32,14 @@ export default {
         transparent: 'transparent',
         burgundy: '#9f3e52',
         brown: '#E8C188',
+        sun: '#F8CD4D'
       },
       fontFamily: {
         body: ['Roboto', 'Open Sans', 'ui-sans-serif'],
         title: ['GT Sectra Bold', 'ui-serif'],
         serif: ['GT Sectra Regular', 'ui-serif'],
         pacifico: ['Pacifico', 'ui-cursive'],
+        amman: ["ff-amman-serif-pro", 'serif'],
       },
       container: {
         center: false, // Prevents auto-centering

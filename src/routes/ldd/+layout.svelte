@@ -1,6 +1,5 @@
 <script lang="ts">
-	// import Logo from '$lib/components/icons/LogoInverted.svelte';
-	import Logo from '$lib/components/icons/Logo.svelte';
+	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 </script>
 
 <svelte:head>
@@ -10,15 +9,13 @@
 	<!-- Need to add more meta data here later -->
 </svelte:head>
 
-<div class="background-image">
-	<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
-</div>
-
-<header>
-	<Logo />
-</header>
+<HeaderComponent />
 
 <main>
+	<div class="intro-spacer"></div>
+	<div class="background-image">
+		<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
+	</div>
 	<slot />
 </main>
 
@@ -27,29 +24,17 @@
 </footer>
 
 <style>
-	header {
-		z-index: 9999;
-		position: fixed;
-		display: flex;
-		justify-content: center;
-		padding: 0.75rem;
-		width: 100%;
-		top: 0;
-		background: rgba(232, 193, 136, 1);
-		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-		/* backdrop-filter: blur(10px); */
-	}
-
 	main {
 		margin: 0;
-		padding-top: 4rem;
 		overflow: hidden;
+		/* padding-top: 7rem; */
+		/* padding-top: 7rem; */
 		/* border: 1px solid #eee; */
 	}
 
 	@media screen and (max-width: 640px) {
 		main {
-			margin-top: 4rem;
+			margin-top: 7rem;
 			padding-top: 0;
 		}
 	}
@@ -78,5 +63,10 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.intro-spacer {
+		height: 7rem;
+		background-color: #ebe4cb;
 	}
 </style>

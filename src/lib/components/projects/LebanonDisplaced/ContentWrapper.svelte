@@ -5,17 +5,19 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`content-wrapper ${blok?.backgroundColor || 'bg-white'} ${blok?.backgroundOpacity ? `bg-opacity-${blok?.backgroundOpacity}` : 'bg-opacity-90'}`}
+	class={`content-wrapper ${blok?.backgroundColor || 'bg-white'} ${blok?.backgroundOpacity || 'bg-opacity-90'} ${blok?.size}`}
 >
-	{#if blok}
-		{#each blok.items as item (item._uid)}
-			{#if item.component !== 'contentWrapper'}
-				<StoryblokComponent blok={item} />
-			{/if}
-		{/each}
-	{:else}
-		{@render children?.()}
-	{/if}
+	<div class="content-wrapper--container">
+		{#if blok}
+			{#each blok.items as item (item._uid)}
+				{#if item.component !== 'contentWrapper'}
+					<StoryblokComponent blok={item} />
+				{/if}
+			{/each}
+		{:else}
+			{@render children?.()}
+		{/if}
+	</div>
 </div>
 
 <style>
@@ -47,5 +49,21 @@
 
 	div:not(:first-child) {
 		margin-top: 2rem;
+	}
+
+	.content-wrapper.full {
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+	}
+
+	.content-wrapper--container {
+		width: 100%;
+	}
+
+	.content-wrapper.full > .content-wrapper--container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 1rem 0;
 	}
 </style>

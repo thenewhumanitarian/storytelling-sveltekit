@@ -67,7 +67,7 @@
   }
 
   h1 {
-    @apply font-serif font-normal text-3xl mb-2;
+    @apply font-amman font-extrabold text-3xl mb-2;
   }
 
   h2 {
@@ -86,8 +86,7 @@
     @apply text-burgundy;
   }
 
-  body,
-  p {
+  body {
     @apply font-body text-base;
   }
 
