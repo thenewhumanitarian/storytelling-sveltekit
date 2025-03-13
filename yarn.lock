@@ -3420,6 +3420,11 @@ math-intrinsics@^1.1.0:
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
   integrity sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==
 
+matter-js@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/matter-js/-/matter-js-0.20.0.tgz#dc3c95c40ea5ef8937788a2770c3f97223b352ed"
+  integrity sha512-iC9fYR7zVT3HppNnsFsp9XOoQdQN2tUyfaKg4CHLH8bN+j6GT4Gw7IH2rP0tflAebrHFw730RR3DkVSZRX8hwA==
+
 mdsvex@^0.12.3:
   version "0.12.3"
   resolved "https://registry.yarnpkg.com/mdsvex/-/mdsvex-0.12.3.tgz#859d9a4985659fb4258e9343a859cabdc16ae911"

@@ -63,6 +63,7 @@
     "gsap": "^3.12.7",
     "locomotive-scroll": "^4.1.4",
     "mapbox-gl": "^3.7.0",
+    "matter-js": "^0.20.0",
     "svelte-inview": "^4.0.4"
   }
 }

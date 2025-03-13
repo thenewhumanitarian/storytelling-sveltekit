@@ -42,6 +42,11 @@
 <FooterComponent></FooterComponent>
 
 <style>
+	/* :global(html,  body) {
+		height: auto;
+		overflow-y: auto;
+	} */
+
 	main {
 		/* margin: 0; */
 		overflow: hidden;
