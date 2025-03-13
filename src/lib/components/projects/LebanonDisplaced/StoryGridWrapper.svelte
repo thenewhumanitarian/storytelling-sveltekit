@@ -48,7 +48,7 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="story-grid--container">
-		<div class="story-grid--panel panel-title">
+		<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 			{#if blok.text}
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
 					<RichText

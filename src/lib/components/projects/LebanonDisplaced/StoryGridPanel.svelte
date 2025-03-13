@@ -131,10 +131,10 @@
 
 	/* Move smoothly on hover */
 	.story-grid--panel:hover .panel-object.left {
-		transform: translate(65%, 0) rotate(10deg);
+		transform: translate(70%, 0) rotate(10deg);
 	}
 	.story-grid--panel:hover .panel-object.right {
-		transform: translate(-65%, 0) rotate(-10deg);
+		transform: translate(-70%, 0) rotate(-10deg);
 	}
 
 	/* Reverse transition when mouse leaves */

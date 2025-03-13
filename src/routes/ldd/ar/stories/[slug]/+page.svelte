@@ -49,5 +49,5 @@
 {:else if story && story.content}
 	<StoryblokComponent blok={story.content} />
 {:else}
-	<div class="hidden">Getting Story</div>
+	<div class="hidden">Getting Story ready...</div>
 {/if}

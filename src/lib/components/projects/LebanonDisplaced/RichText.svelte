@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor}`}
+	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor} ${blok.fontSize}`}
 	use:storyblokEditable={blok}
 >
 	{#if blok.text}
@@ -22,12 +22,13 @@
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
 		font-family: 'ff-amman-serif-pro', serif;
-	}
-	:global(.storyblok--richtext h1) {
+		margin-bottom: 0;
+		font-size: 3rem;
+		line-height: 1;
 		margin-bottom: 0.75rem;
 	}
 	:global(.storyblok--richtext h2) {
-		margin: 0;
+		margin: 0 0 1rem 0;
 		font-family: 'ff-amman-serif-pro', serif;
 		font-weight: 900;
 		font-size: 2rem;

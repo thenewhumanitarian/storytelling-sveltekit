@@ -1,6 +1,20 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
+
+	onMount(() => {
+		/* Add class to body if in Storyblok editor */
+		function isStoryblokEditor() {
+			const urlParams = new URLSearchParams(window.location.search);
+			return urlParams.has('_storyblok');
+		}
+
+		if (isStoryblokEditor()) {
+			document.body.classList.add('is-storyblok-editor');
+		}
+	});
 </script>
 
 <svelte:head>
@@ -13,7 +27,6 @@
 <HeaderComponent />
 
 <main>
-	<div class="intro-spacer"></div>
 	<!-- <div class="background-image">
 		<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
 	</div> -->
@@ -23,16 +36,21 @@
 <FooterComponent />
 
 <style>
-	main {
-		margin: 0;
-		overflow: hidden;
+	/* :global(body) {
 		background-color: #f8cd4d;
-		margin-bottom: 4rem;
+		} */
+
+	main {
+		/* margin: 0; */
+		overflow: hidden;
+		padding-bottom: 4rem;
+		margin-top: 6rem;
+		background-color: #f8cd4d;
 	}
 
 	@media screen and (max-width: 640px) {
 		main {
-			margin-top: 7rem;
+			/* margin-top: 7rem; */
 			padding-top: 0;
 		}
 	}
@@ -52,9 +70,8 @@
 		object-fit: cover;
 	}
 
-	.intro-spacer {
-		z-index: 1;
-		height: 7rem;
-		background-color: #ebe4cb;
+	/* Deactivate links in Storyblok editor */
+	:global(.is-storyblok-editor a) {
+		pointer-events: none;
 	}
 </style>

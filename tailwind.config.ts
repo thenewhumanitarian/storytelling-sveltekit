@@ -32,7 +32,8 @@ export default {
         transparent: 'transparent',
         burgundy: '#9f3e52',
         brown: '#E8C188',
-        sun: '#F8CD4D'
+        sun: '#F8CD4D',
+        grass: '#003D14',
       },
       fontFamily: {
         body: ['Roboto', 'Open Sans', 'ui-sans-serif'],
