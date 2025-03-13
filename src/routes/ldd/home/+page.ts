@@ -7,7 +7,9 @@ export const ssr = true; // ✅ Enable Server-Side Rendering
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
   const slug = params.slug ?? "home";
+
   await useStoryblok();
+
   const storyblokApi = await useStoryblokApi();
 
   try {

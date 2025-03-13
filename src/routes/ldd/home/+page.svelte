@@ -1,4 +1,6 @@
 <script lang="ts">
+	export { preFooter };
+
 	import { onMount } from 'svelte';
 	import { useStoryblok } from '$lib/storyblok';
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
@@ -51,3 +53,7 @@
 {:else}
 	<div class="hidden">Getting Story ready...</div>
 {/if}
+
+{#snippet preFooter()}
+	<h3>Another Card Title</h3>
+{/snippet}

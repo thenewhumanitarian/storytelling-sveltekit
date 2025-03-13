@@ -20,14 +20,16 @@
 
 			gsap.to(scrollContainer, {
 				x: () => -(scrollWidth - viewportWidth),
-				ease: 'linear',
+				ease: 'none',
 				scrollTrigger: {
 					trigger: '.horizontal-scroll-wrapper',
 					start: 'top top',
 					end: () => `+=${scrollWidth - viewportWidth}`,
 					pin: true,
 					scrub: 1,
-					invalidateOnRefresh: true
+					invalidateOnRefresh: true,
+					markers: true,
+
 				},
 				force3D: true,
 				autoAlpha: 1
@@ -54,7 +56,7 @@
 			{/each}
 		{/if}
 	</div>
-	<div class="torn-paper torn-paper--bottom"></div>
+	<!-- <div class="torn-paper torn-paper--bottom"></div> -->
 </div>
 
 <div class="vertical-scroll-wrapper block sm:hidden">
@@ -74,13 +76,14 @@
 		height: 100vh;
 		overflow: hidden;
 		align-items: center;
-		/* RGBA for #e3c09a */
-		background-color: rgba(227, 192, 154, 0.9);
-		/* background-color: rgba(0, 0, 0, 0.5); */
-		box-shadow:
-			0 4px 8px 0 rgba(0, 0, 0, 0.2),
-			0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		background-color: #ebe4cb;
 		margin: 5rem 0;
+		/* RGBA for #e3c09a */
+		/* background-color: rgba(227, 192, 154, 0.9); */
+		/* background-color: rgba(0, 0, 0, 0.5); */
+		/* box-shadow:
+			0 4px 8px 0 rgba(0, 0, 0, 0.2),
+			0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 	}
 	.horizontal-scroll-container {
 		display: flex;
@@ -95,6 +98,10 @@
 		justify-content: center;
 		border-radius: 5px;
 		padding-top: 5rem;
+	}
+
+	:global(.pin-spacer) {
+		margin-bottom: 0 !important;
 	}
 
 	/* .horizontal-scroll-wrapper--title {

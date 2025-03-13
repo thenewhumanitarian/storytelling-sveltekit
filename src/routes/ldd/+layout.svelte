@@ -4,6 +4,8 @@
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
 
+	let { children, preFooter } = $props();
+
 	onMount(() => {
 		/* Add class to body if in Storyblok editor */
 		function isStoryblokEditor() {
@@ -30,22 +32,28 @@
 	<!-- <div class="background-image">
 		<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
 	</div> -->
-	<slot />
+	{@render children()}
 </main>
 
-<FooterComponent />
+{#if preFooter}
+	{@render preFooter()}
+{/if}
+
+<FooterComponent></FooterComponent>
 
 <style>
-	/* :global(body) {
-		background-color: #f8cd4d;
-		} */
-
 	main {
 		/* margin: 0; */
 		overflow: hidden;
 		padding-bottom: 4rem;
 		margin-top: 6rem;
 		background-color: #f8cd4d;
+	}
+
+	:global(main > div.storyblok__outline > div:last-child) {
+		padding-bottom: 10rem;
+		margin-bottom: -10rem;
+		/* background: white; */
 	}
 
 	@media screen and (max-width: 640px) {

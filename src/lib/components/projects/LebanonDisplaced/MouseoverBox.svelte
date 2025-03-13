@@ -16,7 +16,7 @@
 				{#if blok.text}
 					<RichText
 						blok={textObject}
-						className="prose-p:text-sm prose-p:lg:text-lg prose-p:xl:text-2xl"
+						className="prose-p:text-sm prose-p:lg:text-md prose-p:xl:text-xl"
 					/>
 				{/if}
 			</div>
@@ -35,7 +35,10 @@
 			{#if blok.photo}
 				<div class="polaroid-photo floating-rotate-right">
 					<div class="polaroid-photo--inside">
-						<img src={blok.photo.filename} alt={blok.photo.alt || 'Photo'} />
+						<img
+							src={blok.photo.filename}
+							alt={blok.photo.alt || 'Photo description is missing.'}
+						/>
 					</div>
 				</div>
 			{/if}
@@ -155,11 +158,13 @@
 		height: calc(100% - 0.6rem);
 		width: calc(100% - 0.6rem);
 		margin: 0.3rem;
-		background-color: #e8c188;
+		/* background-color: #e8c188; */
+		background-color: #F8CD4D;
 		opacity: 0;
 		transition: all 0.5s;
 		z-index: -1;
-		border: 1px solid #ebe4cb;
+		border: 4px solid #003d14;
+		color: #003d14;
 	}
 
 	.box--wrapper:hover .text-content--hover {
@@ -201,8 +206,8 @@
 		z-index: -1;
 		position: absolute;
 		top: 0;
-		right: -5%;
-		width: 30%;
+		right: -10%;
+		width: 35%;
 		aspect-ratio: 35/42;
 		background-color: white;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);

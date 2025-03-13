@@ -27,7 +27,7 @@
 		position: absolute;
 		height: 5rem;
 		overflow: hidden;
-		top: -4rem;
+		top: -5rem;
 		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
 		background-size: contain;
 	}
