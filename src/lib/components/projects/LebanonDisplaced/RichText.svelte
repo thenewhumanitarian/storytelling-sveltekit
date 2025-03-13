@@ -46,6 +46,8 @@
 		white-space: normal;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
+		font-size: 1.2rem;
+		font-weight: medium;
 	}
 
 	:global(.storyblok--richtext p:not(:last-child)) {
