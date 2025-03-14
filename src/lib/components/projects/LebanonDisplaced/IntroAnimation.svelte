@@ -11,10 +11,15 @@
 	let interval: NodeJS.Timeout | null = null;
 
 	let numberOfTextures = 10;
-	let imageTextures: string[] = [];
+	let imageTextureSource = [
+		'https://localhost:5173/assets/ldd/objects/diary-lantern.png',
+		'https://localhost:5173/assets/ldd/objects/diary-camera.png',
+		'https://localhost:5173/assets/ldd/objects/diary-vase.png'
+	];
+	let imageTextures: string[] = ['https://localhost:5173/assets/ldd/objects/diary-lantern.png'];
 
 	for (let i = 0; i < numberOfTextures; i++) {
-		imageTextures.push(`https://picsum.photos/id/${Math.floor(Math.random() * 1000)}/100`);
+		imageTextures.push(imageTextureSource[Math.floor(Math.random() * imageTextureSource.length)]);
 	}
 
 	let objects: Matter.Body[] = [];
@@ -153,13 +158,24 @@
 			Matter.Composite.add(world, newObject);
 		}, 100);
 
-		window.addEventListener('resize', addWalls);
+		const handleResize = () => {
+			if (!container) return;
+
+			render.canvas.width = container.clientWidth;
+			render.canvas.height = container.clientHeight;
+			render.options.width = container.clientWidth;
+			render.options.height = container.clientHeight;
+
+			addWalls();
+		};
+
+		window.addEventListener('resize', handleResize);
 
 		onDestroy(() => {
 			Matter.Render.stop(render);
 			Matter.Runner.stop(runner);
 			Matter.Engine.clear(engine);
-			window.removeEventListener('resize', addWalls);
+			window.removeEventListener('resize', handleResize);
 			if (interval) clearInterval(interval);
 		});
 	});
