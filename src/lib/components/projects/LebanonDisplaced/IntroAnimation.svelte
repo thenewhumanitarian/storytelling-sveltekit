@@ -12,9 +12,9 @@
 
 	let numberOfTextures = 10;
 	let imageTextureSource = [
-		'https://localhost:5173/assets/ldd/objects/diary-lantern.png',
-		'https://localhost:5173/assets/ldd/objects/diary-camera.png',
-		'https://localhost:5173/assets/ldd/objects/diary-vase.png'
+		'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app/assets/ldd/objects/diary-lantern.png',
+		'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app/assets/ldd/objects/diary-camera.png',
+		'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app/assets/ldd/objects/diary-vase.png'
 	];
 	let imageTextures: string[] = ['https://localhost:5173/assets/ldd/objects/diary-lantern.png'];
 
