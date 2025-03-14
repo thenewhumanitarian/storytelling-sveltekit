@@ -16,7 +16,7 @@
 		'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app/assets/ldd/objects/diary-camera.png',
 		'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app/assets/ldd/objects/diary-vase.png'
 	];
-	let imageTextures: string[] = ['https://localhost:5173/assets/ldd/objects/diary-lantern.png'];
+	let imageTextures: string[] = [];
 
 	for (let i = 0; i < numberOfTextures; i++) {
 		imageTextures.push(imageTextureSource[Math.floor(Math.random() * imageTextureSource.length)]);
