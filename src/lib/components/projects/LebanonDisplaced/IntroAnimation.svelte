@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	// @ts-ignore
 	import Matter from 'matter-js';
 
 	let container: HTMLDivElement | null = null;
@@ -11,19 +10,28 @@
 	let mouseConstraint: Matter.MouseConstraint;
 	let interval: NodeJS.Timeout | null = null;
 
-	const imageTextures: string[] = [
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100',
-		'https://picsum.photos/100'
-	];
+	let numberOfTextures = 10;
+	let imageTextures: string[] = [];
+
+	for (let i = 0; i < numberOfTextures; i++) {
+		imageTextures.push(`https://picsum.photos/id/${Math.floor(Math.random() * 1000)}/100`);
+	}
 
 	let objects: Matter.Body[] = [];
+
+	function preloadImages(urls: string[]): Promise<void[]> {
+		return Promise.all(
+			urls.map(
+				(url) =>
+					new Promise((resolve, reject) => {
+						const img = new Image();
+						img.onload = () => resolve();
+						img.onerror = reject;
+						img.src = url;
+					})
+			)
+		);
+	}
 
 	function createImageBody(
 		x: number,
@@ -43,15 +51,16 @@
 		});
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		if (!container) return;
+
+		await preloadImages(imageTextures);
 
 		engine = Matter.Engine.create();
 		world = engine.world;
 
-		// ✅ Remove Matter.js capturing scroll events
 		const enablePageScroll = () => {
-			if (mouseConstraint && mouseConstraint.mouse.element) {
+			if (mouseConstraint?.mouse?.element) {
 				mouseConstraint.mouse.element.removeEventListener(
 					'wheel',
 					mouseConstraint.mouse.mousewheel
@@ -86,9 +95,7 @@
 			Matter.Composite.clear(world, false);
 			Matter.Composite.add(world, objects);
 
-			const width = container.clientWidth;
-			const height = container.clientHeight;
-
+			const { clientWidth: width, clientHeight: height } = container;
 			const wallWidth = 50;
 
 			const ground = Matter.Bodies.rectangle(width / 2, height + 25, width, wallWidth, {
@@ -101,8 +108,18 @@
 			const rightWall = Matter.Bodies.rectangle(width + 26, height / 2, wallWidth, height, {
 				isStatic: true
 			});
+			const rampLeft = Matter.Bodies.rectangle(width / 6, height / 1.75, width / 2, wallWidth / 5, {
+				isStatic: true,
+				angle: Math.PI * 0.08,
+				render: { fillStyle: '#003D14' }
+			});
+			const rampRight = Matter.Bodies.rectangle(width * 0.8, height / 3, width / 2, wallWidth / 5, {
+				isStatic: true,
+				angle: -Math.PI * 0.08,
+				render: { fillStyle: '#003D14' }
+			});
 
-			Matter.Composite.add(world, [ground, ceiling, leftWall, rightWall]);
+			Matter.Composite.add(world, [ground, ceiling, leftWall, rightWall, rampLeft, rampRight]);
 		};
 
 		addWalls();
@@ -110,89 +127,44 @@
 		const mouse = Matter.Mouse.create(render.canvas);
 		mouseConstraint = Matter.MouseConstraint.create(engine, {
 			mouse,
-			constraint: {
-				stiffness: 0.2,
-				render: { visible: false }
-			}
+			constraint: { stiffness: 0.2, render: { visible: false } }
 		});
 
 		Matter.Composite.add(world, mouseConstraint);
 		render.mouse = mouse;
 
-		// ✅ **Disable Matter.js scroll blocking**
 		enablePageScroll();
 
-		// ✅ Add new object every 100ms, stop at array length
 		interval = setInterval(() => {
 			if (!container || objects.length >= imageTextures.length) {
-				if (interval) clearInterval(interval); // Stop adding when limit is reached
+				if (interval) clearInterval(interval);
 				return;
 			}
 
-			const texture = imageTextures[objects.length]; // Pick in order
-
+			const texture = imageTextures[objects.length];
 			const newObject = createImageBody(
-				Math.random() * container.clientWidth, // Random X position
-				0, // Start at the top
-				100, // Width
-				100, // Height
+				Math.random() * container.clientWidth,
+				0,
+				100,
+				100,
 				texture
 			);
-
 			objects.push(newObject);
 			Matter.Composite.add(world, newObject);
 		}, 100);
 
-		// ✅ Prevent scrolling while dragging objects
-		const preventScroll = (event: Event) => {
-			if (mouseConstraint.body) {
-				event.preventDefault();
-			}
-		};
-
-		// document.addEventListener('wheel', preventScroll, { passive: false });
-		// document.addEventListener('touchmove', preventScroll, { passive: false });
-
-		document.addEventListener('wheel', () => {
-			console.log('wheel');
-		});
-
-		// ✅ **Fix Resize: Fully refresh Matter.js**
-		const handleResize = () => {
-			if (!container) return;
-
-			// Update canvas size
-			render.canvas.width = container.clientWidth;
-			render.canvas.height = container.clientHeight;
-			render.options.width = container.clientWidth;
-			render.options.height = container.clientHeight;
-
-			// Recreate walls to match new size
-			addWalls();
-
-			// Force Matter.js to detect changes
-			Matter.Render.lookAt(render, {
-				min: { x: 0, y: 0 },
-				max: { x: container.clientWidth, y: container.clientHeight }
-			});
-		};
-
-		window.addEventListener('resize', handleResize);
+		window.addEventListener('resize', addWalls);
 
 		onDestroy(() => {
 			Matter.Render.stop(render);
 			Matter.Runner.stop(runner);
 			Matter.Engine.clear(engine);
-			window.removeEventListener('resize', handleResize);
-			document.removeEventListener('wheel', preventScroll);
-			document.removeEventListener('touchmove', preventScroll);
-
+			window.removeEventListener('resize', addWalls);
 			if (interval) clearInterval(interval);
 		});
 	});
 </script>
 
-<!-- Animation Container -->
 <div bind:this={container} class="animation-container"></div>
 
 <style>
@@ -202,8 +174,6 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		margin: 0;
-		padding: 0;
 		overflow: hidden;
 	}
 </style>

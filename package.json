@@ -57,6 +57,7 @@
     "@knight-lab/timelinejs": "^3.9.3",
     "@storyblok/svelte": "^4.0.11",
     "@sveltejs/enhanced-img": "^0.4.4",
+    "@types/matter-js": "^0.19.8",
     "d3": "^7.9.0",
     "d3-scale": "^4.0.2",
     "fs": "^0.0.1-security",
