@@ -130,7 +130,6 @@
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-size: cover;
-		box-shadow: 0 0px 0px 5px #251b19;
 	}
 
 	:global(.story-grid--panel .storyblok--richtext *) {

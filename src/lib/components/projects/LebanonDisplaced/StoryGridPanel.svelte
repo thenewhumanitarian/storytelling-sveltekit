@@ -14,10 +14,10 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel hover-float panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''}`}
+	class={`story-grid--panel hover-float panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''}`}
 	style={`
-    box-shadow: ${blok.borderColor ? `inset 0 0px 0px 5px ${blok.borderColor}` : 'none'};
 		--colSpan: span ${blok.colSpan || '1'};
+		--borderColor: ${blok.borderColor || 'transparent'};
   `}
 >
 	<a
@@ -31,7 +31,9 @@
 				delay={30 * i + 100}
 				isAbsolute={true}
 			>
-				<div class={`line-clamp-6 flex h-full w-full flex-col justify-between`}>
+				<div
+					class={`line-clamp-6 flex h-full w-full flex-col justify-between ${blok.bgColor === 'note' ? 'py-4' : ''}`}
+				>
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -72,6 +74,29 @@
 		z-index: 0;
 	}
 
+	.story-grid--panel:not(.note) {
+		padding: 0.5rem 0.5rem;
+		margin: 0 0.5rem;
+		font-size: 1rem;
+		border: solid 3px #41403e;
+		border-top-left-radius: 255px 15px;
+		border-top-right-radius: 15px 225px;
+		border-bottom-right-radius: 225px 15px;
+		border-bottom-left-radius: 15px 255px;
+		will-change: box-shadow;
+		transition: box-shadow 0.2s ease-in-out;
+	}
+
+	.story-grid--panel:not(.note):hover {
+		box-shadow: 2px 8px 4px -6px hsla(0, 0%, 0%, 0.3);
+	}
+
+	.story-grid--panel.note {
+		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-size: contain;
+		border-color: transparent;
+	}
+
 	.story-grid--panel:hover {
 		opacity: 1;
 		z-index: 1;
@@ -87,7 +112,8 @@
 	}
 
 	:global(.story-grid--panel.has-image .storyblok--richtext) {
-		max-width: 90%;
+		max-width: 100%;
+		padding: 0 0.5rem;
 	}
 
 	.story-grid--panel.has-image img {
@@ -150,16 +176,12 @@
 
 	/* Box shadow effect */
 	.story-grid--panel.stretch-image:hover .panel-object.left {
-		box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.2);
-		transition:
-			box-shadow 0.3s ease-in-out,
-			transform 0.5s ease-in-out;
+		/* box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.2); */
+		transition: transform 0.5s ease-in-out;
 	}
 
 	.story-grid--panel.stretch-image:hover .panel-object.right {
-		box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
-		transition:
-			box-shadow 0.3s ease-in-out,
-			transform 0.5s ease-in-out;
+		/* box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2); */
+		transition: transform 0.5s ease-in-out;
 	}
 </style>
