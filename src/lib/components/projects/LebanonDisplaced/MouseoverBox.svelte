@@ -159,7 +159,8 @@
 		width: calc(100% - 0.6rem);
 		margin: 0.3rem;
 		/* background-color: #e8c188; */
-		background-color: #F8CD4D;
+		/* background-color: #F8CD4D; */
+		background-color: #E8C188;
 		opacity: 0;
 		transition: all 0.5s;
 		z-index: -1;

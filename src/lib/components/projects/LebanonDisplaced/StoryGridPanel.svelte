@@ -14,7 +14,7 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel hover-float panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''}`}
+	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''}`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
 		--borderColor: ${blok.borderColor || 'transparent'};
@@ -51,7 +51,7 @@
 				<div class={`panel-object--inner`}></div>
 				<FadeIn yOffset={20} delay={10 * i + 100} blurAmount={20} isAbsolute={true}>
 					<img
-						class={`${blok.stretchImage ? 'object-cover' : 'object-contain'}`}
+						class={`${blok.stretchImage ? 'object-cover' : 'object-contain'} ${blok.floatInPlace ? 'float-in-place' : ''}`}
 						src={`${blok.image.filename}/m/`}
 						alt={blok.image.alt || 'Image'}
 					/>
@@ -67,10 +67,6 @@
 		background-position: center center;
 		grid-column: var(--colSpan);
 		opacity: 0.9;
-		transition:
-			opacity 0.3s ease-in-out,
-			z-index 0.3s ease-in-out,
-			transform 3s ease-in-out infinite;
 		z-index: 0;
 	}
 
@@ -125,7 +121,6 @@
 	.panel-object-wrapper {
 		display: inline-block;
 		position: relative;
-		transition: transform 0.3s ease-in-out;
 	}
 
 	/* Floating object */
@@ -133,55 +128,62 @@
 		pointer-events: none;
 		overflow: hidden;
 		z-index: 10;
-		will-change: transform, rotate;
-		transition: transform 0.5s ease-in-out;
 	}
 
 	/* Default floating effect (Simulates previous floating animation) */
 	.story-grid--panel .panel-object.float-in-place {
-		/* transform: translateY(0); */
-		transition: transform 2s ease-in-out infinite;
+		transform: translateX(0) rotate(0);
+		transition: transform 1s ease-in-out;
 	}
 
-	/* Simulate floating effect on hover */
-	.story-grid--panel:hover .panel-object.float-in-place {
-		transform: translateY(-8px);
+	img.float-in-place {
+		animation: floatEffect 3s ease-in-out infinite;
+		animation-delay: random(1s, 3s);
 	}
 
-	/* Smooth movement and rotation transition */
-	.story-grid--panel .panel-object.left,
-	.story-grid--panel .panel-object.right {
-		transform: translate(0, 0) rotate(0deg);
-		transition: transform 0.5s ease-in-out;
+	/* Fly-out Effects */
+	.story-grid--panel.has-image:hover .panel-object.right {
+		/* animation: flyToLeft 1s ease-in-out 1 both; */
+		transform: translateX(-70%) rotate(-10deg);
+		transition: transform 1s ease-in-out;
 	}
 
-	/* Move smoothly on hover */
-	.story-grid--panel:hover .panel-object.left {
-		transform: translate(70%, 0) rotate(10deg);
-	}
-	.story-grid--panel:hover .panel-object.right {
-		transform: translate(-70%, 0) rotate(-10deg);
+	.story-grid--panel.has-image:hover .panel-object.left {
+		/* animation: flyToRight 1s ease-in-out 1 both; */
+		transform: translateX(70%) rotate(10deg);
+		transition: transform 1s ease-in-out;
 	}
 
-	/* Reverse transition when mouse leaves */
-	.story-grid--panel .panel-object-wrapper {
-		transform: translateY(0);
+	@keyframes floatEffect {
+		0% {
+			transform: translateY(0px);
+			scale: 1;
+		}
+		50% {
+			transform: translateY(-3px);
+			scale: 1.015;
+		}
+		100% {
+			scale: 1;
+			transform: translateY(0px);
+		}
 	}
 
-	/* Fix for stretch-image elements: Slide out instead of scaling */
-	.story-grid--panel.stretch-image .panel-object {
-		transform: translate(0, 0);
-		transition: transform 0.5s ease-in-out;
+	/* @keyframes flyToRight {
+		0% {
+			transform: translateX(0) rotate(0deg);
+		}
+		100% {
+			transform: translateX(70%) rotate(10deg);
+		}
 	}
 
-	/* Box shadow effect */
-	.story-grid--panel.stretch-image:hover .panel-object.left {
-		/* box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.2); */
-		transition: transform 0.5s ease-in-out;
-	}
-
-	.story-grid--panel.stretch-image:hover .panel-object.right {
-		/* box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2); */
-		transition: transform 0.5s ease-in-out;
-	}
+	@keyframes flyToLeft {
+		0% {
+			transform: translateX(0) rotate(0deg);
+		}
+		100% {
+			transform: translateX(-70%) rotate(-10deg);
+		}
+	} */
 </style>
