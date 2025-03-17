@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
+	//@ts-ignore
 	import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
 
 	const { blok, className } = $props();
@@ -13,7 +14,7 @@
 		height: ${blok.screenHeightInPercent || 100}dvh;
 	`}
 >
-	<IntroAnimation />
+	<IntroAnimation blok={blok} />
 	<div class="intro-title">
 		{#if blok.title.length > 0}
 			{#each blok.title as item}
