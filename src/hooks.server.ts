@@ -1,19 +1,22 @@
-import fs from 'fs';
-import path from 'path';
-
 export async function handle({ event, resolve }) {
-  const { url } = event;
-  const pathname = url.pathname;
-  const staticDir = path.resolve('static');
+  const response = await resolve(event);
 
-  // Try resolving requests to static files
-  const filePath = path.join(staticDir, pathname, 'index.html');
+  // If a 404 occurs and the path ends with a slash, try fetching an `index.html`
+  if (response.status === 404 && event.url.pathname.endsWith('/')) {
+    try {
+      // Use `event.fetch()` to properly fetch static files
+      const staticPath = event.url.pathname + 'index.html';
+      const fallbackResponse = await event.fetch(staticPath);
 
-  if (fs.existsSync(filePath)) {
-    return new Response(fs.readFileSync(filePath), {
-      headers: { 'Content-Type': 'text/html' }
-    });
+      if (fallbackResponse.ok) {
+        return new Response(await fallbackResponse.text(), {
+          headers: { 'Content-Type': 'text/html' }
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching static file:', err);
+    }
   }
 
-  return resolve(event);
+  return response;
 }
