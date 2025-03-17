@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunktnh_storytelling_standalone=self.webpackChunktnh_storytelling_standalone||[]).push([[293],{79639:function(e,t,l){l.r(t);var n=l(96540);t.default=()=>n.createElement("main",null,n.createElement("title",null,"TNH| Storytelling"),n.createElement("h1",null,"The New Humanitarian"),n.createElement("p",null,"Welcome to our Storytelling Codebase."))}}]);
+//# sourceMappingURL=component---src-pages-index-js-b07e6219609f3644ecff.js.map

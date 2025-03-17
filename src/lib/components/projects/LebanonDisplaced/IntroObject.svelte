@@ -22,7 +22,7 @@
 
 <style>
 	.animation-object {
-    position: relative;
+		position: relative;
 		border: 1px dashed red;
 		display: flex;
 		align-items: center;
@@ -31,8 +31,8 @@
 
 	.animation-object img {
 		object-fit: contain;
-    width: 100%;
-    height: 100%;
-    position: absolute
+		width: 100%;
+		height: 100%;
+		position: absolute;
 	}
 </style>
