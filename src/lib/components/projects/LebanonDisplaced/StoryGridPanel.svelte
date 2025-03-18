@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		blok: any; // Todo: Define type here
@@ -10,11 +11,22 @@
 	let { blok = {}, i = 0 }: Props = $props();
 
 	let baseUrl = 'https://localhost:5173';
+
+	onMount(async () => {
+		if (typeof window !== 'undefined') {
+			document.querySelectorAll('.rotate').forEach((el) => {
+				const randomAngle = (Math.random() * 16 - 8).toFixed(2);
+				(el as HTMLElement).style.transform = `rotate(${randomAngle}deg)`;
+			});
+		}
+	});
 </script>
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''} ${blok.bgColor === 'frame' ? 'frame' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}`}
+	class={`
+		story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
 		--borderColor: ${blok.borderColor || 'transparent'};
@@ -156,6 +168,15 @@
 	.story-grid--panel.has-image:hover .panel-object.left {
 		transform: translateX(70%) rotate(10deg);
 		transition: transform 1s ease-in-out;
+	}
+
+	.story-grid--panel.rotate {
+		will-change: transform;
+		transition: transform 1s;
+	}
+
+	.story-grid--panel.rotate:hover {
+		transform: rotate(0deg) !important;
 	}
 
 	@keyframes floatEffect {

@@ -79,8 +79,8 @@
 		height: 100vh;
 		overflow: hidden;
 		align-items: center;
-		background-color: #ebe4cb;
 		margin: 5rem 0;
+		/* background-color: #f7f7f7; */
 		/* RGBA for #e3c09a */
 		/* background-color: rgba(227, 192, 154, 0.9); */
 		/* background-color: rgba(0, 0, 0, 0.5); */

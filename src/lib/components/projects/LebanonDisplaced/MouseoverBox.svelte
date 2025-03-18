@@ -126,8 +126,14 @@
 		margin: 0.3rem;
 		text-align: left;
 		z-index: 1;
-		background-color: rgba(255, 255, 255, 1);
-		padding: 1.5rem 1.5rem 1rem 1.5rem;
+		background-color: rgba(255, 255, 255, 0);
+		padding: 1.5rem 3rem 1rem 3rem;
+		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-size: contain;
+		border-color: transparent;
+		background-repeat: no-repeat;
+		background-position: center;
+		/* background-color: rgba(255, 255, 255, 1); */
 	}
 
 	@media screen and (max-width: 640px) {
@@ -158,14 +164,19 @@
 		height: calc(100% - 0.6rem);
 		width: calc(100% - 0.6rem);
 		margin: 0.3rem;
-		/* background-color: #e8c188; */
-		/* background-color: #F8CD4D; */
-		background-color: #E8C188;
+		background-color: transparent;
 		opacity: 0;
 		transition: all 0.5s;
 		z-index: -1;
-		border: 4px solid #003d14;
 		color: #003d14;
+		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-size: contain;
+		border-color: transparent;
+		background-repeat: no-repeat;
+		background-position: center;
+		/* border: 4px solid #003d14; */
+		/* background-color: #e8c188; */
+		/* background-color: #F8CD4D; */
 	}
 
 	.box--wrapper:hover .text-content--hover {
@@ -210,12 +221,12 @@
 		right: -10%;
 		width: 35%;
 		aspect-ratio: 35/42;
-		background-color: white;
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
 		z-index: -1;
 		transition: all 0.3s;
 		transition-delay: 0.2s;
 		will-change: left top scale transform;
+		background-color: white;
 	}
 
 	.box--wrapper:hover .polaroid-photo {
