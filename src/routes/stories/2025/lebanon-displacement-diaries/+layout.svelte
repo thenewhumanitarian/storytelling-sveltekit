@@ -4,7 +4,7 @@
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
 
-	let { children, preFooter } = $props();
+	let { children } = $props();
 
 	onMount(() => {
 		/* Add class to body if in Storyblok editor */
@@ -34,10 +34,6 @@
 	</div> -->
 	{@render children()}
 </main>
-
-{#if preFooter}
-	{@render preFooter()}
-{/if}
 
 <FooterComponent></FooterComponent>
 

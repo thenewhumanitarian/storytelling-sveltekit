@@ -1,5 +1,5 @@
 <script lang="ts">
-	export { preFooter };
+	export { pageTitle };
 
 	import { onMount } from 'svelte';
 	import { useStoryblok } from '$lib/storyblok';
@@ -7,6 +7,7 @@
 	import type { PageData } from './$types';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -40,7 +41,11 @@
 			);
 		}
 	});
+
+	// console.log(story)
 </script>
+
+<SEO pageTitle={story.content.pageTitle} />
 
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
@@ -54,6 +59,7 @@
 	<div class="hidden">Getting Story ready...</div>
 {/if}
 
-{#snippet preFooter()}
-	<h3>Another Card Title</h3>
+<!-- Expose title via snippet -->
+{#snippet pageTitle()}
+	{title}
 {/snippet}

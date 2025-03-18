@@ -5,6 +5,7 @@
 	import type { PageData } from './$types';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
 	const { data }: { data: PageData } = $props();
 
@@ -39,6 +40,8 @@
 		}
 	});
 </script>
+
+<SEO pageTitle={story.content.pageTitle} />
 
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
