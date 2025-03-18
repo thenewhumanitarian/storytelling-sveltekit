@@ -14,7 +14,7 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''}`}
+	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''} ${blok.bgColor === 'frame' ? 'frame' : ''}`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
 		--borderColor: ${blok.borderColor || 'transparent'};
@@ -58,6 +58,7 @@
 				</FadeIn>
 			</div>
 		{/if}
+
 	</a>
 </div>
 
@@ -70,7 +71,7 @@
 		z-index: 0;
 	}
 
-	.story-grid--panel:not(.note) {
+	.story-grid--panel:not(.note, .frame) {
 		padding: 0.5rem 0.5rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
@@ -83,12 +84,18 @@
 		transition: box-shadow 0.2s ease-in-out;
 	}
 
-	.story-grid--panel:not(.note):hover {
+	.story-grid--panel:not(.note, .frame):hover {
 		box-shadow: 2px 8px 4px -6px hsla(0, 0%, 0%, 0.3);
 	}
 
 	.story-grid--panel.note {
 		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-size: contain;
+		border-color: transparent;
+	}
+
+	.story-grid--panel.frame {
+		background-image: url('/assets/ldd/patterns/picture-frame-one.png');
 		background-size: contain;
 		border-color: transparent;
 	}

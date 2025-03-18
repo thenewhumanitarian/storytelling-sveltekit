@@ -28,8 +28,7 @@
 					pin: true,
 					scrub: 1,
 					invalidateOnRefresh: true,
-					markers: true,
-
+					markers: true
 				},
 				force3D: true,
 				autoAlpha: 1
@@ -42,9 +41,13 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class="horizontal-scroll-wrapper hidden sm:flex"
 >
-	<!-- <div class="torn-paper torn-paper--top">
-		<h2 class="horizontal-scroll-wrapper--title pt-10">Stories</h2>
-	</div> -->
+	{#if blok.title}
+		<div class="horizontal-scroll-wrapper--title-container">
+			<h2 class="horizontal-scroll-wrapper--title pt-32 font-amman font-bold">
+				{blok.title}
+			</h2>
+		</div>
+	{/if}
 	<div class="horizontal-scroll-container">
 		{#if blok?.items}
 			{#each blok.items as item (item._uid)}
@@ -86,8 +89,18 @@
 			0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 	}
 	.horizontal-scroll-container {
+		position: absolute;
 		display: flex;
 		flex-wrap: nowrap;
+		top: 0;
+		left: 0;
+	}
+
+	.horizontal-scroll-wrapper--title-container {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
 	}
 
 	.horizontal-section {

@@ -41,8 +41,6 @@
 			);
 		}
 	});
-
-	// console.log(story)
 </script>
 
 <SEO pageTitle={story.content.pageTitle} />

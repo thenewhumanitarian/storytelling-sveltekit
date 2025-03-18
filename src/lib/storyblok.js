@@ -20,6 +20,7 @@ export async function useStoryblok(accessToken = "") {
       fadeInWrapper: (await import("$lib/components/projects/LebanonDisplaced/FadeIn.svelte")).default,
       mouseoverBox: (await import("$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte")).default,
       richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
+      mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
     },
     apiOptions: {
       https: true,
