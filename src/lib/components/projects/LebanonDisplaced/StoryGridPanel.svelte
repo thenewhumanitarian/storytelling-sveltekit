@@ -14,7 +14,7 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''} ${blok.bgColor === 'frame' ? 'frame' : ''}`}
+	class={`story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor || ''} ${blok.bgColor === 'note' ? 'note' : ''} ${blok.bgColor === 'frame' ? 'frame' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
 		--borderColor: ${blok.borderColor || 'transparent'};
@@ -24,7 +24,7 @@
 		href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
 		class="font-reset"
 	>
-		{#if blok.text}
+		{#if blok.items}
 			<FadeIn
 				yOffset={50}
 				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 py-3 px-4`}
@@ -58,7 +58,6 @@
 				</FadeIn>
 			</div>
 		{/if}
-
 	</a>
 </div>
 
@@ -71,11 +70,11 @@
 		z-index: 0;
 	}
 
-	.story-grid--panel:not(.note, .frame) {
+	.story-grid--panel:not(.note, .frame, .placeholder) {
 		padding: 0.5rem 0.5rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
-		border: solid 3px #41403e;
+		border: solid 3px var(--borderColor);
 		border-top-left-radius: 255px 15px;
 		border-top-right-radius: 15px 225px;
 		border-bottom-right-radius: 225px 15px;
@@ -84,7 +83,7 @@
 		transition: box-shadow 0.2s ease-in-out;
 	}
 
-	.story-grid--panel:not(.note, .frame):hover {
+	.story-grid--panel:not(.note, .frame, .placeholder):hover {
 		box-shadow: 2px 8px 4px -6px hsla(0, 0%, 0%, 0.3);
 	}
 
