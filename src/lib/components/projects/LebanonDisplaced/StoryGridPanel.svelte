@@ -21,7 +21,7 @@
   `}
 >
 	<a
-		href={`${blok.link ? `${baseUrl}/ldd/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+		href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
 		class="font-reset"
 	>
 		{#if blok.text}
@@ -143,13 +143,11 @@
 
 	/* Fly-out Effects */
 	.story-grid--panel.has-image:hover .panel-object.right {
-		/* animation: flyToLeft 1s ease-in-out 1 both; */
 		transform: translateX(-70%) rotate(-10deg);
 		transition: transform 1s ease-in-out;
 	}
 
 	.story-grid--panel.has-image:hover .panel-object.left {
-		/* animation: flyToRight 1s ease-in-out 1 both; */
 		transform: translateX(70%) rotate(10deg);
 		transition: transform 1s ease-in-out;
 	}
@@ -168,22 +166,4 @@
 			transform: translateY(0px);
 		}
 	}
-
-	/* @keyframes flyToRight {
-		0% {
-			transform: translateX(0) rotate(0deg);
-		}
-		100% {
-			transform: translateX(70%) rotate(10deg);
-		}
-	}
-
-	@keyframes flyToLeft {
-		0% {
-			transform: translateX(0) rotate(0deg);
-		}
-		100% {
-			transform: translateX(-70%) rotate(-10deg);
-		}
-	} */
 </style>

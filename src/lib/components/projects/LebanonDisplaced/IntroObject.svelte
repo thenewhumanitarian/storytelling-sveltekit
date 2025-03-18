@@ -3,7 +3,7 @@
 
 	const { blok } = $props();
 
-	console.log(blok);
+	// console.log(blok);
 </script>
 
 <div

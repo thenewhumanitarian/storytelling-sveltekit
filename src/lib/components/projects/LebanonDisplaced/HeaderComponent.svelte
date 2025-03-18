@@ -1,9 +1,20 @@
 <script>
 	import Logo from '$lib/components/icons/Logo.svelte';
+	import LanguageSwitch from './LanguageSwitch.svelte';
 </script>
 
 <header class={'torn-paper torn-paper--top'}>
-	<Logo />
+	<div class="flex w-full flex-row items-center justify-between">
+		<div class="w-36">
+			<p>Share icons</p>
+		</div>
+		<div>
+			<Logo />
+		</div>
+		<div class="w-36 text-right">
+			<LanguageSwitch />
+		</div>
+	</div>
 </header>
 
 <style>

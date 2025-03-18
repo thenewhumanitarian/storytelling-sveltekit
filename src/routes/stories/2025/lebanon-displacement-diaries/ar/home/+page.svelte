@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { useStoryblok } from '$lib/storyblok';
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
-	import type { PageData } from './$types';
+	import type { PageData } from '../$typestypes';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
 

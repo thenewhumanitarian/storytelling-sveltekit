@@ -11,7 +11,7 @@ export async function load({ params }) {
   const storyblokApi = await useStoryblokApi();
 
   try {
-    const response = await storyblokApi.get(`cdn/stories/stories/${slug}`, {
+    const response = await storyblokApi.get(`cdn/stories/diaries/${slug}`, {
       version: "draft",
       language: "ar"  // Request the Arabic version
     });

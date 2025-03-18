@@ -94,7 +94,7 @@
 <style>
 	/* The grid */
 	.story-grid--wrapper {
-		padding: 4rem 0 2rem 0;
+		padding: 2rem 0;
 	}
 
 	.story-grid--wrapper.mobile {
