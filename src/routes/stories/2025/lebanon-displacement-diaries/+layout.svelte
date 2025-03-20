@@ -47,7 +47,8 @@
 		/* margin: 0; */
 		overflow: hidden;
 		padding-bottom: 4rem;
-		margin-top: 6rem;
+		padding-top: 2rem;
+		margin-top: 4rem;
 		background-color: #f8cd4d;
 	}
 
@@ -55,13 +56,6 @@
 		padding-bottom: 10rem;
 		margin-bottom: -10rem;
 		/* background: white; */
-	}
-
-	@media screen and (max-width: 640px) {
-		main {
-			/* margin-top: 7rem; */
-			padding-top: 0;
-		}
 	}
 
 	.background-image {

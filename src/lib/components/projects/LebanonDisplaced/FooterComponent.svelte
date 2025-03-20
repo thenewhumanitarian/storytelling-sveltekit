@@ -29,6 +29,14 @@
 		/* line-height: 1; */
 		/* color: #F8CD4D; */
 	}
+	@media screen and (max-width: 640px) {
+		.left h1 {
+			font-size: 2.3rem !important;
+			width: 100%;
+			line-height: 1;
+			margin: 0;
+		}
+	}
 	:global(.torn-paper--bottom) {
 		position: absolute;
 		height: 5rem;

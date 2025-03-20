@@ -5,13 +5,13 @@
 
 <header class={'torn-paper torn-paper--top'}>
 	<div class="flex w-full flex-row items-center justify-between">
-		<div class="w-36">
+		<div class="w-16">
 			<p>Share icons</p>
 		</div>
 		<div>
 			<Logo />
 		</div>
-		<div class="w-36 text-right">
+		<div class="w-16 text-right">
 			<LanguageSwitch />
 		</div>
 	</div>
@@ -28,12 +28,21 @@
 		padding: 0 1rem 0.7rem 1rem;
 		width: 100%;
 		top: 0;
-		background-color: #ebe4cb;
+		/* background-color: #ebe4cb; */
 		/* background-color: transparent; */
 		/* background-color: rgba(232, 193, 136, 1); */
 		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); */
 		/* backdrop-filter: blur(10px); */
 	}
+
+	@media screen and (max-width: 640px) {
+		header {
+			background-repeat: no-repeat;
+			background-position: top center;
+			background-size: cover;
+		}
+	}
+
 	:global(.torn-paper) {
 		position: absolute;
 		left: 0;

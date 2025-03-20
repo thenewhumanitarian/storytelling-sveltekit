@@ -65,6 +65,9 @@
 			width: 100%;
 			padding: 2rem;
 		}
+		.content-wrapper:first-of-type {
+			margin-top: 0;
+		}
 	}
 
 	/* Avoid margin-bottom when two .content-wrapper are next to each other */

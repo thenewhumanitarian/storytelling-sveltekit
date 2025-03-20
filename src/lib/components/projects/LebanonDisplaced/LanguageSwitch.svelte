@@ -27,11 +27,11 @@
 
 <nav>
 	<ul>
-		<li class={`${currentPath === englishUrl ? 'active bg-sun underline' : ''} px-1`}>
-			<a href={englishUrl} rel="alternate" lang="en">English</a>
+		<li class={`${currentPath === englishUrl ? 'active bg-sun underline' : ''} px-0`}>
+			<a href={englishUrl} rel="alternate" lang="en">EN</a>
 		</li>
-		<li class={`${currentPath === arabicUrl ? 'active bg-sun underline' : ''} px-1`}>
-			<a href={arabicUrl} rel="alternate" lang="ar">العربية</a>
+		<li class={`${currentPath === arabicUrl ? 'active bg-sun underline' : ''} px-0`}>
+			<a href={arabicUrl} rel="alternate" lang="ar">AR</a>
 		</li>
 	</ul>
 </nav>
@@ -40,12 +40,12 @@
 	nav {
 		display: flex;
 		justify-content: center;
-		border: 2px solid black;
 		border-top-left-radius: 255px 15px;
 		border-top-right-radius: 15px 225px;
 		border-bottom-right-radius: 225px 15px;
 		border-bottom-left-radius: 15px 255px;
-		padding: 0.5rem;
+		/* border: 2px solid black; */
+		/* padding: 0.5rem; */
 	}
 
 	ul {
@@ -55,7 +55,7 @@
 	}
 
 	li {
-		margin: 0 0.5rem;
+		margin: 0 0.2rem;
 	}
 
 	a {

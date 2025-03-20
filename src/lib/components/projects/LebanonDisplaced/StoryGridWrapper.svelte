@@ -122,7 +122,7 @@
 	@media screen and (max-width: 900px) {
 		.story-grid--container {
 			width: 100%;
-			padding: 0 4rem 4rem 4rem;
+			padding: 0 2rem 4rem 2rem;
 		}
 	}
 

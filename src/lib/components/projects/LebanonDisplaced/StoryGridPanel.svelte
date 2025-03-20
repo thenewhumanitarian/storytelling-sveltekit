@@ -39,7 +39,7 @@
 		{#if blok.items}
 			<FadeIn
 				yOffset={50}
-				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'px-0 py-3' : 'px-4 pt-5 sm:pt-4 pb-3'}`}
+				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 pt-3 sm:pt-4 pb-3'}`}
 				delay={30 * i + 100}
 			>
 				<div class={`line-clamp-6 flex h-full w-full flex-col justify-between`}>
@@ -55,7 +55,7 @@
 		<!-- Todo: Make this a component? -->
 		{#if blok.image && blok.image?.filename}
 			<div
-				class={`panel-object absolute top-1/3 sm:top-0 ${blok.textAlign === 'left' ? 'left-1/2' : 'right-1/2'} sm:left-0 h-2/3  sm:h-full w-full bg-cover bg-center bg-no-repeat ${blok.textAlign} ${blok.floatInPlace ? 'float-in-place' : ''}`}
+				class={`panel-object absolute top-1/3 sm:top-0 ${blok.textAlign === 'left' ? 'left-1/2' : 'right-1/2'} h-2/3 w-full  bg-cover bg-center bg-no-repeat sm:left-0 sm:h-full ${blok.textAlign} ${blok.floatInPlace ? 'float-in-place' : ''}`}
 			>
 				<div class={`panel-object--inner`}></div>
 				<FadeIn yOffset={20} delay={10 * i + 100} blurAmount={20} isAbsolute={true}>
