@@ -40,6 +40,7 @@ export default {
         title: ['GT Sectra Bold', 'ui-serif'],
         serif: ['GT Sectra Regular', 'ui-serif'],
         pacifico: ['Pacifico', 'ui-cursive'],
+        // amman: ["ff-amman-serif-pro", 'serif'],
         amman: ["ff-amman-serif-pro", 'serif'],
       },
       container: {

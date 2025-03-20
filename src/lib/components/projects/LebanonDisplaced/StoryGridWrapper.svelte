@@ -110,19 +110,19 @@
 		margin: 0 auto;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: var(--grid-rows);
-		grid-gap: 25px;
+		grid-gap: 1.6rem;
 	}
 
 	@media screen and (max-width: 900px) {
 		.story-grid--container {
-			width: 80%;
+			width: 90%;
 		}
 	}
 
 	/* Force one column on mobile */
 	.story-grid--container.mobile {
-		grid-template-columns: 1fr !important;
-		grid-template-rows: auto !important;
+		display: flex;
+		flex-direction: column;
 	}
 
 	/* General panel (global) class */
