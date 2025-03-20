@@ -34,6 +34,15 @@
 		font-size: 2rem;
 	}
 
+	@media screen and (max-width: 640px) {
+		:global(.storyblok--richtext h1) {
+			font-size: 2.3rem !important;
+		}
+		:global(.storyblok--richtext h2) {
+			font-size: 1.8rem !important;
+		}
+	}
+
 	:global(.storyblok--richtext h3) {
 		margin: 0;
 		font-family: 'ff-amman-serif-pro', serif;

@@ -14,7 +14,7 @@
 		height: ${blok.screenHeightInPercent || 100}dvh;
 	`}
 >
-	<IntroAnimation blok={blok} />
+	<IntroAnimation {blok} />
 	<div class="intro-title">
 		{#if blok.title.length > 0}
 			{#each blok.title as item}
@@ -51,14 +51,22 @@
 		top: 8rem;
 		left: 2.5rem;
 	}
-	:global(.storyblok--richtext .intro-title h1) {
-		font-size: 3rem !important;
-		width: 300px;
-		line-height: 1;
-	}
+
 	.bottom-left {
 		position: absolute;
 		bottom: 3rem;
 		left: 2.5rem;
+	}
+	@media screen and (max-width: 640px) {
+		.intro-title {
+			top: 7rem;
+			left: 1rem;
+			text-align: left;
+		}
+		.bottom-left {
+			bottom: 1.5rem;
+			left: 1rem;
+			max-width: 65%;
+		}
 	}
 </style>

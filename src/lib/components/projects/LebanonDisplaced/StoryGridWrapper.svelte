@@ -48,16 +48,16 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="story-grid--container">
-		<div class={`story-grid--panel panel-title ${blok.textColor}`}>
-			{#if blok.text}
+		{#if blok.text}
+			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
 					<RichText
 						{blok}
-						className={'text-center prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-4'}
+						className={`${blok.textAlign || 'text-center'} w-full prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-§4`}
 					/>
 				</FadeIn>
-			{/if}
-		</div>
+			</div>
+		{/if}
 		{#if blok.items}
 			{#each blok.items as item, i (item._uid)}
 				<StoryblokComponent blok={item} {i} style="grid-column: span {item.colSpan || 1};" />
@@ -98,8 +98,14 @@
 		margin: 3rem auto;
 	}
 
+	@media screen and (max-width: 640px) {
+		.story-grid--wrapper {
+			margin: 0 auto;
+		}
+	}
+
 	.story-grid--wrapper.mobile {
-		padding: 2rem 0;
+		padding: 0;
 	}
 
 	/* Default grid */
@@ -115,7 +121,8 @@
 
 	@media screen and (max-width: 900px) {
 		.story-grid--container {
-			width: 90%;
+			width: 100%;
+			padding: 0 4rem 4rem 4rem;
 		}
 	}
 
@@ -146,7 +153,10 @@
 		box-shadow: none;
 		color: white;
 		grid-column: span 3;
-		padding-bottom: 1rem;
+		padding: 1rem;
+		width: 100%;
+		max-width: 800px;
+		margin: 0 auto;
 	}
 
 	/* Mobile Grid: Always One Column */
