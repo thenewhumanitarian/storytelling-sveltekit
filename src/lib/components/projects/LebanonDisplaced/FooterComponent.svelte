@@ -1,7 +1,7 @@
 <footer>
 	<div class="torn-paper torn-paper--bottom"></div>
 	<div class="left">
-		<h1>Lebanon Displacement Diaries</h1>
+		<h1>The Lebanon Displacement Diaries</h1>
 	</div>
 </footer>
 
@@ -17,10 +17,16 @@
 		left: 2.5rem;
 	}
 	.left h1 {
-		font-size: 3rem;
+		font-size: 4rem;
 		width: 300px;
-		line-height: 1;
+		font-size: 4rem;
+		line-height: 0.875;
+		margin-bottom: 2rem;
+		letter-spacing: -2px;
 		color: #ebe4cb;
+		border-left: 6px solid #ebe4cb;
+		padding-left: 1rem;
+		/* line-height: 1; */
 		/* color: #F8CD4D; */
 	}
 	:global(.torn-paper--bottom) {

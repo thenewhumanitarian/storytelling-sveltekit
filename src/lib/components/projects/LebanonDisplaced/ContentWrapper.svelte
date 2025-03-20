@@ -56,6 +56,10 @@
 		margin: 2rem auto;
 	}
 
+	.content-wrapper:first-of-type {
+		margin-top: 4rem;
+	}
+
 	@media screen and (max-width: 660px) {
 		.content-wrapper {
 			width: 100%;

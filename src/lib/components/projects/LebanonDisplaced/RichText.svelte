@@ -21,15 +21,18 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
-		font-family: 'ff-amman-serif-pro', serif;
+		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 		margin-bottom: 0;
-		font-size: 3rem;
-		line-height: 1;
+		font-size: 4rem;
+		line-height: 0.875;
 		margin-bottom: 0.75rem;
+		letter-spacing: -2px;
 	}
 	:global(.storyblok--richtext h2) {
 		margin: 0 0 1rem 0;
-		font-family: 'ff-amman-serif-pro', serif;
+		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 		font-weight: 900;
 		font-size: 2rem;
 	}
@@ -45,7 +48,8 @@
 
 	:global(.storyblok--richtext h3) {
 		margin: 0;
-		font-family: 'ff-amman-serif-pro', serif;
+		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 		font-weight: 900;
 		font-size: 1.1rem;
 	}
@@ -67,7 +71,8 @@
 		margin-bottom: 1rem;
 	}
 	:global(.storyblok--richtext.h2-pacifico h2) {
-		font-family: 'ff-amman-serif-pro', serif;
+		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 		font-size: 1.8rem;
 		line-height: 1.25;
 		margin-bottom: 0;
@@ -91,6 +96,7 @@
 		font-family: 'GT Sectra Fine', serif;
 	}
 	:global(.font-pacifico *) {
-		font-family: 'ff-amman-serif-pro', serif;
+		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 	}
 </style>

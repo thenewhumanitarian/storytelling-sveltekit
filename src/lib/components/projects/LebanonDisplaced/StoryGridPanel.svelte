@@ -39,7 +39,7 @@
 		{#if blok.items}
 			<FadeIn
 				yOffset={50}
-				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'px-0 py-3' : 'px-4 pt-5 pb-3'}`}
+				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'px-0 py-3' : 'px-4 pt-5 sm:pt-4 pb-3'}`}
 				delay={30 * i + 100}
 			>
 				<div class={`line-clamp-6 flex h-full w-full flex-col justify-between`}>

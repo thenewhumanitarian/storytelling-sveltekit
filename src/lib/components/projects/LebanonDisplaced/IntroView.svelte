@@ -50,6 +50,8 @@
 		position: absolute;
 		top: 8rem;
 		left: 2.5rem;
+		border-left: 6px solid #003d14;
+		padding-left: 1rem;
 	}
 
 	.bottom-left {
