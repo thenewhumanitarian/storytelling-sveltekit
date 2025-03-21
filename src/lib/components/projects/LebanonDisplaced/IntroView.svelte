@@ -11,7 +11,7 @@
 	class={`intro-view--wrapper ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
-		height: ${blok.screenHeightInPercent || 100}dvh;
+		height: ${blok.screenHeightInPercent || 100}svh;
 	`}
 >
 	<IntroAnimation {blok} />
