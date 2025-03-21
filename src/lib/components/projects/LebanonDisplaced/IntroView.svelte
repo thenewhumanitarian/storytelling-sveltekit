@@ -11,7 +11,7 @@
 	class={`intro-view--wrapper ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
-		height: ${blok.screenHeightInPercent || 100}svh;
+		height: ${blok.screenHeightInPercent || 100}dvh;
 	`}
 >
 	<IntroAnimation {blok} />
@@ -41,9 +41,9 @@
 		height: 100vh;
 		padding: 2rem;
 		margin-top: -6rem;
-		background-color: #ebe4cb;
 		border-bottom: 6px solid #003d14;
 		z-index: 0;
+		background-color: #ebe4cb;
 	}
 
 	.intro-title {

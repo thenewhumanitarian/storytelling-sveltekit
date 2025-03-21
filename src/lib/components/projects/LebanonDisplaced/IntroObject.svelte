@@ -13,7 +13,7 @@
       top: calc(${blok.posY}% - 6rem);
       left: ${blok.posX}%;
       width: ${blok.width || 'auto'}%;
-      height: ${blok.height || 'auto'}%;
+			aspect-ratio: ${blok.aspectRatio || 'auto'};
     `}
 	class={'animation-object'}
 >
