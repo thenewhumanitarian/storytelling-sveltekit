@@ -2,8 +2,6 @@
 	import { storyblokEditable } from '@storyblok/svelte';
 
 	const { blok } = $props();
-
-	// console.log(blok);
 </script>
 
 <div

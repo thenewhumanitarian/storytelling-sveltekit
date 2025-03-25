@@ -2,6 +2,7 @@
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import { onMount } from 'svelte';
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	interface Props {
 		blok: any; // Todo: Define type here
@@ -10,7 +11,7 @@
 
 	let { blok = {}, i = 0 }: Props = $props();
 
-	let baseUrl = 'https://localhost:5173';
+	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
