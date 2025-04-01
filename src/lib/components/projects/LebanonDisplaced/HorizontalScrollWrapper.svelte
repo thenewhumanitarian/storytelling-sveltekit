@@ -43,7 +43,7 @@
 >
 	{#if blok.title}
 		<div class="horizontal-scroll-wrapper--title-container">
-			<h2 class="horizontal-scroll-wrapper--title pt-32 font-amman font-bold">
+			<h2 class={`horizontal-scroll-wrapper--title pt-32 font-amman font-bold ${blok.textColor}`}>
 				{blok.title}
 			</h2>
 		</div>

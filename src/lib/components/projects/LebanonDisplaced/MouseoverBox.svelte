@@ -6,12 +6,14 @@
 	import RichText from './RichText.svelte';
 
 	const textObject = blok.text;
+
+	console.log(blok)
 </script>
 
 <article>
 	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
 		<div class="box--wrapper" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
-			<div class="name">{blok.title}</div>
+			<div class={`name ${blok.textColor}`}>{blok.title}</div>
 			<div class="text-content">
 				{#if blok.text}
 					<RichText
@@ -127,8 +129,8 @@
 		text-align: left;
 		z-index: 1;
 		background-color: rgba(255, 255, 255, 0);
-		padding: 1.5rem 3rem 1rem 3rem;
-		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		padding: 2rem 4rem 1rem 4rem;
+		background-image: url('/assets/ldd/patterns/scrapbook-note--light.png');
 		background-size: contain;
 		border-color: transparent;
 		background-repeat: no-repeat;
@@ -169,7 +171,7 @@
 		transition: all 0.5s;
 		z-index: -1;
 		color: #003d14;
-		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-image: url('/assets/ldd/patterns/scrapbook-note--light.png');
 		background-size: contain;
 		border-color: transparent;
 		background-repeat: no-repeat;
