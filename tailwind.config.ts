@@ -31,9 +31,11 @@ export default {
       colors: {
         transparent: 'transparent',
         burgundy: '#9f3e52',
-        brown: '#E8C188',
-        sun: '#F8CD4D',
-        grass: '#003D14',
+        brown: '#ffe0b5',
+        sun: '#ede580',
+        grass: '#a4af69',
+        lebgreen: '#636845',
+        lebblack: '#282828'
       },
       fontFamily: {
         body: ['Roboto', 'Open Sans', 'ui-sans-serif'],

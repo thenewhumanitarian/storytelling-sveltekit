@@ -49,7 +49,7 @@
 		padding-bottom: 4rem;
 		padding-top: 2rem;
 		margin-top: 4rem;
-		background-color: #f8cd4d;
+		background-color: #ede580;
 	}
 
 	:global(main > div.storyblok__outline > div:last-child) {

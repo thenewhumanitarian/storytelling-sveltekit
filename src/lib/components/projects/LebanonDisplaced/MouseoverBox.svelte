@@ -82,7 +82,7 @@
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: start;
-		border: #ebe4cb 1px solid;
+		border: #ffe0b5 1px solid;
 		aspect-ratio: 3/2;
 		width: 100%;
 		max-width: 640px;
@@ -122,7 +122,7 @@
 		width: 100%;
 		height: calc(100% - 0.6rem);
 		width: calc(100% - 0.6rem);
-		border: 1px solid #ebe4cb;
+		border: 1px solid #ffe0b5;
 		margin: 0.3rem;
 		text-align: left;
 		z-index: 1;
@@ -176,7 +176,7 @@
 		background-position: center;
 		/* border: 4px solid #003d14; */
 		/* background-color: #e8c188; */
-		/* background-color: #F8CD4D; */
+		/* background-color: #ede580; */
 	}
 
 	.box--wrapper:hover .text-content--hover {

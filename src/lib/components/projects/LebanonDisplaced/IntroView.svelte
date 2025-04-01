@@ -41,17 +41,18 @@
 		height: 100vh;
 		padding: 2rem;
 		margin-top: -6rem;
-		border-bottom: 6px solid #003d14;
+		border-bottom: 6px solid #636845;
 		z-index: 0;
-		background-color: #ebe4cb;
+		background-color: #ffe0b5;
 	}
 
 	.intro-title {
 		position: absolute;
 		top: 8rem;
 		left: 2.5rem;
-		border-left: 6px solid #003d14;
+		border-left: 6px solid #636845;
 		padding-left: 1rem;
+		padding-top: 0.75rem;
 	}
 
 	.bottom-left {

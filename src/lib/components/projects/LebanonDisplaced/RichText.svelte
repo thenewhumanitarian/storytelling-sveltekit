@@ -57,9 +57,9 @@
 	:global(.storyblok--richtext p) {
 		display: block;
 		white-space: normal;
+		font-size: 1.2rem;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
-		font-size: 1.2rem;
 		font-weight: medium;
 	}
 
