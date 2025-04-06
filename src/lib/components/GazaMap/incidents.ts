@@ -1,4 +1,4 @@
-
+// redundant if fetching data from published gsheet (see +page.server.ts)
 export const gaza_incidents = [
   {
     id: 1,

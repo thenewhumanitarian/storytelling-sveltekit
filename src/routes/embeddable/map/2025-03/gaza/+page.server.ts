@@ -9,7 +9,12 @@ export const load: PageServerLoad = async ({ params }) => {
 
   const records = parse(csvText, {
     columns: true,
+    trim: true,
     skip_empty_lines: true,
+    on_record: (record: Record<string, string>) => {
+      const hasMissing = Object.values(record).some(value => value === '');
+      return hasMissing ? undefined : record;
+    },
     cast: (value, context) => {
       switch (context.column as keyof IncidentData) {
         case "id":
@@ -27,10 +32,8 @@ export const load: PageServerLoad = async ({ params }) => {
     }
   })
 
-  const cleanedRecords = records.filter((row: Record<string, string>) => Object.values(row).every(value => value !== ''))
-
   return {
-    incidents_data: cleanedRecords
+    incidentsData: records
   }
 
 }

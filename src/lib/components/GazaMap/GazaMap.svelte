@@ -4,26 +4,25 @@
 	import { onMount } from 'svelte';
 	import type { IncidentData } from './types';
 
-	// Use public token (replace if necessary, ideally from env vars)
+	// Use public token (ideally from env vars)
 	const MAPBOX_TOKEN =
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
 
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
 
-	// --- Props ---
 	let {
 		selectedMarkerId,
 		highlightedMarkerId,
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
-		gaza_incidents
+		incidentsData
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
-		gaza_incidents: IncidentData[];
+		incidentsData: IncidentData[];
 	} = $props();
 
 	// --- Internal State ---
@@ -47,34 +46,35 @@
 		map.on('load', () => {
 			map?.resize();
 			map?.addControl(new mapboxgl.NavigationControl());
-			// Add country boundaries and satellite layers (existing code)
-			map.addSource('countries', {
+			// TODO: check that layers and sources are correct
+      // Add country boundaries and satellite layers (existing code)
+			map?.addSource('countries', {
 				type: 'vector',
 				url: 'mapbox://mapbox.country-boundaries-v1'
 			});
 			// Add the satellite layer
-			map.addSource('satellite', {
+			map?.addSource('satellite', {
 				type: 'raster',
 				url: 'mapbox://mapbox.satellite',
 				tileSize: 256
 			});
-			// Adds satellite layer for Syria
-			map.addLayer({
-				id: 'syria-satellite',
+			// Adds satellite layer for Gaza (I think???)
+			map?.addLayer({
+				id: 'gaza-satellite',
 				type: 'raster',
 				source: 'satellite',
-				filter: ['==', ['get', 'name_en'], 'Syria'],
+				filter: ['==', ['get', 'name_en'], 'Gaza'],
 				paint: {
 					'raster-opacity': 0.8
 				}
 			});
 			// Add the country boundaries layer
-			map.addLayer({
+			map?.addLayer({
 				id: 'country-mask',
 				type: 'fill',
 				source: 'countries',
 				'source-layer': 'country_boundaries',
-				filter: ['!=', ['get', 'name_en'], 'Syria'],
+				filter: ['!=', ['get', 'name_en'], 'Gaza'],
 				paint: {
 					'fill-color': '#000000',
 					'fill-opacity': 0.5
@@ -82,7 +82,7 @@
 			});
 
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
-			gaza_incidents.forEach((incident, idx) => {
+			incidentsData.forEach((incident, idx) => {
 				const { id, latitude, longitude, title, description, killedOrWounded } = incident;
 				const el = document.createElement('div');
 				// Keep custom marker classes for CSS animation/styling not easily done w/ Tailwind
@@ -111,7 +111,6 @@
 				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
 				el.addEventListener('click', () => {
 					setSelectedMarkerId(id);
-					// Optional: Fly to marker on click
 					map?.flyTo({ center: [longitude, latitude], zoom: ZOOM_ZOOM });
 				});
 				// Add listener to popup close button
