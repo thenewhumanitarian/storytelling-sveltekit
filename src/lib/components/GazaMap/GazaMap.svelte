@@ -2,7 +2,7 @@
 	import mapboxgl from 'mapbox-gl';
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import { onMount } from 'svelte';
-	import { gaza_incidents } from '$lib/components/GazaMap/incidents';
+	import type { IncidentData } from './types';
 
 	// Use public token (replace if necessary, ideally from env vars)
 	const MAPBOX_TOKEN =
@@ -16,12 +16,14 @@
 		selectedMarkerId,
 		highlightedMarkerId,
 		setSelectedMarkerId,
-		setHighlightedMarkerId
+		setHighlightedMarkerId,
+		gaza_incidents
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
+		gaza_incidents: IncidentData[];
 	} = $props();
 
 	// --- Internal State ---
@@ -45,6 +47,39 @@
 		map.on('load', () => {
 			map?.resize();
 			map?.addControl(new mapboxgl.NavigationControl());
+			// Add country boundaries and satellite layers (existing code)
+			map.addSource('countries', {
+				type: 'vector',
+				url: 'mapbox://mapbox.country-boundaries-v1'
+			});
+			// Add the satellite layer
+			map.addSource('satellite', {
+				type: 'raster',
+				url: 'mapbox://mapbox.satellite',
+				tileSize: 256
+			});
+			// Adds satellite layer for Syria
+			map.addLayer({
+				id: 'syria-satellite',
+				type: 'raster',
+				source: 'satellite',
+				filter: ['==', ['get', 'name_en'], 'Syria'],
+				paint: {
+					'raster-opacity': 0.8
+				}
+			});
+			// Add the country boundaries layer
+			map.addLayer({
+				id: 'country-mask',
+				type: 'fill',
+				source: 'countries',
+				'source-layer': 'country_boundaries',
+				filter: ['!=', ['get', 'name_en'], 'Syria'],
+				paint: {
+					'fill-color': '#000000',
+					'fill-opacity': 0.5
+				}
+			});
 
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			gaza_incidents.forEach((incident, idx) => {

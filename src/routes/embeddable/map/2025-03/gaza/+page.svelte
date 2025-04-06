@@ -1,6 +1,11 @@
 <script lang="ts">
 	import GazaMap from '$lib/components/GazaMap/GazaMap.svelte';
 	import Timeline from '$lib/components/GazaMap/Timeline.svelte';
+	import { gaza_incidents } from '$lib/components/GazaMap/incidents';
+
+  let { data } = $props()
+
+  console.log('data: ', data)
 
 	// Shared state: ID of the selected incident
 	let selectedMarkerId = $state<number | null>(null);
@@ -24,6 +29,7 @@
 			{setSelectedMarkerId}
 			{highlightedMarkerId}
 			{setHighlightedMarkerId}
+      gaza_incidents={data.incidents_data}
 		/>
 	</div>
 	<div class="absolute bottom-0 left-0 z-30 w-full">
@@ -33,6 +39,7 @@
 			{setSelectedMarkerId}
 			{highlightedMarkerId}
 			{setHighlightedMarkerId}
+      gaza_incidents={data.incidents_data}
 		/>
 	</div>
 </section>

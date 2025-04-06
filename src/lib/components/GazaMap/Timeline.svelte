@@ -1,19 +1,22 @@
 <script lang="ts">
-	import { gaza_incidents } from '$lib/components/GazaMap/incidents';
+	// import { gaza_incidents } from '$lib/components/GazaMap/incidents';
 	import { onMount } from 'svelte';
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { extent } from 'd3-array';
+	import type { IncidentData } from './types';
 
 	let {
 		selectedMarkerId,
 		setSelectedMarkerId,
     highlightedMarkerId,
     setHighlightedMarkerId,
+    gaza_incidents,
 	}: {
 		selectedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		highlightedMarkerId: number | null;
 		setHighlightedMarkerId: (id: number | null) => void;
+    gaza_incidents: IncidentData[]
 	} = $props();
 
 	// --- Internal State ---
@@ -21,7 +24,7 @@
 	let containerWidth = $state(0);
 	const svgHeight = 100; // Constant height of SVG area
 	const barWidth = 12; // Constant width of bars
-	const axisPaddingBottom = 5; // Space below the axis line for labels etc.
+	const axisPaddingBottom = 15; // Space below the axis line for labels etc.
 	const barPaddingBottom = 5; // Space between bottom of bar and axis line
 	const horizontalPadding = 15; // Padding at the ends of the timeline axis
 
@@ -97,7 +100,7 @@
 <!-- Use Tailwind classes for the container -->
 <div
 	bind:this={timelineContainer}
-	class="box-border flex h-[200px] w-full items-center overflow-hidden border-t border-gray-300 bg-white/90 px-2.5"
+	class="box-border flex h-48 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90 px-2.5"
 >
 	{#if containerWidth > 0 && parsedIncidents.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
@@ -121,6 +124,12 @@
 				<g
 					class="group cursor-pointer focus:outline-none"
 					onclick={() => handleClick(incident.id)}
+          onkeydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleClick(incident.id)
+            }
+          }}
 					onmouseenter={() => handleMouseEnter(incident.id)}
 					onmouseleave={handleMouseLeave}
 					onfocusin={() => handleMouseEnter(incident.id)}
@@ -152,7 +161,7 @@
 				{@const [startDate, endDate] = timeScale.domain()}
 				<text
 					x={startRange}
-					y={svgHeight - 18}
+					y={axisY + 10}
 					class="fill-gray-500 font-sans text-xs"
 					text-anchor="start"
 				>
@@ -160,7 +169,7 @@
 				</text>
 				<text
 					x={endRange}
-					y={svgHeight - 18}
+					y={axisY + 10}
 					class="fill-gray-500 font-sans text-xs"
 					text-anchor="end"
 				>

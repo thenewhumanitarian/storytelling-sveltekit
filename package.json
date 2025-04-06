@@ -57,6 +57,7 @@
     "@iframe-resizer/child": "^5.3.2",
     "@knight-lab/timelinejs": "^3.9.3",
     "@storyblok/svelte": "^4.0.11",
+    "csv-parse": "^5.6.0",
     "d3": "^7.9.0",
     "d3-array": "^3.2.4",
     "d3-scale": "^4.0.2",
