@@ -26,8 +26,18 @@ export const load: PageServerLoad = async ({ params }) => {
     trim: true,
     skip_empty_lines: true,
     on_record: (record: Record<string, string>) => {
-      const hasMissing = Object.values(record).some((value) => value === "");
-      return hasMissing ? undefined : record;
+      const requiredFields = ['id', 'title', 'date', 'latitude', 'longitude', 'killedOrWounded'];
+
+      const hasMissingRequired = requiredFields.some((field) => {
+        const value = record[field];
+
+        // Handle numeric values or missing strings
+        if (value === undefined || value === null) return true;
+        if (typeof value === 'string') return value.trim() === '';
+        return false;
+      });
+
+      return hasMissingRequired ? undefined : record;
     },
     cast: (value, context) => {
       switch (context.column as keyof IncidentData) {
@@ -40,6 +50,8 @@ export const load: PageServerLoad = async ({ params }) => {
         case "title":
         case "date":
         case "description":
+        case "videoUrl":
+        case "videoCaption":
         default:
           return value;
       }

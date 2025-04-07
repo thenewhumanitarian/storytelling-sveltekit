@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { IncidentData } from './types';
-	import moment from 'moment';
+	import GazaCard from './GazaCard.svelte';
 
 	// Props
 	let {
@@ -13,6 +13,8 @@
 		selectedMarkerId: number | null;
 		onCardInView: (id: number) => void;
 	} = $props();
+
+	console.log(incidentsData);
 
 	export function scrollToCard(id: number) {
 		console.log('Scroll to ID: ', id);
@@ -126,39 +128,6 @@
 		>
 	</div>
 	{#each incidentsData as incident (incident.chronoId)}
-		<div
-			class="stack-cards__item js-stack-cards__item mx-4 my-4 border bg-white p-4"
-			data-id={incident.chronoId}
-		>
-			<div
-				class="bg-white"
-				class:opacity-100={incident.chronoId === selectedMarkerId}
-				class:opacity-30={incident.chronoId !== selectedMarkerId}
-			>
-				<p class="font-mono text-sm text-zinc-500">
-					﹟ ID: {incident.id} | ⏱ ChronoID: {incident.chronoId} | Date: {moment(
-						incident.date
-					).format('DD MMMM YYYY')}
-				</p>
-				<hr class="my-3" />
-				<h3 class="mb-1 text-lg font-bold">{incident.title}</h3>
-				<h5 class="mb-2 text-sm font-semibold text-gray-600">
-					{incident.killedOrWounded} killed/wounded
-				</h5>
-				<p class="text-sm text-gray-700">{incident.description}</p>
-			</div>
-		</div>
+		<GazaCard {incident} {selectedMarkerId} />
 	{/each}
 </div>
-
-<style>
-	.stack-cards__item {
-		/* position: sticky; */
-		top: 2.5rem; /* <-- This defines *where* they stick */
-		min-height: calc(70vh - 10rem); /* <-- This defines *how tall* each card is */
-		min-height: calc(70svh - 10rem); /* <-- This defines *how tall* each card is */
-		transform-origin: center top;
-		/* box-shadow: 0 0 0 -5px rgba(0, 0, 0, 0.1); */
-		transition: transform 0.2s ease;
-	}
-</style>

@@ -8,4 +8,6 @@ export interface IncidentData {
   description: string;
   chronoId: number;
   weekYear: string;
+  videoUrl: string;
+  videoCaption: string;
 }

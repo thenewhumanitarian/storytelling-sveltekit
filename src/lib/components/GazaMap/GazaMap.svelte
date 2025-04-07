@@ -96,48 +96,48 @@
 				const el = document.createElement('div');
 				el.className = `custom-marker marker-${idx}`;
 
-				const popup = new mapboxgl.Popup({
-					className: 'mapbox-popup-custom shadow-lg rounded-none',
-					closeButton: false
-				}).setHTML(`
-						<div class="p-2.5 text-gray-700">
-							<button class="mapboxgl-popup-close-button" type="button" aria-label="Close popup">×</button>
-							<h3 class="font-bold mb-1">${title}</h3>
-							<h5 class="text-sm font-semibold mb-1">${killedOrWounded} killed/wounded</h5>
-							<p class="text-sm">${description}</p>
-						</div>
-					`);
+				// const popup = new mapboxgl.Popup({
+				// 	className: 'mapbox-popup-custom shadow-lg rounded-none',
+				// 	closeButton: false
+				// }).setHTML(`
+				// 		<div class="p-2.5 text-gray-700">
+				// 			<button class="mapboxgl-popup-close-button" type="button" aria-label="Close popup">×</button>
+				// 			<h3 class="font-bold mb-1">${title}</h3>
+				// 			<h5 class="text-sm font-semibold mb-1">${killedOrWounded} killed/wounded</h5>
+				// 			<p class="text-sm">${description}</p>
+				// 		</div>
+				// 	`);
 
 				const marker = new mapboxgl.Marker({ element: el })
 					.setLngLat([longitude, latitude])
-					.setPopup(popup)
+					// .setPopup(popup)
 					.addTo(map!);
 
 				el.addEventListener('mouseenter', () => setHighlightedMarkerId(chronoId));
 				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
 				el.addEventListener('click', () => {
 					selectionOrigin = 'click';
-					closeAllPopups(chronoId);
+					// closeAllPopups(chronoId);
 					setSelectedMarkerId(chronoId);
 					scrollToIncidentCard(chronoId);
 					map?.flyTo({ center: [longitude, latitude], zoom: ZOOM_ZOOM });
 				});
 
-				popup.on('open', () => {
-					const closeButton = popup.getElement()?.querySelector('.mapboxgl-popup-close-button');
-					closeButton?.addEventListener('click', () => {
-						popup.remove();
-						selectionOrigin = 'click';
-						setSelectedMarkerId(null);
-						map?.flyTo({ zoom: DEFAULT_MAP_ZOOM });
-					});
-				});
+				// popup.on('open', () => {
+				// 	const closeButton = popup.getElement()?.querySelector('.mapboxgl-popup-close-button');
+				// 	closeButton?.addEventListener('click', () => {
+				// 		popup.remove();
+				// 		selectionOrigin = 'click';
+				// 		setSelectedMarkerId(null);
+				// 		map?.flyTo({ zoom: DEFAULT_MAP_ZOOM });
+				// 	});
+				// });
 
 				newMarkers.push({ id: chronoId, markerInstance: marker });
 			});
 			markers = newMarkers;
 
-			/* Heat map */
+			// --- Heat map layer --- //
 			// Convert incidents to GeoJSON FeatureCollection
 			const heatmapGeoJSON = {
 				type: 'FeatureCollection',
@@ -168,37 +168,26 @@
 				paint: {
 					// ⚖️ Give every point more visual weight
 					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0.5, 4, 3],
-
 					// 📏 Increase radius more aggressively with zoom
 					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 5, 15, 10, 40, 15, 60],
-
 					// 🌈 Make the gradient pop earlier
 					'heatmap-color': [
 						'interpolate',
 						['linear'],
 						['heatmap-density'],
-
-						0,
+						0, // No density
 						'rgba(160, 60, 80, 0)',
-
-						0.2,
+						0.2, // Low density
 						'rgba(255,217,188,0.3)',
-
-						0.6,
+						0.6, // Medium density
 						'rgba(255,179,122,0.8)',
-
-						0.7,
+						0.7, // High density
 						'rgba(214,121,139,0.9)',
-
-						// Strong TNH brand color
-						0.8,
+						0.8, // Very high density
 						'rgba(166,89,104,0.8)',
-
-						// Deepened burgundy for hotspots
-						1,
+						1, // Maximum density
 						'#A03C50'
 					],
-
 					// 🔍 Make the layer more visible
 					'heatmap-opacity': 0.75
 				}
@@ -254,10 +243,10 @@
 				}
 				selectionOrigin = null; // reset origin
 
-				if (!markerInstance.getPopup()?.isOpen()) {
-					closeAllPopups(id);
-					map?.flyTo({ center: markerInstance.getLngLat(), zoom: ZOOM_ZOOM });
-				}
+				// if (!markerInstance.getPopup()?.isOpen()) {
+				// 	closeAllPopups(id);
+				// 	map?.flyTo({ center: markerInstance.getLngLat(), zoom: ZOOM_ZOOM });
+				// }
 			}
 
 			if (id === currentHighlightId) {
