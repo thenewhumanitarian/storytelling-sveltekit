@@ -262,13 +262,13 @@
 <GazaCards
 	bind:this={cardsComponent}
 	{selectedMarkerId}
-	incidentsData={incidentsData.sort((a, b) => a.date.localeCompare(b.date))}
+	incidentsData={incidentsData.sort((a, b) => a.chronoId - b.chronoId)}
 	onCardInView={(id) => {
-		const incident = incidentsData.find((i) => i.id === id);
+		const incident = incidentsData.find((i) => i.chronoId === id);
 		if (incident && map) {
-			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM });
-			selectionOrigin = 'scroll';
-			setSelectedMarkerId(id);
+			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM }); // Fly to the incident
+			selectionOrigin = 'scroll'; // Set selection origin to scroll
+			setSelectedMarkerId(id); // Update selected marker ID
 		}
 	}}
 />

@@ -120,7 +120,7 @@
 			/>
 
 			<!-- Incident Bars -->
-			{#each parsedIncidents as incident (incident.id)}
+			{#each parsedIncidents as incident (incident.chronoId)}
 				{@const xPos = timeScale(incident.dateObj)}
 				{@const barHeight = heightScale(incident.killedOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
@@ -128,16 +128,16 @@
 				<!-- Group for interaction + Tailwind group modifier -->
 				<g
 					class="group cursor-pointer focus:outline-none"
-					onclick={() => handleClick(incident.id)}
+					onclick={() => handleClick(incident.chronoId)}
 					onkeydown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {
 							e.preventDefault();
-							handleClick(incident.id);
+							handleClick(incident.chronoId);
 						}
 					}}
-					onmouseenter={() => handleMouseEnter(incident.id)}
+					onmouseenter={() => handleMouseEnter(incident.chronoId)}
 					onmouseleave={handleMouseLeave}
-					onfocusin={() => handleMouseEnter(incident.id)}
+					onfocusin={() => handleMouseEnter(incident.chronoId)}
 					onfocusout={handleMouseLeave}
 					tabindex="0"
 					aria-label={`Incident: ${incident.title} on ${formatDate(incident.dateObj)}, ${incident.killedOrWounded} killed/wounded`}
@@ -151,7 +151,7 @@
 						height={barHeight}
 						rx="1"
 						ry="1"
-						fill={selectedMarkerId === incident.id ? '#f2b0b8' : '#9f3e52'}
+						fill={selectedMarkerId === incident.chronoId ? '#f2b0b8' : '#9f3e52'}
 					>
 						<title
 							>{incident.title} ({formatDate(incident.dateObj)}) - {incident.killedOrWounded} killed/wounded</title

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { IncidentData } from './types';
+	import moment from 'moment';
 
 	// Props
 	let {
@@ -18,14 +19,10 @@
 
 		const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 		if (el && container) {
-			// Get the offset of the element relative to the scroll container
-			const targetOffsetTop = el.offsetTop;
-
-			// Optional padding offset if needed (e.g. to align just below header)
-			const padding = 40;
-
+			const targetOffsetTop =
+				el.getBoundingClientRect().top - container.getBoundingClientRect().top;
 			container.scrollTo({
-				top: targetOffsetTop - padding,
+				top: container.scrollTop + targetOffsetTop - 40,
 				behavior: 'smooth'
 			});
 		}
@@ -36,23 +33,18 @@
 	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 	let pendingCardId: number | null = null;
 
-	function getCurrentIndex(): number {
-		const selectedId = selectedMarkerId; // add this if needed
-		return incidentsData.findIndex((i) => i.id === selectedId);
-	}
-
 	function goToPrevCard() {
-		if (!selectedMarkerId || selectedMarkerId <= 1) {
-			return;
+		const index = incidentsData.findIndex((i) => i.chronoId === selectedMarkerId);
+		if (index > 0) {
+			const prevId = incidentsData[index - 1].chronoId;
+			scrollToCard(prevId);
 		}
-		const prevId = selectedMarkerId - 1;
-		scrollToCard(prevId);
 	}
 
 	function goToNextCard() {
-		const currentIndex = getCurrentIndex();
-		if (currentIndex < incidentsData.length - 1) {
-			const nextId = incidentsData[currentIndex + 1].id;
+		const index = incidentsData.findIndex((i) => i.chronoId === selectedMarkerId);
+		if (index < incidentsData.length - 1 && index !== -1) {
+			const nextId = incidentsData[index + 1].chronoId;
 			scrollToCard(nextId);
 		}
 	}
@@ -94,9 +86,9 @@
 					);
 
 					if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
-						const index = incidentsData.findIndex((i) => i.id === id);
+						const index = incidentsData.findIndex((i) => i.chronoId === id);
 						if (index > 0) {
-							const prevId = incidentsData[index - 1].id;
+							const prevId = incidentsData[index - 1].chronoId;
 							console.log(`⬆️ Scrolled up, will trigger: ${prevId}`);
 							debounceTrigger(prevId);
 						}
@@ -111,7 +103,7 @@
 			},
 			{
 				root: container,
-				threshold: 0.5
+				threshold: 1
 			}
 		);
 
@@ -121,23 +113,33 @@
 
 <div
 	bind:this={container}
-	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-40 shadow-lg"
+	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-36 pt-6 shadow-lg"
 >
 	<div class="fixed right-0 top-0 z-50 flex h-10 w-1/2 items-center justify-between bg-white px-4">
-		<button class="text-sm text-zinc-600" onclick={goToPrevCard}>↑ Up</button>
-		<button class="text-sm text-zinc-600" onclick={goToNextCard}>Down ↓</button>
+		<button
+			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
+			onclick={goToPrevCard}>↑ Up</button
+		>
+		<button
+			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId && selectedMarkerId === incidentsData.length - 1 ? 'pointer-events-none opacity-50' : ''}`}
+			onclick={goToNextCard}>Down ↓</button
+		>
 	</div>
-	{#each incidentsData as incident (incident.id)}
+	{#each incidentsData as incident (incident.chronoId)}
 		<div
-			class="stack-cards__item js-stack-cards__item mx-4 border bg-white p-4"
-			data-id={incident.id}
+			class="stack-cards__item js-stack-cards__item mx-4 my-4 border bg-white p-4"
+			data-id={incident.chronoId}
 		>
 			<div
 				class="bg-white"
-				class:opacity-100={incident.id === selectedMarkerId}
-				class:opacity-30={incident.id !== selectedMarkerId}
+				class:opacity-100={incident.chronoId === selectedMarkerId}
+				class:opacity-30={incident.chronoId !== selectedMarkerId}
 			>
-				<p class="text-sm text-zinc-500">ID: {incident.id} Date: {incident.date}</p>
+				<p class="font-mono text-sm text-zinc-500">
+					﹟ ID: {incident.id} | ⏱ ChronoID: {incident.chronoId} | Date: {moment(
+						incident.date
+					).format('DD MMMM YYYY')}
+				</p>
 				<hr class="my-3" />
 				<h3 class="mb-1 text-lg font-bold">{incident.title}</h3>
 				<h5 class="mb-2 text-sm font-semibold text-gray-600">
@@ -151,12 +153,12 @@
 
 <style>
 	.stack-cards__item {
-		position: sticky;
+		/* position: sticky; */
 		top: 2.5rem; /* <-- This defines *where* they stick */
-		min-height: calc(90vh - 10rem); /* <-- This defines *how tall* each card is */
-		min-height: calc(90svh - 10rem); /* <-- This defines *how tall* each card is */
+		min-height: calc(70vh - 10rem); /* <-- This defines *how tall* each card is */
+		min-height: calc(70svh - 10rem); /* <-- This defines *how tall* each card is */
 		transform-origin: center top;
-		box-shadow: 0 0 0 -5px rgba(0, 0, 0, 0.1);
+		/* box-shadow: 0 0 0 -5px rgba(0, 0, 0, 0.1); */
 		transition: transform 0.2s ease;
 	}
 </style>

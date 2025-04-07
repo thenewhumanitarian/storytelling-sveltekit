@@ -36,7 +36,6 @@
 			<Timeline
 				{selectedMarkerId}
 				{setSelectedMarkerId}
-				{highlightedMarkerId}
 				{setHighlightedMarkerId}
 				{incidentsData}
 				{gazaMapRef}
