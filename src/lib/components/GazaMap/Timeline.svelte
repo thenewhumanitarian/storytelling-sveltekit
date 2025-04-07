@@ -22,6 +22,8 @@
 		// highlightedMarkerId: number | null;
 	} = $props();
 
+	console.log(incidentsData)
+
 	// --- Internal State ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
