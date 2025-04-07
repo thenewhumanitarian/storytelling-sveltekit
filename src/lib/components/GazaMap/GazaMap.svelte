@@ -33,6 +33,10 @@
 	let cardsComponent: GazaCards | null = null;
 	let selectionOrigin: 'click' | 'scroll' | null = null;
 
+	export function setSelectionOriginToClick() {
+		selectionOrigin = 'click';
+	}
+
 	function closeAllPopups(exceptId: number | null = null) {
 		markers.forEach(({ id, markerInstance }) => {
 			const popup = markerInstance.getPopup();
@@ -123,6 +127,7 @@
 					const closeButton = popup.getElement()?.querySelector('.mapboxgl-popup-close-button');
 					closeButton?.addEventListener('click', () => {
 						popup.remove();
+						selectionOrigin = 'click';
 						setSelectedMarkerId(null);
 						map?.flyTo({ zoom: DEFAULT_MAP_ZOOM });
 					});
@@ -163,7 +168,7 @@
 					// Increase the heatmap weight based on intensity
 					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0, 10, 1],
 					// Adjust the heatmap radius by zoom level
-					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
+					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 12, 40],
 					// Adjust the heatmap color ramp
 					'heatmap-color': [
 						'interpolate',
@@ -171,13 +176,13 @@
 						['heatmap-density'],
 						0,
 						'rgba(0, 0, 255, 0)',
-						0.2,
+						0.1,
 						'rgb(0, 255, 255)',
-						0.4,
+						0.2,
 						'rgb(0, 255, 0)',
-						0.6,
+						0.3,
 						'yellow',
-						0.8,
+						0.6,
 						'orange',
 						1,
 						'red'

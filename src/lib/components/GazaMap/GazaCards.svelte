@@ -104,8 +104,8 @@
 	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-40 shadow-lg"
 >
 	<div class="fixed right-0 top-0 z-50 flex h-10 w-1/2 items-center justify-between bg-white px-4">
-		<button on:click={goToPrevCard}>Previous</button>
-		<button on:click={goToNextCard}>Next</button>
+		<button class="text-sm text-zinc-600" on:click={goToPrevCard}>↑ Up</button>
+		<button class="text-sm text-zinc-600" on:click={goToNextCard}>Down ↓</button>
 	</div>
 	{#each incidentsData as incident (incident.id)}
 		<div
