@@ -92,7 +92,7 @@
 
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			incidentsData.forEach((incident, idx) => {
-				const { id, latitude, longitude, title, description, killedOrWounded } = incident;
+				const { chronoId, latitude, longitude, title, description, killedOrWounded } = incident;
 				const el = document.createElement('div');
 				el.className = `custom-marker marker-${idx}`;
 
@@ -113,13 +113,13 @@
 					.setPopup(popup)
 					.addTo(map!);
 
-				el.addEventListener('mouseenter', () => setHighlightedMarkerId(id));
+				el.addEventListener('mouseenter', () => setHighlightedMarkerId(chronoId));
 				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
 				el.addEventListener('click', () => {
 					selectionOrigin = 'click';
-					closeAllPopups(id);
-					setSelectedMarkerId(id);
-					scrollToIncidentCard(id);
+					closeAllPopups(chronoId);
+					setSelectedMarkerId(chronoId);
+					scrollToIncidentCard(chronoId);
 					map?.flyTo({ center: [longitude, latitude], zoom: ZOOM_ZOOM });
 				});
 
@@ -133,7 +133,7 @@
 					});
 				});
 
-				newMarkers.push({ id, markerInstance: marker });
+				newMarkers.push({ id: chronoId, markerInstance: marker });
 			});
 			markers = newMarkers;
 
@@ -144,7 +144,7 @@
 				features: incidentsData.map((incident) => ({
 					type: 'Feature',
 					properties: {
-						intensity: incident.killedOrWounded || 1 // you can adjust what "intensity" means
+						intensity: Math.pow(incident.killedOrWounded || 1, 1.3)
 					},
 					geometry: {
 						type: 'Point',
@@ -166,29 +166,33 @@
 				type: 'heatmap',
 				source: 'incidents-heatmap',
 				paint: {
-					// Increase the heatmap weight based on intensity
-					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0, 10, 1],
-					// Adjust the heatmap radius by zoom level
-					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 12, 40],
-					// Adjust the heatmap color ramp
+					// ⚖️ Give every point more visual weight
+					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0.5, 4, 3],
+
+					// 📏 Increase radius more aggressively with zoom
+					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 5, 15, 10, 40, 15, 60],
+
+					// 🌈 Make the gradient pop earlier
 					'heatmap-color': [
 						'interpolate',
 						['linear'],
 						['heatmap-density'],
 						0,
-						'rgba(0, 0, 255, 0)',
+						'rgba(33,102,172,0)',
 						0.1,
-						'rgb(0, 255, 255)',
-						0.2,
-						'rgb(0, 255, 0)',
+						'rgb(103,169,207)',
 						0.3,
-						'yellow',
-						0.6,
-						'orange',
-						1,
-						'red'
+						'rgb(209,229,240)',
+						0.5,
+						'rgb(253,219,199)',
+						0.7,
+						'rgb(239,138,98)',
+						0.9,
+						'rgb(178,24,43)'
 					],
-					'heatmap-opacity': 0.6
+
+					// 🔍 Make the layer more visible
+					'heatmap-opacity': 0.75
 				}
 			});
 		});
