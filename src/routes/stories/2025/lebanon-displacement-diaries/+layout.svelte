@@ -38,18 +38,13 @@
 <FooterComponent></FooterComponent>
 
 <style>
-	/* :global(html,  body) {
-		height: auto;
-		overflow-y: auto;
-	} */
-
 	main {
 		/* margin: 0; */
 		overflow: hidden;
 		padding-bottom: 4rem;
 		padding-top: 2rem;
 		margin-top: 4rem;
-		background-color: #ede580;
+		background-color: #a6af71;
 	}
 
 	:global(main > div.storyblok__outline > div:last-child) {

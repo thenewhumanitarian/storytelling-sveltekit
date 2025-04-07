@@ -1,3 +1,7 @@
+<script>
+	let { children } = $props();
+</script>
+
 <svelte:head>
 	<title>TNH| Title is missing</title>
 	<meta name="description" content="This is a prototype." />
@@ -5,4 +9,6 @@
 	<!-- Need to add more meta data here later -->
 </svelte:head>
 
-<slot />
+<div class="arabic" dir="rtl">
+	{@render children()}
+</div>

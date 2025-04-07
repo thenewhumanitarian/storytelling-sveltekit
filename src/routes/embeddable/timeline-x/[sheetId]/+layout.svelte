@@ -5,9 +5,13 @@
 	/>
 </svelte:head> -->
 
+<script>
+	let { children } = $props();
+</script>
+
 <div id="timeline" class="bg-zinc-50 font-body">
 	<main>
-		<slot />
+		{@render children()}
 	</main>
 </div>
 

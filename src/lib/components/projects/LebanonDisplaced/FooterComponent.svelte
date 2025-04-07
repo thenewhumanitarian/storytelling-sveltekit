@@ -38,6 +38,11 @@
 		/* line-height: 1; */
 		/* color: #ede580; */
 	}
+
+	:global(.arabic .left h1) {
+		display: none;
+	}
+
 	@media screen and (max-width: 640px) {
 		.left h1 {
 			font-size: 2.3rem !important;

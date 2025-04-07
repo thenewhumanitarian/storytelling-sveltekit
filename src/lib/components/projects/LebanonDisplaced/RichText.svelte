@@ -99,4 +99,13 @@
 		font-family: 'GT Sectra Bold', serif;
 		/* font-family: 'ff-amman-serif-pro', serif; */
 	}
+
+	/* Arabic text styles */
+	:global(.arabic *:not(.text-right, .text-center)) {
+		text-align: right;
+	}
+
+	:global(.arabic *:not(.text-right, .text-center)) {
+		text-align: right;
+	}
 </style>

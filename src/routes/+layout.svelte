@@ -3,8 +3,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 
-	// import '@iframe-resizer/child';
-	// export let data;
+	let { children } = $props();
 
 	onMount(async () => {
 		// Dynamically load the script
@@ -16,5 +15,5 @@
 </script>
 
 <div data-iframe-height={true}>
-	<slot />
+	{@render children()}
 </div>
