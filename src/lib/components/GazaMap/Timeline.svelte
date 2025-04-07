@@ -8,15 +8,15 @@
 	let {
 		selectedMarkerId,
 		setSelectedMarkerId,
-    highlightedMarkerId,
-    setHighlightedMarkerId,
-    incidentsData,
+		setHighlightedMarkerId,
+		incidentsData
+		// highlightedMarkerId,
 	}: {
 		selectedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
-		highlightedMarkerId: number | null;
 		setHighlightedMarkerId: (id: number | null) => void;
-    incidentsData: IncidentData[]
+		incidentsData: IncidentData[];
+		// highlightedMarkerId: number | null;
 	} = $props();
 
 	// --- Internal State ---
@@ -28,9 +28,9 @@
 	const barPaddingBottom = 5; // Space between bottom of bar and axis line
 	const horizontalPadding = 15; // Padding at the ends of the timeline axis
 
-  const axisY = $derived(svgHeight - axisPaddingBottom)
-	
-  // --- Reactive Computations so can pass different selections of incidents ---
+	const axisY = $derived(svgHeight - axisPaddingBottom);
+
+	// --- Reactive Computations so can pass different selections of incidents ---
 	const parsedIncidents = $derived(
 		incidentsData
 			.map((d) => ({ ...d, dateObj: new Date(d.date) }))
@@ -94,13 +94,12 @@
 	function formatDate(date: Date): string {
 		return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); // Simpler format
 	}
-
 </script>
 
 <!-- Use Tailwind classes for the container -->
 <div
 	bind:this={timelineContainer}
-	class="box-border flex h-48 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90 px-2.5"
+	class="box-border flex h-36 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90 px-2.5"
 >
 	{#if containerWidth > 0 && parsedIncidents.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
@@ -124,12 +123,12 @@
 				<g
 					class="group cursor-pointer focus:outline-none"
 					onclick={() => handleClick(incident.id)}
-          onkeydown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              handleClick(incident.id)
-            }
-          }}
+					onkeydown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							handleClick(incident.id);
+						}
+					}}
 					onmouseenter={() => handleMouseEnter(incident.id)}
 					onmouseleave={handleMouseLeave}
 					onfocusin={() => handleMouseEnter(incident.id)}
@@ -167,12 +166,7 @@
 				>
 					{formatDate(startDate)}
 				</text>
-				<text
-					x={endRange}
-					y={axisY + 10}
-					class="fill-gray-500 font-sans text-xs"
-					text-anchor="end"
-				>
+				<text x={endRange} y={axisY + 10} class="fill-gray-500 font-sans text-xs" text-anchor="end">
 					{formatDate(endDate)}
 				</text>
 			{/if}

@@ -8,7 +8,7 @@
 	export function scrollToCard(id: number) {
 		const el = container.querySelector(`[data-id="${id}"]`);
 		if (el) {
-			el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 		}
 	}
 
@@ -16,6 +16,26 @@
 	let lastInViewId: number | null = null;
 	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 	let pendingCardId: number | null = null;
+
+	function getCurrentIndex(): number {
+		return incidentsData.findIndex((i) => i.id === lastInViewId);
+	}
+
+	function goToPrevCard() {
+		const currentIndex = getCurrentIndex();
+		if (currentIndex > 0) {
+			const prevId = incidentsData[currentIndex - 1].id;
+			scrollToCard(prevId);
+		}
+	}
+
+	function goToNextCard() {
+		const currentIndex = getCurrentIndex();
+		if (currentIndex < incidentsData.length - 1) {
+			const nextId = incidentsData[currentIndex + 1].id;
+			scrollToCard(nextId);
+		}
+	}
 
 	function debounceTrigger(id: number) {
 		if (debounceTimer) {
@@ -81,20 +101,24 @@
 
 <div
 	bind:this={container}
-	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent shadow-lg"
+	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-40 shadow-lg"
 >
+	<div class="fixed right-0 top-0 z-50 flex h-10 w-1/2 items-center justify-between bg-white px-4">
+		<button on:click={goToPrevCard}>Previous</button>
+		<button on:click={goToNextCard}>Next</button>
+	</div>
 	{#each incidentsData as incident (incident.id)}
 		<div
-			class="stack-cards__item js-stack-cards__item mb-5 border bg-white p-4"
+			class="stack-cards__item js-stack-cards__item mx-4 border bg-white p-4"
 			data-id={incident.id}
-			class:z-10={incident.id === lastInViewId}
-			class:z-0={incident.id !== lastInViewId}
 		>
 			<div
 				class="bg-white"
 				class:opacity-100={incident.id === lastInViewId}
-				class:opacity-50={incident.id !== lastInViewId}
+				class:opacity-30={incident.id !== lastInViewId}
 			>
+				<p class="text-sm text-zinc-500">ID: {incident.id} Date: {incident.date}</p>
+				<hr class="my-3" />
 				<h3 class="mb-1 text-lg font-bold">{incident.title}</h3>
 				<h5 class="mb-2 text-sm font-semibold text-gray-600">
 					{incident.killedOrWounded} killed/wounded
@@ -108,11 +132,11 @@
 <style>
 	.stack-cards__item {
 		position: sticky;
-		top: 0; /* <-- This defines *where* they stick */
-		height: 95vh; /* <-- This defines *how tall* each card is */
-		height: 95svh; /* <-- This defines *how tall* each card is */
+		top: 2.5rem; /* <-- This defines *where* they stick */
+		min-height: calc(90vh - 10rem); /* <-- This defines *how tall* each card is */
+		min-height: calc(90svh - 10rem); /* <-- This defines *how tall* each card is */
 		transform-origin: center top;
+		box-shadow: 0 0 0 -5px rgba(0, 0, 0, 0.1);
 		transition: transform 0.2s ease;
-		box-shadow: 0 -5px 30px -5px rgba(0, 0, 0, 0.1);
 	}
 </style>

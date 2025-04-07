@@ -31,6 +31,7 @@
 	let markers = $state<{ id: number; markerInstance: mapboxgl.Marker }[]>([]);
 	let clickedCoordinates: mapboxgl.LngLat | null = $state(null);
 	let cardsComponent: GazaCards | null = null;
+	let selectionOrigin: 'click' | 'scroll' | null = null;
 
 	function closeAllPopups(exceptId: number | null = null) {
 		markers.forEach(({ id, markerInstance }) => {
@@ -111,6 +112,7 @@
 				el.addEventListener('mouseenter', () => setHighlightedMarkerId(id));
 				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
 				el.addEventListener('click', () => {
+					selectionOrigin = 'click';
 					closeAllPopups(id);
 					setSelectedMarkerId(id);
 					scrollToIncidentCard(id);
@@ -129,6 +131,60 @@
 				newMarkers.push({ id, markerInstance: marker });
 			});
 			markers = newMarkers;
+
+			/* Heat map */
+			// Convert incidents to GeoJSON FeatureCollection
+			const heatmapGeoJSON = {
+				type: 'FeatureCollection',
+				features: incidentsData.map((incident) => ({
+					type: 'Feature',
+					properties: {
+						intensity: incident.killedOrWounded || 1 // you can adjust what "intensity" means
+					},
+					geometry: {
+						type: 'Point',
+						coordinates: [incident.longitude, incident.latitude]
+					}
+				}))
+			};
+
+			// Add source for heatmap
+			map?.addSource('incidents-heatmap', {
+				type: 'geojson',
+				data: heatmapGeoJSON
+			});
+
+			// Add heatmap layer
+			map?.addLayer({
+				id: 'incidents-heatmap-layer',
+				type: 'heatmap',
+				source: 'incidents-heatmap',
+				paint: {
+					// Increase the heatmap weight based on intensity
+					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0, 10, 1],
+					// Adjust the heatmap radius by zoom level
+					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 20],
+					// Adjust the heatmap color ramp
+					'heatmap-color': [
+						'interpolate',
+						['linear'],
+						['heatmap-density'],
+						0,
+						'rgba(0, 0, 255, 0)',
+						0.2,
+						'rgb(0, 255, 255)',
+						0.4,
+						'rgb(0, 255, 0)',
+						0.6,
+						'yellow',
+						0.8,
+						'orange',
+						1,
+						'red'
+					],
+					'heatmap-opacity': 0.6
+				}
+			});
 		});
 
 		map.on('click', (event) => {
@@ -160,20 +216,29 @@
 	});
 
 	$effect(() => {
-		const currentHighlightId = highlightedMarkerId;
 		const currentSelectedId = selectedMarkerId;
-		const currentMarkers = markers;
+		const currentHighlightId = highlightedMarkerId;
 
-		currentMarkers.forEach(({ id, markerInstance }) => {
+		markers.forEach(({ id, markerInstance }) => {
 			const element = markerInstance.getElement();
 			if (!element) return;
 
+			// Show only the selected marker
 			if (id === currentSelectedId) {
+				element.style.display = 'block';
+			} else {
+				element.style.display = 'none';
+			}
+
+			if (id === currentSelectedId) {
+				if (selectionOrigin === 'click') {
+					scrollToIncidentCard(id); // Only scroll cards if user clicked marker or button
+				}
+				selectionOrigin = null; // reset origin
+
 				if (!markerInstance.getPopup()?.isOpen()) {
 					closeAllPopups(id);
-					// markerInstance.getPopup()?.addTo(map!);
 					map?.flyTo({ center: markerInstance.getLngLat(), zoom: ZOOM_ZOOM });
-					scrollToIncidentCard(id);
 				}
 			}
 
@@ -195,6 +260,7 @@
 		const incident = incidentsData.find((i) => i.id === id);
 		if (incident && map) {
 			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM });
+			selectionOrigin = 'scroll';
 			setSelectedMarkerId(id);
 		}
 	}}
@@ -218,6 +284,7 @@
 	/* Keep custom popup styling if needed, or rely on Tailwind in setHTML */
 	:global(.mapbox-popup-custom .mapboxgl-popup-content) {
 		/* Overriding mapbox defaults if needed, e.g., removing padding if handled by inner div */
+		display: none; /* Hiding popups altogether for now */
 		padding: 0;
 		background-color: white; /* Ensure background */
 		border-radius: 0px; /* Override mapbox default */
@@ -291,13 +358,13 @@
 	/* Keep keyframes */
 	@keyframes borderPulse {
 		0% {
-			border-color: #9f3e52;
+			border-color: #fff;
 		}
 		50% {
 			border-color: #f2b0b8;
 		}
 		100% {
-			border-color: #9f3e52;
+			border-color: #fff;
 		}
 	}
 
