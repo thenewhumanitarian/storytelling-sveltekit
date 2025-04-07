@@ -9,13 +9,16 @@
 		selectedMarkerId,
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
-		incidentsData
-		// highlightedMarkerId,
+		incidentsData,
+		gazaMapRef
+		// highlightedMarkerId
 	}: {
 		selectedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
+		gazaMapRef: { setSelectionOriginToClick: () => void } | null;
+
 		// highlightedMarkerId: number | null;
 	} = $props();
 
@@ -88,6 +91,9 @@
 	}
 
 	function handleClick(id: number) {
+		if (gazaMapRef?.setSelectionOriginToClick) {
+			gazaMapRef.setSelectionOriginToClick();
+		}
 		setSelectedMarkerId(id);
 	}
 

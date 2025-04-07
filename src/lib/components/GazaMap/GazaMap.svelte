@@ -87,7 +87,7 @@
 				source: 'countries',
 				'source-layer': 'country_boundaries',
 				filter: ['!=', ['get', 'name_en'], 'Gaza'],
-				paint: { 'fill-color': '#000000', 'fill-opacity': 0.5 }
+				paint: { 'fill-color': '#000', 'fill-opacity': 0.5 }
 			});
 
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
@@ -156,6 +156,7 @@
 			// Add source for heatmap
 			map?.addSource('incidents-heatmap', {
 				type: 'geojson',
+				// @ts-ignore
 				data: heatmapGeoJSON
 			});
 
@@ -256,7 +257,7 @@
 	});
 </script>
 
-<div bind:this={mapContainer} class="map-container h-full w-1/2"></div>
+<div bind:this={mapContainer} class="map-container w-1/2"></div>
 
 <GazaCards
 	bind:this={cardsComponent}
@@ -284,6 +285,7 @@
 		/* aspect-ratio: 16/8; */ /* Removed in favour of flex layout in parent */
 		/* width: 100%; */ /* Handled by Tailwind */
 		min-height: 300px; /* Ensure minimum map height */
+		height: calc(100% - 144px);
 	}
 
 	/* Keep custom popup styling if needed, or rely on Tailwind in setHTML */

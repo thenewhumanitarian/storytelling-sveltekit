@@ -15,9 +15,9 @@
 		highlightedMarkerId = id;
 	}
 
-	let gazaMapRef: {
+	let gazaMapRef = $state<{
 		setSelectionOriginToClick: () => void;
-	} | null = null;
+	} | null>(null);
 </script>
 
 <main data-iframe-height={true}>
@@ -32,7 +32,7 @@
 				{incidentsData}
 			/>
 		</div>
-		<div class="absolute bottom-0 left-0 z-30 w-full">
+		<div class="absolute bottom-0 left-0 z-30 w-full bg-white">
 			<Timeline
 				{selectedMarkerId}
 				{setSelectedMarkerId}
