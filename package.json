@@ -11,8 +11,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "vercel-build": "yarn install --frozen-lockfile && yarn build"
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.1",
