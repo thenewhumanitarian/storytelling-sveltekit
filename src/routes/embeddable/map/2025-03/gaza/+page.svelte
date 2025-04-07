@@ -5,7 +5,7 @@
 
 	let { data } = $props();
 
-  const { incidentsData } = data
+	const { incidentsData } = data;
 
 	console.log('data: ', data);
 
@@ -31,7 +31,7 @@
 			{setSelectedMarkerId}
 			{highlightedMarkerId}
 			{setHighlightedMarkerId}
-      {incidentsData}
+			{incidentsData}
 		/>
 	</div>
 	<div class="absolute bottom-0 left-0 z-30 w-full">
@@ -41,7 +41,7 @@
 			{setSelectedMarkerId}
 			{highlightedMarkerId}
 			{setHighlightedMarkerId}
-      {incidentsData}
+			{incidentsData}
 		/>
 	</div>
 </section>
