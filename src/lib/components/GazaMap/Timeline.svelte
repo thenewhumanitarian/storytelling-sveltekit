@@ -4,6 +4,7 @@
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { extent } from 'd3-array';
 	import type { IncidentData } from './types';
+	import moment from 'moment';
 
 	let {
 		selectedMarkerId,
@@ -22,16 +23,14 @@
 		// highlightedMarkerId: number | null;
 	} = $props();
 
-	console.log(incidentsData)
-
 	// --- Internal State ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
-	const svgHeight = 100; // Constant height of SVG area
+	const svgHeight = 125; // Constant height of SVG area
 	const barWidth = 12; // Constant width of bars
-	const axisPaddingBottom = 10; // Space below the axis line for labels etc.
-	const barPaddingBottom = 5; // Space between bottom of bar and axis line
-	const horizontalPadding = 15; // Padding at the ends of the timeline axis
+	const axisPaddingBottom = 15; // Space below the axis line for labels etc.
+	const barPaddingBottom = 0; // Space between bottom of bar and axis line
+	const horizontalPadding = 0; // Padding at the ends of the timeline axis
 
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
@@ -100,14 +99,15 @@
 	}
 
 	function formatDate(date: Date): string {
-		return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); // Simpler format
+		return moment(date).format('DD MMMM YYYY');
+		// return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); // Simpler format
 	}
 </script>
 
 <!-- Use Tailwind classes for the container -->
 <div
 	bind:this={timelineContainer}
-	class="box-border flex h-36 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90 px-2.5"
+	class="box-border flex h-36 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90"
 >
 	{#if containerWidth > 0 && parsedIncidents.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
@@ -168,13 +168,13 @@
 				{@const [startDate, endDate] = timeScale.domain()}
 				<text
 					x={startRange}
-					y={axisY + 10}
+					y={axisY + 14}
 					class="fill-gray-500 font-sans text-xs"
 					text-anchor="start"
 				>
 					{formatDate(startDate)}
 				</text>
-				<text x={endRange} y={axisY + 10} class="fill-gray-500 font-sans text-xs" text-anchor="end">
+				<text x={endRange} y={axisY + 14} class="fill-gray-500 font-sans text-xs" text-anchor="end">
 					{formatDate(endDate)}
 				</text>
 			{/if}

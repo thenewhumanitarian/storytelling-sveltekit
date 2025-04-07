@@ -7,4 +7,5 @@ export interface IncidentData {
   killedOrWounded: number;
   description: string;
   chronoId: number;
+  weekYear: string;
 }
