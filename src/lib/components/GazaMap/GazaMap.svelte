@@ -177,18 +177,26 @@
 						'interpolate',
 						['linear'],
 						['heatmap-density'],
+
 						0,
-						'rgba(33,102,172,0)',
-						0.1,
-						'rgb(103,169,207)',
-						0.3,
-						'rgb(209,229,240)',
-						0.5,
-						'rgb(253,219,199)',
+						'rgba(160, 60, 80, 0)',
+
+						0.2,
+						'rgba(255,217,188,0.3)',
+
+						0.6,
+						'rgba(255,179,122,0.8)',
+
 						0.7,
-						'rgb(239,138,98)',
-						0.9,
-						'rgb(178,24,43)'
+						'rgba(214,121,139,0.9)',
+
+						// Strong TNH brand color
+						0.8,
+						'rgba(166,89,104,0.8)',
+
+						// Deepened burgundy for hotspots
+						1,
+						'#A03C50'
 					],
 
 					// 🔍 Make the layer more visible
