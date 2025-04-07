@@ -44,8 +44,6 @@
 		</div>
 		<div class="absolute bottom-0 left-0 z-30 w-full bg-white">
 			<Timeline
-				{selectedMarkerId}
-				{setSelectedMarkerId}
 				{setHighlightedMarkerId}
 				{incidentsData}
 				{gazaMapRef}

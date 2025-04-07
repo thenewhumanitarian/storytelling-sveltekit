@@ -8,21 +8,17 @@
 	import moment from 'moment';
 
 	let {
-		selectedMarkerId,
-		setSelectedMarkerId,
 		setHighlightedMarkerId,
 		incidentsData,
 		gazaMapRef,
 		selectedWeekStartDate,
 		setSelectedWeek
 	}: {
-		selectedMarkerId: number | null;
-		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
 		gazaMapRef: { setSelectionOriginToClick: () => void } | null;
 		selectedWeekStartDate: Date | null;
-		setSelectedWeek: (date: Date | null) => void;
+		setSelectedWeek: (date: Date | null, firstIncidentId: number | null) => void;
 	} = $props();
 
 	// --- Internal State ---
