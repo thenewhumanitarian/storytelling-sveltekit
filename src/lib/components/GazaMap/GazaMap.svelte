@@ -261,6 +261,7 @@
 
 <GazaCards
 	bind:this={cardsComponent}
+	{selectedMarkerId}
 	incidentsData={incidentsData.sort((a, b) => a.date.localeCompare(b.date))}
 	onCardInView={(id) => {
 		const incident = incidentsData.find((i) => i.id === id);

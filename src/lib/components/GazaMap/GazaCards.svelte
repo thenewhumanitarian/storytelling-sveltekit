@@ -2,13 +2,32 @@
 	import { onMount } from 'svelte';
 	import type { IncidentData } from './types';
 
-	export let incidentsData: IncidentData[] = [];
-	export let onCardInView: (id: number) => void;
+	// Props
+	let {
+		incidentsData,
+		selectedMarkerId,
+		onCardInView
+	}: {
+		incidentsData: IncidentData[];
+		selectedMarkerId: number | null;
+		onCardInView: (id: number) => void;
+	} = $props();
 
 	export function scrollToCard(id: number) {
-		const el = container.querySelector(`[data-id="${id}"]`);
-		if (el) {
-			el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+		console.log('Scroll to ID: ', id);
+
+		const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
+		if (el && container) {
+			// Get the offset of the element relative to the scroll container
+			const targetOffsetTop = el.offsetTop;
+
+			// Optional padding offset if needed (e.g. to align just below header)
+			const padding = 40;
+
+			container.scrollTo({
+				top: targetOffsetTop - padding,
+				behavior: 'smooth'
+			});
 		}
 	}
 
@@ -18,15 +37,16 @@
 	let pendingCardId: number | null = null;
 
 	function getCurrentIndex(): number {
-		return incidentsData.findIndex((i) => i.id === lastInViewId);
+		const selectedId = selectedMarkerId; // add this if needed
+		return incidentsData.findIndex((i) => i.id === selectedId);
 	}
 
 	function goToPrevCard() {
-		const currentIndex = getCurrentIndex();
-		if (currentIndex > 0) {
-			const prevId = incidentsData[currentIndex - 1].id;
-			scrollToCard(prevId);
+		if (!selectedMarkerId || selectedMarkerId <= 1) {
+			return;
 		}
+		const prevId = selectedMarkerId - 1;
+		scrollToCard(prevId);
 	}
 
 	function goToNextCard() {
@@ -51,7 +71,7 @@
 				onCardInView?.(pendingCardId);
 			}
 			debounceTimer = null;
-		}, 500);
+		}, 250);
 	}
 
 	onMount(() => {
@@ -104,8 +124,8 @@
 	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-40 shadow-lg"
 >
 	<div class="fixed right-0 top-0 z-50 flex h-10 w-1/2 items-center justify-between bg-white px-4">
-		<button class="text-sm text-zinc-600" on:click={goToPrevCard}>↑ Up</button>
-		<button class="text-sm text-zinc-600" on:click={goToNextCard}>Down ↓</button>
+		<button class="text-sm text-zinc-600" onclick={goToPrevCard}>↑ Up</button>
+		<button class="text-sm text-zinc-600" onclick={goToNextCard}>Down ↓</button>
 	</div>
 	{#each incidentsData as incident (incident.id)}
 		<div
@@ -114,8 +134,8 @@
 		>
 			<div
 				class="bg-white"
-				class:opacity-100={incident.id === lastInViewId}
-				class:opacity-30={incident.id !== lastInViewId}
+				class:opacity-100={incident.id === selectedMarkerId}
+				class:opacity-30={incident.id !== selectedMarkerId}
 			>
 				<p class="text-sm text-zinc-500">ID: {incident.id} Date: {incident.date}</p>
 				<hr class="my-3" />
