@@ -7,12 +7,21 @@
 
 	let selectedMarkerId = $state<number | null>(null);
 	let highlightedMarkerId = $state<number | null>(null);
+	let selectedWeekStartDate = $state<Date | null>(null);
 
 	function setSelectedMarkerId(id: number | null) {
 		selectedMarkerId = id;
 	}
 	function setHighlightedMarkerId(id: number | null) {
 		highlightedMarkerId = id;
+	}
+	function setSelectedWeek(date: Date | null, firstIncidentId: number | null) {
+		selectedWeekStartDate = date;
+		if (date !== null) {
+			selectedMarkerId = null; // Clear marker selection if week is selected
+			highlightedMarkerId = null; // Also clear highlight
+		}
+		selectedMarkerId = firstIncidentId;
 	}
 
 	let gazaMapRef = $state<{
@@ -30,6 +39,7 @@
 				{highlightedMarkerId}
 				{setHighlightedMarkerId}
 				{incidentsData}
+				{selectedWeekStartDate}
 			/>
 		</div>
 		<div class="absolute bottom-0 left-0 z-30 w-full bg-white">
@@ -39,6 +49,8 @@
 				{setHighlightedMarkerId}
 				{incidentsData}
 				{gazaMapRef}
+				{selectedWeekStartDate}
+				{setSelectedWeek}
 			/>
 		</div>
 	</section>

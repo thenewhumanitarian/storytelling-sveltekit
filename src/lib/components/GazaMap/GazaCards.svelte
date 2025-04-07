@@ -14,7 +14,7 @@
 		onCardInView: (id: number) => void;
 	} = $props();
 
-	console.log(incidentsData);
+	// console.log(incidentsData);
 
 	export function scrollToCard(id: number) {
 		console.log('Scroll to ID: ', id);

@@ -17,13 +17,15 @@
 		highlightedMarkerId,
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
-		incidentsData
+		incidentsData,
+		selectedWeekStartDate
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
+		selectedWeekStartDate: Date | null;
 	} = $props();
 
 	let mapContainer: HTMLElement | undefined = $state();

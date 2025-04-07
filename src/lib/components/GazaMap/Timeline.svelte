@@ -12,13 +12,17 @@
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
 		incidentsData,
-		gazaMapRef
+		gazaMapRef,
+		selectedWeekStartDate,
+		setSelectedWeek
 	}: {
 		selectedMarkerId: number | null;
 		setSelectedMarkerId: (id: number | null) => void;
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
 		gazaMapRef: { setSelectionOriginToClick: () => void } | null;
+		selectedWeekStartDate: Date | null;
+		setSelectedWeek: (date: Date | null) => void;
 	} = $props();
 
 	// --- Internal State ---
@@ -32,28 +36,31 @@
 
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
-	// --- Reactive Computations so can pass different selections of incidents ---
 	const parsedIncidents = $derived(
 		incidentsData
 			.map((d) => ({ ...d, dateObj: new Date(d.date) }))
-			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
+			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()) // NB!! ensure that incidents are sorted by date first!!! otherwise cannot get the correct markerId when selecting a week.
 	);
 
 	// Create weekly aggregated data
 	const weeklyAggregatedData = $derived.by(() => {
 		if (parsedIncidents.length === 0) return [];
 
-		// Group by the start of the week (Sunday) and sum killedOrWounded
+		// Group by the start of the week (Sunday) and sum killedOrWounded, and find first incident for the week's chronoId
 		const rolledUp = rollup(
 			parsedIncidents,
-			(v) => sum(v, (d) => d.killedOrWounded), // Summing function
+			(v) => ({
+				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded), // Summing function
+				firstChronoId: v[0].chronoId // Assuming already sorted, the first item in 'v' is the earliest in the week
+			}),
 			(d) => timeWeek.floor(d.dateObj) // Key selector (start of the week)
 		);
 
 		// Convert Map to array of objects and sort by week start date
-		return Array.from(rolledUp, ([weekStartDate, totalKilledOrWounded]) => ({
+		return Array.from(rolledUp, ([weekStartDate, values]) => ({
 			weekStartDate,
-			totalKilledOrWounded
+			totalKilledOrWounded: values.totalKilledOrWounded,
+			firstChronoId: values.firstChronoId
 		})).sort((a, b) => a.weekStartDate.getTime() - b.weekStartDate.getTime());
 	});
 
@@ -116,17 +123,22 @@
 		setHighlightedMarkerId(null); // Call parent's update function
 	}
 
-	function handleClick(weekStartDate: Date) {
+	function handleClick(weekStartDate: Date, firstChronoId: number) {
 		if (gazaMapRef?.setSelectionOriginToClick) {
 			gazaMapRef.setSelectionOriginToClick();
 		}
-		setSelectedMarkerId(null);
+		// Toggle selection: if clicking the already selected week, deselect it.
+		if (selectedWeekStartDate && selectedWeekStartDate.getTime() === weekStartDate.getTime()) {
+			setSelectedWeek(null, null);
+		} else {
+			setSelectedWeek(weekStartDate, firstChronoId);
+		}
 	}
 
-	function handleKeyDown(event: KeyboardEvent, weekStartDate: Date) {
+	function handleKeyDown(event: KeyboardEvent, weekStartDate: Date, firstChronoId: number) {
 		event.preventDefault();
 		if (event.key === 'Enter' || event.key === ' ') {
-			handleClick(weekStartDate);
+			handleClick(weekStartDate, firstChronoId);
 		}
 	}
 
@@ -158,12 +170,13 @@
 				{@const xPos = timeScale(weekData.weekStartDate)}
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
+				{@const isSelected = selectedWeekStartDate?.getTime() === weekData.weekStartDate.getTime()}
 
 				<!-- Group for interaction + Tailwind group modifier -->
 				<g
 					class="group cursor-pointer focus:outline-none"
-					onclick={() => handleClick(weekData.weekStartDate)}
-					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate)}
+					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
+					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
 					onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
 					onmouseleave={handleMouseLeave}
 					onfocusin={() => handleMouseEnter(weekData.weekStartDate)}
@@ -173,14 +186,15 @@
 					role="button"
 				>
 					<rect
-						class="transition-colors duration-200 ease-in-out group-hover:fill-[#f2b0b8] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-blue-500"
+						class:group-hover:fill-[#f2b0b8]={!isSelected}
+						class="fill-[#9f3e52] transition-colors duration-200 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-blue-500"
 						x={xPos - barWidth / 2}
 						y={yPos}
 						width={barWidth}
 						height={barHeight}
 						rx="1"
 						ry="1"
-						fill={'#9f3e52'}
+						fill={isSelected ? '#f2b0b8' : '#9f3e52'}
 					>
 						<title
 							>Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded</title
