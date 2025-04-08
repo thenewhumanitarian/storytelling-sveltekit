@@ -17,7 +17,7 @@
 	// console.log(incidentsData);
 
 	export function scrollToCard(id: number) {
-		console.log('Scroll to ID: ', id);
+		// console.log('Scroll to ID: ', id);
 
 		const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 		if (el && container) {
@@ -60,7 +60,7 @@
 
 		debounceTimer = setTimeout(() => {
 			if (pendingCardId !== null && pendingCardId !== lastInViewId) {
-				console.log(`🕓 Debounced trigger: ${pendingCardId}`);
+				// console.log(`🕓 Debounced trigger: ${pendingCardId}`);
 				lastInViewId = pendingCardId;
 				onCardInView?.(pendingCardId);
 			}
@@ -83,15 +83,15 @@
 
 				entries.forEach((entry) => {
 					const id = Number((entry.target as HTMLElement).dataset.id);
-					console.log(
-						`📌 Card ${id} ${entry.isIntersecting ? 'entered' : 'left'}, top: ${entry.boundingClientRect.top.toFixed(1)}`
-					);
+					// console.log(
+					// 	`📌 Card ${id} ${entry.isIntersecting ? 'entered' : 'left'}, top: ${entry.boundingClientRect.top.toFixed(1)}`
+					// );
 
 					if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
 						const index = incidentsData.findIndex((i) => i.chronoId === id);
 						if (index > 0) {
 							const prevId = incidentsData[index - 1].chronoId;
-							console.log(`⬆️ Scrolled up, will trigger: ${prevId}`);
+							// console.log(`⬆️ Scrolled up, will trigger: ${prevId}`);
 							debounceTrigger(prevId);
 						}
 					}
@@ -99,7 +99,7 @@
 
 				if (intersecting.length > 0) {
 					const topCardId = intersecting[0].id;
-					console.log(`👀 Top visible card: ${topCardId}`);
+					// console.log(`👀 Top visible card: ${topCardId}`);
 					debounceTrigger(topCardId);
 				}
 			},

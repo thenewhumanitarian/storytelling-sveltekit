@@ -12,13 +12,15 @@
 		incidentsData,
 		gazaMapRef,
 		selectedWeekStartDate,
-		setSelectedWeek
+		setSelectedWeek,
+		selectedMarkerId
 	}: {
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
 		gazaMapRef: { setSelectionOriginToClick: () => void } | null;
 		selectedWeekStartDate: Date | null;
 		setSelectedWeek: (date: Date | null, firstIncidentId: number | null) => void;
+		selectedMarkerId: number | null;
 	} = $props();
 
 	// --- Internal State ---
@@ -37,6 +39,14 @@
 			.map((d) => ({ ...d, dateObj: new Date(d.date) }))
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()) // NB!! ensure that incidents are sorted by date first!!! otherwise cannot get the correct markerId when selecting a week.
 	);
+
+	// Find currently selected week start date
+	const activeWeekStartDate = $derived(() => {
+		if (selectedMarkerId === null) return null;
+		const activeIncident = incidentsData.find((i) => i.chronoId === selectedMarkerId);
+		if (!activeIncident) return null;
+		return timeWeek.floor(new Date(activeIncident.date));
+	});
 
 	// Create weekly aggregated data
 	const weeklyAggregatedData = $derived.by(() => {
@@ -166,7 +176,9 @@
 				{@const xPos = timeScale(weekData.weekStartDate)}
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
-				{@const isSelected = selectedWeekStartDate?.getTime() === weekData.weekStartDate.getTime()}
+				<!-- {@const isSelected = selectedWeekStartDate?.getTime() === weekData.weekStartDate.getTime()} -->
+				{@const activeWeek = activeWeekStartDate()}
+				{@const isSelected = activeWeek?.getTime() === weekData.weekStartDate.getTime()}
 
 				<!-- Group for interaction + Tailwind group modifier -->
 				<g
@@ -183,7 +195,7 @@
 				>
 					<rect
 						class:group-hover:fill-[#f2b0b8]={!isSelected}
-						class="fill-[#9f3e52] transition-colors duration-200 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-blue-500"
+						class="transition-colors duration-500 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-blue-500"
 						x={xPos - barWidth / 2}
 						y={yPos}
 						width={barWidth}

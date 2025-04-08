@@ -49,6 +49,7 @@
 				{gazaMapRef}
 				{selectedWeekStartDate}
 				{setSelectedWeek}
+				{selectedMarkerId}
 			/>
 		</div>
 	</section>
