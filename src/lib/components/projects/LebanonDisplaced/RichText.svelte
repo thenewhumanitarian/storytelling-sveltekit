@@ -101,11 +101,11 @@
 	}
 
 	/* Arabic text styles */
-	:global(.arabic *:not(.text-right, .text-center)) {
+	:global(.arabic *:not(.text-center, .text-right)) {
 		text-align: right;
 	}
 
-	:global(.arabic *:not(.text-right, .text-center)) {
-		text-align: right;
+	:global(.arabic *.text-center *, .arabic.text-center *) {
+		text-align: center;
 	}
 </style>

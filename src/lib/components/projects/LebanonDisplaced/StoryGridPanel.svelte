@@ -90,11 +90,11 @@
 		padding: 0.5rem 0.5rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
-		border: solid 3px var(--borderColor);
-		border-top-left-radius: 255px 15px;
+		border: solid 2px var(--borderColor);
+		/* border-top-left-radius: 255px 15px;
 		border-top-right-radius: 15px 225px;
 		border-bottom-right-radius: 225px 15px;
-		border-bottom-left-radius: 15px 255px;
+		border-bottom-left-radius: 15px 255px; */
 		will-change: box-shadow;
 		transition: box-shadow 0.2s ease-in-out;
 	}

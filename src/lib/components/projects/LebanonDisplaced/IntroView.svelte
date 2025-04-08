@@ -44,13 +44,14 @@
 		border-bottom: 6px solid #636845;
 		z-index: 0;
 		background-color: #ffe0b5;
+		background-image: url('/assets/ldd/patterns/fabric-pattern.png');
 	}
 
 	.intro-title {
 		position: absolute;
 		top: 8rem;
 		left: 2.5rem;
-		border-left: 6px solid #636845;
+		border-left: 6px solid #A4AF69;
 		padding-left: 1rem;
 		padding-top: 0.75rem;
 	}
