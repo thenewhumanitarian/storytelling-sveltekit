@@ -26,11 +26,11 @@
 	// --- Internal State ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
-	const svgHeight = 125; // Constant height of SVG area
+	const svgHeight = 120; // Constant height of SVG area
 	const barWidth = 12; // Constant width of bars
-	const axisPaddingBottom = 15; // Space below the axis line for labels etc.
+	const axisPaddingBottom = 18; // Space below the axis line for labels etc.
 	const barPaddingBottom = 0; // Space between bottom of bar and axis line
-	const horizontalPadding = 0; // Padding at the ends of the timeline axis
+	// const horizontalPadding = 0; // Padding at the ends of the timeline axis
 
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
@@ -73,28 +73,17 @@
 	const maxBarHeight = $derived(svgHeight - axisPaddingBottom - barPaddingBottom);
 
 	const timeScale = $derived.by(() => {
-		// Ensure calculation only runs when width is known and data exists
 		if (!containerWidth || weeklyAggregatedData.length === 0) {
 			return scaleTime().domain([new Date(), new Date()]).range([0, 0]);
 		}
-		const dateDomain = extent(weeklyAggregatedData, (d) => d.weekStartDate) as
-			| [Date, Date]
-			| [undefined, undefined];
-		let minDate = dateDomain[0] ?? new Date();
-		let maxDate = dateDomain[1] ?? new Date();
-		// if (minDate.getTime() === maxDate.getTime()) {
-		// 	maxDate = new Date(minDate.getTime() + 24 * 60 * 60 * 1000);
-		// }
-		// Adjust maxDate slightly if only one week exists to give it space, or add a buffer
-		if (weeklyAggregatedData.length === 1) {
-			maxDate = timeWeek.offset(minDate, 1); // Show at least one full week interval
-		} else {
-			// Optional: Add padding to the end date if needed
-			maxDate = timeWeek.offset(maxDate, 1);
-		}
+
+		const dateDomain = extent(weeklyAggregatedData, (d) => d.weekStartDate) as [Date, Date];
+		let minDate = timeWeek.floor(dateDomain[0]!);
+		let maxDate = timeWeek.floor(dateDomain[1]!); // ✅ this aligns the last bar with the right edge
+
 		return scaleTime()
 			.domain([minDate, maxDate])
-			.range([horizontalPadding + barWidth / 2, containerWidth - horizontalPadding - barWidth / 2]);
+			.range([barWidth / 2, containerWidth - barWidth / 2])
 	});
 
 	const heightScale = $derived.by(() => {
@@ -105,6 +94,24 @@
 		// return scaleLinear().domain([0, maxKilled]).range([5, maxBarHeight]); // Min height 5px
 		const maxWeeklyKilled = Math.max(...weeklyAggregatedData.map((d) => d.totalKilledOrWounded), 1);
 		return scaleLinear().domain([0, maxWeeklyKilled]).range([5, maxBarHeight]); // Min height 5px
+	});
+
+	const maxWeek = $derived.by(() => {
+		if (weeklyAggregatedData.length === 0) return null;
+		return weeklyAggregatedData.reduce(
+			(max, d) => (d.totalKilledOrWounded > max.totalKilledOrWounded ? d : max),
+			weeklyAggregatedData[0]
+		);
+	});
+
+	const maxBarLabel = $derived.by(() => {
+		if (!maxWeek || !timeScale || !heightScale) return null;
+
+		return {
+			x: timeScale(maxWeek.weekStartDate),
+			y: axisY - heightScale(maxWeek.totalKilledOrWounded) - barPaddingBottom - 6,
+			value: maxWeek.totalKilledOrWounded
+		};
 	});
 
 	onMount(() => {
@@ -158,7 +165,6 @@
 	bind:this={timelineContainer}
 	class="box-border flex h-36 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90"
 >
-	<!-- {#if containerWidth > 0 && parsedIncidents.length > 0} -->
 	{#if containerWidth > 0 && weeklyAggregatedData.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
 			<!-- Axis Line -->
@@ -171,16 +177,44 @@
 				stroke-width="1"
 			/>
 
-			<!-- Weekly Aggregated Bars -->
+			{#if maxBarLabel}
+				{@const isLeftSide = maxBarLabel.x < containerWidth / 2}
+				{@const lineStartX = isLeftSide ? maxBarLabel.x : maxBarLabel.x - 20}
+				{@const lineEndX = isLeftSide ? maxBarLabel.x + 20 : maxBarLabel.x}
+				{@const labelX = isLeftSide ? maxBarLabel.x : maxBarLabel.x - 20}
+				{@const labelDx = isLeftSide ? 20 : -20}
+				{@const textAnchor = isLeftSide ? 'start' : 'end'}
+
+				<!-- Line from bar to label -->
+				<line
+					x1={lineStartX}
+					x2={lineEndX}
+					y1={Math.max(maxBarLabel.y, 6)}
+					y2={Math.max(maxBarLabel.y, 6)}
+					stroke="#9f3e52"
+					stroke-width="1"
+				/>
+
+				<!-- Label -->
+				<text
+					x={labelX}
+					y={Math.max(maxBarLabel.y, 10)}
+					dx={labelDx}
+					text-anchor={textAnchor}
+					class="fill-[#9f3e52] font-sans text-xs font-semibold"
+				>
+					{maxBarLabel.value} killed/wounded
+				</text>
+			{/if}
+
+			<!-- Weekly Bars -->
 			{#each weeklyAggregatedData as weekData (weekData.weekStartDate.toISOString())}
 				{@const xPos = timeScale(weekData.weekStartDate)}
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
-				<!-- {@const isSelected = selectedWeekStartDate?.getTime() === weekData.weekStartDate.getTime()} -->
 				{@const activeWeek = activeWeekStartDate()}
 				{@const isSelected = activeWeek?.getTime() === weekData.weekStartDate.getTime()}
 
-				<!-- Group for interaction + Tailwind group modifier -->
 				<g
 					class="group cursor-pointer focus:outline-none"
 					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
@@ -193,9 +227,28 @@
 					aria-label={`Week starting ${formatDate(weekData.weekStartDate)}: ${weekData.totalKilledOrWounded} killed/wounded`}
 					role="button"
 				>
+					<!-- Tooltip below bar -->
+					<text
+						x={xPos < containerWidth * 0.1
+							? xPos - 5
+							: xPos > containerWidth * 0.9
+								? xPos + 5
+								: xPos}
+						y={axisY + 14}
+						text-anchor={xPos < containerWidth * 0.1
+							? 'start'
+							: xPos > containerWidth * 0.9
+								? 'end'
+								: 'middle'}
+						class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+					>
+						Week of {moment(weekData.weekStartDate).format('D MMMM Y')}
+					</text>
+
+					<!-- Bar -->
 					<rect
 						class:group-hover:fill-[#f2b0b8]={!isSelected}
-						class="transition-colors duration-500 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1 group-focus-visible:outline-blue-500"
+						class="transition-colors duration-500 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 						x={xPos - barWidth / 2}
 						y={yPos}
 						width={barWidth}
@@ -204,26 +257,42 @@
 						ry="1"
 						fill={isSelected ? '#f2b0b8' : '#9f3e52'}
 					>
-						<title
-							>Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded</title
-						>
+						<title>
+							Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
+						</title>
 					</rect>
 				</g>
 			{/each}
 
-			<!-- Date Labels -->
+			<!-- Date Labels ABOVE bars -->
 			{#if timeScale.domain()[0] && timeScale.domain()[1]}
 				{@const [startRange, endRange] = timeScale.range()}
 				{@const [startDate, endDate] = timeScale.domain()}
+
+				<!-- Left Tick + Label -->
+				{@const firstX = timeScale(weeklyAggregatedData[0].weekStartDate) + 1}
+				<line x1={firstX} y1={0} x2={firstX} y2={15} stroke="gray" stroke-width="1" />
 				<text
 					x={startRange}
-					y={axisY + 14}
-					class="fill-gray-500 font-sans text-xs"
+					y={10}
+					style="fill: gray"
+					class="font-sans text-xs"
 					text-anchor="start"
+					dx="10"
 				>
 					{formatDate(startDate)}
 				</text>
-				<text x={endRange} y={axisY + 14} class="fill-gray-500 font-sans text-xs" text-anchor="end">
+
+				<!-- Right Tick + Label -->
+				{@const lastX = timeScale(weeklyAggregatedData.at(-1).weekStartDate) - 1}
+				<line x1={lastX} y1={0} x2={lastX} y2={15} stroke="gray" stroke-width="1" />
+				<text
+					x={endRange}
+					y={10}
+					class="fill-gray-400 font-sans text-xs"
+					text-anchor="end"
+					dx="-23"
+				>
 					{formatDate(timeWeek.floor(endDate))}
 				</text>
 			{/if}
