@@ -25,10 +25,10 @@
 <style>
 	.animation-object {
 		position: relative;
-		border: 1px dashed red;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		/* border: 1px dashed red; */
 	}
 
 	.animation-object img {
