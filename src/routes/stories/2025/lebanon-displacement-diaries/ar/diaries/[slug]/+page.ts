@@ -1,4 +1,4 @@
-import { useStoryblok } from "$lib/storyblok";
+import { useStoryblok } from "$lib/utils/storyblok";
 import { useStoryblokApi } from "@storyblok/svelte";
 
 export const prerender = false; // ❌ Disable prerendering for dynamic routes

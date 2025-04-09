@@ -40,10 +40,10 @@
 		{#if blok.items}
 			<FadeIn
 				yOffset={50}
-				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 pt-3 sm:pt-4 pb-3'}`}
+				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
 				delay={30 * i + 100}
 			>
-				<div class={`line-clamp-6 flex h-full w-full flex-col justify-between`}>
+				<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -76,8 +76,10 @@
 		background-size: contain;
 		background-position: center center;
 		grid-column: var(--colSpan);
-		opacity: 0.9;
+		opacity: 0.8;
 		z-index: 0;
+		will-change: opacity;
+		transition: opacity 0.5s;
 	}
 
 	@media screen and (max-width: 640px) {
@@ -90,17 +92,17 @@
 		padding: 0.5rem 0.5rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
-		border: solid 2px var(--borderColor);
+		border: solid 0.5px var(--borderColor);
+		/* will-change: box-shadow;
+		transition: box-shadow 0.2s ease-in-out; */
 		/* border-top-left-radius: 255px 15px;
 		border-top-right-radius: 15px 225px;
 		border-bottom-right-radius: 225px 15px;
 		border-bottom-left-radius: 15px 255px; */
-		will-change: box-shadow;
-		transition: box-shadow 0.2s ease-in-out;
 	}
 
-	.story-grid--panel:not(.note, .frame, .placeholder):hover {
-		box-shadow: 2px 8px 4px -6px hsla(0, 0%, 0%, 0.3);
+	.story-grid--panel:not(.note, .frame, .placeholder) {
+		box-shadow: 0 0 10px 10px hsla(0, 0%, 0%, 0.025);
 	}
 
 	.story-grid--panel.note {

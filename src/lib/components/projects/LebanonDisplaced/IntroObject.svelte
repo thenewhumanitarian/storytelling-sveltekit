@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
+
+	import { isArabic } from '$lib/utils/storyblok'; // Function to detect Storyblok language
+	let isRtl = $derived(isArabic());
 
 	const { blok } = $props();
 </script>
@@ -8,10 +11,11 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	style={`
       position: absolute;
-      top: calc(${blok.posY}% - 6rem);
-      left: ${blok.posX}%;
+      left: ${isArabic() ? 'unset' : `${blok.posX}%`};
+			right: ${isArabic() ? `${blok.posX}%` : 'unset'};
       width: ${blok.width || 'auto'}%;
 			aspect-ratio: ${blok.aspectRatio || 'auto'};
+      bottom: calc(${blok.posY}%);
     `}
 	class={'animation-object'}
 >

@@ -24,7 +24,7 @@
 			<h1>Lebanon Displacement Diaries</h1>
 		{/if}
 	</div>
-	<div class="bottom-left">
+	<div class="intro-credit">
 		{#each blok.logos as item}
 			<StoryblokComponent blok={item} />
 		{/each}
@@ -41,7 +41,7 @@
 		height: 100vh;
 		padding: 2rem;
 		margin-top: -6rem;
-		border-bottom: 6px solid #636845;
+		border-bottom: 6px solid inherit;
 		z-index: 0;
 		background-color: #ffe0b5;
 		background-image: url('/assets/ldd/patterns/fabric-pattern.png');
@@ -51,26 +51,48 @@
 		position: absolute;
 		top: 8rem;
 		left: 2.5rem;
-		border-left: 6px solid #A4AF69;
-		padding-left: 1rem;
 		padding-top: 0.75rem;
+		/* border-left: 6px solid #A4AF69;
+		padding-left: 1rem; */
 	}
 
-	.bottom-left {
+	:global(.arabic .intro-title) {
+		left: unset;
+		right: 2.5rem;
+	}
+
+	.intro-credit {
 		position: absolute;
 		bottom: 3rem;
 		left: 2.5rem;
 	}
+
+	:global(.arabic .intro-credit) {
+		left: unset;
+		right: 2.5rem;
+	}
+
 	@media screen and (max-width: 640px) {
 		.intro-title {
 			top: 7rem;
 			left: 1rem;
 			text-align: left;
 		}
-		.bottom-left {
+
+		:global(.arabic .intro-title) {
+			left: unset;
+			right: 1rem;
+		}
+
+		.intro-credit {
 			bottom: 1.5rem;
 			left: 1rem;
 			max-width: 65%;
+		}
+
+		:global(.arabic .intro-credit) {
+			left: unset;
+			right: 1rem;
 		}
 	}
 </style>

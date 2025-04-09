@@ -1,4 +1,9 @@
 <script>
+	import { setContext } from 'svelte';
+
+	// Set arabic context for the layout
+	setContext('lang', 'ar');
+
 	let { children } = $props();
 </script>
 

@@ -1,3 +1,7 @@
+// 000 – Import the getContext function from Svelte
+import { getContext } from 'svelte';
+import { readable, derived } from 'svelte/store';
+
 // @ts-nocheck
 // 001 - Import Access token and region from env variables
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
@@ -30,4 +34,26 @@ export async function useStoryblok(accessToken = "") {
       region: PUBLIC_REGION || 'eu',
     },
   });
+}
+
+export function lang() {
+  return getContext('lang') as string;
+}
+
+// Create a readable store from context (context is available only inside component)
+export function createLangStore() {
+  const langValue = lang();
+  return readable(langValue);
+}
+
+export function isArabic() {
+  return lang() === 'ar';
+}
+
+export function isEnglish() {
+  return lang() === 'en';
+}
+
+export function createIsRtlStore() {
+  return derived(createLangStore(), ($lang) => $lang === 'ar');
 }

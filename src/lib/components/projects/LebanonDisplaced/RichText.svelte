@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { storyblokEditable, renderRichText } from '@storyblok/svelte';
-
 	const { blok, className } = $props();
+
+	import { createIsRtlStore } from '$lib/utils/storyblok';
+	const isRtl = createIsRtlStore();
 </script>
 
 <div
@@ -101,6 +103,10 @@
 	}
 
 	/* Arabic text styles */
+	:global(.arabic *) {
+		direction: rtl;
+	}
+
 	:global(.arabic *:not(.text-center, .text-right)) {
 		text-align: right;
 	}

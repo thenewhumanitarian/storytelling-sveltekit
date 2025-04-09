@@ -3,6 +3,9 @@
 	import { inview } from 'svelte-inview';
 	import type { ObserverEventDetails, Options } from 'svelte-inview';
 
+	import { createIsRtlStore } from '$lib/utils/storyblok';
+	const isRtl = createIsRtlStore();
+
 	interface Props {
 		delay?: number;
 		duration?: number;
@@ -41,12 +44,14 @@
 		duration: duration,
 		delay: delay
 	};
+
+	const flipX = $derived(isRtl ? -xOffset : xOffset);
 </script>
 
 <div
 	use:inview={options}
 	oninview_change={handleChange}
-	class={`${isAbsolute ? 'absolute top-0 left-0' : 'relative'} block h-full w-full`}
+	class={`${isAbsolute ? 'absolute left-0 top-0' : 'relative'} block h-full w-full`}
 >
 	{#if isInView}
 		<div
@@ -60,7 +65,7 @@
 			<div
 				in:fly={{
 					...sharedOptions,
-					x: xOffset,
+					x: flipX,
 					y: yOffset
 				}}
 				class={`fade-in--wrapper_fly h-full w-full shrink-0 ${containerClasses || 'flex flex-col items-center justify-center'}`}

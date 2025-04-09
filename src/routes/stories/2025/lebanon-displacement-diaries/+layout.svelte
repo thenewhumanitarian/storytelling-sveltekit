@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
 
 	let { children } = $props();
+
+	// Set default language to English
+	setContext('lang', 'en');
 
 	onMount(() => {
 		/* Add class to body if in Storyblok editor */

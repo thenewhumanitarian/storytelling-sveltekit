@@ -2,7 +2,7 @@
 	export { pageTitle };
 
 	import { onMount } from 'svelte';
-	import { useStoryblok } from '$lib/storyblok';
+	import { useStoryblok } from '$lib/utils/storyblok';
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
 	import type { PageData } from './$types';
 
