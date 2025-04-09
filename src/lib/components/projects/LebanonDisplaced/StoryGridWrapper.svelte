@@ -116,7 +116,7 @@
 		margin: 0 auto;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: var(--grid-rows);
-		grid-gap: 1.6rem;
+		grid-gap: 2rem;
 	}
 
 	@media screen and (max-width: 900px) {

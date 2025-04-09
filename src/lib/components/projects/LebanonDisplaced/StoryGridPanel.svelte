@@ -93,6 +93,7 @@
 		margin: 0 0.5rem;
 		font-size: 1rem;
 		border: solid 0.5px var(--borderColor);
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 		/* will-change: box-shadow;
 		transition: box-shadow 0.2s ease-in-out; */
 		/* border-top-left-radius: 255px 15px;
@@ -102,7 +103,8 @@
 	}
 
 	.story-grid--panel:not(.note, .frame, .placeholder) {
-		box-shadow: 0 0 10px 10px hsla(0, 0%, 0%, 0.025);
+		/* box-shadow: 0 0 10px 10px hsla(0, 0%, 0%, 0.025); */
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
 	.story-grid--panel.note {
@@ -112,10 +114,9 @@
 		width: 100%;
 	}
 
+	/* Scotch tape effect */
 	.story-grid--panel.frame {
-		background-image: url('/assets/ldd/patterns/picture-frame-one.png');
-		background-size: contain;
-		border-color: transparent;
+		background: transparent;
 	}
 
 	.story-grid--panel:hover {

@@ -7,7 +7,7 @@
 
 	const textObject = blok.text;
 
-	console.log(blok)
+	// console.log(blok);
 </script>
 
 <article>
@@ -22,7 +22,7 @@
 					/>
 				{/if}
 			</div>
-			<div class="text-content--hover">
+			<div class="text-content--hover font-serif">
 				<h2>Read more →</h2>
 			</div>
 			{#if blok.object}
@@ -34,6 +34,7 @@
 					{/if}
 				</div>
 			{/if}
+			<!--
 			{#if blok.photo}
 				<div class="polaroid-photo floating-rotate-right">
 					<div class="polaroid-photo--inside">
@@ -43,14 +44,14 @@
 						/>
 					</div>
 				</div>
-			{/if}
+			{/if}-->
 		</div>
 	</FadeIn>
 </article>
 
 <style>
 	h2 {
-		font-family: 'Pacifico', cursive;
+		font-weight: bold;
 	}
 
 	@media screen and (max-width: 640px) {
@@ -84,7 +85,8 @@
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: start;
-		border: #ffe0b5 1px solid;
+		border: 0.5px solid #282828;
+		background: #ffe0b5;
 		aspect-ratio: 3/2;
 		width: 100%;
 		max-width: 640px;
@@ -122,19 +124,18 @@
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: calc(100% - 0.6rem);
-		width: calc(100% - 0.6rem);
-		border: 1px solid #ffe0b5;
-		margin: 0.3rem;
+		height: 100%;
+		border: 0.5px solid #282828;
 		text-align: left;
 		z-index: 1;
-		background-color: rgba(255, 255, 255, 0);
-		padding: 2rem 4rem 1rem 4rem;
-		background-image: url('/assets/ldd/patterns/scrapbook-note--light.png');
+		background: #ffe0b5;
 		background-size: contain;
 		border-color: transparent;
 		background-repeat: no-repeat;
 		background-position: center;
+		padding: 2rem 1.5rem;
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* padding: 2rem 4rem 1rem 4rem; */
 		/* background-color: rgba(255, 255, 255, 1); */
 	}
 
@@ -163,19 +164,18 @@
 		text-align: left;
 		top: 0;
 		left: 0;
-		height: calc(100% - 0.6rem);
-		width: calc(100% - 0.6rem);
-		margin: 0.3rem;
+		height: 100%;
+		width: 100%;
 		background-color: transparent;
 		opacity: 0;
 		transition: all 0.5s;
 		z-index: -1;
 		color: #003d14;
-		background-image: url('/assets/ldd/patterns/scrapbook-note--light.png');
 		background-size: contain;
 		border-color: transparent;
 		background-repeat: no-repeat;
 		background-position: center;
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 		/* border: 4px solid #003d14; */
 		/* background-color: #e8c188; */
 		/* background-color: #ede580; */

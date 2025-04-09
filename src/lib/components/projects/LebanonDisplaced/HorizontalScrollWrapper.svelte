@@ -1,8 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, getContext } from 'svelte';
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 
 	export let blok;
+
+	const lang = getContext('lang');
+	const isArabic = lang === 'ar';
+
+	// console.log(isArabic);
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -18,21 +23,46 @@
 			let scrollWidth = scrollContainer.scrollWidth;
 			let viewportWidth = document.querySelector('main')?.offsetWidth || window.innerWidth;
 
-			gsap.to(scrollContainer, {
-				x: () => -(scrollWidth - viewportWidth),
-				ease: 'none',
-				scrollTrigger: {
-					trigger: '.horizontal-scroll-wrapper',
-					start: 'top top',
-					end: () => `+=${scrollWidth - viewportWidth}`,
-					pin: true,
-					scrub: 1,
-					invalidateOnRefresh: true,
-					markers: false
-				},
-				force3D: true,
-				autoAlpha: 1
-			});
+			let distance = scrollWidth - viewportWidth;
+
+			// Flip layout direction for RTL
+			if (isArabic) {
+				// Add row-reverse direction
+				scrollContainer.style.flexDirection = 'row-reverse';
+
+				// Set initial position to far right
+				gsap.set(scrollContainer, { x: 0 });
+
+				gsap.to(scrollContainer, {
+					x: -distance,
+					ease: 'none',
+					scrollTrigger: {
+						trigger: '.horizontal-scroll-wrapper',
+						start: 'top top',
+						end: `+=${distance}`,
+						pin: true,
+						scrub: 1,
+						invalidateOnRefresh: true,
+						markers: false
+					}
+				});
+			} else {
+				gsap.set(scrollContainer, { x: 0 });
+
+				gsap.to(scrollContainer, {
+					x: -distance,
+					ease: 'none',
+					scrollTrigger: {
+						trigger: '.horizontal-scroll-wrapper',
+						start: 'top top',
+						end: `+=${distance}`,
+						pin: true,
+						scrub: 1,
+						invalidateOnRefresh: true,
+						markers: false
+					}
+				});
+			}
 		}
 	});
 </script>
@@ -43,7 +73,7 @@
 >
 	{#if blok.title}
 		<div class="horizontal-scroll-wrapper--title-container">
-			<h2 class={`horizontal-scroll-wrapper--title pt-32 font-amman font-bold ${blok.textColor}`}>
+			<h2 class={`horizontal-scroll-wrapper--title pt-32 font-serif font-bold ${blok.textColor}`}>
 				{blok.title}
 			</h2>
 		</div>
@@ -73,6 +103,10 @@
 </div>
 
 <style>
+	/* :global(.arabic .horizontal-scroll-container) {
+		flex-direction: row-reverse;
+	} */
+
 	.horizontal-scroll-wrapper {
 		position: relative;
 		width: 100%;
