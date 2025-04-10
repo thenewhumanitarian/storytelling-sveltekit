@@ -1,14 +1,15 @@
 <script>
 	import Logo from '$lib/components/icons/Logo.svelte';
-	import LanguageSwitch from './LanguageSwitch.svelte';
+	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
+	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
 </script>
 
 <header class={'torn-paper torn-paper--top'}>
 	<div class="flex w-full flex-row items-center justify-between">
-		<div class="w-16">
-			<p>Share icons</p>
+		<div class="flex h-6 w-auto gap-2">
+			<ShareIcons />
 		</div>
-		<div>
+		<div class="absolute left-1/2 -translate-x-1/2">
 			<Logo />
 		</div>
 		<div class="w-16 text-right">

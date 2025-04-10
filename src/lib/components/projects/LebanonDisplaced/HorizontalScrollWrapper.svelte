@@ -5,9 +5,7 @@
 	export let blok;
 
 	const lang = getContext('lang');
-	const isArabic = lang === 'ar';
-
-	// console.log(isArabic);
+	const isRtl = lang === 'ar';
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -22,47 +20,23 @@
 			if (!scrollContainer) return;
 			let scrollWidth = scrollContainer.scrollWidth;
 			let viewportWidth = document.querySelector('main')?.offsetWidth || window.innerWidth;
+			const scrollAmount = scrollWidth - viewportWidth;
 
-			let distance = scrollWidth - viewportWidth;
-
-			// Flip layout direction for RTL
-			if (isArabic) {
-				// Add row-reverse direction
-				scrollContainer.style.flexDirection = 'row-reverse';
-
-				// Set initial position to far right
-				gsap.set(scrollContainer, { x: 0 });
-
-				gsap.to(scrollContainer, {
-					x: -distance,
-					ease: 'none',
-					scrollTrigger: {
-						trigger: '.horizontal-scroll-wrapper',
-						start: 'top top',
-						end: `+=${distance}`,
-						pin: true,
-						scrub: 1,
-						invalidateOnRefresh: true,
-						markers: false
-					}
-				});
-			} else {
-				gsap.set(scrollContainer, { x: 0 });
-
-				gsap.to(scrollContainer, {
-					x: -distance,
-					ease: 'none',
-					scrollTrigger: {
-						trigger: '.horizontal-scroll-wrapper',
-						start: 'top top',
-						end: `+=${distance}`,
-						pin: true,
-						scrub: 1,
-						invalidateOnRefresh: true,
-						markers: false
-					}
-				});
-			}
+			gsap.to(scrollContainer, {
+				x: () => (isRtl ? scrollAmount : -scrollAmount),
+				ease: 'none',
+				scrollTrigger: {
+					trigger: '.horizontal-scroll-wrapper',
+					start: 'top top',
+					end: () => `+=${scrollAmount}`,
+					pin: true,
+					scrub: 1,
+					invalidateOnRefresh: true,
+					markers: false
+				},
+				force3D: true,
+				autoAlpha: 1
+			});
 		}
 	});
 </script>
@@ -128,6 +102,12 @@
 		flex-wrap: nowrap;
 		top: 0;
 		left: 0;
+	}
+
+	:global(.arabic .horizontal-scroll-container) {
+		left: unset;
+		right: 0;
+		flex-direction: row;
 	}
 
 	.horizontal-scroll-wrapper--title-container {

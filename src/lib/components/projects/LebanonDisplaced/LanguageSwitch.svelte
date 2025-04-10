@@ -13,25 +13,15 @@
 	$: arabicUrl = currentPath.startsWith(PUBLIC_AR_PATH)
 		? currentPath
 		: currentPath.replace(PUBLIC_BASE_PATH, PUBLIC_AR_PATH);
-
-	// Active language detection
-	$: isEnglishActive =
-		currentPath.startsWith(PUBLIC_BASE_PATH) && !currentPath.startsWith(PUBLIC_AR_PATH);
-	$: isArabicActive = currentPath.startsWith(PUBLIC_AR_PATH);
-
-	// Debugging (optional)
-	// $: console.log('Current Path:', currentPath);
-	// $: console.log('English URL:', englishUrl);
-	// $: console.log('Arabic URL:', arabicUrl);
 </script>
 
 <nav>
 	<ul>
-		<li class={`${currentPath === englishUrl ? 'active bg-sun underline' : ''} px-0`}>
-			<a href={englishUrl} rel="alternate" lang="en">EN</a>
+		<li class={`${currentPath === englishUrl ? 'active bg-brown underline' : ''} px-1`}>
+			<a href={englishUrl} rel="alternate" lang="en">English</a>
 		</li>
-		<li class={`${currentPath === arabicUrl ? 'active bg-sun underline' : ''} px-0`}>
-			<a href={arabicUrl} rel="alternate" lang="ar">AR</a>
+		<li class={`${currentPath === arabicUrl ? 'active bg-brown underline' : ''} px-1`}>
+			<a href={arabicUrl} rel="alternate" lang="ar">العربية</a>
 		</li>
 	</ul>
 </nav>
@@ -39,13 +29,8 @@
 <style>
 	nav {
 		display: flex;
-		justify-content: center;
-		/* border-top-left-radius: 255px 15px;
-		border-top-right-radius: 15px 225px;
-		border-bottom-right-radius: 225px 15px;
-		border-bottom-left-radius: 15px 255px; */
-		/* border: 2px solid black; */
-		/* padding: 0.5rem; */
+		justify-content: end;
+		gap: 1rem;
 	}
 
 	ul {

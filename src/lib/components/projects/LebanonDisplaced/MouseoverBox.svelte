@@ -6,8 +6,6 @@
 	import RichText from './RichText.svelte';
 
 	const textObject = blok.text;
-
-	// console.log(blok);
 </script>
 
 <article>
@@ -23,7 +21,8 @@
 				{/if}
 			</div>
 			<div class="text-content--hover font-serif">
-				<h2>Read more →</h2>
+				<h2 class="en">Read more →</h2>
+				<h2 dir="rtl" class="ar">اقرأ المزيد←</h2>
 			</div>
 			{#if blok.object}
 				<div class="personal-object floating-rotate-left floating--delay">
@@ -59,6 +58,18 @@
 			font-size: 1.4rem;
 			line-height: 1;
 		}
+	}
+
+	:global(h2.en) {
+		display: block;
+	}
+
+	:global(.arabic h2.en) {
+		display: none;
+	}
+
+	:global(.arabic h2.ar) {
+		display: block;
 	}
 
 	article {
