@@ -16,6 +16,7 @@
 			<LanguageSwitch />
 		</div>
 	</div>
+	<link href="https://cdn.knightlab.com/libs/soundcite/latest/css/player.css" rel="stylesheet" />
 </header>
 
 <style>

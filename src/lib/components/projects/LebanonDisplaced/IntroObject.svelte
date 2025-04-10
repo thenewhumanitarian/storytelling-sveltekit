@@ -16,6 +16,7 @@
       width: ${blok.width || 'auto'}%;
 			aspect-ratio: ${blok.aspectRatio || 'auto'};
       bottom: calc(${blok.posY}%);
+			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
     `}
 	class={'animation-object'}
 >

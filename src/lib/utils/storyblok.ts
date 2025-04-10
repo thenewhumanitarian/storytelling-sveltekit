@@ -25,6 +25,7 @@ export async function useStoryblok(accessToken = "") {
       mouseoverBox: (await import("$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte")).default,
       richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
       mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
+      soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
     },
     apiOptions: {
       https: true,

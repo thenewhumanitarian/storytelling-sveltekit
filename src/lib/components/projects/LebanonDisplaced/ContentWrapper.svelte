@@ -57,7 +57,7 @@
 	}
 
 	.content-wrapper:first-of-type {
-		margin-top: 4rem;
+		margin-top: 2rem;
 	}
 
 	@media screen and (max-width: 660px) {

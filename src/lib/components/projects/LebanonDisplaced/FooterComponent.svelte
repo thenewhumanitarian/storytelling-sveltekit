@@ -55,6 +55,8 @@
 		height: 5rem;
 		overflow: hidden;
 		top: -5rem;
+		margin-top: 1rem;
+		background-color: white;
 		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
 		background-size: contain;
 	}
