@@ -60,4 +60,10 @@
 		border-radius: 0px !important;
 		padding: 0.75rem 1rem;
 	}
+
+	:global(.arabic .soundcite-play:before) {
+		border-left: none;
+		border-right: 0.75em solid black;
+    padding-left: 0.5rem;
+	}
 </style>
