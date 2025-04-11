@@ -1,8 +1,11 @@
 <script>
-	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+	import { getContext } from 'svelte';
 
-	import { createIsRtlStore } from '$lib/utils/storyblok';
-	const isRtl = createIsRtlStore();
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
+
+	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+	console.log('Footer', isRtl);
 </script>
 
 <footer
@@ -10,9 +13,9 @@
 	style={`justify-content: ${isRtl ? 'flex-end' : 'flex-start'};`}
 >
 	<div class="torn-paper torn-paper--bottom"></div>
-	<div class={`footer--logo w-auto ${isRtl ? 'text-right ' : 'text-left'}`}>
-		<FadeIn duration={2000} yOffset={0} blurAmount={30}>
-			<h1>The Lebanon Displacement Diaries</h1>
+	<div class={`footer--logo w-full ${isRtl ? 'text-right' : 'text-left'}`}>
+		<FadeIn duration={2000} yOffset={0} blurAmount={30} containerClasses={`flex w-full ${isRtl ? 'justify-end' : 'justify-start'}`}>
+			<h1>The<br />Lebanon<br />Displacement<br />Diaries</h1>
 		</FadeIn>
 	</div>
 </footer>
@@ -28,7 +31,7 @@
 	.footer--logo h1 {
 		/* Adjust header logo too if changed here */
 		font-size: 4rem;
-		max-width: 320px;
+		/* max-width: 320px; */
 		font-size: 4rem;
 		line-height: 0.875;
 		margin-bottom: 2rem;
@@ -58,6 +61,6 @@
 		margin-top: 1rem;
 		background-color: white;
 		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
-		background-size: contain;
+		background-size: cover;
 	}
 </style>

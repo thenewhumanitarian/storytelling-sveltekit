@@ -97,4 +97,10 @@
 	.logo {
 		width: 160px;
 	}
+
+	@media screen and (max-width: 640px) {
+		.logo {
+			width: 135px;
+		}
+	}
 </style>

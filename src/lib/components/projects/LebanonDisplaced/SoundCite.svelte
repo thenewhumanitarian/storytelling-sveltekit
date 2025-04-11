@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount, tick, getContext } from 'svelte';
 	import { storyblokEditable } from '@storyblok/svelte';
 
 	let { blok = {} } = $props();
 	let soundciteElement: HTMLSpanElement | null = null;
 
-	const id = `soundcite-${blok._uid}`;
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
+
+	// const id = `soundcite-${blok._uid}`;
 	const text = blok.text;
 	const url = blok.audio?.filename || '';
 	const start = 0;
@@ -21,6 +24,9 @@
 			window.SOUNDCITE_CONFIG = {
 				background_color: '250,225,186' // e.g., bright yellow; use RGB format
 			};
+
+			// Set SoundCite config for isRtl
+			window.SOUNDCITE_CONFIG.isRtl = isRtl;
 
 			const script = document.createElement('script');
 			script.src = '/scripts/SoundCite.js';
@@ -64,6 +70,12 @@
 	:global(.arabic .soundcite-play:before) {
 		border-left: none;
 		border-right: 0.75em solid black;
-    padding-left: 0.5rem;
+		padding-left: 0.5rem;
+	}
+
+	:global(.arabic .soundcite-pause:before) {
+		padding-left: 0.5rem;
+		border-left: none;
+		border-right: 0.75em double black;
 	}
 </style>

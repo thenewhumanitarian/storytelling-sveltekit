@@ -5,7 +5,6 @@
 	// Reactive current path
 	$: currentPath = $page.url.pathname;
 
-	// Dynamically compute language URLs using env variables
 	$: englishUrl = currentPath.startsWith(PUBLIC_AR_PATH)
 		? currentPath.replace(PUBLIC_AR_PATH, PUBLIC_BASE_PATH)
 		: currentPath;
@@ -13,49 +12,28 @@
 	$: arabicUrl = currentPath.startsWith(PUBLIC_AR_PATH)
 		? currentPath
 		: currentPath.replace(PUBLIC_BASE_PATH, PUBLIC_AR_PATH);
+
+	function handleChange(event) {
+		event.preventDefault();
+		if (event.target?.value) {
+			window.location.href = event.target.value;
+		}
+	}
 </script>
 
-<nav>
-	<ul>
-		<li class={`${currentPath === englishUrl ? 'active bg-brown underline' : ''} px-1`}>
-			<a href={englishUrl} rel="alternate" lang="en">English</a>
-		</li>
-		<li class={`${currentPath === arabicUrl ? 'active bg-brown underline' : ''} px-1`}>
-			<a href={arabicUrl} rel="alternate" lang="ar">العربية</a>
-		</li>
-	</ul>
+<nav class="flex items-center justify-end gap-2 bg-transparent px-2 py-1">
+	<!-- Desktop (and mobile!) dropdown -->
+	<select
+		class="text-xs sm:text-base appearance-none border bg-transparent px-3 py-2 pr-6 sm:pr-8 text-black focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-burgundy"
+		on:change={handleChange}
+	>
+		<option value={englishUrl} selected={currentPath === englishUrl}>English</option>
+		<option value={arabicUrl} selected={currentPath === arabicUrl}>العربية</option>
+	</select>
 </nav>
 
 <style>
-	nav {
-		display: flex;
-		justify-content: end;
-		gap: 1rem;
-	}
-
-	ul {
-		display: flex;
-		list-style: none;
-		padding: 0;
-	}
-
-	li {
-		margin: 0 0.2rem;
-	}
-
-	a {
-		text-decoration: none;
-		color: #333;
-		font-weight: normal;
-	}
-
-	/* Ensure active link is styled correctly */
-	li.active a {
-		font-weight: bold;
-		color: black;
-	}
-
-	a:hover {
-		text-decoration: underline;
+	select {
+		border: 0.5px solid #282828;
 	}
 </style>

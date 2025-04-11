@@ -101,7 +101,7 @@
   }
   var style = document.createElement("style");
   style.type = "text/css";
-  style.innerHTML = ".soundcite-loaded { background-color: rgba(" + SOUNDCITE_CONFIG.background_color + ",.15) }";
+  style.innerHTML = ".soundcite-loaded { background-color: rgba(" + SOUNDCITE_CONFIG.background_color + ",.5) }";
   document.getElementsByTagName("head")[0].appendChild(style);
   var bind = function (func, context) {
     var slice = Array.prototype.slice;
@@ -164,7 +164,12 @@
   }
   var update_playing_element = function (el, percentage) {
     var color = SOUNDCITE_CONFIG.background_color || "0,0,0";
-    el.style.cssText = "background: -webkit-linear-gradient(left, rgba(" + color + ",.15)" + percentage + "%, rgba(" + color + ",.05)" + (percentage + 1) + "%);" + "background: linear-gradient(to right, rgba(" + color + ",.15)" + percentage + "%, rgba(" + color + ",.05)" + (percentage + 1) + "%);"
+    if (SOUNDCITE_CONFIG.isRtl) {
+      el.style.cssText = "background: -webkit-linear-gradient(right, rgba(" + color + ",.5)" + percentage + "%, rgba(" + color + ",.2)" + (percentage + 1) + "%);" + "background: linear-gradient(to left, rgba(" + color + ",.5)" + percentage + "%, rgba(" + color + ",.2)" + (percentage + 1) + "%);"
+    }
+    else {
+      el.style.cssText = "background: -webkit-linear-gradient(left, rgba(" + color + ",.5)" + percentage + "%, rgba(" + color + ",.2)" + (percentage + 1) + "%);" + "background: linear-gradient(to right, rgba(" + color + ",.5)" + percentage + "%, rgba(" + color + ",.2)" + (percentage + 1) + "%);"
+    }
   };
   window.soundcite = {};
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

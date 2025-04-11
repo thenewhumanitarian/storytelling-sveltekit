@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
 
+	/* Get language from URL */
+	import { page } from '$app/state';
+	const pageRoute = page.route.id;
+	const lang = pageRoute && pageRoute.includes('/ar/') ? 'ar' : 'en';
+
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
 
-	let { children } = $props();
+	setContext('lang', lang);
 
-	// Set default language to English
-	setContext('lang', 'en');
+	let { children } = $props();
 
 	onMount(() => {
 		/* Add class to body if in Storyblok editor */
@@ -32,9 +36,6 @@
 <HeaderComponent />
 
 <main>
-	<!-- <div class="background-image">
-		<enhanced:img src="$lib/assets/ldd/bg-example-1.jpg" alt="Scrapbook background example" />
-	</div> -->
 	{@render children()}
 </main>
 

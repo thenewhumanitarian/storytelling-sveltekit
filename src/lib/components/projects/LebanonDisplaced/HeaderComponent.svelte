@@ -21,13 +21,13 @@
 
 <style>
 	header {
-		height: 6rem;
+		height: 7rem;
 		z-index: 9999;
 		position: fixed;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0 1rem 0.7rem 1rem;
+		padding: 0 1rem 2rem 1rem;
 		width: 100%;
 		top: 0;
 		/* background-color: #ffe0b5; */
@@ -42,6 +42,8 @@
 			background-repeat: no-repeat;
 			background-position: top center;
 			background-size: cover;
+			padding-bottom: 0.7rem;
+			height: 5rem;
 		}
 	}
 
@@ -52,7 +54,7 @@
 		height: 25vh;
 		z-index: 1;
 		background-position: top center;
-		background-size: contain;
+		background-size: cover;
 	}
 	:global(.torn-paper--top) {
 		top: 0;
