@@ -5,7 +5,7 @@
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`content-wrapper ${blok.borderColor === 'black' ? 'border-[0.5px] border-black' : ''} ${blok?.backgroundColor || 'bg-white'} ${blok?.size}`}
+	class={`content-wrapper ${blok.borderColor === 'black' ? 'border-[0.5px] border-black' : ''} ${blok?.backgroundColor || 'bg-transparent'} ${blok?.size}`}
 >
 	<div class="content-wrapper--container">
 		{#if blok}
@@ -38,6 +38,11 @@
 	@media screen and (max-width: 660px) {
 		.content-wrapper:first-of-type {
 			margin-top: 0;
+		}
+
+		.content-wrapper {
+			padding: 1rem;
+			margin: 0 1rem;
 		}
 	}
 
@@ -98,7 +103,7 @@
 
 	@media screen and (max-width: 640px) {
 		.content-wrapper.full > .content-wrapper--container {
-			padding: 2rem 1rem;
+			padding: 0;
 		}
 	}
 </style>

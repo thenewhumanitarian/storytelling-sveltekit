@@ -1,6 +1,24 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
-	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+
+	import { lightboxItems, currentIndex } from '$lib/stores/lightbox';
+
+	function openLightbox() {
+		console.log('Clicked on media element');
+
+		lightboxItems.update((items) => {
+			const currentSrc = blok.media.filename;
+			const type = blok.media.filename.includes('.mp4') ? 'video' : 'image';
+
+			let index = items.findIndex((i) => i.src === currentSrc);
+			if (index === -1) {
+				index = items.length;
+				items.push({ src: currentSrc, type });
+			}
+			currentIndex.set(index);
+			return items;
+		});
+	}
 
 	interface Props {
 		blok: any; // Todo: Define type here
@@ -9,32 +27,28 @@
 	let { blok = {} }: Props = $props();
 </script>
 
-<div
+<button
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class="media-element cursor-pointer"
+	class="media-element relative flex cursor-pointer items-center justify-center"
+	onclick={openLightbox}
 >
-	<FadeIn isAbsolute={true} blurAmount={10} duration={1000} yOffset={0} xOffset={-50}>
-		<!-- Videos -->
-		{#if blok.media?.filename.includes('.mp4')}
-			<video class="absolute h-full w-full object-contain p-0" autoplay loop muted playsinline>
-				<source src={`${blok.media.filename}`} type="video/mp4" />
-			</video>
-		{/if}
+	<!-- Videos -->
+	{#if blok.media?.filename.includes('.mp4')}
+		<video class="aspect-square" autoplay loop muted playsinline>
+			<source src={`${blok.media.filename}`} type="video/mp4" />
+		</video>
+	{/if}
 
-		<!-- Images -->
-		{#if blok.media?.filename.includes('.jpg') || blok.media?.filename.includes('.png')}
-			<img
-				src={`${blok.media.filename}`}
-				alt={`${blok.media.alt}`}
-				class="h-full w-auto object-contain p-0"
-			/>
-		{/if}
-	</FadeIn>
-</div>
+	<!-- Images -->
+	{#if blok.media?.filename.includes('.jpg') || blok.media?.filename.includes('.png')}
+		<img src={`${blok.media.filename}`} alt={`${blok.media.alt}`} class="aspect-square" />
+	{/if}
+</button>
 
 <style>
-	.media-element img, .media-element video {
-		--w: 200px; /* image width */
+	.media-element img,
+	.media-element video {
+		--w: 175px; /* image width */
 		--r: 1; /* image ratio */
 		/* control the tape dimension (adjust to understand) */
 		--l: 45px;

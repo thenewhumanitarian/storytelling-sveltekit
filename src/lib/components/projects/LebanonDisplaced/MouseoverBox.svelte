@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+	const lang = getContext('lang') as string;
+
 	import { storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 
@@ -21,11 +24,13 @@
 				{/if}
 			</div>
 			<div class="text-content--hover font-serif">
-				<h2 class="en">Read more →</h2>
-				<h2 dir="rtl" class="ar">اقرأ المزيد←</h2>
+				<h2 class:hidden={lang === 'ar'}>Read more →</h2>
+				<h2 class:hidden={lang !== 'ar'} dir="rtl">اقرأ المزيد←</h2>
 			</div>
 			{#if blok.object}
-				<div class="personal-object floating-rotate-left floating--delay">
+				<div
+					class={`personal-object floating--delay ${lang === 'ar' ? 'rtl-object floating-rotate-right' : 'floating-rotate-left'}`}
+				>
 					{#if blok.object.filename}
 						<img src={blok.object.filename} alt={blok.object.alt || 'Object'} />
 					{:else}
@@ -224,6 +229,26 @@
 			left: -8%;
 			scale: 1.1;
 			bottom: -18%;
+		}
+	}
+
+	/* RTL override: object floats on the right */
+	.rtl-object {
+		right: -10%;
+		left: auto;
+		transform-origin: center right;
+	}
+
+	.box--wrapper:hover .rtl-object {
+		right: -16%;
+		left: auto;
+		scale: 1.4;
+	}
+
+	@media screen and (max-width: 640px) {
+		.box--wrapper:hover .rtl-object {
+			right: -8%;
+			scale: 1.1;
 		}
 	}
 

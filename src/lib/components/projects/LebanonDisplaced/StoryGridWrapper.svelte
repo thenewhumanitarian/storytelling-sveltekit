@@ -28,33 +28,38 @@
 			const span = Number(item.colSpan) || 1;
 			currentRow += span;
 
-			// Move to the next row if the current row exceeds columns
 			if (currentRow > state.columns) {
 				rowCount++;
 				currentRow = span;
 			}
 		});
 
-		// Update state with computed values
-		state.totalRows = rowCount + 1; // Adding 1 for any remaining panels
-		state.gridTemplateRows = `auto ${Array(state.totalRows).fill(rowHeight).join(' ')} auto`;
+		// Calculate how many rows of items
+		state.totalRows = rowCount + 1;
+
+		// Conditionally add 'auto' row for title only if blok.text exists
+		const hasText = blok.text && blok.text.trim() !== '';
+		const rows = hasText
+			? `auto ${Array(state.totalRows).fill(rowHeight).join(' ')}`
+			: Array(state.totalRows).fill(rowHeight).join(' ');
+
+		state.gridTemplateRows = rows;
 	});
 </script>
 
 <!-- Desktop Grid -->
 <section
-	class="story-grid--wrapper hidden sm:block"
+	class="story-grid--wrapper desktop"
 	style="--grid-rows: {state.gridTemplateRows};"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div class="story-grid--container">
-		{#if blok.text}
+	<div class="story-grid--container desktop">
+		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-					<RichText
-						{blok}
-						className={`${blok.textAlign || 'text-center'} w-full prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-§4`}
-					/>
+					<h3 class={`pb-0 text-center font-serif text-3xl ${blok.textColor}`}>
+						{blok.text}
+					</h3>
 				</FadeIn>
 			</div>
 		{/if}
@@ -68,21 +73,20 @@
 
 <!-- Mobile Grid -->
 <section
-	class="story-grid--wrapper mobile sm:hidden"
+	class="story-grid--wrapper mobile"
 	style="--grid-rows: auto;"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="story-grid--container mobile">
-		<div class="story-grid--panel panel-title">
-			{#if blok.text}
+		{#if blok.text && blok.text !== ''}
+			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-					<RichText
-						{blok}
-						className={'text-center prose-h1:text-5xl prose-h1:font-pacifico prose-h1:pb-4'}
-					/>
+					<h3 class={`pb-0 text-center font-serif text-2xl ${blok.textColor}`}>
+						{blok.text}
+					</h3>
 				</FadeIn>
-			{/if}
-		</div>
+			</div>
+		{/if}
 		{#if blok.items}
 			{#each blok.items as item, i (item._uid)}
 				<StoryblokComponent blok={item} {i} style="grid-column: span 1 !important;" />
@@ -106,6 +110,17 @@
 
 	.story-grid--wrapper.mobile {
 		padding: 0;
+		display: none;
+	}
+
+	@media screen and (max-width: 750px) {
+		.story-grid--wrapper.mobile {
+			display: block;
+		}
+
+		.story-grid--wrapper.desktop {
+			display: none;
+		}
 	}
 
 	/* Default grid */
@@ -122,7 +137,8 @@
 	@media screen and (max-width: 900px) {
 		.story-grid--container {
 			width: 100%;
-			padding: 0 2rem 4rem 2rem;
+			padding: 0 1rem 2rem;
+			grid-gap: 1rem;
 		}
 	}
 
@@ -153,7 +169,6 @@
 		box-shadow: none;
 		color: white;
 		grid-column: span 3;
-		padding: 1rem;
 		width: 100%;
 		max-width: 800px;
 		margin: 0 auto;

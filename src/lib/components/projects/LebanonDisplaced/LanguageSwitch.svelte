@@ -21,10 +21,10 @@
 	}
 </script>
 
-<nav class="flex items-center justify-end gap-2 bg-transparent px-2 py-1">
+<nav class="flex items-center justify-end gap-2 bg-transparent px-2 py-1 sm:px-0">
 	<!-- Desktop (and mobile!) dropdown -->
 	<select
-		class="text-xs sm:text-base appearance-none border bg-transparent px-3 py-2 pr-6 sm:pr-8 text-black focus:outline-none focus:ring-2 focus:ring-burgundy focus:border-burgundy"
+		class="appearance-none border bg-transparent px-3 py-2 pr-6 text-xs text-black focus:border-burgundy focus:outline-none focus:ring-2 focus:ring-burgundy sm:pr-8 sm:text-base"
 		on:change={handleChange}
 	>
 		<option value={englishUrl} selected={currentPath === englishUrl}>English</option>

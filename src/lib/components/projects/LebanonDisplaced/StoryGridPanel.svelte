@@ -33,42 +33,46 @@
 		--borderColor: ${blok.borderColor || 'transparent'};
   `}
 >
-	<a
-		href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
-		class="font-reset"
-	>
-		{#if blok.items}
-			<FadeIn
-				yOffset={50}
-				containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
-				delay={30 * i + 100}
-			>
-				<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
-					{#if blok?.items}
-						{#each blok.items as item (item._uid)}
-							<StoryblokComponent blok={item} />
-						{/each}
-					{/if}
-				</div>
-			</FadeIn>
-		{/if}
-
-		<!-- Todo: Make this a component? -->
-		{#if blok.image && blok.image?.filename}
-			<div
-				class={`panel-object absolute top-1/3 sm:top-0 ${blok.textAlign === 'left' ? 'left-1/2' : 'right-1/2'} h-2/3 w-full  bg-cover bg-center bg-no-repeat sm:left-0 sm:h-full ${blok.textAlign} ${blok.floatInPlace ? 'float-in-place' : ''}`}
-			>
-				<div class={`panel-object--inner`}></div>
-				<FadeIn yOffset={20} delay={10 * i + 100} blurAmount={20} isAbsolute={true}>
-					<img
-						class={`${blok.stretchImage ? 'object-cover' : 'object-contain'} ${blok.floatInPlace ? 'float-in-place' : ''}`}
-						src={`${blok.image.filename}/m/`}
-						alt={blok.image.alt || 'Image'}
-					/>
+	{#if blok.link.id || blok.link.url}
+		<a
+			href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+			class="font-reset"
+		>
+			{#if blok.items}
+				<FadeIn
+					yOffset={50}
+					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
+					delay={30 * i + 100}
+				>
+					<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
+						{#if blok?.items}
+							{#each blok.items as item (item._uid)}
+								<StoryblokComponent blok={item} />
+							{/each}
+						{/if}
+					</div>
 				</FadeIn>
-			</div>
-		{/if}
-	</a>
+			{/if}
+		</a>
+	{:else}
+		<div class="font-reset">
+			{#if blok.items}
+				<FadeIn
+					yOffset={50}
+					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
+					delay={30 * i + 100}
+				>
+					<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
+						{#if blok?.items}
+							{#each blok.items as item (item._uid)}
+								<StoryblokComponent blok={item} />
+							{/each}
+						{/if}
+					</div>
+				</FadeIn>
+			{/if}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -76,7 +80,7 @@
 		background-size: contain;
 		background-position: center center;
 		grid-column: var(--colSpan);
-		opacity: 0.8;
+		opacity: 1;
 		z-index: 0;
 		will-change: opacity;
 		transition: opacity 0.5s;

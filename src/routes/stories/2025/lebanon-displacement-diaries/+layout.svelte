@@ -8,6 +8,7 @@
 
 	import HeaderComponent from '$lib/components/projects/LebanonDisplaced/HeaderComponent.svelte';
 	import FooterComponent from '$lib/components/projects/LebanonDisplaced/FooterComponent.svelte';
+	import Lightbox from '$lib/components/projects/LebanonDisplaced/Lightbox.svelte';
 
 	setContext('lang', lang);
 
@@ -37,6 +38,7 @@
 
 <main>
 	{@render children()}
+	<Lightbox />
 </main>
 
 <FooterComponent></FooterComponent>

@@ -74,7 +74,7 @@
 
 	@media screen and (max-width: 640px) {
 		.intro-title {
-			top: 7rem;
+			top: 5rem;
 			left: 1rem;
 			text-align: left;
 		}

@@ -41,6 +41,15 @@
 		font-size: 2rem;
 	}
 
+	:global(.storyblok--richtext h3) {
+		margin: 0 0 1rem 0;
+		font-family: 'GT Sectra Fine', sans-serif;
+		font-weight: bold;
+		/* font-family: 'ff-amman-serif-pro', serif; */
+		font-weight: 900;
+		font-size: 3rem;
+	}
+
 	@media screen and (max-width: 640px) {
 		:global(.storyblok--richtext h1) {
 			font-size: 2.3rem !important;

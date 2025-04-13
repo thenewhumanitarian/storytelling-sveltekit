@@ -5,7 +5,7 @@
 </script>
 
 <header class={'torn-paper torn-paper--top'}>
-	<div class="flex w-full flex-row items-center justify-between">
+	<div class="flex w-full flex-row items-center justify-between sm:px-2">
 		<div class="flex h-6 w-auto gap-2">
 			<ShareIcons />
 		</div>

@@ -5,7 +5,7 @@
 	const isRtl = lang === 'ar';
 
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	console.log('Footer', isRtl);
+	// console.log('Footer', isRtl);
 </script>
 
 <footer
