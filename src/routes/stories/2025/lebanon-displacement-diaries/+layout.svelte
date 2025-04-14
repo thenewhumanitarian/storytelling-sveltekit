@@ -75,7 +75,7 @@
 	}
 
 	/* Deactivate links in Storyblok editor */
-	:global(.is-storyblok-editor a) {
+	:global(.is-storyblok-editor a, .is-storyblok-editor button) {
 		pointer-events: none;
 	}
 </style>

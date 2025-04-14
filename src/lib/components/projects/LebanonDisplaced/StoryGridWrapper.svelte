@@ -5,10 +5,10 @@
 
 	/* Own components */
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
+	// import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
 
 	// Default row height
-	const rowHeight = blok.rowHeight ? blok.rowHeight + 'px' : '200px';
+	const rowHeight = blok.rowHeight ? blok.rowHeight + 'px' : 'auto';
 
 	// Create state for totalRows and gridTemplateRows
 	const state = $state({
@@ -57,7 +57,7 @@
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-					<h3 class={`pb-0 text-center font-serif text-3xl ${blok.textColor}`}>
+					<h3 class={`pb-0 text-center font-serif text-2xl ${blok.textColor || 'text-lebblack'}`}>
 						{blok.text}
 					</h3>
 				</FadeIn>

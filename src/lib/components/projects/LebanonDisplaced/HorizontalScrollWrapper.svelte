@@ -158,7 +158,7 @@
 	}
 
 	.vertical-scroll-container {
-		max-width: 320px;
+		max-width: 420px;
 		margin: 2rem auto;
 	}
 </style>

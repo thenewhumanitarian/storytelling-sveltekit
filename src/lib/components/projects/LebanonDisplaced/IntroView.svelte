@@ -11,7 +11,7 @@
 	class={`intro-view--wrapper ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
-		height: ${blok.screenHeightInPercent || 100}dvh;
+		height: ${blok.screenHeightInPercent || 100}svh;
 	`}
 >
 	<IntroAnimation {blok} />
@@ -65,6 +65,7 @@
 		position: absolute;
 		bottom: 3rem;
 		left: 2.5rem;
+		max-width: 65%;
 	}
 
 	:global(.arabic .intro-credit) {
@@ -87,7 +88,6 @@
 		.intro-credit {
 			bottom: 1.5rem;
 			left: 1rem;
-			max-width: 65%;
 		}
 
 		:global(.arabic .intro-credit) {

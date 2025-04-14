@@ -7,33 +7,43 @@
 	};
 
 	const state = $state<{
-		items: LightboxItem[];
 		index: number | null;
 		isVisible: boolean;
 	}>({
-		items: [],
 		index: null,
 		isVisible: false
 	});
 
+	// Track and react to currentIndex changes only
 	$effect(() => {
-		state.items = $lightboxItems;
 		state.index = $currentIndex;
 		state.isVisible = $currentIndex !== null;
+		// console.log('Updated state', {
+		// 	index: state.index,
+		// 	isVisible: state.isVisible,
+		// 	items: $lightboxItems
+		// });
 	});
 
 	const close = () => currentIndex.set(null);
-	const next = () =>
-		currentIndex.update((i) => (i !== null && i < state.items.length - 1 ? i + 1 : i));
-	const prev = () => currentIndex.update((i) => (i !== null && i > 0 ? i - 1 : i));
+
+	const next = () => {
+		const items = $lightboxItems;
+		currentIndex.update((i) => (i !== null ? (i < items.length - 1 ? i + 1 : 0) : null));
+	};
+
+	const prev = () => {
+		const items = $lightboxItems;
+		currentIndex.update((i) => (i !== null ? (i > 0 ? i - 1 : items.length - 1) : null));
+	};
 </script>
 
-{#if state.isVisible && state.index !== null}
+{#if state.isVisible && state.index !== null && $lightboxItems[state.index]}
 	<div>
 		<div
 			class="lightbox-overlay"
 			onclick={close}
-			onkeydown={(e) => (e.key === 'Escape' ? close() : null)}
+			onkeydown={(e) => e.key === 'Escape' && close()}
 			aria-label="Close lightbox"
 		>
 			<div
@@ -42,20 +52,20 @@
 				aria-modal="true"
 				onclick={(e) => e.stopPropagation()}
 			>
-				{#if state.items[state.index]?.type === 'image'}
-					<img src={state.items[state.index].src} alt="" />
-				{:else if state.items[state.index]?.type === 'video'}
-					<video src={state.items[state.index].src} autoplay controls playsinline>
+				{#if $lightboxItems[state.index].type === 'image'}
+					<img src={$lightboxItems[state.index].src} alt="" />
+				{:else if $lightboxItems[state.index].type === 'video'}
+					<video src={$lightboxItems[state.index].src} autoplay controls playsinline>
 						<track kind="captions" />
 					</video>
 				{/if}
 			</div>
 		</div>
 
-		<!-- Accessible navigation buttons -->
-		<button class="lightbox-prev" onclick={prev} aria-label="Previous media">←</button>
-		<button class="lightbox-next" onclick={next} aria-label="Next media">→</button>
-		<button class="lightbox-close" onclick={close} aria-label="Close lightbox">×</button>
+		<!-- Navigation buttons -->
+		<button class="lightbox-prev" onclick={prev}>←</button>
+		<button class="lightbox-next" onclick={next}>→</button>
+		<button class="lightbox-close" onclick={close}>×</button>
 	</div>
 {/if}
 
@@ -64,7 +74,7 @@
 		position: fixed;
 		inset: 0;
 		/* background: rgba(0, 0, 0, 0.9); */
-    background: #ffe0b5;
+		background: #ffe0b5;
 		display: flex;
 		justify-content: center;
 		align-items: center;

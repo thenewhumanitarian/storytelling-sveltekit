@@ -11,8 +11,8 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	style={`
       position: absolute;
-      left: ${isArabic() ? 'unset' : `${blok.posX}%`};
-			right: ${isArabic() ? `${blok.posX}%` : 'unset'};
+      right: ${isArabic() ? 'unset' : `${blok.posX}%`};
+			left: ${isArabic() ? `${blok.posX}%` : 'unset'};
       width: ${blok.width || 'auto'}%;
 			aspect-ratio: ${blok.aspectRatio || 'auto'};
       bottom: calc(${blok.posY}%);

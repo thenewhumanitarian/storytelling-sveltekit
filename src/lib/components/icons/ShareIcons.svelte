@@ -9,7 +9,7 @@
 <div class="share-icons flex items-center justify-center gap-2">
 	<!-- Share label only on mobile when icons are hidden -->
 	<button
-		class="block cursor-pointer text-black text-sm sm:hidden"
+		class="block cursor-pointer text-lebblack text-sm sm:hidden"
 		onclick={toggleShare}
 		class:hidden={showIcons}
 	>
@@ -18,7 +18,7 @@
 	<!-- BlueSky -->
 	<div class={`flex items-center gap-2 ${showIcons ? 'block' : 'hidden'} sm:flex`}>
 		<a
-			class="text-black hover:text-burgundy"
+			class="text-lebblack hover:text-burgundy"
 			href="#"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -40,7 +40,7 @@
 		</a>
 		<!-- LinkedIn -->
 		<a
-			class="text-black hover:text-burgundy"
+			class="text-lebblack hover:text-burgundy"
 			href="#"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -69,7 +69,7 @@
 		</a>
 		<!-- WhatsApp -->
 		<a
-			class="text-black hover:text-burgundy"
+			class="text-lebblack hover:text-burgundy"
 			href="#"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -85,7 +85,7 @@
 		</a>
 		<!-- Email -->
 		<a
-			class="text-black hover:text-burgundy opacity-0 sm:opacity-100"
+			class="text-lebblack hover:text-burgundy opacity-0 sm:opacity-100"
 			href="#"
 			target="_blank"
 			rel="noopener noreferrer"
