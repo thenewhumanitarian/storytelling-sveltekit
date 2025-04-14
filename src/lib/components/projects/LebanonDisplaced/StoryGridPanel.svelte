@@ -26,7 +26,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.stretchImage ? 'stretch-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel hover-transit panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -44,7 +44,7 @@
 					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
 					delay={30 * i + 100}
 				>
-					<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
+					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
 						{#if blok?.items}
 							{#each blok.items as item (item._uid)}
 								<StoryblokComponent blok={item} />
@@ -62,7 +62,7 @@
 					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
 					delay={30 * i + 100}
 				>
-					<div class={`line-clamp-6 flex h-full w-full flex-col justify-start gap-y-3`}>
+					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
 						{#if blok?.items}
 							{#each blok.items as item (item._uid)}
 								<StoryblokComponent blok={item} />
@@ -98,12 +98,6 @@
 		font-size: 1rem;
 		border: solid 0.5px var(--borderColor);
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-		/* will-change: box-shadow;
-		transition: box-shadow 0.2s ease-in-out; */
-		/* border-top-left-radius: 255px 15px;
-		border-top-right-radius: 15px 225px;
-		border-bottom-right-radius: 225px 15px;
-		border-bottom-left-radius: 15px 255px; */
 	}
 
 	.story-grid--panel:not(.note, .frame, .placeholder) {
@@ -198,6 +192,7 @@
 
 	.story-grid--panel.rotate:hover {
 		transform: rotate(0deg) !important;
+		opacity: 1;
 	}
 
 	@keyframes floatEffect {

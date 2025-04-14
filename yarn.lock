@@ -806,6 +806,11 @@
   resolved "https://registry.yarnpkg.com/@storyblok/richtext/-/richtext-3.0.2.tgz#98b85029aa62a79ea0191708f7d924e25d37f176"
   integrity sha512-KBLx9ycNVMyVnNyPiwBH5g9uWmiJpMzp9YvpnnADXlPLoksusrwI56BusSM8HaIgJgcnB5RR0LvhySkPFdC8Zg==
 
+"@storyblok/richtext@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@storyblok/richtext/-/richtext-3.2.0.tgz#6eee61aba593943113b067eb29f3d210f0ce77b8"
+  integrity sha512-koVGDv1HtiI5vymE5fzRB1VO1PNguj+RSfHI4zCy2+90pRoqZbsUCR8V2TaNl7Pg8R1oOkFZnbAxdt9Z4xoxDg==
+
 "@storyblok/svelte@^4.0.11":
   version "4.0.11"
   resolved "https://registry.yarnpkg.com/@storyblok/svelte/-/svelte-4.0.11.tgz#90224bcfd0b4ef9d5ae10d65ba578c5ae7f3053e"

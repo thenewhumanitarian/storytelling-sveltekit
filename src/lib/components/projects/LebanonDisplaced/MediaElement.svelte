@@ -14,12 +14,13 @@
 	});
 
 	function openLightbox() {
-		// console.log('Clicked on media element');
+		// If we're in the Storyblok editor, disable interaction
+		if (document.body.classList.contains('is-storyblok-editor')) return;
+
+		const currentSrc = blok.media.filename;
+		const type = blok.media.filename.includes('.mp4') ? 'video' : 'image';
 
 		lightboxItems.update((items) => {
-			const currentSrc = blok.media.filename;
-			const type = blok.media.filename.includes('.mp4') ? 'video' : 'image';
-
 			let index = items.findIndex((i) => i.src === currentSrc);
 			if (index === -1) {
 				index = items.length;
@@ -36,79 +37,116 @@
 
 	let { blok = {} }: Props = $props();
 
-	console.log(blok);
+	// console.log(blok);
 </script>
 
 <button
-	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class="media-element"
 	onclick={openLightbox}
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="media-wrapper">
 		{#if blok.media?.filename.includes('.mp4')}
-			<video class="bg-brown" src={blok.media.filename} autoplay loop muted playsinline />
+			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
-			<img class="bg-brown" src={blok.media.filename} alt={blok.media.alt} />
+			<img src={blok.media.filename} alt={blok.media.alt} />
+		{/if}
+		<!-- Tape pieces in all corners -->
+		{#if blok.tape?.includes('tl')}
+			<span class="tape tape-tl"></span>
+		{/if}
+		{#if blok.tape?.includes('tr')}
+			<span class="tape tape-tr"></span>
+		{/if}
+		{#if blok.tape?.includes('bl')}
+			<span class="tape tape-bl"></span>
+		{/if}
+		{#if blok.tape?.includes('br')}
+			<span class="tape tape-br"></span>
 		{/if}
 	</div>
 </button>
 
 <style>
+	:root {
+		--tape-color: #dbd8be;
+		--tape-opacity: 0.6;
+		--tape-size: 35px;
+		--tape-width: 50px;
+		--tape-height: 25px;
+	}
+
 	.media-element {
-	cursor: pointer;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0;
-	background: none;
-	border: none;
-}
+		all: unset;
+		cursor: pointer;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		overflow: visible; /* ✅ This is missing */
+	}
 
-.media-wrapper {
-	--w: 175px;
-	--r: 1;
-	--l: 45px;
-	--s: 20px;
-	--_d: calc(var(--s) + var(--l));
+	.media-element:hover .media-wrapper {
+		border: 0.5px solid #282828;
+	}
 
-	width: var(--w);
-	height: var(--w); /* Force square container */
-	padding: calc(var(--_d) / 2);
-	box-sizing: border-box;
-	position: relative;
+	/* .media-element:hover .tape {
+		opacity: 0;
+	} */
 
-	--_g: calc(100% - var(--w) / 2) /
-		calc(var(--w) * (1 + 1 / var(--r)) - 2 * (var(--s) + var(--_d)));
+	.media-wrapper {
+		position: relative;
+		background: #ffe0b5;
+		padding: 0.5rem;
+		box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+		width: 175px;
+		height: auto;
+		display: inline-block;
+		overflow: visible; /* 👈 Add this! */
+	}
 
-	background: repeating-conic-gradient(from 45deg, #0000 0 25%, #0005 0 50%) var(--_g);
-	-webkit-mask: repeating-conic-gradient(from 45deg, #000 0 25%, #0005 0 50%) var(--_g);
+	.media-wrapper img,
+	.media-wrapper video {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+		display: block;
+		border: none;
+	}
 
-	clip-path: polygon(
-		var(--l) 0,
-		var(--_d) var(--s),
-		calc(100% - var(--_d)) var(--s),
-		calc(100% - var(--l)) 0,
-		100% var(--l),
-		calc(100% - var(--s)) var(--_d),
-		calc(100% - var(--s)) calc(100% - var(--_d)),
-		100% calc(100% - var(--l)),
-		calc(100% - var(--l)) 100%,
-		calc(100% - var(--_d)) calc(100% - var(--s)),
-		var(--_d) calc(100% - var(--s)),
-		var(--l) 100%,
-		0 calc(100% - var(--l)),
-		var(--s) calc(100% - var(--_d)),
-		var(--s) var(--_d),
-		0 var(--l)
-	);
-}
+	/* Scotch tape corner pieces */
+	.tape {
+		position: absolute;
+		width: var(--tape-width);
+		height: var(--tape-height);
+		background: var(--tape-color);
+		opacity: var(--tape-opacity);
+		pointer-events: none;
+		will-change: opacity;
+		transition: opacity 0.4s;
+	}
 
-.media-wrapper img,
-.media-wrapper video {
-	width: 100%;
-	height: 100%;
-	object-fit: contain; /* preserves aspect ratio */
-	display: block;
-	padding: 0.5rem;
-}
+	/* Corners */
+	.tape-tl {
+		top: calc(var(--tape-height) * -0.25);
+		left: calc(var(--tape-width) * -0.35);
+		transform: rotate(-45deg);
+	}
+
+	.tape-tr {
+		top: calc(var(--tape-height) * -0.25);
+		right: calc(var(--tape-width) * -0.35);
+		transform: rotate(45deg);
+	}
+
+	.tape-bl {
+		bottom: calc(var(--tape-width) * -0.15);
+		left: calc(var(--tape-width) * -0.35);
+		transform: rotate(45deg);
+	}
+
+	.tape-br {
+		bottom: calc(var(--tape-width) * -0.15);
+		right: calc(var(--tape-width) * -0.35);
+		transform: rotate(-45deg);
+	}
 </style>

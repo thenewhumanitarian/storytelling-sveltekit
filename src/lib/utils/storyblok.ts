@@ -26,6 +26,7 @@ export async function useStoryblok(accessToken = "") {
       richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
       mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
       soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
+      inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
     },
     apiOptions: {
       https: true,

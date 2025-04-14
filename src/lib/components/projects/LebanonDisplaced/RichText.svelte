@@ -1,9 +1,41 @@
 <script lang="ts">
-	import { storyblokEditable, renderRichText } from '@storyblok/svelte';
+	// import { storyblokEditable, renderRichText } from '@storyblok/svelte';
+	import { storyblokEditable } from '@storyblok/svelte';
+	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
+
 	const { blok, className } = $props();
 
-	import { createIsRtlStore } from '$lib/utils/storyblok';
-	const isRtl = createIsRtlStore();
+	import { richTextResolver, BlockTypes } from '@storyblok/richtext';
+
+	// Custom resolver for inline Blok components
+	const { render } = richTextResolver({
+		resolvers: {
+			[BlockTypes.BLOCK]: (node) => {
+				if (node.attrs?.body?.component === 'inlineImage') {
+					return `<inline-image data-blok='${JSON.stringify(node.attrs.body)}'></inline-image>`;
+				}
+				return '';
+			}
+		}
+	});
+
+	// Only define custom element once
+	if (!customElements.get('inline-image')) {
+		customElements.define(
+			'inline-image',
+			class extends HTMLElement {
+				connectedCallback() {
+					const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
+					new InlineImage({
+						target: this,
+						props: { blok }
+					});
+				}
+			}
+		);
+	}
+
+	console.log(blok);
 </script>
 
 <div
@@ -11,9 +43,9 @@
 	use:storyblokEditable={blok}
 >
 	{#if blok.text}
-		{@html renderRichText(blok.text)}
+		{@html render(blok.text)}
 	{:else if blok}
-		{@html renderRichText(blok)}
+		{@html render(blok)}
 	{/if}
 </div>
 
@@ -40,7 +72,6 @@
 		font-weight: 900;
 		font-size: 2rem;
 	}
-
 	:global(.storyblok--richtext h3) {
 		margin: 0 0 1rem 0;
 		font-family: 'GT Sectra Fine', sans-serif;
@@ -49,7 +80,12 @@
 		font-weight: 900;
 		font-size: 3rem;
 	}
-
+	:global(.storyblok--richtext img) {
+		float: left;
+		max-width: 50%;
+		margin-left: -25%;
+		padding-right: 2.5%;
+	}
 	@media screen and (max-width: 640px) {
 		:global(.storyblok--richtext h1) {
 			font-size: 2.3rem !important;

@@ -30,8 +30,8 @@
 		flex-direction: column;
 		row-gap: 1rem;
 		width: 100%;
-		max-width: 800px;
 		margin: 2rem auto;
+		max-width: 800px;
 		/* aspect-ratio: 3/2; */
 	}
 
