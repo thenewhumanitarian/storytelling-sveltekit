@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { tick } from 'svelte';
+	import { tick, getContext } from 'svelte';
+
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
+
 	import Swiper from 'swiper';
 	import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 	import 'swiper/css';
@@ -116,6 +120,7 @@
 				e.preventDefault();
 				e.stopPropagation();
 			}}
+			dir={isRtl ? 'rtl' : 'ltr'}
 		>
 			<div class="swiper-wrapper">
 				{#each $lightboxItems as item, i}
@@ -124,7 +129,13 @@
 							<figure class="media-figure">
 								<img src={item.src} alt={item.alt || ''} loading="lazy" />
 								{#if item.caption}
-									<figcaption class="media-caption">{item.caption}</figcaption>
+									<figcaption
+										class="media-caption"
+										style={`text-align: ${isRtl ? 'right' : 'left'}`}
+										dir={isRtl ? 'rtl' : 'ltr'}
+									>
+										{item.caption}
+									</figcaption>
 								{/if}
 							</figure>
 						{:else if item.type === 'video'}
@@ -178,7 +189,7 @@
 		background-color: #9f3e52;
 		width: 5rem;
 		height: 1rem;
-		border-radius: 2px;
+		border-radius: 1px;
 	}
 	.lightbox-overlay {
 		z-index: 9999;
@@ -219,7 +230,7 @@
 		padding: 0.25rem 0.5rem;
 		color: #282828;
 		max-width: 100%;
-		text-align: center;
+		text-align: left;
 	}
 
 	.swiper {

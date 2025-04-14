@@ -25,7 +25,7 @@
 <style>
 	.inline-image-wrapper {
 		clear: both;
-		margin: 3rem 0;
+		margin: 1rem 0;
 	}
 
 	figure {
@@ -39,9 +39,8 @@
 
 	figcaption {
 		margin: 0.25rem 0;
-		/* font-size: 0.9rem; */
-		font-style: italic;
-		color: #444;
+		color: #282828;
+		padding: 0 0.75rem;
 	}
 
 	.align-left {
@@ -51,9 +50,9 @@
 		margin-right: 2.5%;
 	}
 
-  .align-left figcaption {
-    text-align: right;
-  }
+	.align-left figcaption {
+		text-align: right;
+	}
 
 	.align-right {
 		float: right;
