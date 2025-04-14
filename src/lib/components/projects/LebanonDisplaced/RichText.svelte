@@ -1,32 +1,41 @@
 <script lang="ts">
-	// import { storyblokEditable, renderRichText } from '@storyblok/svelte';
 	import { storyblokEditable } from '@storyblok/svelte';
 	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
+	import { mount } from 'svelte'; // ✅ this is key
+	import { richTextResolver } from '@storyblok/richtext';
 
 	const { blok, className } = $props();
 
-	import { richTextResolver, BlockTypes } from '@storyblok/richtext';
+	if (
+		blok &&
+		typeof blok === 'object' &&
+		Object.keys(blok).length > 0 &&
+		blok.text?.content?.some(
+			(node) => node.type !== 'paragraph' // ✅ skip logging if it's only plain text
+		)
+	) {
+		console.log('✅ RichText blok (non-paragraph):', blok);
+	}
 
-	// Custom resolver for inline Blok components
 	const { render } = richTextResolver({
 		resolvers: {
-			[BlockTypes.BLOCK]: (node) => {
-				if (node.attrs?.body?.component === 'inlineImage') {
-					return `<inline-image data-blok='${JSON.stringify(node.attrs.body)}'></inline-image>`;
+			blok: (node) => {
+				const blok = node.attrs?.body?.[0];
+				if (blok?.component === 'inlineImage') {
+					return `<inline-image data-blok='${JSON.stringify(blok)}'></inline-image>`;
 				}
 				return '';
 			}
 		}
 	});
 
-	// Only define custom element once
 	if (!customElements.get('inline-image')) {
 		customElements.define(
 			'inline-image',
 			class extends HTMLElement {
 				connectedCallback() {
 					const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
-					new InlineImage({
+					mount(InlineImage, {
 						target: this,
 						props: { blok }
 					});
@@ -34,8 +43,6 @@
 			}
 		);
 	}
-
-	console.log(blok);
 </script>
 
 <div
@@ -80,12 +87,22 @@
 		font-weight: 900;
 		font-size: 3rem;
 	}
-	:global(.storyblok--richtext img) {
+	:global(.storyblok--richtext > img) {
 		float: left;
 		max-width: 50%;
 		margin-left: -25%;
 		padding-right: 2.5%;
 	}
+
+	@media screen and (max-width: 945px) {
+		:global(.storyblok--richtext > img) {
+			width: 100%;
+			margin: 2rem auto;
+			float: none;
+			max-width: 100%;
+		}
+	}
+
 	@media screen and (max-width: 640px) {
 		:global(.storyblok--richtext h1) {
 			font-size: 2.3rem !important;

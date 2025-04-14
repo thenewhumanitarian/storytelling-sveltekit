@@ -8,7 +8,8 @@
 		if (blok?.media?.filename) {
 			registerMediaElement({
 				src: blok.media.filename,
-				type: blok.media.filename.includes('.mp4') ? 'video' : 'image'
+				type: blok.media.filename.includes('.mp4') ? 'video' : 'image',
+				caption: blok.caption || null
 			});
 		}
 	});

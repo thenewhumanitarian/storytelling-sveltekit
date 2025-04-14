@@ -22,7 +22,7 @@
 <style>
 	header {
 		height: 7rem;
-		z-index: 9999;
+		z-index: 555;
 		position: fixed;
 		display: flex;
 		justify-content: center;
