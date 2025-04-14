@@ -12,6 +12,7 @@
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
 		height: ${blok.screenHeightInPercent || 100}svh;
+		background-image: ${blok.backgroundImage?.filename ? `url(${blok.backgroundImage.filename})` : 'url(/assets/ldd/patterns/fabric-pattern.png'};
 	`}
 >
 	<IntroAnimation {blok} />
@@ -44,7 +45,6 @@
 		border-bottom: 6px solid inherit;
 		z-index: 0;
 		background-color: #ffe0b5;
-		background-image: url('/assets/ldd/patterns/fabric-pattern.png');
 	}
 
 	.intro-title {

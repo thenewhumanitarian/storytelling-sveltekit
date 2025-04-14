@@ -112,10 +112,10 @@
 			bind:this={swiperEl}
 			class="swiper lightbox-swiper"
 			role="region"
-				onclick={(e) => {
-		e.preventDefault();
-		e.stopPropagation();
-	}}
+			onclick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+			}}
 		>
 			<div class="swiper-wrapper">
 				{#each $lightboxItems as item, i}
@@ -164,13 +164,14 @@
 		opacity: 1;
 	}
 
-	/* :global(.swiper-wrapper) {
+	:global(.swiper-wrapper) {
 		top: 7%;
 		height: 90%;
-	} */
+	}
 
 	:global(.swiper-pagination-bullets) {
 		top: 0 !important; /* move bullets up */
+		bottom: unset !important;
 	}
 
 	:global(.swiper-pagination-bullet-active) {

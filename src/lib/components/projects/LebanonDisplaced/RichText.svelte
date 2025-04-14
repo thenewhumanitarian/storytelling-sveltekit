@@ -14,7 +14,7 @@
 			(node) => node.type !== 'paragraph' // ✅ skip logging if it's only plain text
 		)
 	) {
-		console.log('✅ RichText blok (non-paragraph):', blok);
+		// console.log('✅ RichText blok (non-paragraph):', blok);
 	}
 
 	const { render } = richTextResolver({
