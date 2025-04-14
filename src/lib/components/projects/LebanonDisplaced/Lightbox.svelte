@@ -248,7 +248,7 @@
 	.swiper-button-prev,
 	.swiper-button-next {
 		color: black;
-		/* z-index: 30 !important; */
+		z-index: 30 !important;
 		will-change: color;
 		transition: color 0.5s;
 	}
