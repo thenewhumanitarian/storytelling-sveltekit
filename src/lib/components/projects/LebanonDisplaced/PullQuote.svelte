@@ -22,9 +22,12 @@
 			</div>
 		</div>
 	{/if}
-	<blockquote>
+	<blockquote class={blok.name ? 'has-name' : ''}>
 		{blok.text}
 	</blockquote>
+	{#if blok.name}
+		<p class="absolute bottom-12 w-full pull-quote--name">{blok.name}</p>
+	{/if}
 </div>
 
 <style>
@@ -43,6 +46,16 @@
 		z-index: 1;
 		font-weight: 300;
 		margin: 1rem -15%;
+	}
+
+	.pull-quote--name {
+		font-family: 'Roboto', sans-serif;
+		font-weight: 400;
+		font-size: 1rem;
+	}
+
+	blockquote.has-name {
+		padding-bottom: 4.5rem;
 	}
 
 	@media screen and (max-width: 850px) {

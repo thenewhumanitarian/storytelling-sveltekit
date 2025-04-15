@@ -1,54 +1,42 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	const lang = getContext('lang') as string;
-
 	import { storyblokEditable } from '@storyblok/svelte';
-	const { blok } = $props();
 
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	import RichText from './RichText.svelte';
 
-	const textObject = blok.text;
+	const lang = getContext('lang') as string;
+	const { blok } = $props();
 </script>
 
 <article>
 	<FadeIn duration={1000} yOffset={200} blurAmount={20}>
-		<div class="box--wrapper" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
+		<div class="box--wrapper" use:storyblokEditable={blok}>
 			<div class={`name ${blok.textColor}`}>{blok.title}</div>
+
 			<div class="text-content">
 				{#if blok.text}
 					<RichText
-						blok={textObject}
+						blok={blok.text}
 						className="prose-p:text-sm prose-p:lg:text-md prose-p:xl:text-xl"
 					/>
 				{/if}
 			</div>
+
 			<div class="text-content--hover font-serif">
 				<h2 class:hidden={lang === 'ar'}>Read more →</h2>
 				<h2 class:hidden={lang !== 'ar'} dir="rtl">اقرأ المزيد←</h2>
 			</div>
-			{#if blok.object}
+
+			{#if blok.object?.filename}
 				<div
-					class={`personal-object floating--delay ${lang === 'ar' ? 'rtl-object floating-rotate-right' : 'floating-rotate-left'}`}
+					class={`personal-object floating--delay ${
+						lang === 'ar' ? 'rtl-object floating-rotate-right' : 'floating-rotate-left'
+					}`}
 				>
-					{#if blok.object.filename}
-						<img src={blok.object.filename} alt={blok.object.alt || 'Object'} />
-					{:else}
-						<span>Object</span>
-					{/if}
+					<img src={blok.object.filename} alt={blok.object.alt || 'Object'} />
 				</div>
 			{/if}
-			<!--
-			{#if blok.photo}
-				<div class="polaroid-photo floating-rotate-right">
-					<div class="polaroid-photo--inside">
-						<img
-							src={blok.photo.filename}
-							alt={blok.photo.alt || 'Photo description is missing.'}
-						/>
-					</div>
-				</div>
-			{/if}-->
 		</div>
 	</FadeIn>
 </article>
@@ -115,7 +103,7 @@
 	.box--wrapper .name {
 		position: absolute;
 		top: -1.5rem;
-		font-family: 'GT Sectra Fine', sans-serif;
+		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: bold;
 		font-size: 2rem;
 		padding: 0.5rem 1rem;
