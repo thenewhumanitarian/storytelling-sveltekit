@@ -74,6 +74,11 @@
 		justify-content: center;
 		align-items: center;
 		overflow: visible; /* ✅ This is missing */
+		transform-origin: center center;
+	}
+
+	.media-element .media-wrapper {
+		border: 0.5px solid transparent;
 	}
 
 	.media-element:hover .media-wrapper {

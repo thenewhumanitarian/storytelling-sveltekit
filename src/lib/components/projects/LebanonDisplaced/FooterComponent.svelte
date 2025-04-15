@@ -60,6 +60,7 @@
 		top: -5rem;
 		margin-top: 1rem;
 		background-color: white;
+		/* background-image: url('/assets/ldd/patterns/torn-cardboard--bottom.png'); */
 		background-image: url('/assets/ldd/patterns/torn-paper--bottom@2x.png');
 		background-size: cover;
 	}

@@ -37,6 +37,7 @@
 			bind:this={figureEl}
 			on:click={openLightbox}
 			class={`relative cursor-pointer ${alignClass} ${blok.bgColor} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
+			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
 			<!-- Scotch tape pieces -->
 			{#if blok.tape?.includes('tl')}
@@ -68,6 +69,7 @@
 	figure {
 		display: flex;
 		flex-direction: column;
+		border: 0.5px solid transparent;
 		will-change: transform;
 		transition: transform 1s;
 	}
@@ -78,6 +80,10 @@
 
 	.inline-image-wrapper:hover figure:not(.bg-transparent) {
 		border: 0.5px solid #282828;
+	}
+
+	.inline-image-wrapper:hover figure.bg-transparent img {
+		border: 0.5px solid transparent;
 	}
 
 	.inline-image-wrapper:hover figure.bg-transparent img {
@@ -103,7 +109,7 @@
 		width: 50%;
 		margin-left: -25%;
 		margin-right: 4%;
-		transform: rotate(-3deg);
+		transform: rotate(var(--rotation-angle, 0deg));
 	}
 
 	.align-left figcaption {
@@ -115,7 +121,7 @@
 		width: 50%;
 		margin-right: -25%;
 		margin-left: 4%;
-		transform: rotate(3deg);
+		transform: rotate(var(--rotation-angle, 0deg));
 	}
 
 	.align-center {
@@ -131,9 +137,17 @@
 		.align-right,
 		.align-center {
 			float: none;
-			margin: 2rem auto;
+			margin: 3rem auto;
 			width: 100%;
-			max-width: 100%;
+			max-width: 400px;
+		}
+	}
+
+	@media screen and (max-width: 640px) {
+		.align-left,
+		.align-right,
+		.align-center {
+			max-width: 280px;
 		}
 	}
 

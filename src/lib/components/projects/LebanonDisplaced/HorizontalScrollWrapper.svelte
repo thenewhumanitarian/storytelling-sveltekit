@@ -63,7 +63,6 @@
 			{/each}
 		{/if}
 	</div>
-	<!-- <div class="torn-paper torn-paper--bottom"></div> -->
 </div>
 
 <div class="vertical-scroll-wrapper block sm:hidden">
@@ -77,10 +76,6 @@
 </div>
 
 <style>
-	/* :global(.arabic .horizontal-scroll-container) {
-		flex-direction: row-reverse;
-	} */
-
 	.horizontal-scroll-wrapper {
 		position: relative;
 		width: 100%;

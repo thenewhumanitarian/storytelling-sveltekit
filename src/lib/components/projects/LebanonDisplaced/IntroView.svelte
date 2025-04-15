@@ -4,15 +4,33 @@
 	import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
 
 	const { blok, className } = $props();
+
+	export function transformStoryblokImage(url: string, modifiers: Record<string, string>): string {
+		if (!url) return '';
+
+		const [base, query] = url.split('?');
+		const params = new URLSearchParams(query || '');
+
+		for (const [key, value] of Object.entries(modifiers)) {
+			params.set(key, value);
+		}
+
+		return `${base}?${params.toString()}`;
+	}
+
+	const transformed = transformStoryblokImage(blok.backgroundImage.filename, {
+		m: '1200x800',
+		filters: 'quality(40):format(webp)'
+	});
 </script>
 
 <div
 	use:storyblokEditable={blok}
-	class={`intro-view--wrapper ${className}`}
+	class={`intro-view--wrapper border-b-4 border-lebgreen ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
 		height: ${blok.screenHeightInPercent || 100}svh;
-		background-image: ${blok.backgroundImage?.filename ? `url(${blok.backgroundImage.filename})` : 'url(/assets/ldd/patterns/fabric-pattern.png)'};
+		background-image: url(${transformed});
 	`}
 >
 	<IntroAnimation {blok} />

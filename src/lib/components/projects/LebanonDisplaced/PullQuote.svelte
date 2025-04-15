@@ -11,12 +11,12 @@
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
-		<div class="pull-quote-image--wrapper before bg-grass group-hover:bg-brown">
+		<div class="pull-quote-image--wrapper before bg-grass">
 			<div class="pull-quote-image--container">
 				<img class="pull-quote-image before" src={blok.image.filename} alt={blok.image.alt || ''} />
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after bg-grass group-hover:bg-brown">
+		<div class="pull-quote-image--wrapper after bg-grass">
 			<div class="pull-quote-image--container">
 				<img class="pull-quote-image after" src={blok.image.filename} alt={blok.image.alt || ''} />
 			</div>
@@ -141,9 +141,9 @@
 		transform: translate(-50%, 50%);
 	}
 
-	.pull-quote-container:hover img {
+	/* .pull-quote-container:hover img {
 		animation: floatEffect 3s ease-in-out infinite;
-	}
+	} */
 
 	@keyframes floatEffect {
 		0% {

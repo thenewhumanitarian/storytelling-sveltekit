@@ -21,7 +21,7 @@
 
 <style>
 	header {
-		height: 7rem;
+		height: 8rem;
 		z-index: 555;
 		position: fixed;
 		display: flex;
@@ -37,7 +37,21 @@
 		/* backdrop-filter: blur(10px); */
 	}
 
-	@media screen and (max-width: 640px) {
+	@media screen and (max-width: 1200px) {
+		header {
+			height: 7rem;
+			padding-bottom: 1.8rem;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		header {
+			height: 6rem;
+			padding-bottom: 1rem;
+		}
+	}
+
+	@media screen and (max-width: 475px) {
 		header {
 			background-repeat: no-repeat;
 			background-position: top center;
@@ -59,10 +73,12 @@
 	:global(.torn-paper--top) {
 		top: 0;
 		background-position: bottom center;
+		/* background-image: url('/assets/ldd/patterns/torn-cardboard--top.png'); */
 		background-image: url('/assets/ldd/patterns/torn-paper--top@2x.png');
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background-size: cover;
 	}
 	.background-image img {
 		width: 100%;

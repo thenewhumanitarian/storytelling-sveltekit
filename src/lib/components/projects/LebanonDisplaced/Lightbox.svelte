@@ -139,7 +139,7 @@
 								{/if}
 							</figure>
 						{:else if item.type === 'video'}
-							<video src={item.src} controls playsinline bind:this={videoEls[i]}>
+							<video src={item.src} controls playsinline bind:this={videoEls[i]} class="max-h-full">
 								<track kind="captions" src="captions.vtt" srclang="en" label="English" />
 							</video>
 						{/if}
@@ -196,7 +196,7 @@
 		position: fixed;
 		inset: 0;
 		background: #ffe0b5;
-		background-image: url('/assets/ldd/patterns/fabric-pattern.png');
+		background-image: url('/assets/ldd/patterns/beige-paper-texture.png');
 		background-size: cover;
 		display: flex;
 		justify-content: center;
@@ -214,16 +214,18 @@
 		margin: 0;
 	}
 
-	.media-figure img {
+	.media-figure img,
+	.media-figure video {
 		display: block;
 		object-fit: contain;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 		max-width: 90vw;
-		max-height: 90vh;
+		max-height: 85vh;
 	}
 
 	@media screen and (max-width: 640px) {
-		.media-figure img {
+		.media-figure img,
+		.media-figure video {
 			max-width: 100%;
 			max-height: 100%;
 		}

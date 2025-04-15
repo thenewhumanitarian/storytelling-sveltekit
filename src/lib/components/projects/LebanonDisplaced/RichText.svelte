@@ -5,6 +5,7 @@
 
 	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 	import PullQuote from '$lib/components/projects/LebanonDisplaced/PullQuote.svelte';
+	import LineBreak from '$lib/components/projects/LebanonDisplaced/LineBreak.svelte';
 
 	const { blok, className } = $props();
 
@@ -17,6 +18,9 @@
 				}
 				if (blok?.component === 'pullQuote') {
 					return `<pull-quote data-blok='${JSON.stringify(blok)}'></pull-quote>`;
+				}
+				if (blok?.component === 'lineBreak') {
+					return `<line-break data-blok='${JSON.stringify(blok)}'></line-break>`;
 				}
 				return '';
 			}
@@ -52,6 +56,21 @@
 			}
 		);
 	}
+
+	if (!customElements.get('line-break')) {
+		customElements.define(
+			'line-break',
+			class extends HTMLElement {
+				connectedCallback() {
+					const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
+					mount(LineBreak, {
+						target: this,
+						props: { blok }
+					});
+				}
+			}
+		);
+	}
 </script>
 
 <div
@@ -71,7 +90,7 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
-		font-family: 'GT Sectra Fine', sans-serif;
+		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: bold;
 		/* font-family: 'ff-amman-serif-pro', serif; */
 		margin-bottom: 0;
@@ -82,7 +101,7 @@
 	}
 	:global(.storyblok--richtext h2) {
 		margin: 0 0 1rem 0;
-		font-family: 'GT Sectra Fine', sans-serif;
+		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: bold;
 		/* font-family: 'ff-amman-serif-pro', serif; */
 		font-weight: 900;
@@ -159,7 +178,7 @@
 		font-family: 'Roboto', sans-serif;
 	}
 	:global(.font-serif *) {
-		font-family: 'GT Sectra Fine', serif;
+		font-family: 'GT Sectra Bold', serif;
 	}
 	:global(.font-pacifico *) {
 		font-family: 'GT Sectra Bold', serif;
