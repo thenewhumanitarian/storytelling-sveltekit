@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
+
+	import FadeIn from '$lib/components/animations/FadeIn.svelte';
+
 	const { blok } = $props();
 </script>
 
