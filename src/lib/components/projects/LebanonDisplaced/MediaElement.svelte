@@ -2,47 +2,36 @@
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { onMount } from 'svelte';
 
-	import { lightboxItems, currentIndex, registerMediaElement } from '$lib/stores/lightbox';
+	import { registerMediaElement, setIndexFromSrc } from '$lib/stores/lightbox';
+
+	interface Props {
+		blok: any; // TODO: Define type if you want
+	}
+
+	let { blok = {} }: Props = $props();
+
+	let element: HTMLElement;
 
 	onMount(() => {
 		if (blok?.media?.filename) {
 			registerMediaElement({
 				src: blok.media.filename,
 				type: blok.media.filename.includes('.mp4') ? 'video' : 'image',
-				caption: blok.caption || null
+				caption: blok.caption || '',
+				element
 			});
 		}
 	});
 
 	function openLightbox() {
-		// If we're in the Storyblok editor, disable interaction
 		if (document.body.classList.contains('is-storyblok-editor')) return;
-
-		const currentSrc = blok.media.filename;
-		const type = blok.media.filename.includes('.mp4') ? 'video' : 'image';
-
-		lightboxItems.update((items) => {
-			let index = items.findIndex((i) => i.src === currentSrc);
-			if (index === -1) {
-				index = items.length;
-				items.push({ src: currentSrc, type });
-			}
-			currentIndex.set(index);
-			return items;
-		});
+		setIndexFromSrc(blok.media.filename);
 	}
-
-	interface Props {
-		blok: any; // Todo: Define type here
-	}
-
-	let { blok = {} }: Props = $props();
-
-	// console.log(blok);
 </script>
 
 <button
 	class="media-element"
+	bind:this={element}
 	onclick={openLightbox}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
@@ -52,7 +41,8 @@
 		{:else}
 			<img src={blok.media.filename} alt={blok.media.alt} />
 		{/if}
-		<!-- Tape pieces in all corners -->
+
+		<!-- Scotch tape corners -->
 		{#if blok.tape?.includes('tl')}
 			<span class="tape tape-tl"></span>
 		{/if}
@@ -89,10 +79,6 @@
 	.media-element:hover .media-wrapper {
 		border: 0.5px solid #282828;
 	}
-
-	/* .media-element:hover .tape {
-		opacity: 0;
-	} */
 
 	.media-wrapper {
 		position: relative;
