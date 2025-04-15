@@ -1,21 +1,12 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
-	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 	import { mount } from 'svelte'; // ✅ this is key
 	import { richTextResolver } from '@storyblok/richtext';
 
-	const { blok, className } = $props();
+	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
+	import PullQuote from '$lib/components/projects/LebanonDisplaced/PullQuote.svelte';
 
-	if (
-		blok &&
-		typeof blok === 'object' &&
-		Object.keys(blok).length > 0 &&
-		blok.text?.content?.some(
-			(node) => node.type !== 'paragraph' // ✅ skip logging if it's only plain text
-		)
-	) {
-		// console.log('✅ RichText blok (non-paragraph):', blok);
-	}
+	const { blok, className } = $props();
 
 	const { render } = richTextResolver({
 		resolvers: {
@@ -23,6 +14,9 @@
 				const blok = node.attrs?.body?.[0];
 				if (blok?.component === 'inlineImage') {
 					return `<inline-image data-blok='${JSON.stringify(blok)}'></inline-image>`;
+				}
+				if (blok?.component === 'pullQuote') {
+					return `<pull-quote data-blok='${JSON.stringify(blok)}'></pull-quote>`;
 				}
 				return '';
 			}
@@ -36,6 +30,21 @@
 				connectedCallback() {
 					const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
 					mount(InlineImage, {
+						target: this,
+						props: { blok }
+					});
+				}
+			}
+		);
+	}
+
+	if (!customElements.get('pull-quote')) {
+		customElements.define(
+			'pull-quote',
+			class extends HTMLElement {
+				connectedCallback() {
+					const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
+					mount(PullQuote, {
 						target: this,
 						props: { blok }
 					});
@@ -81,11 +90,10 @@
 	}
 	:global(.storyblok--richtext h3) {
 		margin: 0 0 1rem 0;
-		font-family: 'GT Sectra Fine', sans-serif;
 		font-weight: bold;
-		/* font-family: 'ff-amman-serif-pro', serif; */
-		font-weight: 900;
-		font-size: 3rem;
+		line-height: auto;
+		font-family: 'GT Sectra Bold', serif;
+		font-size: 1.4rem;
 	}
 	:global(.storyblok--richtext > img) {
 		float: left;
@@ -110,14 +118,6 @@
 		:global(.storyblok--richtext h2) {
 			font-size: 1.8rem !important;
 		}
-	}
-
-	:global(.storyblok--richtext h3) {
-		margin: 0;
-		font-family: 'GT Sectra Bold', serif;
-		/* font-family: 'ff-amman-serif-pro', serif; */
-		font-weight: 900;
-		font-size: 1.1rem;
 	}
 
 	:global(.storyblok--richtext p) {

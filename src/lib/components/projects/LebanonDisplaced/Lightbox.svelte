@@ -196,10 +196,11 @@
 		position: fixed;
 		inset: 0;
 		background: #ffe0b5;
+		background-image: url('/assets/ldd/patterns/fabric-pattern.png');
+		background-size: cover;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 1000;
 		padding: 2rem;
 		box-sizing: border-box;
 		overflow: hidden;
@@ -215,10 +216,17 @@
 
 	.media-figure img {
 		display: block;
-		max-width: 90vw;
-		max-height: 90vh;
 		object-fit: contain;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		max-width: 90vw;
+		max-height: 90vh;
+	}
+
+	@media screen and (max-width: 640px) {
+		.media-figure img {
+			max-width: 100%;
+			max-height: 100%;
+		}
 	}
 
 	.media-caption {
@@ -229,8 +237,11 @@
 		background: rgba(255, 255, 255, 0.9);
 		padding: 0.25rem 0.5rem;
 		color: #282828;
-		max-width: 100%;
-		text-align: left;
+		text-align: start;
+		font-size: 0.9rem;
+		box-sizing: border-box;
+		/* transform: translateX(-50%); */
+		/* max-width: 90vw; */
 	}
 
 	.swiper {
@@ -243,6 +254,10 @@
 		max-height: 100vh;
 	}
 
+	:global(.swiper-slide) {
+		width: 100% !important;
+	}
+
 	.swiper-slide.lightbox-media {
 		display: flex;
 		justify-content: center;
@@ -251,8 +266,8 @@
 
 	.lightbox-media img,
 	.lightbox-media video {
-		max-width: 90vw;
-		max-height: 90vh;
+		/* max-width: 90vw;
+		max-height: 90vh; */
 		object-fit: contain;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
