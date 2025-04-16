@@ -41,7 +41,7 @@
 	<Lightbox />
 </main>
 
-<FooterComponent></FooterComponent>
+<FooterComponent />
 
 <style>
 	main {

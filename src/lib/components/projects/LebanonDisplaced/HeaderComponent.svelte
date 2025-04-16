@@ -74,7 +74,7 @@
 		top: 0;
 		background-position: bottom center;
 		/* background-image: url('/assets/ldd/patterns/torn-cardboard--top.png'); */
-		background-image: url('/assets/ldd/patterns/torn-paper--top@2x.png');
+		background-image: url('/assets/ldd/patterns/torn-paper--top.png');
 		display: flex;
 		align-items: center;
 		justify-content: center;

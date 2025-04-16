@@ -34,19 +34,21 @@
 	`}
 >
 	<IntroAnimation {blok} />
-	<div class="intro-title">
-		{#if blok.title.length > 0}
-			{#each blok.title as item}
+	<div class="intro-text">
+		<div class="intro-title">
+			{#if blok.title.length > 0}
+				{#each blok.title as item}
+					<StoryblokComponent blok={item} />
+				{/each}
+			{:else}
+				<h1>Lebanon Displacement Diaries</h1>
+			{/if}
+		</div>
+		<div class="intro-credit">
+			{#each blok.logos as item}
 				<StoryblokComponent blok={item} />
 			{/each}
-		{:else}
-			<h1>Lebanon Displacement Diaries</h1>
-		{/if}
-	</div>
-	<div class="intro-credit">
-		{#each blok.logos as item}
-			<StoryblokComponent blok={item} />
-		{/each}
+		</div>
 	</div>
 </div>
 
@@ -54,7 +56,7 @@
 	.intro-view--wrapper {
 		position: relative;
 		display: flex;
-		justify-content: center;
+		justify-content: start;
 		align-items: center;
 		width: 100%;
 		height: 100vh;
@@ -65,13 +67,20 @@
 		background-color: #ffe0b5;
 	}
 
+	.intro-text {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-between;
+		height: 100%;
+		width: 100%;
+		max-width: 60%;
+		padding-top: 6rem;
+	}
+
 	.intro-title {
-		position: absolute;
-		top: 8rem;
-		left: 2.5rem;
-		padding-top: 0.75rem;
-		/* border-left: 6px solid #A4AF69;
-		padding-left: 1rem; */
+
 	}
 
 	:global(.arabic .intro-title) {
@@ -80,22 +89,22 @@
 	}
 
 	.intro-credit {
-		position: absolute;
+		/* position: absolute;
 		bottom: 3rem;
 		left: 2.5rem;
-		max-width: 65%;
+		max-width: 60%; */
 	}
 
 	:global(.arabic .intro-credit) {
-		left: unset;
-		right: 2.5rem;
+		/* left: unset;
+		right: 2.5rem; */
 	}
 
 	@media screen and (max-width: 640px) {
 		.intro-title {
-			top: 5rem;
+			/* top: 5rem;
 			left: 1rem;
-			text-align: left;
+			text-align: left; */
 		}
 
 		:global(.arabic .intro-title) {
@@ -104,13 +113,13 @@
 		}
 
 		.intro-credit {
-			bottom: 1.5rem;
-			left: 1rem;
+			/* bottom: 1.5rem;
+			left: 1rem; */
 		}
 
 		:global(.arabic .intro-credit) {
-			left: unset;
-			right: 1rem;
+			/* left: unset;
+			right: 1rem; */
 		}
 	}
 </style>

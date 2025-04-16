@@ -53,7 +53,7 @@
 	use:storyblokEditable={blok}
 	use:inview={options}
 	oninview_change={handleChange}
-	class="relative block h-full w-full"
+	class="relative block h-auto w-full"
 >
 	{#if isInView}
 		<div
