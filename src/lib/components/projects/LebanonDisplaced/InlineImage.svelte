@@ -5,7 +5,7 @@
 
 	const { blok } = $props();
 
-	let alignClass = 'align-center';
+	let alignClass = $state('align-center');
 	if (blok.align === 'left') {
 		alignClass = 'align-left';
 	} else if (blok.align === 'right') {
@@ -53,7 +53,7 @@
 				<span class="tape tape-br"></span>
 			{/if}
 
-			<img src={blok.media.filename} alt={blok.media.alt} />
+			<img src={`${blok.media.filename}/m/480x0`} alt={blok.media.alt} />
 			{#if blok.caption}
 				<figcaption>{blok.caption}</figcaption>
 			{/if}

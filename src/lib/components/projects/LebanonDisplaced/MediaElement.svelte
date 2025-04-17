@@ -4,6 +4,8 @@
 
 	import { registerMediaElement, setIndexFromSrc } from '$lib/stores/lightbox';
 
+	const maxWidth = 400;
+
 	interface Props {
 		blok: any; // TODO: Define type if you want
 	}
@@ -39,7 +41,7 @@
 		{#if blok.media?.filename.includes('.mp4')}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
-			<img src={blok.media.filename} alt={blok.media.alt} />
+			<img src={`${blok.media.filename}/m/240x0`} alt={blok.media.alt} />
 		{/if}
 
 		<!-- Scotch tape corners -->

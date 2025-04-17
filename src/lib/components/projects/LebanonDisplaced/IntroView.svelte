@@ -29,7 +29,7 @@
 	class={`intro-view--wrapper border-b-4 border-lebgreen ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
-		height: ${blok.screenHeightInPercent || 100}svh;
+		height: ${blok.screenHeightInPercent || 100}svh; /* To do: Mobile should be 100svh always */
 		background-image: url(${transformed});
 	`}
 >
@@ -67,6 +67,13 @@
 		background-color: #ffe0b5;
 	}
 
+	@media screen and (max-width: 825px) {
+		.intro-view--wrapper {
+			padding: 0.5rem 1rem 1rem;
+			height: 100svh !important;
+		}
+	}
+
 	.intro-text {
 		position: relative;
 		display: flex;
@@ -79,8 +86,22 @@
 		padding-top: 6rem;
 	}
 
-	.intro-title {
+	@media screen and (max-width: 800px) {
+		.intro-text {
+			max-width: 100%;
+			padding-top: 6rem;
+			/* row-gap: 0.5rem; */
+			/* justify-content: flex-start; */
+		}
+	}
 
+	@media screen and (max-width: 475px) {
+		.intro-text {
+			padding-top: 5rem;
+		}
+	}
+
+	.intro-title {
 	}
 
 	:global(.arabic .intro-title) {

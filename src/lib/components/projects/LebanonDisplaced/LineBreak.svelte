@@ -11,7 +11,11 @@
 	{#if blok.image?.filename}
 		<div class="line-break-image--wrapper before bg-grass">
 			<div class="line-break-image--container">
-				<img class="line-break-image before" src={blok.image.filename} alt={blok.image.alt || ''} />
+				<img
+					class="pull-quote-image before"
+					src={`${blok.image.filename}/m/40x0`}
+					alt={blok.image.alt || ''}
+				/>
 			</div>
 		</div>
 	{/if}

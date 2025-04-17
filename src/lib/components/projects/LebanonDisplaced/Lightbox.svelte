@@ -127,7 +127,7 @@
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
 							<figure class="media-figure">
-								<img src={item.src} alt={item.alt || ''} loading="lazy" />
+								<img src={`${item.src}/m/800x0`} alt={item.alt || ''} loading="lazy" />
 								{#if item.caption}
 									<figcaption
 										class="media-caption"

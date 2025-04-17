@@ -27,7 +27,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0 1rem 2rem 1rem;
+		padding: 0 1rem 3rem 1rem;
 		width: 100%;
 		top: 0;
 		/* background-color: #ffe0b5; */
@@ -35,6 +35,12 @@
 		/* background-color: rgba(232, 193, 136, 1); */
 		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); */
 		/* backdrop-filter: blur(10px); */
+	}
+
+	@media screen and (max-width: 1350px) {
+		header {
+			padding-bottom: 2rem;
+		}
 	}
 
 	@media screen and (max-width: 1200px) {

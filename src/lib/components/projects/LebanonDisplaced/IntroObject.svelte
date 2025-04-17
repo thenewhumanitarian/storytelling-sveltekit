@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
+	const { blok } = $props();
+
+	import ScrapBookPaper from '$lib/components/projects/LebanonDisplaced/ScrapBookPaper.svelte';
 
 	import { isArabic } from '$lib/utils/storyblok'; // Function to detect Storyblok language
 	let isRtl = $derived(isArabic());
-
-	const { blok } = $props();
 </script>
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	style={`
       position: absolute;
-      right: ${isArabic() ? 'unset' : `${blok.posX}%`};
-			left: ${isArabic() ? `${blok.posX}%` : 'unset'};
+      right: ${isRtl ? 'unset' : `${blok.posX}%`};
+			left: ${isRtl ? `${blok.posX}%` : 'unset'};
       width: ${blok.width || 'auto'}%;
 			aspect-ratio: ${blok.aspectRatio || 'auto'};
       bottom: calc(${blok.posY}%);
@@ -20,7 +21,18 @@
     `}
 	class={'animation-object'}
 >
-	<img src={blok.image.filename} alt={blok.alt} />
+	<ScrapBookPaper>
+		<div class="absolute left-0 top-0 flex h-full w-full items-center justify-center">
+			{#if blok.backgroundImage}
+				<img
+					src={`${blok.backgroundImage.filename}/m/400x0`}
+					alt={blok.backgroundImage.alt}
+					style="object-fit: cover; width: 100%; height: 100%;"
+				/>
+			{/if}
+			<img src={blok.image.filename} alt={blok.alt} />
+		</div></ScrapBookPaper
+	>
 </div>
 
 <style>
@@ -29,7 +41,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* border: 1px dashed red; */
 	}
 
 	.animation-object img {

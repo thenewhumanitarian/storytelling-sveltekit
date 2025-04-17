@@ -138,7 +138,7 @@
 		.story-grid--container {
 			width: 100%;
 			padding: 0 1rem 2rem;
-			grid-gap: 1rem;
+			grid-gap: 2.25rem;
 		}
 	}
 
