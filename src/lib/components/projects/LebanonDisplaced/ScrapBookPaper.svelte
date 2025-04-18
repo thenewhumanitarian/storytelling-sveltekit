@@ -19,19 +19,17 @@
 		/* background: red; */
 		background: url('/assets/ldd/patterns/scrapbook-paper--white.png') no-repeat top center;
 		background-size: cover;
-	}
-
-	.scrap-book-paper:not(:hover) {
-		animation: floatEffect 8s ease-in-out infinite;
+		transform: scale(1) translateY(0) rotate(-1deg);
+		transition: transform 3s ease-in-out;
 	}
 
 	.scrap-book-paper:hover {
-		animation: zoomInEffect 0.5s ease-in-out 1 both;
+		transform: scale(1.15) translateY(-8%) rotate(3deg);
 	}
 
 	@media screen and (max-width: 1250px) {
 		.scrap-book-paper:hover {
-			animation: zoomInEffect2 0.5s ease-in-out 1 both;
+			transform: scale(1.15) translate(-5%, -11%) rotate(2deg);
 		}
 	}
 
@@ -69,6 +67,4 @@
 			transform: translateY(0px) rotate(3deg);
 		}
 	}
-
-
 </style>

@@ -64,7 +64,7 @@
 		width: auto;
 		max-width: 80%;
 		max-height: 80%;
-		padding-bottom: 10%;
+		/* padding-bottom: 10%; */
 	}
 
 	/* Scotch tape corner pieces */
