@@ -90,6 +90,7 @@
 		.intro-text {
 			max-width: 100%;
 			padding-top: 6rem;
+			justify-content: start;
 			/* row-gap: 0.5rem; */
 			/* justify-content: flex-start; */
 		}
