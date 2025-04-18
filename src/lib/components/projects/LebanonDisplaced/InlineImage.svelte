@@ -152,7 +152,6 @@
 	}
 
 	/* Scotch tape corner pieces */
-
 	:root {
 		--tape-color: #dbd8be;
 		--tape-opacity: 0.6;

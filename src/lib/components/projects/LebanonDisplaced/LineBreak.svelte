@@ -12,7 +12,7 @@
 		<div class="line-break-image--wrapper before bg-grass">
 			<div class="line-break-image--container">
 				<img
-					class="pull-quote-image before"
+					class="line-break-image before"
 					src={`${blok.image.filename}/m/40x0`}
 					alt={blok.image.alt || ''}
 				/>

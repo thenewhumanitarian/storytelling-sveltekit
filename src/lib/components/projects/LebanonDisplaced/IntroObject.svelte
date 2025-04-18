@@ -21,18 +21,32 @@
     `}
 	class={'animation-object'}
 >
-	<ScrapBookPaper>
-		<div class="absolute left-0 top-0 flex h-full w-full items-center justify-center">
-			{#if blok.backgroundImage}
-				<img
-					src={`${blok.backgroundImage.filename}/m/400x0`}
-					alt={blok.backgroundImage.alt}
-					style="object-fit: cover; width: 100%; height: 100%;"
-				/>
-			{/if}
-			<img src={blok.image.filename} alt={blok.alt} />
-		</div></ScrapBookPaper
-	>
+	<div class="relative h-full w-full">
+		<ScrapBookPaper>
+			<div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 h-full w-full flex items-center justify-center">
+				{#if blok.backgroundImage}
+					<div
+						class="absolute top-0 left-0 w-full h-full"
+						style="z-index: -1; opacity: 0.5;"
+					></div>
+				{/if}
+				{#if blok.backgroundImage}
+					<div
+						class="absolute top-0 left-0 w-full h-full"
+						style="z-index: -1; opacity: 0.5;"
+					></div>
+				{/if}
+				{#if blok.backgroundImage}
+					<img
+						src={`${blok.backgroundImage.filename}/m/400x0/filters:quality(60)`}
+						alt={blok.backgroundImage.alt}
+						style="object-fit: cover; width: 100%; height: 100%;"
+					/>
+				{/if}
+				<img src={blok.image.filename} alt={blok.alt} />
+			</div>
+		</ScrapBookPaper>
+	</div>
 </div>
 
 <style>
@@ -45,8 +59,10 @@
 
 	.animation-object img {
 		object-fit: contain;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		/* position: absolute; */
+		width: auto;
+		max-width: 80%;
+		max-height: 80%;
+		padding-bottom: 10%;
 	}
 </style>

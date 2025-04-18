@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
 
-	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-
 	const { blok } = $props();
 </script>
 
@@ -13,12 +11,20 @@
 	{#if blok.image?.filename}
 		<div class="pull-quote-image--wrapper before bg-grass">
 			<div class="pull-quote-image--container">
-				<img class="pull-quote-image before" src={`${blok.image.filename}/m/40x0`} alt={blok.image.alt || ''} />
+				<img
+					class="pull-quote-image before"
+					src={`${blok.image.filename}/m/40x0`}
+					alt={blok.image.alt || ''}
+				/>
 			</div>
 		</div>
 		<div class="pull-quote-image--wrapper after bg-grass">
 			<div class="pull-quote-image--container">
-				<img class="pull-quote-image after" src={`${blok.image.filename}/m/40x0`} alt={blok.image.alt || ''} />
+				<img
+					class="pull-quote-image after"
+					src={`${blok.image.filename}/m/40x0`}
+					alt={blok.image.alt || ''}
+				/>
 			</div>
 		</div>
 	{/if}
@@ -26,7 +32,7 @@
 		{blok.text}
 	</blockquote>
 	{#if blok.name}
-		<p class="absolute bottom-12 w-full pull-quote--name">{blok.name}</p>
+		<p class="pull-quote--name absolute bottom-12 w-full">{blok.name}</p>
 	{/if}
 </div>
 
