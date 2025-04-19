@@ -1,27 +1,13 @@
 import { useStoryblokApi } from "@storyblok/svelte";
-import { useStoryblok } from "$lib/utils/storyblok";
-import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
-import { apiPlugin, storyblokInit } from "@storyblok/svelte";
+import { initStoryblok } from "$lib/utils/storyblokInit";
 
 export const prerender = true;
 export const ssr = true;
 
-/** You must call storyblokInit before calling useStoryblokApi */
-function initStoryblok() {
-  storyblokInit({
-    accessToken: PUBLIC_ACCESS_TOKEN,
-    use: [apiPlugin],
-    apiOptions: {
-      https: true,
-      cache: { type: "memory" },
-      region: PUBLIC_REGION || "eu",
-    },
-  });
-}
-
 export async function entries() {
-  initStoryblok(); // no await needed
+  initStoryblok(); // ✅ only once
   const api = await useStoryblokApi();
+
   const res = await api.get("cdn/stories", {
     starts_with: "diaries/",
     version: "published",
@@ -34,9 +20,8 @@ export async function entries() {
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
+  initStoryblok(); // ✅ same shared init
   const slug = params.slug ?? "home";
-  useStoryblok(); // your own utility (should call storyblokInit)
-
   const api = await useStoryblokApi();
 
   try {
