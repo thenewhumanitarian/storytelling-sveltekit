@@ -26,7 +26,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel hover-transit hidden sm:block panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel hover-transit hidden sm:block ${blok.link?.id || blok.link?.url ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -133,7 +133,7 @@
 	}
 
 	.story-grid--panel:not(.note, .frame, .placeholder) {
-		padding: 0.5rem 0.5rem;
+		padding: 1rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
 		border: solid 0.5px var(--borderColor);
@@ -233,6 +233,24 @@
 	.story-grid--panel.rotate:hover {
 		transform: rotate(0deg) !important;
 		opacity: 1;
+	}
+
+	.story-grid--panel.has-link {
+		transform: translateY(0);
+		transition: transform 0.4s ease-in-out;
+	}
+
+	/* Base hover effect for panels with links */
+	.story-grid--panel.has-link:hover {
+		transform: translateY(-2px);
+		background: rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+		will-change: transform, background;
+	}
+
+	:global(.story-grid--panel.has-link:hover .inline-image-wrapper figure) {
+		transform: rotate(0deg);
+		transition-delay: 0.1s;
 	}
 
 	@keyframes floatEffect {

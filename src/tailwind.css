@@ -68,7 +68,6 @@
 
   h1 {
     @apply font-serif font-extrabold text-3xl mb-2;
-    /* @apply font-amman font-extrabold text-3xl mb-2; */
   }
 
   h2 {

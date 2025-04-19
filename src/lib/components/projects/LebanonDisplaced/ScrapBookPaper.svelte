@@ -1,11 +1,12 @@
 <script>
 	// import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	const { children, mouseOver = true } = $props();
+	const { children, mouseOver = true, maxWidthMobile = '100%' } = $props();
 </script>
 
 <!-- <FadeIn duration={1} delay={1} isAbsolute={true} blurAmount={20}> -->
 <div
 	class={`scrap-book-paper relative flex h-full w-full items-center justify-center ${mouseOver ? 'has-mouseover' : ''}`}
+	style={`--max-width-mobile: ${maxWidthMobile};`}
 >
 	{@render children?.()}
 </div>
@@ -18,21 +19,21 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		/* background: red; */
 		background: url('/assets/ldd/patterns/scrapbook-paper--white.png') no-repeat top center;
 		background-size: cover;
 		transform: scale(1) translateY(0) rotate(-1deg);
-		transition: transform 3s ease-in-out;
+		transition: transform 0.5s ease-in-out;
 	}
 
 	.scrap-book-paper.has-mouseover:hover {
-		transform: scale(1.15) translateY(-8%) rotate(3deg);
+		transform: scale(1.15) translateY(-8%) rotate(0deg);
 		z-index: 999;
 	}
 
 	@media screen and (max-width: 1250px) {
 		.scrap-book-paper.has-mouseover:hover {
 			transform: scale(1.15) translate(-5%, -11%) rotate(2deg);
+			z-index: 999;
 		}
 	}
 
@@ -40,6 +41,12 @@
 	/* @media screen and (max-width: 825px) {
 
 	} */
+
+	@media screen and (max-width: 640px) {
+		.scrap-book-paper {
+			max-width: var(--max-width-mobile);
+		}
+	}
 
 	@keyframes zoomInEffect {
 		0% {

@@ -4,24 +4,6 @@
 	import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
 
 	const { blok, className } = $props();
-
-	export function transformStoryblokImage(url: string, modifiers: Record<string, string>): string {
-		if (!url) return '';
-
-		const [base, query] = url.split('?');
-		const params = new URLSearchParams(query || '');
-
-		for (const [key, value] of Object.entries(modifiers)) {
-			params.set(key, value);
-		}
-
-		return `${base}?${params.toString()}`;
-	}
-
-	const transformed = transformStoryblokImage(blok.backgroundImage.filename, {
-		m: '1200x800',
-		filters: 'quality(40):format(webp)'
-	});
 </script>
 
 <div
@@ -30,11 +12,15 @@
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
 		height: ${blok.screenHeightInPercent || 100}svh; /* To do: Mobile should be 100svh always */
-		background-image: url(${transformed});
+		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:quality(53)");
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-color: ${blok.backgroundColor};
 	`}
 >
 	<IntroAnimation {blok} />
-	<div class="intro-text">
+	<div class="intro-text -z-1">
 		<div class="intro-title">
 			{#if blok.title.length > 0}
 				{#each blok.title as item}

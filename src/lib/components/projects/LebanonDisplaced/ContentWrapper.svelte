@@ -68,7 +68,7 @@
 	@media screen and (max-width: 660px) {
 		.content-wrapper {
 			width: 100%;
-			padding: 2rem;
+			padding: 1.5rem 1rem;
 		}
 		.content-wrapper:first-of-type {
 			margin-top: 0;

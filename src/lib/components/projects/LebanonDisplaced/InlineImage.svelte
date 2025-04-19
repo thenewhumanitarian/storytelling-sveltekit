@@ -47,13 +47,18 @@
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
-			on:click={openLightbox}
 			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
-			<div class="relative h-full w-full" use:storyblokEditable={blok}>
+			<button
+				type="button"
+				class={`relative h-full w-full flex items-center justify-center`}
+				use:storyblokEditable={blok}
+				onclick={openLightbox}
+				aria-label={blok.lightbox ? 'Open lightbox' : ''}
+			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
-					<ScrapBookPaper mouseOver={false}>
+					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
 						<div class="h-full w-full p-5">
 							<img
 								class="inline-image"
@@ -86,7 +91,7 @@
 						<span class="tape tape-br"></span>
 					{/if}
 				{/if}
-			</div>
+			</button>
 
 			{#if blok.caption}
 				<figcaption>{blok.caption}</figcaption>
@@ -175,7 +180,7 @@
 
 	@media screen and (max-width: 945px) {
 		.inline-image-wrapper {
-			margin: 1rem auto;
+			margin: 0 auto 1rem auto;
 		}
 		.align-left,
 		.align-right,
@@ -183,7 +188,7 @@
 			float: none;
 			margin: 3rem auto;
 			width: 100%;
-			max-width: 400px;
+			max-width: 240px;
 		}
 
 		.align-left.no-margin-y,

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { lightboxItems } from '$lib/stores/lightbox';
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 </script>
@@ -6,7 +7,7 @@
 <div class="animation-container" use:storyblokEditable={blok && blok._editable ? blok : undefined}>
 	{#if blok.images}
 		{#each blok.images as item, i (item._uid)}
-			<StoryblokComponent blok={item} {i} style="grid-column: span {item.colSpan || 1};" />
+			<StoryblokComponent blok={item} {i} style="grid-column: span {item.colSpan || 1};" singleObject={blok.images.length === 1} />
 		{/each}
 	{/if}
 </div>
