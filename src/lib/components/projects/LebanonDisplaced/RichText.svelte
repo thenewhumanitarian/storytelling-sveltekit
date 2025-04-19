@@ -9,7 +9,7 @@
 
 	const { blok, className } = $props();
 
-	function escapeHTML(str) {
+	function escapeHTML(str: string) {
   return str.replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -26,7 +26,7 @@
 					return `<inline-image data-blok="${escapeHTML(JSON.stringify(blok))}"></inline-image>`;
 				}
 				if (blok?.component === 'pullQuote') {
-					return `<pull-quote data-blok='${JSON.stringify(blok)}'></pull-quote>`;
+					return `<pull-quote data-blok='${escapeHTML(JSON.stringify(blok))}'></pull-quote>`;
 				}
 				if (blok?.component === 'lineBreak') {
 					return `<line-break data-blok='${JSON.stringify(blok)}'></line-break>`;

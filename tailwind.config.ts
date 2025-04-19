@@ -33,7 +33,7 @@ export default {
         burgundy: '#9f3e52',
         brown: '#ffe0b5',
         sun: '#ede580',
-        grass: '#a6af71',
+        grass: '#AFB87E',
         lebgreen: '#636845',
         lebblack: '#282828'
       },

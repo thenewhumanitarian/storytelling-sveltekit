@@ -52,7 +52,7 @@
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
 			<div class="relative h-full w-full" use:storyblokEditable={blok}>
-				{#if blok.bgColor === 'scrap-paper'}
+				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false}>
 						<div class="h-full w-full p-5">
 							<img
@@ -92,7 +92,7 @@
 				<figcaption>{blok.caption}</figcaption>
 			{/if}
 
-			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'scrap-paper'}
+			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'bg-scrap-paper'}
 				{#if blok.tape?.includes('tl')}
 					<span class="tape tape-tl"></span>
 				{/if}
@@ -131,10 +131,14 @@
 		border: 0.5px solid #282828;
 	}
 
+	.inline-image-wrapper:hover figure.bg-scrap-paper {
+		border: 0.5px solid transparent !important;
+	}
+
 	.inline-image-wrapper:hover figure.bg-transparent img {
 		border: 0.5px solid #282828;
 	}
-	figure:not(.bg-transparent, .scrap-paper) {
+	figure:not(.bg-transparent, .bg-scrap-paper) {
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
@@ -173,13 +177,19 @@
 		.inline-image-wrapper {
 			margin: 1rem auto;
 		}
-		.align-left:not(.no-margin-y),
-		.align-right:not(.no-margin-y),
-		.align-center:not(.no-margin-y) {
+		.align-left,
+		.align-right,
+		.align-center {
 			float: none;
 			margin: 3rem auto;
 			width: 100%;
 			max-width: 400px;
+		}
+
+		.align-left.no-margin-y,
+		.align-right.no-margin-y,
+		.align-center.no-margin-y {
+			margin: 0 auto;
 		}
 	}
 
