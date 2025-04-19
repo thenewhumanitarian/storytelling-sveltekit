@@ -12,7 +12,7 @@
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
 		height: ${blok.screenHeightInPercent || 100}svh; /* To do: Mobile should be 100svh always */
-		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:quality(50)");
+		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(50)");
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;

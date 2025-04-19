@@ -49,20 +49,20 @@
 						{/if}
 						{#if blok.backgroundImage}
 							<img
-								src={`${blok.backgroundImage.filename}/m/800x0/filters:quality(80)`}
+								src={`${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(80)`}
 								alt={blok.backgroundImage.alt || 'Photo alt text is missing.'}
 								style="object-fit: cover; width: 100%; height: 100%;"
 							/>
 						{/if}
 						<div class="flex h-full w-full items-center justify-center">
 							<img
-								src={`${blok.image.filename}/m/50x0/filters:quality(40)/`}
+								src={`${blok.image.filename}/m/50x0/filters:format(webp):quality(40)/`}
 								alt={blok.alt || 'Blurry preview of the image.'}
 								class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2"
 							/>
 							<img
 								class="z-5 absolute"
-								src={`${blok.image.filename}/m/360x0/filters:quality(40)/`}
+								src={`${blok.image.filename}/m/360x0/filters:format(webp):quality(40)/`}
 								alt={blok.alt || 'Photo alt text is missing.'}
 							/>
 						</div>
@@ -93,7 +93,7 @@
 					{/if}
 					{#if blok.backgroundImage}
 						<img
-							src={`${blok.backgroundImage.filename}/m/800x0/filters:quality(80)`}
+							src={`${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(80)`}
 							alt={blok.backgroundImage.alt}
 							style="object-fit: cover; width: 100%; height: 100%;"
 						/>

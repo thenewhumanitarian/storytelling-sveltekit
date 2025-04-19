@@ -180,6 +180,9 @@
 		margin-right: -25%;
 		margin-left: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
+	}
+
+	.align-right:not(.no-margin-y) {
 		margin-top: 1rem;
 		margin-bottom: 1rem;
 	}
