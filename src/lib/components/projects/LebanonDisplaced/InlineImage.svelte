@@ -43,7 +43,7 @@
 	});
 </script>
 
-<div class="inline-image-wrapper">
+<div class="inline-image-wrapper" use:storyblokEditable={blok}>
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
@@ -52,8 +52,7 @@
 		>
 			<button
 				type="button"
-				class={`relative h-full w-full flex items-center justify-center`}
-				use:storyblokEditable={blok}
+				class={`relative flex h-full w-full items-center justify-center`}
 				onclick={openLightbox}
 				aria-label={blok.lightbox ? 'Open lightbox' : ''}
 			>
@@ -159,10 +158,20 @@
 		margin-left: -25%;
 		margin-right: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
+		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.align-left figcaption {
 		text-align: right;
+	}
+
+	:global(.arabic .align-left figcaption) {
+		text-align: right;
+	}
+
+	:global(.arabic .align-right figcaption) {
+		text-align: left;
 	}
 
 	.align-right {
@@ -171,6 +180,8 @@
 		margin-right: -25%;
 		margin-left: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
+		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.align-center {
@@ -189,6 +200,11 @@
 			margin: 3rem auto;
 			width: 100%;
 			max-width: 240px;
+		}
+
+		.align-left figcaption,
+		.align-right figcaption {
+			text-align: center;
 		}
 
 		.align-left.no-margin-y,
