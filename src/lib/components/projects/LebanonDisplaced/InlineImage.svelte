@@ -189,7 +189,7 @@
 		width: 100%;
 	}
 
-	@media screen and (max-width: 945px) {
+	@media screen and (max-width: 925px) {
 		.inline-image-wrapper {
 			margin: 0 auto 1rem auto;
 		}

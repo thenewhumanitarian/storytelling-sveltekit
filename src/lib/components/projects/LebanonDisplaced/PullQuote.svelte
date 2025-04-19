@@ -77,6 +77,7 @@
 			font-size: 1.25rem;
 			line-height: 1.2;
 			margin: 1rem -5%;
+			padding: 2rem;
 		}
 	}
 
@@ -107,12 +108,14 @@
 			height: 1rem;
 		}
 		blockquote:before {
-			left: -0.25rem;
-			top: -0.5rem;
+			left: 0.25rem;
+			top: -1.5rem;
+			color: #636845;
 		}
 		blockquote:after {
-			right: -0.25rem;
-			bottom: 3rem;
+			right: 0.25rem;
+			bottom: 2.15rem;
+			color: #636845;
 		}
 	}
 
