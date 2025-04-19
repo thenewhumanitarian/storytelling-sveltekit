@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { StoryblokComponent } from '@storyblok/svelte';
-	import type { PageData } from './$types';
 	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
-	export let data: PageData;
+	let { data } = $props();
 </script>
 
 <SEO pageTitle={data.story?.content?.pageTitle} />

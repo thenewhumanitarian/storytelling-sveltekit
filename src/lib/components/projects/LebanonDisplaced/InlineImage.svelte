@@ -54,7 +54,7 @@
 				type="button"
 				class={`relative flex h-full w-full items-center justify-center`}
 				onclick={openLightbox}
-				aria-label={blok.lightbox ? 'Open lightbox' : ''}
+				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
@@ -62,7 +62,7 @@
 							<img
 								class="inline-image"
 								src={`${blok.media.filename}/m/480x0`}
-								alt={blok.media.alt || ''}
+								alt={blok.media.alt || 'Photo alt text is missing.'}
 							/>
 						</div>
 					</ScrapBookPaper>
@@ -70,7 +70,7 @@
 					<img
 						class="inline-image"
 						src={`${blok.media.filename}/m/480x0`}
-						alt={blok.media.alt || ''}
+						alt={blok.media.alt || 'Photo alt text is missing.'}
 					/>
 				{/if}
 				{#if blok.bgColor === 'bg-transparent'}

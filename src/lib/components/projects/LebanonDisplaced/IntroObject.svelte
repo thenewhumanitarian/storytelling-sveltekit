@@ -22,7 +22,7 @@
       bottom: calc(${blok.posY}%);
 			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
     `}
-	class={`animation-object z-1 hover:cursor-pointer hover:z-50 ${singleObject ? 'single' : ''}`}
+	class={`animation-object z-1 hover:z-50 hover:cursor-pointer ${singleObject ? 'single' : ''}`}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="relative h-full w-full">
@@ -50,12 +50,15 @@
 						{#if blok.backgroundImage}
 							<img
 								src={`${blok.backgroundImage.filename}/m/800x0/filters:quality(80)`}
-								alt={blok.backgroundImage.alt}
+								alt={blok.backgroundImage.alt || 'Photo alt text is missing.'}
 								style="object-fit: cover; width: 100%; height: 100%;"
 							/>
 						{/if}
 						<div class="flex h-full w-full items-center justify-center">
-							<img src={`${blok.image.filename}/m/400x0/filters:quality(50)`} alt={blok.alt} />
+							<img
+								src={`$s{blok.image.filename}/m/400x0/filters:quality(50)`}
+								alt={blok.alt || 'Photo alt text is missing.'}
+							/>
 						</div>
 					</div>
 					<!-- Scotch tape pieces -->
@@ -89,7 +92,7 @@
 							style="object-fit: cover; width: 100%; height: 100%;"
 						/>
 					{/if}
-					<img src={blok.image.filename} alt={blok.alt} />
+					<img src={blok.image.filename} alt={blok.alt || 'Photo alt text is missing.'} />
 				</div>
 				<!-- Scotch tape pieces -->
 				<span class="tape tape-tl"></span>

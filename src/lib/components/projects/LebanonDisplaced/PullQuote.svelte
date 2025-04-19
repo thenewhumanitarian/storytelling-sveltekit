@@ -14,7 +14,7 @@
 				<img
 					class="pull-quote-image before"
 					src={`${blok.image.filename}/m/40x0`}
-					alt={blok.image.alt || ''}
+					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>
@@ -23,7 +23,7 @@
 				<img
 					class="pull-quote-image after"
 					src={`${blok.image.filename}/m/40x0`}
-					alt={blok.image.alt || ''}
+					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>

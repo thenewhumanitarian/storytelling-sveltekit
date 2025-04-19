@@ -41,7 +41,7 @@
 		{#if blok.media?.filename.includes('.mp4')}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
-			<img src={`${blok.media.filename}/m/240x0`} alt={blok.media.alt} />
+			<img src={`${blok.media.filename}/m/240x0`} alt={blok.media.alt || 'Photo alt text is missing.'} />
 		{/if}
 
 		<!-- Scotch tape corners -->

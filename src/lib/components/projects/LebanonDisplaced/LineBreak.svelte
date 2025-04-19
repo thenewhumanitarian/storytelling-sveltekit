@@ -14,7 +14,7 @@
 				<img
 					class="line-break-image before"
 					src={`${blok.image.filename}/m/40x0`}
-					alt={blok.image.alt || ''}
+					alt={blok.image.alt || 'Photo alt text is missing.'}
 				/>
 			</div>
 		</div>
