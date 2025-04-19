@@ -28,7 +28,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel group hover-transit hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel hover-transit group hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -55,7 +55,9 @@
 					</div>
 				</FadeIn>
 			{/if}
-			<div class="read-more-tag absolute -right-4 bottom-2 z-50 flex items-center justify-center origin-left">
+			<div
+				class="read-more-tag absolute -right-4 bottom-2 z-50 flex origin-left items-center justify-center"
+			>
 				<h3 class="m-0 p-0 text-lebgreen group-hover:underline">Read</h3>
 			</div>
 		</a>
@@ -75,6 +77,45 @@
 						{/if}
 					</div>
 				</FadeIn>
+			{/if}
+		</div>
+	{/if}
+</div>
+<div
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+	class={`
+		story-grid--panel hover-transit block sm:hidden panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+	`}
+	style={`
+		--colSpan: span ${blok.colSpan || '1'};
+		--borderColor: ${blok.borderColor || 'transparent'};
+  `}
+>
+	{#if blok.link.id || blok.link.url}
+		<a
+			href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+			class="font-reset"
+		>
+			{#if blok.items}
+				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+					{#if blok?.items}
+						{#each blok.items as item (item._uid)}
+							<StoryblokComponent blok={item} />
+						{/each}
+					{/if}
+				</div>
+			{/if}
+		</a>
+	{:else}
+		<div class="font-reset">
+			{#if blok.items}
+				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+					{#if blok?.items}
+						{#each blok.items as item (item._uid)}
+							<StoryblokComponent blok={item} />
+						{/each}
+					{/if}
+				</div>
 			{/if}
 		</div>
 	{/if}
