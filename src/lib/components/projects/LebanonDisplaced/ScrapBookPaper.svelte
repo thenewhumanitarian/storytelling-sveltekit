@@ -26,7 +26,7 @@
 	}
 
 	.scrap-book-paper.has-mouseover:hover {
-		transform: scale(1.15) translateY(-8%) rotate(0deg);
+		transform: scale(1.1) translateY(-8%) rotate(0deg);
 		z-index: 999;
 	}
 

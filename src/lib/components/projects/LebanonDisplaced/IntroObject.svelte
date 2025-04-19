@@ -22,12 +22,10 @@
       bottom: calc(${blok.posY}%);
 			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
     `}
-	class={`animation-object hover:z-50 ${singleObject ? 'single' : ''}`}
+	class={`animation-object z-1 hover:cursor-pointer hover:z-50 ${singleObject ? 'single' : ''}`}
+	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div
-		class="relative h-full w-full"
-		use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	>
+	<div class="relative h-full w-full">
 		{#if blok.link?.id || blok.link?.url}
 			<a
 				href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
@@ -56,7 +54,9 @@
 								style="object-fit: cover; width: 100%; height: 100%;"
 							/>
 						{/if}
-						<img src={blok.image.filename} alt={blok.alt} />
+						<div class="flex h-full w-full items-center justify-center">
+							<img src={`${blok.image.filename}/m/400x0/filters:quality(50)`} alt={blok.alt} />
+						</div>
 					</div>
 					<!-- Scotch tape pieces -->
 					<span class="tape tape-tl"></span>

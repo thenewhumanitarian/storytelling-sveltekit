@@ -21,12 +21,14 @@
 			});
 		}
 	});
+
+	const hasLink = blok.link?.id || blok.link?.url;
 </script>
 
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel hover-transit hidden sm:block ${blok.link?.id || blok.link?.url ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel group hover-transit hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -53,6 +55,9 @@
 					</div>
 				</FadeIn>
 			{/if}
+			<div class="read-more-tag absolute -right-4 bottom-2 z-50 flex items-center justify-center origin-left">
+				<h3 class="m-0 p-0 text-lebgreen group-hover:underline">Read</h3>
+			</div>
 		</a>
 	{:else}
 		<div class="font-reset">
@@ -70,46 +75,6 @@
 						{/if}
 					</div>
 				</FadeIn>
-			{/if}
-		</div>
-	{/if}
-</div>
-
-<div
-	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	class={`
-		story-grid--panel hover-transit block sm:hidden panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
-	`}
-	style={`
-		--colSpan: span ${blok.colSpan || '1'};
-		--borderColor: ${blok.borderColor || 'transparent'};
-  `}
->
-	{#if blok.link.id || blok.link.url}
-		<a
-			href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
-			class="font-reset"
-		>
-			{#if blok.items}
-				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
-					{#if blok?.items}
-						{#each blok.items as item (item._uid)}
-							<StoryblokComponent blok={item} />
-						{/each}
-					{/if}
-				</div>
-			{/if}
-		</a>
-	{:else}
-		<div class="font-reset">
-			{#if blok.items}
-				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
-					{#if blok?.items}
-						{#each blok.items as item (item._uid)}
-							<StoryblokComponent blok={item} />
-						{/each}
-					{/if}
-				</div>
 			{/if}
 		</div>
 	{/if}
@@ -150,6 +115,21 @@
 		background-size: contain;
 		border-color: transparent;
 		width: 100%;
+	}
+
+	/* Read more tag */
+	.read-more-tag {
+		transform: rotate(0deg);
+		transition: transform 0.5s ease-in-out;
+		background-image: url('/assets/ldd/patterns/tag--read-more.png');
+		background-size: 100%;
+		background-repeat: no-repeat;
+		aspect-ratio: 241/107;
+		height: 2.8rem;
+	}
+
+	.story-grid--panel.has-link:hover .read-more-tag {
+		transform: rotate(2deg);
 	}
 
 	/* Scotch tape effect */
@@ -249,8 +229,8 @@
 	}
 
 	:global(.story-grid--panel.has-link:hover .inline-image-wrapper figure) {
-		transform: rotate(0deg);
-		transition-delay: 0.1s;
+		transform: rotate(0deg) translateY(2px);
+		/* transition-delay: 0.1s; */
 	}
 
 	@keyframes floatEffect {

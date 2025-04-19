@@ -8,11 +8,11 @@
 
 <div
 	use:storyblokEditable={blok}
-	class={`intro-view--wrapper border-b-4 border-lebgreen ${className}`}
+	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
 	style={`
 		height: ${blok.screenHeightInPercent || 100}vh;
 		height: ${blok.screenHeightInPercent || 100}svh; /* To do: Mobile should be 100svh always */
-		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:quality(53)");
+		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:quality(50)");
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
