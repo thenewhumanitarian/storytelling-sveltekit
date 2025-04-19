@@ -1,19 +1,62 @@
-// src/lib/utils/initStoryblok.ts
-import { storyblokInit, apiPlugin } from "@storyblok/svelte";
-import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
+import { storyblokInit, apiPlugin, useStoryblokApi } from '@storyblok/svelte';
+import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from '$env/static/public';
+
+// Static imports are safe for prerendering
+import Page from '$lib/components/projects/LebanonDisplaced/Page.svelte';
+import DetailPage from '$lib/components/projects/LebanonDisplaced/DetailPage.svelte';
+import ContentWrapper from '$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte';
+import IntroView from '$lib/components/projects/LebanonDisplaced/IntroView.svelte';
+import IntroObject from '$lib/components/projects/LebanonDisplaced/IntroObject.svelte';
+import HorizontalScrollWrapper from '$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte';
+import StoryGrid from '$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte';
+import StoryGridPanel from '$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte';
+import FadeIn from '$lib/components/projects/LebanonDisplaced/FadeIn.svelte';
+import MouseoverBox from '$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte';
+import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
+import MediaElement from '$lib/components/projects/LebanonDisplaced/MediaElement.svelte';
+import SoundCite from '$lib/components/projects/LebanonDisplaced/SoundCite.svelte';
+import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 
 let initialized = false;
 
 export function initStoryblok() {
   if (initialized) return;
+  initialized = true;
+
   storyblokInit({
     accessToken: PUBLIC_ACCESS_TOKEN,
     use: [apiPlugin],
+    bridge: false, // disable bridge for SSR
     apiOptions: {
       https: true,
-      cache: { type: "memory" },
-      region: PUBLIC_REGION || "eu",
+      region: PUBLIC_REGION || 'eu'
     },
+    components: {
+      page: Page,
+      detailPage: DetailPage,
+      contentWrapper: ContentWrapper,
+      introView: IntroView,
+      introObject: IntroObject,
+      horizontalScrollWrapper: HorizontalScrollWrapper,
+      storyGrid: StoryGrid,
+      storyGridPanel: StoryGridPanel,
+      fadeInWrapper: FadeIn,
+      mouseoverBox: MouseoverBox,
+      richText: RichText,
+      mediaElement: MediaElement,
+      soundCite: SoundCite,
+      inlineImage: InlineImage
+    }
   });
-  initialized = true;
+}
+
+export async function loadStory(slug: string) {
+  initStoryblok(); // ensure Storyblok is initialized once
+  const api = await useStoryblokApi();
+
+  const res = await api.get(`cdn/stories/diaries/${slug}`, {
+    version: 'published'
+  });
+
+  return res.data.story;
 }
