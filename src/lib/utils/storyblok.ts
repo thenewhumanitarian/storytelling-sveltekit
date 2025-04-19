@@ -7,11 +7,13 @@ import { readable, derived } from 'svelte/store';
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
 import { apiPlugin, storyblokInit } from "@storyblok/svelte";
 
+const isDev = process.env.NODE_ENV === 'development'; // works both in server and Vite
+
 export async function useStoryblok(accessToken = "") {
   storyblokInit({
     accessToken: accessToken === "" ? PUBLIC_ACCESS_TOKEN : accessToken,
     use: [apiPlugin],
-    bridge: true,
+    bridge: isDev,
     components: {
       page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
       detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,
