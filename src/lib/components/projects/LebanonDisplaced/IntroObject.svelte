@@ -56,7 +56,13 @@
 						{/if}
 						<div class="flex h-full w-full items-center justify-center">
 							<img
-								src={`$s{blok.image.filename}/m/400x0/filters:quality(50)`}
+								src={`${blok.image.filename}/m/50x0/filters:quality(40)/`}
+								alt={blok.alt || 'Blurry preview of the image.'}
+								class="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2"
+							/>
+							<img
+								class="z-5 absolute"
+								src={`${blok.image.filename}/m/360x0/filters:quality(40)/`}
 								alt={blok.alt || 'Photo alt text is missing.'}
 							/>
 						</div>
