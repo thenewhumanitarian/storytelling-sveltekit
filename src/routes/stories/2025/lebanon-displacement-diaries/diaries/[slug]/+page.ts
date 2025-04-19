@@ -1,21 +1,20 @@
 import { useStoryblok } from "$lib/utils/storyblok";
 import { useStoryblokApi } from "@storyblok/svelte";
 
-export const prerender = false; // ❌ Disable prerendering for dynamic routes
-export const ssr = true; // ✅ Enable Server-Side Rendering
+export const prerender = true;
+export const ssr = true;
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
   const slug = params.slug ?? "home";
-  await useStoryblok();
+  useStoryblok(); // No await — ensure sync init
+
   const storyblokApi = await useStoryblokApi();
 
   try {
     const response = await storyblokApi.get(`cdn/stories/diaries/${slug}`, {
-      version: "draft",
+      version: "published", // ✅ For production/static builds
     });
-
-    // console.log("Storyblok API response:", response.data);
 
     return {
       story: response.data.story || null,
