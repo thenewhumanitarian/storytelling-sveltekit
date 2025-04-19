@@ -56,7 +56,7 @@
 				</FadeIn>
 			{/if}
 			<div
-				class="read-more-tag absolute -right-4 bottom-2 z-50 flex origin-left items-center justify-center"
+				class={`read-more-tag absolute ${blok.textAlign === 'left' ? '-right-4' : '-left-4'} bottom-2 z-50 flex origin-left items-center justify-center`}
 			>
 				<h3 class="m-0 p-0 text-lebgreen group-hover:underline">Read</h3>
 			</div>
@@ -170,7 +170,7 @@
 	}
 
 	.story-grid--panel.has-link:hover .read-more-tag {
-		transform: rotate(2deg);
+		transform: rotate(4deg);
 	}
 
 	/* Scotch tape effect */
