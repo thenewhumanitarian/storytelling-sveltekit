@@ -1,10 +1,12 @@
 <script>
 	// import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	const { children } = $props();
+	const { children, mouseOver = true } = $props();
 </script>
 
 <!-- <FadeIn duration={1} delay={1} isAbsolute={true} blurAmount={20}> -->
-<div class="scrap-book-paper relative flex h-full w-full items-center justify-center">
+<div
+	class={`scrap-book-paper relative flex h-full w-full items-center justify-center ${mouseOver ? 'has-mouseover' : ''}`}
+>
 	{@render children?.()}
 </div>
 
@@ -23,12 +25,13 @@
 		transition: transform 3s ease-in-out;
 	}
 
-	.scrap-book-paper:hover {
+	.scrap-book-paper.has-mouseover:hover {
 		transform: scale(1.15) translateY(-8%) rotate(3deg);
+		z-index: 999;
 	}
 
 	@media screen and (max-width: 1250px) {
-		.scrap-book-paper:hover {
+		.scrap-book-paper.has-mouseover:hover {
 			transform: scale(1.15) translate(-5%, -11%) rotate(2deg);
 		}
 	}

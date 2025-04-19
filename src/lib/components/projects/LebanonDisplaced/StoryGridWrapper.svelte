@@ -53,7 +53,7 @@
 	style="--grid-rows: {state.gridTemplateRows};"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div class="story-grid--container desktop">
+	<div class={`story-grid--container desktop ${blok.size}`}>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
@@ -77,7 +77,7 @@
 	style="--grid-rows: auto;"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div class="story-grid--container mobile">
+	<div class={`story-grid--container mobile ${blok.size}`}>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
@@ -132,6 +132,10 @@
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: var(--grid-rows);
 		grid-gap: 2rem;
+	}
+
+	.story-grid--container.narrow {
+		max-width: 650px;
 	}
 
 	@media screen and (max-width: 900px) {

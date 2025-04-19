@@ -9,12 +9,21 @@
 
 	const { blok, className } = $props();
 
+	function escapeHTML(str) {
+  return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+}
+
+
 	const { render } = richTextResolver({
 		resolvers: {
 			blok: (node) => {
 				const blok = node.attrs?.body?.[0];
 				if (blok?.component === 'inlineImage') {
-					return `<inline-image data-blok='${JSON.stringify(blok)}'></inline-image>`;
+					return `<inline-image data-blok="${escapeHTML(JSON.stringify(blok))}"></inline-image>`;
 				}
 				if (blok?.component === 'pullQuote') {
 					return `<pull-quote data-blok='${JSON.stringify(blok)}'></pull-quote>`;
@@ -119,6 +128,11 @@
 		max-width: 50%;
 		margin-left: -25%;
 		padding-right: 2.5%;
+	}
+
+	:global(.storyblok--richtext hr) {
+		border-color: #282828;
+		margin: 1rem auto !important;
 	}
 
 	@media screen and (max-width: 945px) {

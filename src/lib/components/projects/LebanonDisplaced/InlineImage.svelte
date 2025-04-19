@@ -2,6 +2,7 @@
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { onMount } from 'svelte';
 	import { registerMediaElement, setIndexFromSrc } from '$lib/stores/lightbox';
+	import ScrapBookPaper from '$lib/components/projects/LebanonDisplaced/ScrapBookPaper.svelte';
 
 	const { blok } = $props();
 
@@ -15,47 +16,95 @@
 	let figureEl: HTMLElement;
 
 	function openLightbox() {
+		if (!blok.lightbox) return;
 		if (document.body.classList.contains('is-storyblok-editor')) return;
 		setIndexFromSrc(blok.media.filename);
 	}
 
+	function escapeHTML(str: string) {
+		return str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
 	onMount(() => {
 		if (blok?.media?.filename && figureEl) {
+			if (!blok.lightbox) return;
 			registerMediaElement({
 				src: blok.media.filename,
 				type: 'image',
-				caption: blok.caption || '',
+				caption: escapeHTML(blok.caption || ''),
 				element: figureEl
 			});
 		}
 	});
 </script>
 
-<div class="inline-image-wrapper" use:storyblokEditable={blok}>
+<div class="inline-image-wrapper">
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
 			on:click={openLightbox}
-			class={`relative cursor-pointer ${alignClass} ${blok.bgColor} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
+			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
-			<!-- Scotch tape pieces -->
-			{#if blok.tape?.includes('tl')}
-				<span class="tape tape-tl"></span>
-			{/if}
-			{#if blok.tape?.includes('tr')}
-				<span class="tape tape-tr"></span>
-			{/if}
-			{#if blok.tape?.includes('bl')}
-				<span class="tape tape-bl"></span>
-			{/if}
-			{#if blok.tape?.includes('br')}
-				<span class="tape tape-br"></span>
-			{/if}
+			<div class="relative h-full w-full" use:storyblokEditable={blok}>
+				{#if blok.bgColor === 'scrap-paper'}
+					<ScrapBookPaper mouseOver={false}>
+						<div class="h-full w-full p-5">
+							<img
+								class="inline-image"
+								src={`${blok.media.filename}/m/480x0`}
+								alt={blok.media.alt || ''}
+							/>
+						</div>
+					</ScrapBookPaper>
+				{:else}
+					<img
+						class="inline-image"
+						src={`${blok.media.filename}/m/480x0`}
+						alt={blok.media.alt || ''}
+					/>
+				{/if}
+				{#if blok.bgColor === 'bg-transparent'}
+					{#if blok.tape?.includes('tr')}
+						<span class="tape tape-tl"></span>
+					{/if}
+					{#if blok.tape?.includes('tl')}
+						<span class="tape tape-tl"></span>
+					{/if}
+					{#if blok.tape?.includes('tr')}
+						<span class="tape tape-tr"></span>
+					{/if}
+					{#if blok.tape?.includes('bl')}
+						<span class="tape tape-bl"></span>
+					{/if}
+					{#if blok.tape?.includes('br')}
+						<span class="tape tape-br"></span>
+					{/if}
+				{/if}
+			</div>
 
-			<img src={`${blok.media.filename}/m/480x0`} alt={blok.media.alt} />
 			{#if blok.caption}
 				<figcaption>{blok.caption}</figcaption>
+			{/if}
+
+			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'scrap-paper'}
+				{#if blok.tape?.includes('tl')}
+					<span class="tape tape-tl"></span>
+				{/if}
+				{#if blok.tape?.includes('tr')}
+					<span class="tape tape-tr"></span>
+				{/if}
+				{#if blok.tape?.includes('bl')}
+					<span class="tape tape-bl"></span>
+				{/if}
+				{#if blok.tape?.includes('br')}
+					<span class="tape tape-br"></span>
+				{/if}
 			{/if}
 		</figure>
 	{/if}
@@ -69,32 +118,23 @@
 	figure {
 		display: flex;
 		flex-direction: column;
-		border: 0.5px solid transparent;
 		will-change: transform;
 		transition: transform 1s;
+		border: 0.5px solid transparent;
 	}
 
 	.inline-image-wrapper:hover figure {
 		transform: rotate(-0deg);
 	}
 
-	.inline-image-wrapper:hover figure:not(.bg-transparent) {
+	.inline-image-wrapper:hover figure:not(.bg-transparent, .bg-scrap-paper) {
 		border: 0.5px solid #282828;
-	}
-
-	.inline-image-wrapper:hover figure.bg-transparent img {
-		border: 0.5px solid transparent;
 	}
 
 	.inline-image-wrapper:hover figure.bg-transparent img {
 		border: 0.5px solid #282828;
 	}
-
-	figure:not(.bg-transparent) {
-		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-	}
-
-	figure.bg-transparent img {
+	figure:not(.bg-transparent, .scrap-paper) {
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
@@ -133,9 +173,9 @@
 		.inline-image-wrapper {
 			margin: 1rem auto;
 		}
-		.align-left,
-		.align-right,
-		.align-center {
+		.align-left:not(.no-margin-y),
+		.align-right:not(.no-margin-y),
+		.align-center:not(.no-margin-y) {
 			float: none;
 			margin: 3rem auto;
 			width: 100%;

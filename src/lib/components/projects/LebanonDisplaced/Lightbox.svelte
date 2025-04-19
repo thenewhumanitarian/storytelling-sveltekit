@@ -92,6 +92,12 @@
 			}
 		});
 	});
+
+	function decodeHTML(html: string): string {
+		const txt = document.createElement('textarea');
+		txt.innerHTML = html;
+		return txt.value;
+	}
 </script>
 
 {#if state.isVisible && state.index !== null && $lightboxItems[state.index]}
@@ -134,7 +140,7 @@
 										style={`text-align: ${isRtl ? 'right' : 'left'}`}
 										dir={isRtl ? 'rtl' : 'ltr'}
 									>
-										{item.caption}
+										{decodeHTML(item.caption)}
 									</figcaption>
 								{/if}
 							</figure>
