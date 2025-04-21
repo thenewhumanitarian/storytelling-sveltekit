@@ -58,7 +58,7 @@
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
-						<div class="h-full w-full p-5">
+						<div class="h-full w-full p-10">
 							<img
 								class="inline-image"
 								src={`${blok.media.filename}/m/480x0`}

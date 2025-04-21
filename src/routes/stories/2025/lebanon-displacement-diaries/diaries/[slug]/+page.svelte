@@ -36,5 +36,7 @@
 {:else if story}
 	<StoryblokComponent blok={story.content} />
 {:else}
-	<div class="text-center fixed top-0 left-0 w-full h-full flex items-center justify-center">Loading content...</div>
+	<div class="fixed left-0 top-0 flex h-full w-full items-center justify-center text-center">
+		Loading content...
+	</div>
 {/if}

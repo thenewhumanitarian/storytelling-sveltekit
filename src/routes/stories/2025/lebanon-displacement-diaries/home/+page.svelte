@@ -9,7 +9,6 @@
 
 	// Use `let` since these will be updated
 	let story = $state(data.story);
-	let loaded = $state(false);
 
 	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
 	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR;
