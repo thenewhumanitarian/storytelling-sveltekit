@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
 import { useStoryblokApi } from '@storyblok/svelte';
-import { initStoryblok } from '$lib/utils/storyblokInit';
+import { initStoryblok } from '$lib/utils/storyblok';
 
 export const prerender = true;
 export const ssr = true;

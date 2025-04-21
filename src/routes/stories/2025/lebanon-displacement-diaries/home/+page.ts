@@ -1,12 +1,12 @@
 import type { PageLoad } from './$types';
 import { useStoryblokApi } from '@storyblok/svelte';
-import { initStoryblok } from '$lib/utils/storyblokInit';
+import { initStoryblok } from '$lib/utils/storyblok';
 
 export const prerender = true;
 export const ssr = true;
 
 export const load: PageLoad = async () => {
-  initStoryblok(); // Ensure SB is ready
+  initStoryblok();
 
   const api = await useStoryblokApi();
   const isDev = process.env.NODE_ENV === 'development';

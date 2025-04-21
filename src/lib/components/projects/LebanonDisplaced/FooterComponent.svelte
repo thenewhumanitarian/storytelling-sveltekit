@@ -87,7 +87,7 @@
 		margin-top: 1rem;
 		background-color: white;
 		/* background-image: url('/assets/ldd/patterns/torn-cardboard--bottom.png'); */
-		background-image: url('/assets/ldd/patterns/torn-paper--bottom.png');
+		background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.png');
 		background-size: cover;
 	}
 </style>

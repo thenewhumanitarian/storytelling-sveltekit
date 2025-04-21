@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { lightboxItems } from '$lib/stores/lightbox';
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 </script>

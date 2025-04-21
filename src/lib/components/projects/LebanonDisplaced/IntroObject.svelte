@@ -21,6 +21,7 @@
 			aspect-ratio: ${blok.aspectRatio || 'auto'};
       bottom: calc(${blok.posY}%);
 			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
+			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
     `}
 	class={`animation-object z-1 hover:z-50 hover:cursor-pointer ${singleObject ? 'single' : ''}`}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
@@ -68,10 +69,10 @@
 						</div>
 					</div>
 					<!-- Scotch tape pieces -->
-					<span class="tape tape-tl"></span>
+					<!-- <span class="tape tape-tl"></span>
 					<span class="tape tape-tr"></span>
 					<span class="tape tape-bl"></span>
-					<span class="tape tape-br"></span>
+					<span class="tape tape-br"></span> -->
 				</ScrapBookPaper>
 			</a>
 		{:else}
@@ -101,10 +102,10 @@
 					<img src={blok.image.filename} alt={blok.alt || 'Photo alt text is missing.'} />
 				</div>
 				<!-- Scotch tape pieces -->
-				<span class="tape tape-tl"></span>
+				<!-- <span class="tape tape-tl"></span>
 				<span class="tape tape-tr"></span>
 				<span class="tape tape-bl"></span>
-				<span class="tape tape-br"></span>
+				<span class="tape tape-br"></span> -->
 			</ScrapBookPaper>
 		{/if}
 	</div>
@@ -140,8 +141,8 @@
 	.animation-object img {
 		object-fit: contain;
 		width: auto;
-		max-width: 80%;
-		max-height: 80%;
+		max-width: 70%;
+		max-height: 70%;
 	}
 
 	/* Scotch tape corner pieces */

@@ -4,20 +4,18 @@
 	import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
 
 	const { blok, className } = $props();
+
+	const bgImage = `${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(50)`;
 </script>
+
+<svelte:head>
+	<link rel="preload" as="image" href={bgImage} />
+</svelte:head>
 
 <div
 	use:storyblokEditable={blok}
 	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
-	style={`
-		height: ${blok.screenHeightInPercent || 100}vh;
-		height: ${blok.screenHeightInPercent || 100}svh; /* To do: Mobile should be 100svh always */
-		background-image: url("${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(50)");
-		background-position: center;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-color: ${blok.backgroundColor};
-	`}
+	style={`--intro-bg: url("${bgImage}"); background-color: ${blok.backgroundColor};`}
 >
 	<IntroAnimation {blok} />
 	<div class="intro-text -z-1">
@@ -42,7 +40,7 @@
 	.intro-view--wrapper {
 		position: relative;
 		display: flex;
-		justify-content: start;
+		justify-content: flex-start;
 		align-items: center;
 		width: 100%;
 		height: 100vh;
@@ -50,6 +48,10 @@
 		margin-top: -6rem;
 		border-bottom: 6px solid inherit;
 		z-index: 0;
+		background-image: var(--intro-bg);
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
 		background-color: #ffe0b5;
 	}
 
@@ -77,8 +79,6 @@
 			max-width: 100%;
 			padding-top: 6rem;
 			justify-content: start;
-			/* row-gap: 0.5rem; */
-			/* justify-content: flex-start; */
 		}
 	}
 
@@ -89,45 +89,32 @@
 	}
 
 	.intro-title {
+		/* Add styles as needed */
 	}
 
 	:global(.arabic .intro-title) {
-		left: unset;
 		right: 2.5rem;
+		left: unset;
 	}
 
 	.intro-credit {
-		/* position: absolute;
-		bottom: 3rem;
-		left: 2.5rem;
-		max-width: 60%; */
+		/* Add styles as needed */
 	}
 
 	:global(.arabic .intro-credit) {
-		/* left: unset;
-		right: 2.5rem; */
+		right: 2.5rem;
+		left: unset;
 	}
 
 	@media screen and (max-width: 640px) {
-		.intro-title {
-			/* top: 5rem;
-			left: 1rem;
-			text-align: left; */
-		}
-
 		:global(.arabic .intro-title) {
-			left: unset;
 			right: 1rem;
-		}
-
-		.intro-credit {
-			/* bottom: 1.5rem;
-			left: 1rem; */
+			left: unset;
 		}
 
 		:global(.arabic .intro-credit) {
-			/* left: unset;
-			right: 1rem; */
+			right: 1rem;
+			left: unset;
 		}
 	}
 </style>
