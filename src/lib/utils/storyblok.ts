@@ -2,6 +2,8 @@
 import { getContext } from 'svelte';
 import { readable, derived } from 'svelte/store';
 import { storyblokEditable, useStoryblokApi } from '@storyblok/svelte';
+// 000 – Import the storyblokInit function from the utils folder
+import { initStoryblok } from '$lib/utils/storyblokInit';
 
 // @ts-nocheck
 // 001 - Import Access token and region from env variables
@@ -104,14 +106,29 @@ export function clientOnlyEditable(node: HTMLElement, blok: any) {
   return storyblokEditable(node, blok);
 }
 
+// This function fetches all story slugs from Storyblok
 export async function fetchAllStorySlugs(lang: string = 'en') {
-  const api = useStoryblokApi();
+  // 🧠 Ensure Storyblok is initialized before calling useStoryblokApi
+  initStoryblok();
+
+  const api = await useStoryblokApi();
   const res = await api.get('cdn/stories', {
+    version: 'published',
     starts_with: 'diaries/',
-    version: 'published', // or 'draft' if in dev
     language: lang,
-    per_page: 100, // paginate if needed
+    per_page: 100,
   });
 
-  return res.data.stories.map((story) => story.slug.replace('diaries/', ''));
+  interface Story {
+    slug: string;
+  }
+
+  interface FetchAllStorySlugsResponse {
+    data: {
+      stories: Story[];
+    };
+  }
+
+  const typedRes = res as FetchAllStorySlugsResponse;
+  return typedRes.data.stories.map((story) => story.slug.replace(/^diaries\//, ''));
 }
