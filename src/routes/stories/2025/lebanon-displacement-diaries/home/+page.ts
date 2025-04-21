@@ -1,15 +1,26 @@
 import type { PageLoad } from './$types';
-import { loadStaticPage } from '$lib/utils/storyblokInit';
+import { useStoryblokApi } from '@storyblok/svelte';
+import { initStoryblok } from '$lib/utils/storyblokInit';
 
 export const prerender = true;
 export const ssr = true;
 
 export const load: PageLoad = async () => {
-  const slug = 'home';
+  initStoryblok(); // Ensure SB is ready
+
+  const api = await useStoryblokApi();
+  const isDev = process.env.NODE_ENV === 'development';
+  const version = isDev ? 'draft' : 'published';
 
   try {
-    const story = await loadStaticPage(slug, 'en');
-    return { story };
+    const res = await api.get(`cdn/stories/home`, {
+      version,
+      language: 'en'
+    });
+
+    return {
+      story: res.data.story
+    };
   } catch (error) {
     console.error('Storyblok fetch error:', error);
     return {

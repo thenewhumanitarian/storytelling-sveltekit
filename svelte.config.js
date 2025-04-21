@@ -13,9 +13,9 @@ const config = {
 
 	kit: {
 		adapter: vercel(),
-		prerender: {
-			entries: ['*'] // or let dynamic ones be discovered via your entries() fn
-		}
+		// prerender: {
+		// 	entries: ['*']
+		// }
 	}
 };
 

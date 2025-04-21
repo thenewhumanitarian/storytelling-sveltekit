@@ -1,7 +1,7 @@
 // 000 – Import the getContext function from Svelte
 import { getContext } from 'svelte';
 import { readable, derived } from 'svelte/store';
-import { storyblokEditable } from '@storyblok/svelte';
+import { storyblokEditable, useStoryblokApi } from '@storyblok/svelte';
 
 // @ts-nocheck
 // 001 - Import Access token and region from env variables
@@ -102,4 +102,16 @@ export function createIsRtlStore() {
 export function clientOnlyEditable(node: HTMLElement, blok: any) {
   if (typeof window === 'undefined') return;
   return storyblokEditable(node, blok);
+}
+
+export async function fetchAllStorySlugs(lang: string = 'en') {
+  const api = useStoryblokApi();
+  const res = await api.get('cdn/stories', {
+    starts_with: 'diaries/',
+    version: 'published', // or 'draft' if in dev
+    language: lang,
+    per_page: 100, // paginate if needed
+  });
+
+  return res.data.stories.map((story) => story.slug.replace('diaries/', ''));
 }
