@@ -2,7 +2,8 @@ import type { PageLoad, EntryGenerator } from './$types';
 import { loadStory } from '$lib/utils/storyblokInit';
 import { fetchAllStorySlugs } from '$lib/utils/storyblok';
 
-export const prerender = true;
+export const prerender = true; // Enable prerendering for this route
+export const ssr = true; // Enable SSR for this route
 
 export const entries: EntryGenerator = async () => {
   const slugs = await fetchAllStorySlugs('en');

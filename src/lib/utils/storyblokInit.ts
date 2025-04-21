@@ -51,12 +51,10 @@ export function initStoryblok() {
 }
 
 export async function loadStory(slug: string, lang: string = 'en') {
-  initStoryblok(); // ensure Storyblok is initialized once
+  initStoryblok(); // make sure it's initialized
   const api = await useStoryblokApi();
 
-  const isDev = process.env.NODE_ENV === 'development';
-  const version = isDev ? 'draft' : 'published';
-
+  const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
   const res = await api.get(`cdn/stories/diaries/${slug}`, {
     version,
     language: lang || 'en',
