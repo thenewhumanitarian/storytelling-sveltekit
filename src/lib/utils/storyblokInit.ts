@@ -50,12 +50,31 @@ export function initStoryblok() {
   });
 }
 
-export async function loadStory(slug: string) {
+export async function loadStory(slug: string, lang: string = 'en') {
   initStoryblok(); // ensure Storyblok is initialized once
   const api = await useStoryblokApi();
 
+  const isDev = process.env.NODE_ENV === 'development';
+  const version = isDev ? 'draft' : 'published';
+
   const res = await api.get(`cdn/stories/diaries/${slug}`, {
-    version: 'published'
+    version,
+    language: lang || 'en',
+  });
+
+  return res.data.story;
+}
+
+export async function loadStaticPage(slug: string, lang: string = 'en') {
+  initStoryblok(); // ensure Storyblok is initialized once
+  const api = await useStoryblokApi();
+
+  const isDev = process.env.NODE_ENV === 'development';
+  const version = isDev ? 'draft' : 'published';
+
+  const res = await api.get(`cdn/stories/${slug}`, {
+    version,
+    language: lang || 'en',
   });
 
   return res.data.story;

@@ -1,33 +1,22 @@
-import { useStoryblok } from "$lib/utils/storyblok";
-import { useStoryblokApi } from "@storyblok/svelte";
+import type { PageLoad } from './$types';
+import { loadStaticPage } from '$lib/utils/storyblokInit';
 
-export const prerender = false; // ❌ Disable prerendering for dynamic routes
-export const ssr = true; // ✅ Enable Server-Side Rendering
+export const prerender = true;
+export const ssr = true;
 
-/** @type {import('./$types').PageLoad} */
-export async function load({ params }) {
-  const slug = params.slug ?? "home";
-
-  await useStoryblok();
-
-  const storyblokApi = await useStoryblokApi();
+export const load: PageLoad = async () => {
+  const slug = 'home';
 
   try {
-    const response = await storyblokApi.get(`cdn/stories/${slug}`, {
-      version: "draft",
-    });
-
-    // console.log("Storyblok API response:", response.data);
-
-    return {
-      story: response.data.story || null,
-      error: false,
-    };
+    const story = await loadStaticPage(slug, 'en');
+    return { story };
   } catch (error) {
-    console.error("Storyblok API error:", error);
+    console.error('Storyblok fetch error:', error);
     return {
       story: null,
-      error,
+      error: {
+        message: 'Failed to load story.'
+      }
     };
   }
-}
+};

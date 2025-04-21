@@ -21,18 +21,32 @@
 		justify-content: center;
 		background: url('/assets/ldd/patterns/scrapbook-paper--white.png') no-repeat top center;
 		background-size: cover;
-		transform: scale(1) translateY(0) rotate(-1deg);
+		transform: scale(1) translateY(0) rotate(1deg);
 		transition: transform 0.5s ease-in-out;
 	}
 
+	:global(.arabic .scrap-book-paper) {
+		transform: scale(1) translateY(0) rotate(-1deg);
+	}
+
 	.scrap-book-paper.has-mouseover:hover {
-		transform: scale(1.1) translateY(-8%) rotate(0deg);
+		transform: scale(1.1) translateX(-2vw) translateY(-5vh) rotate(-2deg);
+		z-index: 999;
+	}
+
+	:global(.arabic .scrap-book-paper.has-mouseover:hover) {
+		transform: scale(1.1) translateX(2vw) translateY(-4vh) rotate(2deg);
 		z-index: 999;
 	}
 
 	@media screen and (max-width: 1250px) {
 		.scrap-book-paper.has-mouseover:hover {
-			transform: scale(1.15) translate(-5%, -11%) rotate(2deg);
+			transform: scale(1.15) translateX(-2.5vw) translateY(-2.5vh) rotate(-2deg);
+			z-index: 999;
+		}
+
+		:global(.arabic .scrap-book-paper.has-mouseover:hover) {
+			transform: scale(1.1) translateX(2.5vw) translateY(-2.5vh) rotate(2deg);
 			z-index: 999;
 		}
 	}
@@ -45,36 +59,6 @@
 	@media screen and (max-width: 640px) {
 		.scrap-book-paper {
 			max-width: var(--max-width-mobile);
-		}
-	}
-
-	@keyframes zoomInEffect {
-		0% {
-			transform: scale(1);
-		}
-		100% {
-			transform: scale(1.25) translateY(-10px) rotate(0deg);
-		}
-	}
-
-	@keyframes zoomInEffect2 {
-		0% {
-			transform: scale(1);
-		}
-		100% {
-			transform: scale(1.15) translateY(-10px) rotate(0deg);
-		}
-	}
-
-	@keyframes floatEffect {
-		0% {
-			transform: translateY(0px) rotate(4deg);
-		}
-		50% {
-			transform: translateY(15px);
-		}
-		100% {
-			transform: translateY(0px) rotate(3deg);
 		}
 	}
 </style>

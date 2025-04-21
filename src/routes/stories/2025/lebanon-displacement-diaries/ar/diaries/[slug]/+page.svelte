@@ -1,56 +1,48 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useStoryblok } from '$lib/utils/storyblok';
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
-	import type { PageData } from './$types';
-
-	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	import { reinitStoryblok } from '$lib/utils/storyblok';
 	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
-	const { data }: { data: PageData } = $props();
-
-	// Use `let` since these will be updated
+	let { data } = $props();
 	let story = $state(data.story);
-	let loaded = $state(false);
 
-	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
-	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR === 'true';
-
-	// onMount: Initialize Storyblok (client-side) and mark as loaded.
 	onMount(async () => {
-		await useStoryblok();
-		loaded = true;
-	});
+		if (
+			// Check if we are in the Storyblok editor or preview mode
+			typeof window !== 'undefined' &&
+			story?.id &&
+			(document.body.classList.contains('is-storyblok-editor') ||
+				window.location.search.includes('_storyblok'))
+		) {
+			console.log('Storyblok editor mode detected');
+			// Re-initialize Storyblok with the current story ID
+			await reinitStoryblok();
 
-	// Reactive effect: Initialize the Storyblok Bridge when the story is available and the preview mode is enabled.
-	$effect(() => {
-		if (ENABLE_VISUAL_EDITOR && story && story.id) {
-			useStoryblokBridge(
-				story.id,
-				(newStory) => {
-					story.content = newStory.content;
-				},
-				{
-					// Optionally adjust or remove preventClicks if you want elements to be clickable
-					preventClicks: true,
-					resolveLinks: 'url',
-					language: 'ar'
-				}
-			);
+			// Re-initialize the Storyblok bridge
+			useStoryblokBridge(story.id, (newStory) => {
+				story = {
+					...story,
+					content: { ...newStory.content },
+					timestamp: new Date().getTime()
+				};
+			});
+
+			// Wait for the next animation frame to ensure the Storyblok bridge is fully initialized
+			await new Promise((r) => requestAnimationFrame(r));
+			story = { ...story };
 		}
 	});
 </script>
 
-<SEO pageTitle={story.content.pageTitle} />
+<SEO pageTitle={story?.content?.pageTitle} />
 
 {#if data.error}
-	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
-{/if}
-
-{#if !loaded}
-	<div class="hidden text-center">Loading...</div>
-{:else if story && story.content}
-	<StoryblokComponent blok={story.content} />
+	<div class="bg-red-600 p-4 text-center text-white">⚠️ {data.error.message}</div>
+{:else if story}
+	{#key story.timestamp}
+		<StoryblokComponent blok={story.content} />
+	{/key}
 {:else}
-	<div class="hidden">Getting Story ready...</div>
+	<div class="text-center">Loading content...</div>
 {/if}

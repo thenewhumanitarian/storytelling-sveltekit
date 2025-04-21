@@ -9,7 +9,7 @@ export const load: PageLoad = async ({ params }) => {
   const slug = params.slug ?? 'home';
 
   try {
-    const story = await loadStory(slug);
+    const story = await loadStory(slug, 'en');
     return { story };
   } catch (error) {
     console.error('Storyblok fetch error:', error);
