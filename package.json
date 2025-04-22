@@ -65,6 +65,7 @@
     "d3-scale": "^4.0.2",
     "fs": "^0.0.1-security",
     "gsap": "^3.12.7",
+    "interactjs": "^1.10.27",
     "mapbox-gl": "^3.7.0",
     "moment": "^2.30.1",
     "momentjs": "^2.0.0",
