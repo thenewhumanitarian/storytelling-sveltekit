@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { fly, blur } from 'svelte/transition';
 	import { inview } from 'svelte-inview';
 	import type { ObserverEventDetails, Options } from 'svelte-inview';
-
 	import { createIsRtlStore } from '$lib/utils/storyblok';
 	const isRtl = createIsRtlStore();
 
@@ -22,7 +20,7 @@
 		delay = 0,
 		duration = 500,
 		xOffset = 0,
-		yOffset = 0,
+		yOffset = 20,
 		blurAmount = 0,
 		inViewOffset = '0px',
 		children,
@@ -40,11 +38,6 @@
 		isInView = detail.inView;
 	};
 
-	const sharedOptions = {
-		duration: duration,
-		delay: delay
-	};
-
 	const flipX = $derived(isRtl ? -xOffset : xOffset);
 </script>
 
@@ -53,29 +46,13 @@
 	oninview_change={handleChange}
 	class={`${isAbsolute ? 'absolute left-0 top-0' : 'relative'} block h-full w-full`}
 >
-	{#if isInView}
-		<div
-			in:blur={{
-				...sharedOptions,
-				amount: blurAmount,
-				opacity: 0
-			}}
-			class="fade-in--wrapper_blur h-full w-full"
-		>
-			<div
-				in:fly={{
-					...sharedOptions,
-					x: flipX,
-					y: yOffset
-				}}
-				class={`fade-in--wrapper_fly h-full w-full shrink-0 ${containerClasses || 'flex flex-col items-center justify-center'}`}
-			>
-				{@render children?.()}
-			</div>
-		</div>
-	{:else}
-		<div style="opacity: 0;">
-			{@render children?.()}
-		</div>
-	{/if}
+	<div
+		class={`transform transition-opacity duration-[${duration}ms] delay-[${delay}ms] ease-out
+			${isInView ? 'translate-x-0 translate-y-0 opacity-100 blur-0' : 'translate-x-[${flipX}px] translate-y-[${yOffset}px] opacity-0 blur-sm'}
+			fade-in--wrapper h-full w-full ${containerClasses || 'flex flex-col items-center justify-center'}
+		`}
+		style="will-change: opacity, transform, filter;"
+	>
+		{@render children?.()}
+	</div>
 </div>

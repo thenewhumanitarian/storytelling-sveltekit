@@ -22,6 +22,7 @@ import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte'
 import MediaElement from '$lib/components/projects/LebanonDisplaced/MediaElement.svelte';
 import SoundCite from '$lib/components/projects/LebanonDisplaced/SoundCite.svelte';
 import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
+import HorizontalSpacer from '$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte';
 
 // Import Access token and region from env variables
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
@@ -55,7 +56,8 @@ export function initStoryblok() {
       richText: RichText,
       mediaElement: MediaElement,
       soundCite: SoundCite,
-      inlineImage: InlineImage
+      inlineImage: InlineImage,
+      horizontalSpacer: HorizontalSpacer,
     }
   });
 }
@@ -111,6 +113,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
         soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
+        horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
       },
       apiOptions: {
         https: true,
@@ -138,6 +141,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
         soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
+        horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
       },
       apiOptions: {
         https: true,

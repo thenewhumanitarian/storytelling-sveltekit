@@ -28,7 +28,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel hover-transit group hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel group hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -56,7 +56,7 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`read-more-tag absolute ${blok.textAlign === 'left' ? '-right-4' : '-left-4'} bottom-2 z-50 flex origin-left items-center justify-center`}
+				class={`read-more-tag absolute ${blok.textAlign === 'left' ? '-right-4' : '-left-4'} -bottom-2 z-50 flex origin-left items-center justify-center`}
 			>
 				<h3 class="m-0 p-0 text-lebgreen group-hover:underline">Read</h3>
 			</div>
@@ -167,6 +167,7 @@
 		background-repeat: no-repeat;
 		aspect-ratio: 241/107;
 		height: 2.8rem;
+		bottom: -1rem;
 	}
 
 	.story-grid--panel.has-link:hover .read-more-tag {
@@ -264,9 +265,9 @@
 	/* Base hover effect for panels with links */
 	.story-grid--panel.has-link:hover {
 		transform: translateY(-2px);
-		background: rgba(0, 0, 0, 0.05);
 		cursor: pointer;
 		will-change: transform, background;
+		/* background: rgba(0, 0, 0, 0.05); */
 	}
 
 	:global(.story-grid--panel.has-link:hover .inline-image-wrapper figure) {

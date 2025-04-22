@@ -154,8 +154,8 @@
 
 	.align-left {
 		float: left;
-		width: 60%;
-		margin-left: -35%;
+		width: 50%;
+		margin-left: -25%;
 		margin-right: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-top: 1rem;
@@ -176,8 +176,8 @@
 
 	.align-right {
 		float: right;
-		width: 60%;
-		margin-right: -35%;
+		width: 50%;
+		margin-right: -25%;
 		margin-left: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
 	}

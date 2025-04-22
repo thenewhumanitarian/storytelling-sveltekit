@@ -170,6 +170,13 @@
 		margin-bottom: 1rem;
 	}
 
+	:global(
+		.storyblok--richtext
+			*:not(figure, .inline-image-wrapper, .pull-quote-container, blockquote p):last-child
+	) {
+		margin-bottom: 0;
+	}
+
 	:global(.font-sans *) {
 		font-family: 'Roboto', sans-serif;
 	}

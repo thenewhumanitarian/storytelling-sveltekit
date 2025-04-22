@@ -144,18 +144,17 @@
 		position: relative;
 		opacity: 0.8;
 		will-change: opacity, width, filter;
-		transition: all 0.8s;
+		transition: all 1s;
+		/* filter: blur(1px); */
 		transition-behavior: cubic-bezier(0.4, 0, 0.2, 1);
-		/* filter: blur(5px); */
 	}
 
-	.pull-quote-image.after {
+	/* .pull-quote-image.after {
 		transition-delay: 0.2s;
-	}
+	} */
 
 	.pull-quote-container:hover .pull-quote-image {
-		opacity: 0.8;
-		width: 1.4rem;
+		opacity: 1;
 		filter: none;
 	}
 
@@ -169,24 +168,5 @@
 		bottom: 0;
 		left: 50%;
 		transform: translate(-50%, 50%);
-	}
-
-	/* .pull-quote-container:hover img {
-		animation: floatEffect 3s ease-in-out infinite;
-	} */
-
-	@keyframes floatEffect {
-		0% {
-			transform: translateY(-0.5px);
-			scale: 1;
-		}
-		50% {
-			transform: translateY(0.5px);
-			scale: 1.015;
-		}
-		100% {
-			scale: 1;
-			transform: translateY(-0.5px);
-		}
 	}
 </style>
