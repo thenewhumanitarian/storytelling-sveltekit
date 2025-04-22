@@ -37,7 +37,7 @@
 	});
 </script>
 
-<SEO pageTitle={story.content.pageTitle} />
+<SEO pageTitle={story.content.pageTitle} pageDescription={story.content.pageDescription} />
 
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
