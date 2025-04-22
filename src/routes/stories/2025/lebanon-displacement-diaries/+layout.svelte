@@ -51,6 +51,8 @@
 		padding-top: 2rem;
 		margin-top: 4rem;
 		background-color: #afb87e;
+		background-image: url('/assets/ldd/patterns/example-background--repetitive.png');
+		background-repeat: repeat;
 	}
 
 	:global(main > div.storyblok__outline > div:last-child) {

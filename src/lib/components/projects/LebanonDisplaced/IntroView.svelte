@@ -52,7 +52,6 @@
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
-		background-color: #ffe0b5;
 	}
 
 	@media screen and (max-width: 825px) {
@@ -89,7 +88,11 @@
 	}
 
 	.intro-title {
+		overflow: visible;
 		/* Add styles as needed */
+		/* background-image: url('/assets/ldd/patterns/paper-tag--title.png'); */
+		/* background-size: contain;
+		background-repeat: no-repeat; */
 	}
 
 	:global(.arabic .intro-title) {

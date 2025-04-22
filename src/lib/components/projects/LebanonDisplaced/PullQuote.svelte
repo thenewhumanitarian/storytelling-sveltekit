@@ -5,31 +5,33 @@
 </script>
 
 <div
-	class="pull-quote-container group border-b-[0.5px] border-t-[0.5px] border-lebgreen font-serif font-bold text-lebblack"
+	class="pull-quote-container group font-serif font-bold text-lebblack"
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
-		<div class="pull-quote-image--wrapper before bg-grass">
+		<div class="pull-quote-image--wrapper before bg-grass z-50">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image before"
-					src={`${blok.image.filename}/m/40x0`}
+					src={`${blok.image.filename}/m/60x0`}
 					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after bg-grass">
+		<div class="pull-quote-image--wrapper after bg-grass z-50">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image after"
-					src={`${blok.image.filename}/m/40x0`}
+					src={`${blok.image.filename}/m/60x0`}
 					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>
 	{/if}
-	<blockquote class={blok.name ? 'has-name' : ''}>
-		{blok.text}
+	<blockquote class={`border-[0.5px] border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
+		<p>
+			{blok.text}
+		</p>
 	</blockquote>
 	{#if blok.name}
 		<p class="pull-quote--name absolute bottom-12 w-full">{blok.name}</p>
@@ -51,7 +53,13 @@
 		margin: 0;
 		z-index: 1;
 		font-weight: 300;
-		margin: 1rem -15%;
+		margin: 0 -15%;
+	}
+
+	blockquote p {
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
+		font-size: 1.6rem;
 	}
 
 	.pull-quote--name {
@@ -91,14 +99,14 @@
 
 	blockquote:before {
 		content: '“';
-		left: -1rem;
-		top: -1.5rem;
+		left: 0.25rem;
+		top: -1rem;
 	}
 
 	blockquote:after {
 		content: '”';
-		right: 0;
-		bottom: 2rem;
+		right: 0.25rem;
+		bottom: 2.4rem;
 	}
 
 	@media screen and (max-width: 850px) {
@@ -123,22 +131,22 @@
 		position: absolute;
 		width: auto;
 		height: auto;
-		border: 0.5px solid #282828;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0.25rem;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* border: 0.5px solid #282828; */
 	}
 
 	.pull-quote-image {
-		width: 1.4rem;
+		width: 2rem;
 		position: relative;
-		/* filter: blur(5px); */
-		opacity: 0.6;
+		opacity: 0.8;
 		will-change: opacity, width, filter;
 		transition: all 0.8s;
 		transition-behavior: cubic-bezier(0.4, 0, 0.2, 1);
+		/* filter: blur(5px); */
 	}
 
 	.pull-quote-image.after {
