@@ -32,7 +32,7 @@
 <SEO
 	pageTitle={story?.content?.pageTitle}
 	pageDescription={story?.content?.pageDescription}
-	pageImage={`${story?.content?.socialImage?.filename}/m/1200x630/filters:format(webp)/`}
+	pageImage={`${story?.content?.socialImage?.filename}/m/1200x630/filters:format(webp)`}
 />
 
 {#if data?.error}
