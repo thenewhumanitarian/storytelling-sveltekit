@@ -29,7 +29,11 @@
 	});
 </script>
 
-<SEO pageTitle={story?.content?.pageTitle} />
+<SEO
+	pageTitle={story?.content?.pageTitle}
+	pageDescription={story?.content?.pageDescription}
+	pageImage={`${story?.socialImage?.filename}`}
+/>
 
 {#if data?.error}
 	<div class="bg-red-600 p-4 text-center text-white">⚠️ {data.error.message}</div>

@@ -30,6 +30,8 @@
 <SEO
 	pageTitle={story?.content?.pageTitle}
 	pageDescription={story?.content?.pageDescription}
+	pageImage={`${story?.socialImage?.filename}`}
+
 />
 
 {#if data?.error}
