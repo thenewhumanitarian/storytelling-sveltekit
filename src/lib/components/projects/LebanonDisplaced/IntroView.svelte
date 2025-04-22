@@ -5,7 +5,8 @@
 
 	const { blok, className } = $props();
 
-	const bgImage = `${blok.backgroundImage.filename}/m/800x0/filters:format(webp):quality(50)`;
+	const bgImage = `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(50)`;
+	const bgImageMobile = `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(50)`;
 </script>
 
 <svelte:head>
@@ -15,7 +16,7 @@
 <div
 	use:storyblokEditable={blok}
 	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
-	style={`--intro-bg: url("${bgImage}"); background-color: ${blok.backgroundColor};`}
+	style={`--intro-bg-desktop: url("${bgImage}"); --intro-bg-mobile: url("${bgImageMobile}"); background-color: ${blok.backgroundColor};`}
 >
 	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
@@ -48,16 +49,17 @@
 		margin-top: -6rem;
 		border-bottom: 6px solid inherit;
 		z-index: 0;
-		background-image: var(--intro-bg);
+		background-image: var(--intro-bg-desktop);
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
 	}
 
-	@media screen and (max-width: 825px) {
+	@media screen and (max-width: 800px) {
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
+			background-image: var(--intro-bg-mobile);
 		}
 	}
 

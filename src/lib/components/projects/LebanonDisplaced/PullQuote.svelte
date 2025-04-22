@@ -76,7 +76,7 @@
 		blockquote {
 			font-size: 1.5rem;
 			line-height: 1.15;
-			margin: 1rem 0;
+			margin: 1rem -2rem;
 		}
 	}
 
