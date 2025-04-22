@@ -5,18 +5,31 @@
 
 	const { blok, className } = $props();
 
-	const bgImage = `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(50)`;
-	const bgImageMobile = `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(50)`;
+	const hasDesktopImage = !!blok.backgroundImage?.filename;
+	const hasMobileImage = !!blok.backgroundImageMobile?.filename;
+
+	const bgImage = hasDesktopImage
+		? `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(50)`
+		: '';
+
+	const bgImageMobile = hasMobileImage
+		? `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(50)`
+		: bgImage; // fallback to desktop if mobile is missing
 </script>
 
 <svelte:head>
 	<link rel="preload" as="image" href={bgImage} />
+	<link rel="preload" as="image" href={bgImageMobile} media="(max-width: 825px)" />
 </svelte:head>
 
 <div
 	use:storyblokEditable={blok}
 	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
-	style={`--intro-bg-desktop: url("${bgImage}"); --intro-bg-mobile: url("${bgImageMobile}"); background-color: ${blok.backgroundColor};`}
+	style={`
+	--intro-bg-desktop: ${bgImage ? `url("${bgImage}")` : 'none'};
+	--intro-bg-mobile: ${bgImageMobile ? `url("${bgImageMobile}")` : 'none'};
+	background-color: ${blok.backgroundColor};
+`}
 >
 	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
