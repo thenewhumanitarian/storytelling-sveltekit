@@ -154,8 +154,8 @@
 
 	.align-left {
 		float: left;
-		width: 50%;
-		margin-left: -25%;
+		width: 60%;
+		margin-left: -35%;
 		margin-right: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-top: 1rem;
@@ -176,8 +176,8 @@
 
 	.align-right {
 		float: right;
-		width: 50%;
-		margin-right: -25%;
+		width: 60%;
+		margin-right: -35%;
 		margin-left: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
 	}
@@ -192,17 +192,33 @@
 		width: 100%;
 	}
 
+	@media screen and (max-width: 1200px) {
+		.align-left {
+			margin-left: -15%;
+		}
+
+		.align-right {
+			margin-right: -15%;
+		}
+
+		.align-left,
+		.align-right {
+			width: 50%;
+		}
+	}
+
 	@media screen and (max-width: 925px) {
 		.inline-image-wrapper {
 			margin: 2.5rem auto;
 		}
+
 		.align-left,
 		.align-right,
 		.align-center {
 			float: none;
 			margin: 3rem auto;
 			width: 100%;
-			max-width: 360px;
+			max-width: 400px;
 		}
 
 		.align-left figcaption,
