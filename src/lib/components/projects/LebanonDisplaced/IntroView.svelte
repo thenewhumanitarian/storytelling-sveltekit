@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 	//@ts-ignore
-	import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
+	// import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
 
 	const { blok, className } = $props();
 
@@ -17,7 +17,7 @@
 	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
 	style={`--intro-bg: url("${bgImage}"); background-color: ${blok.backgroundColor};`}
 >
-	<IntroAnimation {blok} />
+	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
 		<div class="intro-title">
 			{#if blok.title.length > 0}
