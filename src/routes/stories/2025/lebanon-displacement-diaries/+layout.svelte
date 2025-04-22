@@ -51,7 +51,7 @@
 		padding-top: 2rem;
 		margin-top: 4rem;
 		background-color: #afb87e;
-		background-image: url('/assets/ldd/patterns/example-background--repetitive--sofia.jpg');
+		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
 		background-repeat: repeat;
 	}
 
