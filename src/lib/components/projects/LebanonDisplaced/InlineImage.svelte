@@ -194,7 +194,7 @@
 
 	@media screen and (max-width: 925px) {
 		.inline-image-wrapper {
-			margin: 0 auto 1rem auto;
+			margin: 2.5rem auto;
 		}
 		.align-left,
 		.align-right,
@@ -202,7 +202,7 @@
 			float: none;
 			margin: 3rem auto;
 			width: 100%;
-			max-width: 240px;
+			max-width: 360px;
 		}
 
 		.align-left figcaption,

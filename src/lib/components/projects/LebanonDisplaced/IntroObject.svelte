@@ -23,7 +23,7 @@
 			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
 			max-height: ${blok.maxHeight ? `${blok.maxHeight}svh` : 'unset'};
     `}
-	class={`animation-object z-1 hover:z-50 hover:cursor-pointer ${singleObject ? 'single' : ''}`}
+	class={`animation-object z-1 hover:z-50 hover:cursor-move ${singleObject ? 'single' : ''}`}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div class="relative h-full w-full">
