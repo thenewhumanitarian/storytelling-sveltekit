@@ -6,22 +6,22 @@
 
 	let scrollWrapper: HTMLDivElement;
 
-	onMount(() => {
-		const el = scrollWrapper;
-		if (!el) return;
+	// onMount(() => {
+	// 	const el = scrollWrapper;
+	// 	if (!el) return;
 
-		const handleWheel = (e: WheelEvent) => {
-			if (e.deltaY === 0) return;
-			e.preventDefault();
-			el.scrollLeft += lang === 'ar' ? -e.deltaY : e.deltaY;
-		};
+	// 	const handleWheel = (e: WheelEvent) => {
+	// 		if (e.deltaY === 0) return;
+	// 		e.preventDefault();
+	// 		el.scrollLeft += lang === 'ar' ? -e.deltaY : e.deltaY;
+	// 	};
 
-		el.addEventListener('wheel', handleWheel, { passive: false });
+	// 	el.addEventListener('wheel', handleWheel, { passive: false });
 
-		return () => {
-			el.removeEventListener('wheel', handleWheel);
-		};
-	});
+	// 	return () => {
+	// 		el.removeEventListener('wheel', handleWheel);
+	// 	};
+	// });
 </script>
 
 <div
@@ -56,7 +56,7 @@
 
 <style>
 	.horizontal-scroll-wrapper::-webkit-scrollbar {
-		height: 10px;
+		height: 12px;
 		background: #ffe0b5;
 	}
 	.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
