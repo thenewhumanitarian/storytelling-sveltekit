@@ -126,6 +126,10 @@
 		line-height: 1.25;
 	}
 
+	:global(.storyblok--richtext a:hover) {
+		text-decoration: underline;
+	}
+
 	/* Responsive font sizes */
 	@media screen and (max-width: 640px) {
 		:global(.storyblok--richtext h1) {
@@ -182,10 +186,6 @@
 	}
 	:global(.font-serif *) {
 		font-family: 'GT Sectra Bold', serif;
-	}
-	:global(.font-pacifico *) {
-		font-family: 'GT Sectra Bold', serif;
-		/* font-family: 'ff-amman-serif-pro', serif; */
 	}
 
 	/* Arabic text styles */

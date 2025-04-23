@@ -249,7 +249,8 @@
 
 	.story-grid--panel.rotate {
 		will-change: transform;
-		transition: transform 1s;
+		transition: transform 0.8s ease-in-out;
+		transform-origin: center center;
 	}
 
 	.story-grid--panel.rotate:hover {

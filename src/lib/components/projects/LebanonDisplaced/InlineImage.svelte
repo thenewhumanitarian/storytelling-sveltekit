@@ -123,7 +123,7 @@
 		display: flex;
 		flex-direction: column;
 		will-change: transform;
-		transition: transform 1s;
+		transition: transform 0.8s;
 		border: 0.5px solid transparent;
 	}
 
