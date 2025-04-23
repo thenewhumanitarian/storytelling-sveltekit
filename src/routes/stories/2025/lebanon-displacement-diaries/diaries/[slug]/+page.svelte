@@ -1,18 +1,32 @@
 <script lang="ts">
-	import { StoryblokComponent } from '@storyblok/svelte';
-	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 	import { onMount } from 'svelte';
-	import { useStoryblokBridge } from '@storyblok/svelte';
+	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
+	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 	import { reinitStoryblok } from '$lib/utils/storyblok';
 	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 
-	export let data;
-	let { story, relatedDiaries } = data;
+	const { data } = $props();
+
+	// Reactive vars to update during client-side nav
+	let story = data.story;
+	let relatedDiaries = data.relatedDiaries;
 
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
+	let relatedDiariesBlocks = story?.content?.relatedDiaries || [];
 
-	// Enable Storyblok bridge ONLY in editor mode (client-side)
+	// React to route changes (slug change triggers SSR new data)
+	$effect(() => {
+		if (data.story?.id !== story?.id) {
+			story = data.story;
+			relatedDiaries = data.relatedDiaries;
+			contentBlocks = story?.content?.body || [];
+			footerBlocks = story?.content?.footer || [];
+			relatedDiariesBlocks = story?.content?.relatedDiaries || [];
+		}
+	});
+
+	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
 		if (
 			typeof window !== 'undefined' &&
@@ -45,19 +59,16 @@
 {#if data?.error}
 	<div class="bg-red-600 p-4 text-center text-white">⚠️ {data.error.message}</div>
 {:else if story}
-	<!-- Render main story body content -->
 	{#each contentBlocks as blok}
 		<StoryblokComponent {blok} />
 	{/each}
 
-	<!-- Render related diaries if available -->
 	{#if relatedDiaries?.length > 0}
 		<section class="related-diaries-wrapper my-16">
-			<HorizontalScroll items={relatedDiaries} lang />
+			<HorizontalScroll items={relatedDiaries} lang="en" />
 		</section>
 	{/if}
 
-	<!-- Render footer content explicitly here -->
 	{#if footerBlocks.length > 0}
 		<footer class="footer-content mt-16">
 			{#each footerBlocks as blok}

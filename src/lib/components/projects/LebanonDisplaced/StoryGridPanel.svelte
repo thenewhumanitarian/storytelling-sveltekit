@@ -56,9 +56,9 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`read-more-tag absolute ${blok.textAlign === 'left' ? '-right-4' : '-left-4'} -bottom-2 z-50 flex origin-left items-center justify-center`}
+				class={`read-more-tag bg-lebgreen absolute ${blok.textAlign === 'left' ? 'right-0' : 'left-0'} px-2 py-1 z-50 flex origin-left items-center justify-center`}
 			>
-				<h3 class="m-0 p-0 text-lebgreen group-hover:underline">Read</h3>
+				<h3 class="m-0 p-0 text-white group-hover:underline">Read</h3>
 			</div>
 		</a>
 	{:else}
@@ -160,18 +160,12 @@
 
 	/* Read more tag */
 	.read-more-tag {
-		transform: rotate(0deg);
-		transition: transform 0.5s ease-in-out;
-		background-image: url('/assets/ldd/patterns/tag--read-more.png');
 		background-size: 100%;
 		background-repeat: no-repeat;
-		aspect-ratio: 241/107;
-		height: 2.8rem;
-		bottom: -1rem;
-	}
-
-	.story-grid--panel.has-link:hover .read-more-tag {
-		transform: rotate(4deg);
+		bottom: 0;
+		right: 0;
+		/* height: 2.8rem; */
+		/* aspect-ratio: 241/107; */
 	}
 
 	/* Scotch tape effect */
@@ -231,10 +225,10 @@
 		transition: transform 1s ease-in-out;
 	}
 
-	img.float-in-place {
+	/* img.float-in-place {
 		animation: floatEffect 3s ease-in-out infinite;
 		animation-delay: random(1s, 3s);
-	}
+	} */
 
 	/* Fly-out Effects */
 	.story-grid--panel.has-image:hover .panel-object.right {
@@ -276,7 +270,7 @@
 		/* transition-delay: 0.1s; */
 	}
 
-	@keyframes floatEffect {
+	/* @keyframes floatEffect {
 		0% {
 			transform: translateY(0px);
 			scale: 1;
@@ -289,5 +283,5 @@
 			scale: 1;
 			transform: translateY(0px);
 		}
-	}
+	} */
 </style>
