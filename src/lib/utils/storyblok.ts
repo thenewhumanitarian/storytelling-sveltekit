@@ -23,6 +23,7 @@ import MediaElement from '$lib/components/projects/LebanonDisplaced/MediaElement
 import SoundCite from '$lib/components/projects/LebanonDisplaced/SoundCite.svelte';
 import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 import HorizontalSpacer from '$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte';
+import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 
 // Import Access token and region from env variables
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
@@ -58,6 +59,7 @@ export function initStoryblok() {
       soundCite: SoundCite,
       inlineImage: InlineImage,
       horizontalSpacer: HorizontalSpacer,
+      horizontalScroll: HorizontalScroll
     }
   });
 }
@@ -73,6 +75,20 @@ export async function loadStory(slug: string, lang: string = 'en') {
   });
 
   return res.data.story;
+}
+
+// Function that loads all stories except the one with the given slug
+export async function loadAllStoriesExcept(slug: string, lang: string = 'en') {
+  initStoryblok(); // ensure Storyblok is initialized once
+  const api = await useStoryblokApi();
+
+  const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
+  const res = await api.get('cdn/stories', {
+    version,
+    starts_with: 'diaries/',
+    language: lang || 'en',
+  });
+  return res.data.stories.filter((story: any) => story.slug !== `${slug}`);
 }
 
 export async function loadStaticPage(slug: string, lang: string = 'en') {
@@ -114,6 +130,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
+        horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
       },
       apiOptions: {
         https: true,
@@ -142,6 +159,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
+        horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
       },
       apiOptions: {
         https: true,

@@ -85,7 +85,7 @@
 		height: 100%;
 		width: 100%;
 		max-width: 55%;
-		padding-top: 6rem;
+		padding-top: 2rem;
 	}
 
 	@media screen and (max-width: 800px) {
@@ -98,7 +98,7 @@
 
 	@media screen and (max-width: 475px) {
 		.intro-text {
-			padding-top: 5rem;
+			padding-top: 5.25rem;
 		}
 	}
 

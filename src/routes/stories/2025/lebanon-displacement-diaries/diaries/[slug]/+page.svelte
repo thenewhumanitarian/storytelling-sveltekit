@@ -4,9 +4,13 @@
 	import { onMount } from 'svelte';
 	import { useStoryblokBridge } from '@storyblok/svelte';
 	import { reinitStoryblok } from '$lib/utils/storyblok';
+	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 
 	export let data;
-	let { story } = data;
+	let { story, relatedDiaries } = data;
+
+	let contentBlocks = story?.content?.body || [];
+	let footerBlocks = story?.content?.footer || [];
 
 	// Enable Storyblok bridge ONLY in editor mode (client-side)
 	onMount(async () => {
@@ -16,7 +20,6 @@
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'))
 		) {
-			console.log('Storyblok editor mode detected');
 			await reinitStoryblok();
 			useStoryblokBridge(story.id, (newStory) => {
 				story = {
@@ -24,6 +27,8 @@
 					content: { ...newStory.content },
 					timestamp: new Date().getTime()
 				};
+				contentBlocks = newStory.content.body;
+				footerBlocks = newStory.content.footer;
 			});
 		}
 	});
@@ -40,7 +45,26 @@
 {#if data?.error}
 	<div class="bg-red-600 p-4 text-center text-white">⚠️ {data.error.message}</div>
 {:else if story}
-	<StoryblokComponent blok={story.content} />
+	<!-- Render main story body content -->
+	{#each contentBlocks as blok}
+		<StoryblokComponent {blok} />
+	{/each}
+
+	<!-- Render related diaries if available -->
+	{#if relatedDiaries?.length > 0}
+		<section class="related-diaries-wrapper my-16">
+			<HorizontalScroll items={relatedDiaries} />
+		</section>
+	{/if}
+
+	<!-- Render footer content explicitly here -->
+	{#if footerBlocks.length > 0}
+		<footer class="footer-content mt-16">
+			{#each footerBlocks as blok}
+				<StoryblokComponent {blok} />
+			{/each}
+		</footer>
+	{/if}
 {:else}
 	<div class="fixed left-0 top-0 flex h-full w-full items-center justify-center text-center">
 		Loading content...
