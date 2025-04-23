@@ -202,8 +202,10 @@
 		position: fixed;
 		inset: 0;
 		background: #ffe0b5;
-		background-image: url('/assets/ldd/patterns/beige-paper-texture.png');
-		background-size: cover;
+		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
+		background-repeat: repeat;
+		/* background-image: url('/assets/ldd/patterns/beige-paper-texture.png'); */
+		/* background-size: cover; */
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -282,7 +284,7 @@
 
 	.swiper-button-prev,
 	.swiper-button-next {
-		color: black;
+		color: white;
 		z-index: 30 !important;
 		will-change: color;
 		transition: color 0.5s;
@@ -298,8 +300,8 @@
 		right: 1rem;
 		background: none;
 		border: none;
-		color: black;
-		font-size: 3rem;
+		color: white;
+		font-size: 4rem;
 		z-index: 1001;
 		cursor: pointer;
 		will-change: color;

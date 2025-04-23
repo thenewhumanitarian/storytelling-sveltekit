@@ -19,7 +19,7 @@
 
 <svelte:head>
 	{#if pageTitle}
-		<title>TNH | {pageTitle}</title>
+		<title>Lebanon Displacement Diaries | {pageTitle}</title>
 	{/if}
 
 	{#if pageDescription}

@@ -37,7 +37,13 @@
 	});
 </script>
 
-<SEO pageTitle={story.content.pageTitle} pageDescription={story.content.pageDescription} />
+<SEO
+	pageTitle={story?.content?.pageTitle}
+	pageDescription={story?.content?.pageDescription}
+	pageImage={story?.content?.socialImage?.filename
+		? `${story.content.socialImage.filename}/m/1000x552/filters:quality(50)`
+		: story.content.socialImage.filename}
+/>
 
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>

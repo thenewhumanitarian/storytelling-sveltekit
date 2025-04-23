@@ -54,6 +54,7 @@
 		z-index: 1;
 		font-weight: 300;
 		margin: 0 -15%;
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
 	blockquote p {
