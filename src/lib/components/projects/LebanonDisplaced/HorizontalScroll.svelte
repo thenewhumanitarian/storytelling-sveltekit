@@ -96,23 +96,21 @@
 				href={`/stories/2025/lebanon-displacement-diaries/diaries/${item.slug}`}
 				class="related-diaries--container pointer-events-none relative flex h-full w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-4 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
 			>
-				{#if item.content?.socialImage?.filename}
+				{#if item.content?.previewImage?.filename}
 					<img
-						src={`${item.content.socialImage.filename}/m/300x200`}
+						src={`${item.content.previewImage.filename}/m/300x200`}
 						alt={item.content.pageTitle}
 						class="mb-4 h-[200px] w-full object-cover"
 					/>
 				{/if}
-				<h3
-					class="pointer-events-auto mb-1 text-xl font-bold hover:text-burgundy hover:underline"
-				>
+				<h3 class="pointer-events-auto mb-1 text-xl inline-block font-bold hover:text-burgundy hover:underline">
 					{item.content.pageTitle}
 				</h3>
 				<p class="line-clamp-5 text-sm text-gray-700">{item.content.pageDescription}</p>
 				<div
-					class={`read-more-tag pointer-events-auto absolute -right-2 top-2 z-50 flex origin-left items-center justify-center`}
+					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
 				>
-					<h3 class="m-0 inline p-0 text-lebgreen group-hover:underline">Read</h3>
+					<h3 class="m-0 inline p-0 text-white hover:underline">Read</h3>
 				</div>
 			</a>
 		{/each}
@@ -130,25 +128,18 @@
 		cursor: grab;
 	}
 
-	/* Read more tag */
-	.read-more-tag {
-		transform: rotate(0deg);
-		transition: transform 0.5s ease-in-out;
-		background-image: url('/assets/ldd/patterns/tag--read-more.png');
-		background-size: 100%;
-		background-repeat: no-repeat;
-		aspect-ratio: 241/107;
-		height: 2.8rem;
-		bottom: -1rem;
-	}
-
 	.read-more-tag {
 		transform: rotate(0deg);
 		transition: all 0.5s linear;
 	}
 
-	.related-diaries--container:hover .read-more-tag {
-		transform: rotate(3deg);
-		transform-origin: 50%;
+	.read-more-tag {
+		right: 0;
+		left: unset;
+	}
+
+	:global(.arabic .horizontal-scroll-content .read-more-tag) {
+		left: 0;
+		right: unset;
 	}
 </style>
