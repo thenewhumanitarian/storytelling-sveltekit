@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { createIsRtlStore } from '$lib/utils/storyblok';
+
 	const { items } = $props();
+	const isRtl = createIsRtlStore();
 
 	// Repeat the single item 10 times for demo purposes
 	const repeatedItems = Array.from({ length: 10 }, () => items[0]);
+
 </script>
 
 <div class="horizontal-scroll-wrapper my-12 h-auto w-full overflow-x-auto pb-8">
@@ -11,7 +15,7 @@
 		{#each repeatedItems as item, i (i)}
 			<a
 				href={`/stories/2025/lebanon-displacement-diaries/diaries/${item.slug}`}
-				class="flex h-full w-240px sm:w-[280px] shrink-0 flex-col justify-start border border-black bg-[#ffe0b5] p-4 shadow-xl"
+				class="w-240px flex h-full shrink-0 flex-col justify-start border border-black bg-[#ffe0b5] p-4 shadow-xl sm:w-[280px]"
 			>
 				{#if item.content?.socialImage?.filename}
 					<img
@@ -20,7 +24,7 @@
 						class="mb-4 h-[200px] w-full object-cover"
 					/>
 				{/if}
-				<h3 class="text-xl font-semibold mb-1">{item.content.pageTitle}</h3>
+				<h3 class="mb-1 text-xl font-semibold">{item.content.pageTitle}</h3>
 				<p class="line-clamp-5 text-sm text-gray-700">{item.content.pageDescription}</p>
 			</a>
 		{/each}

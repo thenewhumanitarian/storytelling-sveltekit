@@ -3,9 +3,13 @@
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
 	import { reinitStoryblok } from '$lib/utils/storyblok';
 	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
+	import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 
 	export let data;
-	let { story } = data;
+	let { story, relatedDiaries } = data;
+
+	let contentBlocks = story?.content?.body || [];
+	let footerBlocks = story?.content?.footer || [];
 
 	onMount(async () => {
 		if (
@@ -22,6 +26,8 @@
 					content: { ...newStory.content },
 					timestamp: new Date().getTime()
 				};
+				contentBlocks = newStory.content.body;
+				footerBlocks = newStory.content.footer;
 			});
 		}
 	});
@@ -38,7 +44,23 @@
 {#if data?.error}
 	<div class="bg-red-600 p-4 text-center text-white">⚠️ {data.error.message}</div>
 {:else if story}
-	<StoryblokComponent blok={story.content} />
+	{#each contentBlocks as blok}
+		<StoryblokComponent {blok} />
+	{/each}
+
+	{#if relatedDiaries?.length > 0}
+		<section class="related-diaries-wrapper my-16">
+			<HorizontalScroll items={relatedDiaries} lang="ar" />
+		</section>
+	{/if}
+
+	{#if footerBlocks.length > 0}
+		<footer class="footer-content mt-16">
+			{#each footerBlocks as blok}
+				<StoryblokComponent {blok} />
+			{/each}
+		</footer>
+	{/if}
 {:else}
 	<div class="text-center">Loading content...</div>
 {/if}

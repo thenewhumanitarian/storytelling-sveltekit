@@ -1,8 +1,8 @@
 import type { PageLoad, EntryGenerator } from './$types';
-import { loadStory, fetchAllStorySlugs } from '$lib/utils/storyblok';
+import { loadStory, fetchAllStorySlugs, loadAllStoriesExcept } from '$lib/utils/storyblok';
 
-export const prerender = true; // Enable prerendering for this route
-export const ssr = true; // Enable prerendering and SSR for this route
+export const prerender = true;
+export const ssr = true;
 
 export const entries: EntryGenerator = async () => {
   const slugs = await fetchAllStorySlugs('ar');
@@ -14,13 +14,14 @@ export const load: PageLoad = async ({ params }) => {
 
   try {
     const story = await loadStory(slug, 'ar');
-    return { story };
+    const relatedDiaries = await loadAllStoriesExcept(slug, 'ar');
+    return { story, relatedDiaries };
   } catch (error) {
     console.error('Storyblok fetch error:', error);
     return {
       story: null,
       error: {
-        message: 'Failed to load story.'
+        message: 'فشل تحميل القصة.' // Arabic for "Failed to load story."
       }
     };
   }
