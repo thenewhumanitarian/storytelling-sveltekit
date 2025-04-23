@@ -35,7 +35,8 @@
 		{#each repeatedItems as item, i (i)}
 			<a
 				href={`/stories/2025/lebanon-displacement-diaries/diaries/${item.slug}`}
-				class="flex h-full w-240px sm:w-[280px] shrink-0 flex-col justify-start border border-black bg-[#ffe0b5] p-4 shadow-xl"
+				class="flex h-full w-240px sm:w-[280px] shrink-0 flex-col justify-start border-[0.5px] border-black bg-[#ffe0b5] p-4 shadow hover:shadow-xl transition-all duration-300 ease-in-out"
+
 			>
 				{#if item.content?.socialImage?.filename}
 					<img
@@ -55,9 +56,11 @@
 
 <style>
 	.horizontal-scroll-wrapper::-webkit-scrollbar {
-		height: 4px;
+		height: 10px;
+		background: #ffe0b5;
 	}
 	.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
 		background: #9f3e52;
+		cursor: grab;
 	}
 </style>
