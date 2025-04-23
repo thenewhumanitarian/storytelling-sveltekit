@@ -176,7 +176,7 @@
 
 	:global(
 		.storyblok--richtext
-			*:not(figure, .inline-image-wrapper, .pull-quote-container, blockquote p):last-child
+			*:not(figure, .inline-image-wrapper, .line-break-container, .pull-quote-container, blockquote p):last-child
 	) {
 		margin-bottom: 0;
 	}

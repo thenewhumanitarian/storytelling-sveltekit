@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="line-break-container group border-b-[0.5px] border-t-[0.5px] border-lebgreen font-serif font-bold text-lebblack"
+	class="line-break-container group border-t-[0.5px] border-lebblack font-serif font-bold text-lebblack"
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
@@ -25,28 +25,27 @@
 	.line-break-container {
 		position: relative;
 		text-align: center;
-		margin: 3rem auto;
+		margin: 2.5rem auto;
 	}
 
 	.line-break-image--wrapper {
 		position: absolute;
 		width: auto;
 		height: auto;
-		border: 0.5px solid #282828;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0.25rem;
-		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px; */
 	}
 
 	.line-break-image {
-		width: 1.4rem;
+		width: 2rem;
 		position: relative;
-		opacity: 0.6;
-		will-change: opacity, width, filter;
+		opacity: 0.8;
+		/* will-change: opacity, width, filter;
 		transition: all 0.8s;
-		transition-behavior: cubic-bezier(0.4, 0, 0.2, 1);
+		transition-behavior: cubic-bezier(0.4, 0, 0.2, 1); */
 	}
 
 	.line-break-container:hover .line-break-image {
