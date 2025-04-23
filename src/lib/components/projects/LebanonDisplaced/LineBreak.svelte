@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
-	// import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	const { blok } = $props();
 </script>
 
@@ -13,7 +12,7 @@
 			<div class="line-break-image--container">
 				<img
 					class="line-break-image before"
-					src={`${blok.image.filename}/m/40x0`}
+					src={`${blok.image.filename}/m/60x0`}
 					alt={blok.image.alt || 'Photo alt text is missing.'}
 				/>
 			</div>
