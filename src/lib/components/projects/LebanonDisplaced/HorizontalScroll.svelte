@@ -85,7 +85,7 @@
 
 <div
 	bind:this={scrollWrapper}
-	class="horizontal-scroll-wrapper my-12 h-auto w-full overflow-x-auto pb-8 hover:cursor-grab"
+	class="horizontal-scroll-wrapper my-12 h-auto w-full overflow-x-auto pb-8 hover:cursor-move"
 	dir={lang === 'ar' ? 'rtl' : 'ltr'}
 >
 	<div class="horizontal-scroll-content flex h-full gap-6">
