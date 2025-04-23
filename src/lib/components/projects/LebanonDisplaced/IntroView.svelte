@@ -33,7 +33,7 @@
 >
 	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
-		<div class="intro-title">
+		<div class="intro-title text-shadow">
 			{#if blok.title.length > 0}
 				{#each blok.title as item}
 					<StoryblokComponent blok={item} />
@@ -42,7 +42,7 @@
 				<h1>Lebanon Displacement Diaries</h1>
 			{/if}
 		</div>
-		<div class="intro-credit">
+		<div class="intro-credit text-shadow">
 			{#each blok.logos as item}
 				<StoryblokComponent blok={item} />
 			{/each}
@@ -104,10 +104,6 @@
 
 	.intro-title {
 		overflow: visible;
-		/* Add styles as needed */
-		/* background-image: url('/assets/ldd/patterns/paper-tag--title.png'); */
-		/* background-size: contain;
-		background-repeat: no-repeat; */
 	}
 
 	:global(.arabic .intro-title) {
@@ -117,6 +113,12 @@
 
 	.intro-credit {
 		/* Add styles as needed */
+	}
+
+	.text-shadow {
+		text-shadow:
+			0 0 15px rgba(255, 225, 181, 0.6),
+			0 0 10px rgba(255, 225, 181, 0.6);
 	}
 
 	:global(.arabic .intro-credit) {

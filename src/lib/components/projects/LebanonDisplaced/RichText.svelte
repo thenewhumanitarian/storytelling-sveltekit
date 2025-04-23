@@ -80,7 +80,7 @@
 </script>
 
 <div
-	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor} ${blok.fontSize}`}
+	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor}`}
 	use:storyblokEditable={blok}
 >
 	{#if blok.text}

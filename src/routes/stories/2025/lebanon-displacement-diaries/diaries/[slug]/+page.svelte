@@ -53,7 +53,7 @@
 	<!-- Render related diaries if available -->
 	{#if relatedDiaries?.length > 0}
 		<section class="related-diaries-wrapper my-16">
-			<HorizontalScroll items={relatedDiaries} />
+			<HorizontalScroll items={relatedDiaries} lang />
 		</section>
 	{/if}
 

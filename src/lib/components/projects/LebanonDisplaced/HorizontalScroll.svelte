@@ -103,9 +103,9 @@
 						class="mb-4 h-[200px] w-full object-cover"
 					/>
 				{/if}
-				<h3 class="pointer-events-auto mb-1 text-xl inline-block font-bold hover:text-burgundy hover:underline">
+				<span class="pointer-events-auto mb-1 text-xl inline-block font-bold hover:text-burgundy hover:underline">
 					{item.content.pageTitle}
-				</h3>
+				</span>
 				<p class="line-clamp-5 text-sm text-gray-700">{item.content.pageDescription}</p>
 				<div
 					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
