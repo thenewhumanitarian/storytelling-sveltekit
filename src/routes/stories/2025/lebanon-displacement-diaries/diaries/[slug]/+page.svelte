@@ -7,24 +7,12 @@
 
 	const { data } = $props();
 
-	// Reactive vars to update during client-side nav
 	let story = data.story;
 	let relatedDiaries = data.relatedDiaries;
 
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 	let relatedDiariesBlocks = story?.content?.relatedDiaries || [];
-
-	// React to route changes (slug change triggers SSR new data)
-	$effect(() => {
-		if (data.story?.id !== story?.id) {
-			story = data.story;
-			relatedDiaries = data.relatedDiaries;
-			contentBlocks = story?.content?.body || [];
-			footerBlocks = story?.content?.footer || [];
-			relatedDiariesBlocks = story?.content?.relatedDiaries || [];
-		}
-	});
 
 	// Enable Storyblok bridge in editor mode
 	onMount(async () => {

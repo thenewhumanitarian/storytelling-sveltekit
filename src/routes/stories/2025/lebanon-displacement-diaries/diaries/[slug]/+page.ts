@@ -9,10 +9,7 @@ export const entries: EntryGenerator = async () => {
   return slugs.map((slug) => ({ slug }));
 };
 
-export const load: PageLoad = async ({ params, depends }) => {
-  // Tell SvelteKit to re-run this load function when this dependency changes
-  depends('app:diary-slug');
-
+export const load: PageLoad = async ({ params }) => {
   const slug = params.slug;
 
   try {

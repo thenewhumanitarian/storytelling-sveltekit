@@ -95,6 +95,7 @@
 		<div class="w-[20px] shrink-0"></div>
 		{#each repeatedItems as item, i (i)}
 			<a
+				data-sveltekit-reload
 				onclick={handleClick}
 				href={`/stories/2025/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
 				class="related-diaries--container pointer-events-none relative flex h-full w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-4 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
@@ -107,15 +108,17 @@
 					/>
 				{/if}
 				<span
-					class="pointer-events-auto mb-1 inline-block text-xl font-serif font-bold hover:text-burgundy hover:underline"
+					class="pointer-events-auto mb-1 inline-block font-serif text-xl font-bold hover:text-burgundy hover:underline"
 				>
 					{item.content.pageTitle}
 				</span>
-				<p class="line-clamp-5 text-base text-gray-700 font-amman">{item.content.pageDescription}</p>
+				<p class="line-clamp-5 font-amman text-base text-gray-700">
+					{item.content.pageDescription}
+				</p>
 				<div
 					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
 				>
-					<h3 class="m-0 inline p-0 text-white hover:underline text-base">Read</h3>
+					<h3 class="m-0 inline p-0 text-base text-white hover:underline">Read</h3>
 				</div>
 			</a>
 		{/each}
