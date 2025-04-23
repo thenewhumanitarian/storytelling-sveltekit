@@ -1,21 +1,41 @@
 <script lang="ts">
-	import { createIsRtlStore } from '$lib/utils/storyblok';
+	import { onMount } from 'svelte';
 
-	const { items } = $props();
-	const isRtl = createIsRtlStore();
-
-	// Repeat the single item 10 times for demo purposes
+	const { items, lang } = $props();
 	const repeatedItems = Array.from({ length: 10 }, () => items[0]);
 
+	let scrollWrapper: HTMLDivElement;
+
+	onMount(() => {
+		const el = scrollWrapper;
+		if (!el) return;
+
+		const handleWheel = (e: WheelEvent) => {
+			if (e.deltaY === 0) return;
+			e.preventDefault();
+			el.scrollLeft += lang === 'ar' ? -e.deltaY : e.deltaY;
+		};
+
+		el.addEventListener('wheel', handleWheel, { passive: false });
+
+		return () => {
+			el.removeEventListener('wheel', handleWheel);
+		};
+	});
 </script>
 
-<div class="horizontal-scroll-wrapper my-12 h-auto w-full overflow-x-auto pb-8">
+<div
+	bind:this={scrollWrapper}
+	class="horizontal-scroll-wrapper my-12 h-auto w-full overflow-x-auto pb-8"
+	dir={lang === 'ar' ? 'rtl' : 'ltr'}
+>
 	<div class="horizontal-scroll-content flex h-full gap-6">
 		<div class="w-[20px] shrink-0"></div>
+
 		{#each repeatedItems as item, i (i)}
 			<a
 				href={`/stories/2025/lebanon-displacement-diaries/diaries/${item.slug}`}
-				class="w-240px flex h-full shrink-0 flex-col justify-start border border-black bg-[#ffe0b5] p-4 shadow-xl sm:w-[280px]"
+				class="flex h-full w-240px sm:w-[280px] shrink-0 flex-col justify-start border border-black bg-[#ffe0b5] p-4 shadow-xl"
 			>
 				{#if item.content?.socialImage?.filename}
 					<img
@@ -24,12 +44,11 @@
 						class="mb-4 h-[200px] w-full object-cover"
 					/>
 				{/if}
-				<h3 class="mb-1 text-xl font-semibold">{item.content.pageTitle}</h3>
+				<h3 class="text-xl font-semibold mb-1">{item.content.pageTitle}</h3>
 				<p class="line-clamp-5 text-sm text-gray-700">{item.content.pageDescription}</p>
 			</a>
 		{/each}
 
-		<!-- Spacer to match the gap after the last item -->
 		<div class="w-[20px] shrink-0"></div>
 	</div>
 </div>

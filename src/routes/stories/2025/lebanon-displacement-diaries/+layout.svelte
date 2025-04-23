@@ -56,8 +56,8 @@
 	}
 
 	:global(main > div.storyblok__outline > div:last-child) {
-		padding-bottom: 10rem;
-		margin-bottom: -10rem;
+		/* padding-bottom: 10rem;
+		margin-bottom: -10rem; */
 		/* background: white; */
 	}
 
