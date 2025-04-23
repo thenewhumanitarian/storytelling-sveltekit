@@ -18,7 +18,7 @@
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after bg-grass z-50">
+		<div class="pull-quote-image--wrapper after bg-transparent z-50">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image after"
@@ -111,6 +111,10 @@
 	}
 
 	@media screen and (max-width: 850px) {
+		blockquote {
+			padding: 0.5rem 2rem;
+			box-shadow: none;
+		}
 		blockquote:before,
 		blockquote:after {
 			font-size: 6rem;
@@ -118,12 +122,12 @@
 		}
 		blockquote:before {
 			left: 0.25rem;
-			top: -1.5rem;
+			top: -2.75rem;
 			color: #636845;
 		}
 		blockquote:after {
 			right: 0.25rem;
-			bottom: 2.15rem;
+			bottom: 1rem;
 			color: #636845;
 		}
 	}

@@ -15,6 +15,14 @@
 	let swiperEl: HTMLDivElement;
 	let swiper: Swiper | undefined;
 
+	// Stop all videos when the lightbox is closed
+	$effect(() => {
+		if (!state.isVisible && swiper) {
+			swiper.destroy(true, true);
+			swiper = undefined;
+		}
+	});
+
 	const state = $state<{
 		index: number | null;
 		isVisible: boolean;
@@ -64,6 +72,17 @@
 			swiper.on('slideChange', () => {
 				currentIndex.set(swiper.realIndex);
 				swiper.pagination?.update?.();
+
+				// 🔇 Pause all videos except the active one
+				videoEls.forEach((video, i) => {
+					if (!video) return;
+					if (i === swiper.realIndex) {
+						video.play().catch(() => {});
+					} else {
+						video.pause();
+						video.currentTime = 0; // optional: reset video to beginning
+					}
+				});
 			});
 		} else {
 			swiper.slideTo(state.index, 0);
@@ -132,8 +151,15 @@
 				{#each $lightboxItems as item, i}
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
-							<figure class="media-figure">
-								<img src={`${item.src}/m/800x0`} alt={item.alt || 'Photo alt text is missing.'} loading="lazy" />
+							<figure
+								class="media-figure bg-brown"
+								style={`aspect-ratio: ${item.width} / ${item.height};`}
+							>
+								<img
+									src={`${item.src}/m/800x0`}
+									alt={item.alt || 'Photo alt text is missing.'}
+									loading="lazy"
+								/>
 								{#if item.caption}
 									<figcaption
 										class="media-caption"
