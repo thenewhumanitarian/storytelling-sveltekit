@@ -80,7 +80,7 @@
 </script>
 
 <div
-	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor}`}
+	class={`storyblok--richtext w-full ${blok.textAlign || 'text-left'} ${blok.fontFamily || 'font-sans'} ${className} ${blok.textColor} ${blok.bgColor ? `background-${blok.bgColor}` : ''}`}
 	use:storyblokEditable={blok}
 >
 	{#if blok.text}
@@ -108,6 +108,19 @@
 		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: 900;
 		font-size: 2rem;
+	}
+
+	:global(
+		.storyblok--richtext.background-brown p,
+		.storyblok--richtext.background-brown h1,
+		.storyblok--richtext.background-brown h2,
+		.storyblok--richtext.background-brown h3,
+		.storyblok--richtext.background-brown h4
+	) {
+		background-color: rgba(248, 225, 188, 0.8);
+		display: inline;
+		padding: 0 0.25rem;
+		box-decoration-break: clone;
 	}
 
 	:global(.storyblok--richtext h3) {
@@ -176,7 +189,13 @@
 
 	:global(
 		.storyblok--richtext
-			*:not(figure, .inline-image-wrapper, .line-break-container, .pull-quote-container, blockquote p):last-child
+			*:not(
+				figure,
+				.inline-image-wrapper,
+				.line-break-container,
+				.pull-quote-container,
+				blockquote p
+			):last-child
 	) {
 		margin-bottom: 0;
 	}

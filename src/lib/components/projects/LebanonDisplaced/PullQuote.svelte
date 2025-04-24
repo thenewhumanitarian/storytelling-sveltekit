@@ -9,7 +9,7 @@
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
-		<div class="pull-quote-image--wrapper before bg-grass z-50">
+		<div class="pull-quote-image--wrapper before z-50 bg-grass">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image before"
@@ -18,7 +18,7 @@
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after bg-transparent z-50">
+		<div class="pull-quote-image--wrapper after z-50 bg-grass sm:bg-transparent">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image after"
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 	{/if}
-	<blockquote class={`border-[0.5px] border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
+	<blockquote class={`border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
 		<p>
 			{blok.text}
 		</p>
@@ -54,7 +54,7 @@
 		z-index: 1;
 		font-weight: 300;
 		margin: 0 -15%;
-		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px;
 	}
 
 	blockquote p {
@@ -141,22 +141,11 @@
 		justify-content: center;
 		padding: 0.25rem;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-		/* border: 0.5px solid #282828; */
 	}
 
 	.pull-quote-image {
 		width: 2rem;
-		position: relative;
-		opacity: 0.8;
-		will-change: opacity, width, filter;
-		transition: all 1s;
-		/* filter: blur(1px); */
-		transition-behavior: cubic-bezier(0.4, 0, 0.2, 1);
 	}
-
-	/* .pull-quote-image.after {
-		transition-delay: 0.2s;
-	} */
 
 	.pull-quote-container:hover .pull-quote-image {
 		opacity: 1;

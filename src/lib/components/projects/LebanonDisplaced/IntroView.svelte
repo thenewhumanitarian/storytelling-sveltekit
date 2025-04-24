@@ -88,16 +88,6 @@
 		padding-top: 6rem;
 	}
 
-	:global(.intro-text h4, .intro-text h1, .intro-text h3) {
-		box-decoration-break: clone;
-		display: inline;
-		background: rgba(248,225,188,0.8);
-		padding: 0 0.25rem;
-		box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 10px -10px;
-		margin-bottom: 0.15rem;
-		/* background: #ffe0b5; */
-	}
-
 	@media screen and (max-width: 800px) {
 		.intro-text {
 			max-width: 100%;
