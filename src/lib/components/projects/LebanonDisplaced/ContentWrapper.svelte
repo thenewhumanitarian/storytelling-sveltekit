@@ -70,8 +70,9 @@
 			width: 100%;
 			padding: 1.5rem 1rem;
 		}
-		.content-wrapper:first-of-type {
-			margin-top: 0;
+		.content-wrapper.small {
+			margin: 2rem 1rem;
+			width: calc(100% - 2rem);
 		}
 	}
 

@@ -146,6 +146,12 @@
 		}
 	}
 
+	@media screen and (max-width: 640px) {
+		.story-grid--container {
+			grid-gap: 1.5rem;
+		}
+	}
+
 	/* Force one column on mobile */
 	.story-grid--container.mobile {
 		display: flex;

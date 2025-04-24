@@ -18,7 +18,7 @@
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after z-50 bg-grass sm:bg-transparent">
+		<div class="pull-quote-image--wrapper after z-50 bg-grass">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image after"
@@ -54,7 +54,7 @@
 		z-index: 1;
 		font-weight: 300;
 		margin: 0 -15%;
-		box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px;
+		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
 	}
 
 	blockquote p {
@@ -85,7 +85,7 @@
 		blockquote {
 			font-size: 1.25rem;
 			line-height: 1.2;
-			margin: 1rem -5%;
+			margin: 1rem -1.6rem;
 			padding: 2rem;
 		}
 	}
