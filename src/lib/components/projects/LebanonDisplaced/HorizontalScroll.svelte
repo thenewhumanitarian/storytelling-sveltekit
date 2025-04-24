@@ -98,13 +98,13 @@
 				data-sveltekit-reload
 				onclick={handleClick}
 				href={`/stories/2025/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
-				class="related-diaries--container pointer-events-none relative flex h-full w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-4 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
+				class="related-diaries--container pointer-events-none relative flex h-full max-w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-4 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
 			>
 				{#if item.content?.previewImage?.filename}
 					<img
-						src={`${item.content.previewImage.filename}/m/300x200`}
+						src={`${item.content.previewImage.filename}/m/640x360/filters:format(jpg):quality(50)`}
 						alt={item.content.pageTitle}
-						class="mb-4 h-[200px] w-full object-cover"
+						class="mb-4 w-full object-cover"
 					/>
 				{/if}
 				<span
@@ -113,7 +113,7 @@
 					{item.content.pageTitle}
 				</span>
 				<p class="line-clamp-5 font-amman text-base text-gray-700">
-					{item.content.pageDescription}
+					{item.content.previewText || item.content.pageDescription}
 				</p>
 				<div
 					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
@@ -127,6 +127,9 @@
 </div>
 
 <style>
+	.related-diaries--container img {
+		aspect-ratio: auto;
+	}
 	.horizontal-scroll-wrapper::-webkit-scrollbar {
 		height: 12px;
 		background: #ffe0b5;
