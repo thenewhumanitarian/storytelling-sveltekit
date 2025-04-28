@@ -52,6 +52,12 @@
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
 {:else if story?.content}
 	<StoryblokComponent blok={story.content} />
+
+	{#if story.content.textAnnotations?.length}
+		{#each story.content.textAnnotations as annotation}
+			<StoryblokComponent blok={annotation} />
+		{/each}
+	{/if}
 {:else}
 	<div class="hidden">Getting Story ready...</div>
 {/if}

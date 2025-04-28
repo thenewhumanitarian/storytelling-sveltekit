@@ -16,6 +16,8 @@
 	onMount(() => {
 		if (!blok?.identifier || !blok?.text) return;
 
+		console.log('TextAnnotation mounted', blok);
+
 		const searchWord = blok.identifier.toLowerCase();
 		const tooltipContent = blok.text ? render(blok.text) : '';
 		const targetOccurrence = blok.occurrence ? parseInt(blok.occurrence) : null;
@@ -128,5 +130,18 @@
 		font-family: 'Roboto', sans-serif !important;
 		width: 100%;
 		/* display: block; */
+	}
+
+	:global(.text-annotation) {
+		display: inline-flex;
+		align-items: center;
+		background-color: rgba(248, 225, 188, 0.5);
+		padding: 0 0.15rem;
+		margin: 0 0.05rem;
+		cursor: pointer;
+		transition: background 0.3s ease;
+		border-radius: 0.15rem;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
 	}
 </style>
