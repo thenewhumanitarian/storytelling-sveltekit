@@ -24,6 +24,7 @@ import SoundCite from '$lib/components/projects/LebanonDisplaced/SoundCite.svelt
 import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 import HorizontalSpacer from '$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte';
 import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
+import TextAnnotation from '$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte';
 
 // Import Access token and region from env variables
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
@@ -59,7 +60,8 @@ export function initStoryblok() {
       soundCite: SoundCite,
       inlineImage: InlineImage,
       horizontalSpacer: HorizontalSpacer,
-      horizontalScroll: HorizontalScroll
+      horizontalScroll: HorizontalScroll,
+      textAnnotation: TextAnnotation,
     }
   });
 }
@@ -131,6 +133,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
         horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
+        textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
       },
       apiOptions: {
         https: true,
@@ -160,6 +163,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
         horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
+        textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
       },
       apiOptions: {
         https: true,

@@ -51,6 +51,12 @@
 		<StoryblokComponent {blok} />
 	{/each}
 
+	{#if story.content.textAnnotations?.length}
+		{#each story.content.textAnnotations as annotation}
+			<StoryblokComponent blok={annotation} />
+		{/each}
+	{/if}
+
 	{#if relatedDiaries?.length > 0}
 		<section class="related-diaries-wrapper my-16">
 			<HorizontalScroll items={relatedDiaries} lang="en" />

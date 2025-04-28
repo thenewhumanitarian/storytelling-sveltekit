@@ -1,0 +1,127 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { storyblokEditable } from '@storyblok/svelte';
+	import { richTextResolver } from '@storyblok/richtext';
+	import tippy from 'tippy.js';
+	import 'tippy.js/dist/tippy.css';
+
+	const { blok } = $props();
+
+	function escapeHTML(str: string) {
+		return str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
+	const { render } = richTextResolver(); // no special resolvers needed now!
+
+	onMount(() => {
+		if (!blok?.identifier || !blok?.text) return;
+
+		const searchWord = blok.identifier.toLowerCase();
+		const tooltipContent = blok.text ? render(blok.text) : '';
+
+		// 1. 🧠 Snapshot all text nodes
+		const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+		const textNodes: Text[] = [];
+		let node;
+		while ((node = walker.nextNode())) {
+			textNodes.push(node as Text);
+		}
+
+		// 2. 🚀 Now modify them safely
+		textNodes.forEach((node) => {
+			const nodeText = node.textContent?.toLowerCase();
+			if (nodeText && nodeText.includes(searchWord)) {
+				if (node.parentElement?.closest('.text-annotation')) return;
+
+				const regex = new RegExp(`(${escapeRegExp(blok.identifier)})`, 'gi');
+				const parts = node.textContent!.split(regex);
+
+				if (parts.length > 1) {
+					const frag = document.createDocumentFragment();
+
+					parts.forEach((part) => {
+						if (part.toLowerCase() === searchWord) {
+							const span = document.createElement('span');
+							span.textContent = part;
+							span.classList.add('text-annotation');
+							tippy(span, {
+								content: tooltipContent,
+								allowHTML: true,
+								theme: 'light',
+								interactive: true,
+								delay: [100, 50],
+								placement: 'top',
+								interactiveDebounce: 25,
+								inertia: true
+								// trigger: 'manual', // 👈 this disables hover/focus triggers
+								// showOnCreate: true // 👈 this shows it immediately
+							});
+							frag.appendChild(span);
+						} else {
+							frag.appendChild(document.createTextNode(part));
+						}
+					});
+
+					node.parentNode?.replaceChild(frag, node);
+				}
+			}
+		});
+	});
+
+	function escapeRegExp(string: string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	}
+</script>
+
+<div use:storyblokEditable={blok} class="hidden"></div>
+
+<style>
+	:global(.text-annotation) {
+		background-color: rgba(248, 225, 188, 0.5);
+		padding: 0 0.05rem;
+		cursor: pointer;
+		transition: background 0.3s ease;
+	}
+	:global(.text-annotation:hover) {
+		background-color: rgba(248, 225, 188, 0.8);
+	}
+	/* Example: override light-border theme */
+	:global(.tippy-box[data-theme~='light']) {
+		background-color: #f8e1bc;
+		font-style: normal; /* specifically fix italic inheritance */
+		font-weight: normal;
+		color: #282828;
+		font-size: 1rem;
+		padding: 0.1rem 0;
+		border-radius: 0;
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+	}
+
+	/* Fix the arrow color (svg fill) */
+	:global(.tippy-box[data-theme~='light'][data-placement^='top'] > .tippy-arrow::before) {
+		border-top-color: #f8e1bc !important;
+	}
+
+	:global(.tippy-content) {
+		display: block;
+		width: 100%;
+	}
+
+	:global(.tippy-content > p) {
+		margin: 0;
+	}
+
+	:global(.tippy-content *) {
+		/* font-weight: normal; */
+		text-decoration: none;
+		font-size: 0.9rem !important;
+		font-family: 'Roboto', sans-serif !important;
+		width: 100%;
+		/* display: block; */
+	}
+</style>
