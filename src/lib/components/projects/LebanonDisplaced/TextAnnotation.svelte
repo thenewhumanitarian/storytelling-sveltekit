@@ -7,48 +7,56 @@
 
 	const { blok } = $props();
 
-	function escapeHTML(str: string) {
-		return str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#039;');
-	}
+	const { render } = richTextResolver();
 
-	const { render } = richTextResolver(); // no special resolvers needed now!
+	function escapeRegExp(string: string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	}
 
 	onMount(() => {
 		if (!blok?.identifier || !blok?.text) return;
 
 		const searchWord = blok.identifier.toLowerCase();
 		const tooltipContent = blok.text ? render(blok.text) : '';
+		const targetOccurrence = blok.occurrence ? parseInt(blok.occurrence) : null;
 
-		// 1. 🧠 Snapshot all text nodes
-		const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-		const textNodes: Text[] = [];
-		let node;
-		while ((node = walker.nextNode())) {
-			textNodes.push(node as Text);
-		}
+		let globalMatchIndex = 0; // 🧠 Global counter across all matches
 
-		// 2. 🚀 Now modify them safely
-		textNodes.forEach((node) => {
-			const nodeText = node.textContent?.toLowerCase();
-			if (nodeText && nodeText.includes(searchWord)) {
+		const regex = new RegExp(`(${escapeRegExp(blok.identifier)})`, 'gi');
+
+		// 🚀 Find all .content-wrapper elements
+		const contentWrappers = document.querySelectorAll('.content-wrapper');
+
+		contentWrappers.forEach((wrapper) => {
+			const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT);
+			const textNodes: Text[] = [];
+			let node;
+			while ((node = walker.nextNode())) {
+				textNodes.push(node as Text);
+			}
+
+			textNodes.forEach((node) => {
+				const nodeText = node.textContent;
+				if (!nodeText || !nodeText.toLowerCase().includes(searchWord)) return;
 				if (node.parentElement?.closest('.text-annotation')) return;
 
-				const regex = new RegExp(`(${escapeRegExp(blok.identifier)})`, 'gi');
-				const parts = node.textContent!.split(regex);
+				const parts = nodeText.split(regex);
 
-				if (parts.length > 1) {
-					const frag = document.createDocumentFragment();
+				if (parts.length <= 1) return;
 
-					parts.forEach((part) => {
-						if (part.toLowerCase() === searchWord) {
+				const frag = document.createDocumentFragment();
+
+				parts.forEach((part) => {
+					if (part.toLowerCase() === searchWord) {
+						globalMatchIndex += 1;
+
+						const shouldHighlight = !targetOccurrence || globalMatchIndex === targetOccurrence;
+
+						if (shouldHighlight) {
 							const span = document.createElement('span');
 							span.textContent = part;
 							span.classList.add('text-annotation');
+
 							tippy(span, {
 								content: tooltipContent,
 								allowHTML: true,
@@ -58,24 +66,20 @@
 								placement: 'top',
 								interactiveDebounce: 25,
 								inertia: true
-								// trigger: 'manual', // 👈 this disables hover/focus triggers
-								// showOnCreate: true // 👈 this shows it immediately
 							});
 							frag.appendChild(span);
 						} else {
 							frag.appendChild(document.createTextNode(part));
 						}
-					});
+					} else {
+						frag.appendChild(document.createTextNode(part));
+					}
+				});
 
-					node.parentNode?.replaceChild(frag, node);
-				}
-			}
+				node.parentNode?.replaceChild(frag, node);
+			});
 		});
 	});
-
-	function escapeRegExp(string: string) {
-		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-	}
 </script>
 
 <div use:storyblokEditable={blok} class="hidden"></div>
@@ -110,6 +114,7 @@
 	:global(.tippy-content) {
 		display: block;
 		width: 100%;
+		padding: 0.1rem 0.4rem;
 	}
 
 	:global(.tippy-content > p) {
