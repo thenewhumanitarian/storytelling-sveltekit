@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tick, getContext } from 'svelte';
+	import { tick, getContext, onMount, onDestroy } from 'svelte';
 
 	const lang = getContext('lang');
 	const isRtl = lang === 'ar';
@@ -21,6 +21,19 @@
 			swiper.destroy(true, true);
 			swiper = undefined;
 		}
+	});
+
+	onMount(() => {
+		const handleKeydown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				close();
+			}
+		};
+		window.addEventListener('keydown', handleKeydown);
+
+		onDestroy(() => {
+			window.removeEventListener('keydown', handleKeydown);
+		});
 	});
 
 	const state = $state<{
