@@ -16,7 +16,7 @@
 	onMount(() => {
 		if (!blok?.identifier || !blok?.text) return;
 
-		console.log('TextAnnotation mounted', blok);
+		// console.log('TextAnnotation mounted', blok);
 
 		const searchWord = blok.identifier.toLowerCase();
 		const tooltipContent = blok.text ? render(blok.text) : '';
