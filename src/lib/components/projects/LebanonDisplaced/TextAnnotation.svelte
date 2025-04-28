@@ -136,8 +136,8 @@
 		display: inline-flex;
 		align-items: center;
 		background-color: rgba(248, 225, 188, 0.5);
-		padding: 0 0.15rem;
 		margin: 0 0.05rem;
+		padding: 0 0.15rem;
 		cursor: pointer;
 		border-radius: 0.15rem;
 		transition: background 0.3s ease;
