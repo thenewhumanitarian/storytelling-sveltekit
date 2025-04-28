@@ -139,8 +139,8 @@
 		padding: 0 0.15rem;
 		margin: 0 0.05rem;
 		cursor: pointer;
-		transition: background 0.3s ease;
 		border-radius: 0.15rem;
+		transition: background 0.3s ease;
 		box-decoration-break: clone;
 		-webkit-box-decoration-break: clone;
 	}
