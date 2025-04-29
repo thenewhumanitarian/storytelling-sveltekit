@@ -12,16 +12,6 @@
 
 	import { lightboxItems, currentIndex } from '$lib/stores/lightbox';
 
-	// Update LightboxItem type to include 'alt' property
-	type LightboxItem = {
-		type: 'image' | 'video';
-		src: string;
-		width?: number;
-		height?: number;
-		alt?: string; // Add 'alt' property
-		caption?: string;
-	};
-
 	let swiperEl: HTMLDivElement;
 	let swiper: Swiper | undefined;
 
@@ -133,16 +123,22 @@
 				video.pause();
 			}
 		});
+	});
+
+	function decodeHTML(html: string): string {
+		const txt = document.createElement('textarea');
+		txt.innerHTML = html;
+		return txt.value;
+	}
+</script>
+
+{#if state.isVisible && state.index !== null && $lightboxItems[state.index]}
 	<div
 		class="lightbox-overlay"
 		role="dialog"
-		onkeydown={(e) => {
-			if (e.key === 'Escape') {
-				e.preventDefault();
-				close();
-			}
-		}}
-	>
+		tabindex="0"
+		onclick={(e) => {
+			e.preventDefault();
 			e.stopPropagation();
 			close();
 		}}
@@ -150,12 +146,16 @@
 			if (e.key === 'Escape') {
 				e.preventDefault();
 				close();
+			}
+		}}
+	>
+		<!-- Swiper Root -->
 		<div
 			bind:this={swiperEl}
 			class="swiper lightbox-swiper"
 			role="region"
-			dir={isRtl ? 'rtl' : 'ltr'}
-		>
+			onclick={(e) => {
+				e.preventDefault();
 				e.stopPropagation();
 			}}
 			dir={isRtl ? 'rtl' : 'ltr'}
@@ -164,11 +164,11 @@
 				{#each $lightboxItems as item, i}
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
-							<figure
-								class="media-figure bg-brown"
-								style={`aspect-ratio: ${item.width} / ${item.height};`}
-							>
-								<div class="h-full w-full bg-lebgreen absolute top-0 left-0 -z-1"></div>
+							<figure class="media-figure bg-brown">
+								<div
+									style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
+									class="absolute left-0 top-0 h-full w-full bg-lebgreen"
+								></div>
 								<img
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
@@ -178,7 +178,7 @@
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
 									loading="lazy"
-									class="absolute top-0 left-0 w-full h-full object-contain"
+									class="absolute left-0 top-0 h-full w-full object-contain"
 								/>
 								{#if item.caption}
 									<figcaption
@@ -208,7 +208,6 @@
 		<!-- Close Button -->
 		<button
 			class="lightbox-close"
-			type="button"
 			onclick={(e) => {
 				e.preventDefault();
 				close();
@@ -251,14 +250,18 @@
 		background: #ffe0b5;
 		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
 		background-repeat: repeat;
-		/* background-image: url('/assets/ldd/patterns/beige-paper-texture.png'); */
-		/* background-size: cover; */
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		padding: 2rem;
 		box-sizing: border-box;
 		overflow: hidden;
+		/* background-image: url('/assets/ldd/patterns/beige-paper-texture.png'); */
+		/* background-size: cover; */
+	}
+
+	.lightbox-overlay:hover {
+		cursor: grab;
 	}
 
 	.media-figure {
