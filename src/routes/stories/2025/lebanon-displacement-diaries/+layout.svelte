@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
 
-	/* Google Tag Manager */
-	import { browser } from '$app/environment';
-	const gtmId = import.meta.env.PUBLIC_GTM_ID;
-	const shouldRender = browser && gtmId && import.meta.env.MODE === 'production';
-
 	/* Get language from URL */
 	import { page } from '$app/state';
 	const pageRoute = page.route.id;
@@ -42,17 +37,6 @@
 <HeaderComponent />
 
 <main>
-	{#if shouldRender}
-		<noscript>
-			<iframe
-				src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-				height="0"
-				width="0"
-				style="display:none;visibility:hidden"
-				title="Google Tag Manager"
-			></iframe>
-		</noscript>
-	{/if}
 	{@render children()}
 	<Lightbox />
 </main>
