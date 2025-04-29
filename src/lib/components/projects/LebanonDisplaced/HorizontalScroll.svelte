@@ -5,7 +5,7 @@
 	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
 
 	const { items, lang } = $props();
-	const repeatedItems = Array.from({ length: 10 }, () => items[0]);
+	const repeatedItems = Array.from({ length: 10 }, () => items[(Math.random() * items.length) | 0]);
 
 	let scrollWrapper: HTMLDivElement;
 	let isDown = false;
@@ -88,7 +88,7 @@
 
 <div
 	bind:this={scrollWrapper}
-	class="horizontal-scroll-wrapper my-6 sm:my-12 h-auto w-full overflow-x-auto pb-8 hover:cursor-move"
+	class="horizontal-scroll-wrapper my-6 h-auto w-full overflow-x-auto pb-8 hover:cursor-move sm:my-12"
 	dir={lang === 'ar' ? 'rtl' : 'ltr'}
 >
 	<div class="horizontal-scroll-content flex h-full gap-6">
