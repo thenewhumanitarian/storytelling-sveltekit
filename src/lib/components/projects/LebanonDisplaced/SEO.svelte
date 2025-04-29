@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_GTM_ID } from '$env/static/public';
+	import { PUBLIC_GA4_ID } from '$env/static/public';
 
 	const isProduction = import.meta.env.MODE === 'production';
-	const shouldEmbedGTM = isProduction && PUBLIC_GTM_ID;
+	const shouldEmbedGA = isProduction && PUBLIC_GA4_ID;
 
 	const {
 		pageTitle = '',
@@ -35,16 +35,15 @@
 		<link rel="canonical" href={pageUrl} />
 	{/if}
 
-	<!-- Google Tag Manager (if enabled) -->
-	{#if shouldEmbedGTM}
+	<!-- Google Analytics GA4 (if enabled) -->
+	{#if shouldEmbedGA}
 		{@html `
+			<script async src="https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA4_ID}"></script>
 			<script>
-				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-				'https://www.googletagmanager.com/gtm.js?id=${PUBLIC_GTM_ID}'+dl;
-				f.parentNode.insertBefore(j,f);
-				})(window,document,'script','dataLayer','${PUBLIC_GTM_ID}');
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+				gtag('config', '${PUBLIC_GA4_ID}');
 			</script>
 		`}
 	{/if}
