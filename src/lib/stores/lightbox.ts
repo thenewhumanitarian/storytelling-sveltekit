@@ -5,12 +5,15 @@ export type LightboxItem = {
   type: 'image' | 'video';
   caption: string;
   element?: HTMLElement;
+  width?: number;
+  height?: number;
 };
 
 export const lightboxItems = writable<LightboxItem[]>([]);
 export const currentIndex = writable<number | null>(null);
 
 export function registerMediaElement(item: LightboxItem) {
+  console.log(item)
   lightboxItems.update((items) => {
     const normalizedCaption = item.caption?.trim() || '';
 

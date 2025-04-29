@@ -15,12 +15,19 @@
 	let element: HTMLElement;
 
 	onMount(() => {
+		// Extract dimensions from URL like ".../5712x4284/..."
+		const match = blok.media.filename.match(/\/(\d+)x(\d+)\//);
+		const width = match ? parseInt(match[1], 10) : undefined;
+		const height = match ? parseInt(match[2], 10) : undefined;
+
 		if (blok?.media?.filename) {
 			registerMediaElement({
 				src: blok.media.filename,
 				type: blok.media.filename.includes('.mp4') ? 'video' : 'image',
 				caption: blok.caption || '',
-				element
+				element,
+				width,
+				height
 			});
 		}
 	});
@@ -41,7 +48,10 @@
 		{#if blok.media?.filename.includes('.mp4')}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
-			<img src={`${blok.media.filename}/m/240x0/filters:format(webp):quality(80)`} alt={blok.media.alt || 'Photo alt text is missing.'} />
+			<img
+				src={`${blok.media.filename}/m/240x0/filters:format(webp):quality(80)`}
+				alt={blok.media.alt || 'Photo alt text is missing.'}
+			/>
 		{/if}
 
 		<!-- Scotch tape corners -->

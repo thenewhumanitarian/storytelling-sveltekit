@@ -168,10 +168,17 @@
 								class="media-figure bg-brown"
 								style={`aspect-ratio: ${item.width} / ${item.height};`}
 							>
+								<div class="h-full w-full bg-lebgreen absolute top-0 left-0 -z-1"></div>
 								<img
-									src={`${item.src}/m/800x0`}
+									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
 									loading="lazy"
+								/>
+								<img
+									src={`${item.src}/m/1024x0`}
+									alt={item.alt || 'Photo alt text is missing.'}
+									loading="lazy"
+									class="absolute top-0 left-0 w-full h-full object-contain"
 								/>
 								{#if item.caption}
 									<figcaption

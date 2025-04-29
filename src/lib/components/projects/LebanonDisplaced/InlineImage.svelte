@@ -33,11 +33,19 @@
 	onMount(() => {
 		if (blok?.media?.filename && figureEl) {
 			if (!blok.lightbox) return;
+
+			// Extract dimensions from URL like ".../5712x4284/..."
+			const match = blok.media.filename.match(/\/(\d+)x(\d+)\//);
+			const width = match ? parseInt(match[1], 10) : undefined;
+			const height = match ? parseInt(match[2], 10) : undefined;
+
 			registerMediaElement({
 				src: blok.media.filename,
 				type: 'image',
 				caption: escapeHTML(blok.caption || ''),
-				element: figureEl
+				element: figureEl,
+				width,
+				height
 			});
 		}
 	});
