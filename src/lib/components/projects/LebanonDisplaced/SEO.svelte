@@ -6,6 +6,7 @@
 
 	const {
 		pageTitle = '',
+		pageTitlePrefix = '',
 		pageDescription = '',
 		pageImage = '',
 		pageUrl = '',
@@ -24,7 +25,12 @@
 
 <svelte:head>
 	{#if pageTitle}
-		<title>Lebanon Displacement Diaries | {pageTitle}</title>
+		{#if pageTitlePrefix}
+			<title>{pageTitlePrefix} | {pageTitle}</title>
+		{:else}
+			<title>{pageTitle}</title>
+		{/if}
+		<title>Lebanon Displacement Diaries</title>
 	{/if}
 
 	{#if pageDescription}

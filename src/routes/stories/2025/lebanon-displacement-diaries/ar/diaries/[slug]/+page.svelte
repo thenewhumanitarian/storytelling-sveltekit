@@ -35,6 +35,7 @@
 
 <SEO
 	pageTitle={story?.content?.pageTitle}
+	pageTitlePrefix={'Lebanon Displacement Diaries | '}
 	pageDescription={story?.content?.pageDescription}
 	pageImage={story?.content?.socialImage?.filename
 		? `${story.content.socialImage.filename}/m/1000x552/filters:format(jpg):quality(50)`

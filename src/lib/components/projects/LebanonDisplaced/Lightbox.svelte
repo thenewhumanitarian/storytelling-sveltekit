@@ -12,6 +12,16 @@
 
 	import { lightboxItems, currentIndex } from '$lib/stores/lightbox';
 
+	// Update LightboxItem type to include 'alt' property
+	type LightboxItem = {
+		type: 'image' | 'video';
+		src: string;
+		width?: number;
+		height?: number;
+		alt?: string; // Add 'alt' property
+		caption?: string;
+	};
+
 	let swiperEl: HTMLDivElement;
 	let swiper: Swiper | undefined;
 
@@ -123,25 +133,9 @@
 				video.pause();
 			}
 		});
-	});
-
-	function decodeHTML(html: string): string {
-		const txt = document.createElement('textarea');
-		txt.innerHTML = html;
-		return txt.value;
-	}
-</script>
-
-{#if state.isVisible && state.index !== null && $lightboxItems[state.index]}
 	<div
 		class="lightbox-overlay"
 		role="dialog"
-		tabindex="0"
-		onclick={(e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			close();
-		}}
 		onkeydown={(e) => {
 			if (e.key === 'Escape') {
 				e.preventDefault();
@@ -149,13 +143,19 @@
 			}
 		}}
 	>
-		<!-- Swiper Root -->
+			e.stopPropagation();
+			close();
+		}}
+		onkeydown={(e) => {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				close();
 		<div
 			bind:this={swiperEl}
 			class="swiper lightbox-swiper"
 			role="region"
-			onclick={(e) => {
-				e.preventDefault();
+			dir={isRtl ? 'rtl' : 'ltr'}
+		>
 				e.stopPropagation();
 			}}
 			dir={isRtl ? 'rtl' : 'ltr'}
@@ -208,6 +208,7 @@
 		<!-- Close Button -->
 		<button
 			class="lightbox-close"
+			type="button"
 			onclick={(e) => {
 				e.preventDefault();
 				close();
