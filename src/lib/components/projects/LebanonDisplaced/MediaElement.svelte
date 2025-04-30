@@ -23,8 +23,8 @@
 	bind:this={element}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	onclick={() => openLightbox(blok.media?.filename.toString())}
-	data-lightbox-src={blok.media?.filename}
 	data-lightbox
+	data-lightbox-src={blok.media?.filename}
 	data-lightbox-type={type}
 	data-lightbox-caption={blok.caption || ''}
 	data-lightbox-alt={blok.media?.alt || 'Alt text for thiw photo is missing. Apologies.'}
