@@ -169,6 +169,7 @@
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
 									loading="lazy"
+									class="block sm:hidden"
 								/>
 								<img
 									src={`${item.src}/m/1024x0`}
@@ -188,7 +189,7 @@
 											</figcaption>
 										{/if}
 										<button
-											class="caption-toggle absolute -bottom-7 right-0 bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100"
+											class={`caption-toggle absolute -bottom-7 ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100`}
 											onclick={() => (state.showCaption = !state.showCaption)}
 										>
 											{state.showCaption ? 'Hide caption' : 'Show caption'}
