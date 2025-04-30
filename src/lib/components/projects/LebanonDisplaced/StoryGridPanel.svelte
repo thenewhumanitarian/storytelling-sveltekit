@@ -16,7 +16,7 @@
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
 			document.querySelectorAll('.rotate').forEach((el) => {
-				const randomAngle = (Math.random() * 16 - 8).toFixed(2);
+				const randomAngle = (Math.random() * 16 - 8).toFixed(2); // Random angle between -8 and 8 degrees
 				(el as HTMLElement).style.transform = `rotate(${randomAngle}deg)`;
 			});
 		}
@@ -28,7 +28,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel group mx-auto hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel group mx-auto hidden items-center justify-center sm:flex ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -43,7 +43,7 @@
 			{#if blok.items}
 				<FadeIn
 					yOffset={50}
-					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
+					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2'}`}
 					delay={30 * i + 100}
 				>
 					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
@@ -66,7 +66,7 @@
 			{#if blok.items}
 				<FadeIn
 					yOffset={50}
-					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2 py-3'}`}
+					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : blok.bgColor === 'picture-frame-landscape' ? 'px-1 py-2' : 'px-2 py-3'}`}
 					delay={30 * i + 100}
 				>
 					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
@@ -138,7 +138,13 @@
 		}
 	}
 
-	.story-grid--panel:not(.note, .brown-card, .placeholder, .picture-frame) {
+	.story-grid--panel:not(
+			.note,
+			.brown-card,
+			.placeholder,
+			.picture-frame,
+			.picture-frame-landscape
+		) {
 		padding: 1rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
@@ -147,8 +153,11 @@
 	}
 
 	.story-grid--panel:not(.note, .brown-card, .placeholder, .picture-frame) {
-		/* box-shadow: 0 0 10px 10px hsla(0, 0%, 0%, 0.025); */
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+	}
+
+	:global(.story-grid-panel.picture-frame-landscape) {
+		padding: 1rem;
 	}
 
 	.story-grid--panel.note {
@@ -180,12 +189,36 @@
 		max-width: 200px;
 	}
 
-	:global(.story-grid--panel.picture-frame .media-wrapper) {
+	.story-grid--panel.picture-frame-landscape {
+		aspect-ratio: 2276/1842;
+		background-image: url('/assets/ldd/frames/picture-frame--body--landscape.png');
+		background-size: 100%;
+		aspect-ratio: 1842/2276;
+		border: none;
+		box-shadow: none;
+		max-width: 200px;
+	}
+
+	:global(
+		.story-grid--panel.picture-frame .media-wrapper,
+		.story-grid--panel.picture-frame-landscape .media-wrapper
+	) {
 		background: transparent;
 	}
 
-	:global(.story-grid--panel.picture-frame .media-wrapper img, .story-grid--panel.picture-frame .media-wrapper video) {
+	:global(
+		.story-grid--panel.picture-frame .media-wrapper img,
+		.story-grid--panel.picture-frame .media-wrapper video
+	) {
 		aspect-ratio: 1583/2013;
+		object-fit: cover;
+	}
+
+	:global(
+		.story-grid--panel.picture-frame-landscape .media-wrapper img,
+		.story-grid--panel.picture-frame-landscape .media-wrapper video
+	) {
+		aspect-ratio: 2013/1583;
 		object-fit: cover;
 	}
 
@@ -258,7 +291,7 @@
 
 	.story-grid--panel.rotate {
 		will-change: transform;
-		transition: transform 0.8s ease-in-out;
+		transition: transform 1s ease-in-out;
 		transform-origin: center center;
 	}
 
