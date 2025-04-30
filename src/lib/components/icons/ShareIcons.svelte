@@ -1,25 +1,58 @@
-<script>
+<script lang="ts">
+	import { browser } from '$app/environment';
+
 	let showIcons = false;
 
 	function toggleShare() {
 		showIcons = !showIcons;
+	}
+
+	let siteUrl = '';
+	let encodedUrl = '';
+	let message = '';
+	let linkedInUrl = '';
+	let whatsappUrl = '';
+	let emailUrl = '';
+	let blueskyShareUrl = '';
+
+	if (browser) {
+		siteUrl = window.location.href.replace(
+			'https://localhost:5173',
+			'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app'
+		);
+		encodedUrl = encodeURIComponent(siteUrl);
+		message = encodeURIComponent(
+			'Check out The Lebanon Displacement Diaries'
+		);
+
+		const socialHandles: object = {
+			bluesky: '@newhumanitarian.bsky.social',
+			whatsapp: 'https://wa.me/?text=Check%20out%20The%20Lebanon%20Displacement%20Diaries%20by'
+		};
+
+		linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+		whatsappUrl = `https://wa.me/?text=${message}%20by%20The%20New%20Humanitarian:%20${encodedUrl}`;
+		emailUrl = `mailto:?subject=The Lebanon Displacement Diaries&body=${message}%20by%20The%20New%20Humanitarian:%20${encodedUrl}`;
+		blueskyShareUrl = `https://bsky.app/intent/compose?text=${message}%20by%20${socialHandles.bluesky}:%0A${encodedUrl}%0A%0Ahttps://bsky.app/profile/newhumanitarian.bsky.social`;
 	}
 </script>
 
 <div class="share-icons flex items-center justify-center gap-2">
 	<!-- Share label only on mobile when icons are hidden -->
 	<button
-		class="block cursor-pointer text-lebblack text-sm sm:hidden"
-		onclick={toggleShare}
+		class="block cursor-pointer text-sm text-lebblack sm:hidden"
+		on:click={toggleShare}
 		class:hidden={showIcons}
 	>
 		Share
 	</button>
-	<!-- BlueSky -->
+
+	<!-- Icons -->
 	<div class={`flex items-center gap-2 ${showIcons ? 'block' : 'hidden'} sm:flex`}>
+		<!-- BlueSky -->
 		<a
 			class="text-lebblack hover:text-burgundy"
-			href="#"
+			href={blueskyShareUrl}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Share on BlueSky"
@@ -41,69 +74,59 @@
 		<!-- LinkedIn -->
 		<a
 			class="text-lebblack hover:text-burgundy"
-			href="#"
+			href={linkedInUrl}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Share on LinkedIn"
 			title="Share on LinkedIn"
 		>
+			<!-- LinkedIn SVG -->
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 38 38"
 				fill="none"
 				class="inline h-full w-auto pb-1"
 			>
-				<g clip-path="url(#clip0_236_2262)">
-					<g clip-path="url(#clip1_236_2262)">
-						<path
-							d="M8.60456 4.96093C8.60456 7.20374 6.94686 9.02186 4.2215 9.02186C1.65769 9.02186 0 7.20374 0 4.96093C0 2.71811 1.71037 0.899994 4.33037 0.899994C6.95037 0.899994 8.55188 2.66195 8.60456 4.96093ZM0.214236 38.3434V12.2229H8.33764V38.3434H0.214236Z"
-							class="fill-current transition-colors duration-500"
-						/>
-						<path
-							d="M13.1976 20.5553C13.1976 17.2981 13.0923 14.5745 12.9834 12.2228H20.0391L20.4149 15.8556H20.5765C21.6441 14.1463 24.2641 11.6367 28.6472 11.6367C33.9926 11.6367 37.9998 15.2168 37.9998 22.9069V38.3434H29.8764V23.8686C29.8764 20.5026 28.6999 18.2072 25.7603 18.2072C23.5161 18.2072 22.1815 19.755 21.5915 21.2502C21.3772 21.7837 21.3246 22.5314 21.3246 23.279V38.3399H13.2011V20.5518L13.1976 20.5553Z"
-							class="fill-current transition-colors duration-500"
-						/>
-					</g>
-				</g>
+				<path
+					d="M8.6 5c0 2.2-1.7 4-4.4 4C1.7 9 0 7.2 0 5s1.7-4.1 4.3-4.1C6.9.9 8.6 2.7 8.6 5ZM.2 38.3V12.2H8.3v26.1H.2ZM13.2 20.6c0-3.3-.1-6-.2-8.3h6.8l.4 3.6h.2c1-1.7 3.6-4.2 8-4.2 5.3 0 9.3 3.6 9.3 11.3v15.4h-8.1V23.9c0-3.4-1.2-6-4.1-6-2.2 0-3.5 1.5-4 3-.1.5-.2 1.3-.2 2v15.5h-8.1V20.6Z"
+					class="fill-current transition-colors duration-500"
+				/>
 			</svg>
 		</a>
+
 		<!-- WhatsApp -->
 		<a
 			class="text-lebblack hover:text-burgundy"
-			href="#"
+			href={whatsappUrl}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Share on WhatsApp"
 			title="Share on WhatsApp"
 		>
-			<svg class="pt-0.5" xmlns="http://www.w3.org/2000/svg"
-				><path
+			<svg class="pt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+				<path
 					class="fill-current transition-colors duration-500"
-					d="M17.078 2.928A9.928 9.928 0 0 0 10.01 0C4.505 0 .024 4.479.022 9.985a9.962 9.962 0 0 0 1.333 4.992L0 20l5.233-1.237a9.981 9.981 0 0 0 4.773 1.216h.004c5.506 0 9.987-4.48 9.99-9.985a9.921 9.921 0 0 0-2.922-7.066Zm-2.18 10.626c-.207.583-1.226 1.145-1.684 1.186-.458.042-.887.207-2.995-.624-2.538-1-4.14-3.601-4.264-3.767-.125-.167-1.019-1.353-1.019-2.581s.645-1.832.874-2.081a.916.916 0 0 1 .666-.312c.166 0 .333 0 .478.006.178.007.375.016.562.431.222.494.707 1.728.77 1.853.061.125.103.271.02.437-.083.166-.125.27-.249.416-.125.146-.262.325-.374.437-.125.124-.255.26-.11.509.146.25.646 1.067 1.388 1.728.954.85 1.758 1.113 2.008 1.239.25.125.395.104.54-.063.147-.166.625-.728.79-.978.167-.25.334-.208.563-.125.229.083 1.456.687 1.705.812.25.125.416.187.478.291.062.103.062.603-.146 1.186Z"
-				/></svg
-			>
+					d="M17.1 2.9A9.9 9.9 0 0 0 10 0 10 10 0 0 0 0 10c0 1.7.4 3.2 1.3 4.9L0 20l5.2-1.2a10 10 0 0 0 4.8 1.2c5.5 0 10-4.5 10-10a10 10 0 0 0-2.9-7.1Zm-2.2 10.6c-.2.6-1.2 1.1-1.7 1.2-.5 0-.9.2-3-.6-2.5-1-4.1-3.6-4.3-3.8C5.8 10 5 8.8 5 7.6s.6-1.8.9-2.1c.2-.2.4-.3.7-.3.2 0 .3 0 .5 0 .2 0 .4 0 .6.4.2.5.7 1.7.8 1.9.1.1.1.3 0 .4-.1.2-.1.3-.3.4-.1.1-.3.3-.4.4-.1.1-.3.3-.1.5.2.2.6 1.1 1.4 1.7.9.8 1.8 1.1 2 1.2.2.1.4.1.5-.1.1-.1.6-.7.8-1 .2-.2.3-.2.6-.1.2.1 1.5.7 1.7.8.3.1.4.2.5.3 0 .1 0 .6-.1 1.2Z"
+				/>
+			</svg>
 		</a>
+
 		<!-- Email -->
 		<a
-			class="text-lebblack hover:text-burgundy opacity-0 sm:opacity-100"
-			href="#"
+			class="text-lebblack hover:text-burgundy"
+			href={emailUrl}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Share via Email"
 			title="Share via Email"
 		>
-			<svg
-				class="pt-0.75"
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 100 100"
-				style="enable-background:new 0 0 100 100"
-				xml:space="preserve"
-				><path
+			<svg class="pt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+				<path
 					d="M8 971.4c-2.2 0-4 1.8-4 4v54c0 2.2 1.8 4 4 4h84c2.2 0 4-1.8 4-4v-54c0-2.2-1.8-4-4-4H8zm6.6 6h70.9L50 1010.3l-35.4-32.9zm-4.6 3.9 38 35.2c1.1 1.1 2.9 1.1 4.1 0l38-35.2v46.1H10v-46.1z"
 					class="fill-current transition-colors duration-500"
 					transform="translate(0 -952.362)"
-				/></svg
-			>
+				/>
+			</svg>
 		</a>
 	</div>
 </div>
