@@ -74,6 +74,8 @@
 				swiper = new Swiper(swiperEl, {
 					modules: [Navigation, Pagination, Keyboard],
 					initialSlide: state.index ?? 0,
+					mousewheel: { forceToAxis: true },
+
 					// simulateTouch: true,
 					// threshold: 10,
 					// zoom: {
@@ -168,17 +170,18 @@
 								<img
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
-									loading="lazy"
 									class="block sm:hidden"
+									loading="lazy"
 								/>
 								<img
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
-									loading="lazy"
 									class="absolute left-0 top-0 hidden h-full w-full object-contain sm:block"
+									loading="lazy"
+
 								/>
 								{#if item.caption}
-									<div class="flex flex-row">
+									<div class="flex flex-row" loading="lazy">
 										{#if state.showCaption}
 											<figcaption
 												class="media-caption"
@@ -202,6 +205,7 @@
 								<track kind="captions" src="captions.vtt" srclang="en" label="English" />
 							</video>
 						{/if}
+						<div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 					</div>
 				{/each}
 			</div>
