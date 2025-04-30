@@ -26,18 +26,24 @@
 	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
 	const width = match ? parseInt(match[1], 10) : undefined;
 	const height = match ? parseInt(match[2], 10) : undefined;
+
+	const isStartPage = blok.bgColor === 'bg-transparent' && blok.lightbox === false;
+	const hasLightbox = blok.lightbox === true;
 </script>
 
-<div class="inline-image-wrapper" use:storyblokEditable={blok}>
+<div
+	class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}
+	use:storyblokEditable={blok}
+>
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
-			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
+			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
 			<button
 				type="button"
-				class={`relative flex h-full w-full items-center justify-center`}
+				class={`relative flex h-full w-full items-center justify-center ${isStartPage ? 'no-lightbox p-6' : ''}`}
 				onclick={() => openLightbox(blok.media?.filename.toString())}
 				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
 				data-lightbox={blok.lightbox ? 'true' : 'false'}
@@ -60,7 +66,7 @@
 					</ScrapBookPaper>
 				{:else}
 					<img
-						class="inline-image"
+						class={`inline-image`}
 						src={`${blok.media.filename}/m/480x0`}
 						alt={blok.media.alt || 'Photo alt text is missing.'}
 					/>
@@ -123,7 +129,7 @@
 		transform: rotate(-0deg);
 	}
 
-	.inline-image-wrapper:hover figure:not(.bg-transparent, .bg-scrap-paper) {
+	.inline-image-wrapper:hover figure:not(.bg-transparent, .no-lightbox, .bg-scrap-paper) {
 		border: 0.5px solid #282828;
 	}
 
@@ -131,7 +137,7 @@
 		border: 0.5px solid transparent !important;
 	}
 
-	.inline-image-wrapper:hover figure.bg-transparent img {
+	.inline-image-wrapper:hover figure.bg-transparent:not(.no-lightbox) {
 		border: 0.5px solid #282828;
 	}
 	figure:not(.bg-transparent, .bg-scrap-paper) {

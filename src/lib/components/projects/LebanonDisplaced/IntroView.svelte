@@ -112,7 +112,14 @@
 	}
 
 	.intro-credit {
-		/* Add styles as needed */
+		max-width: 60%;
+	}
+
+	@media screen and (max-width: 640px) {
+		.intro-credit {
+			max-width: 100%;
+			margin-top: 1rem;
+		}
 	}
 
 	.text-shadow {

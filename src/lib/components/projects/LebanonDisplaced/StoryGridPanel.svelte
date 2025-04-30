@@ -28,7 +28,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel group hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel group mx-auto hidden sm:block ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -56,7 +56,7 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`read-more-tag bg-lebgreen absolute ${blok.textAlign === 'left' ? 'right-0' : 'left-0'} px-2 py-1 z-50 flex origin-left items-center justify-center`}
+				class={`read-more-tag absolute bg-lebgreen ${blok.textAlign === 'left' ? 'right-0' : 'left-0'} z-50 flex origin-left items-center justify-center px-2 py-1`}
 			>
 				<h3 class="m-0 p-0 text-white group-hover:underline">Read</h3>
 			</div>
@@ -138,7 +138,7 @@
 		}
 	}
 
-	.story-grid--panel:not(.note, .frame, .placeholder) {
+	.story-grid--panel:not(.note, .brown-card, .placeholder, .picture-frame) {
 		padding: 1rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
@@ -146,7 +146,7 @@
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
-	.story-grid--panel:not(.note, .frame, .placeholder) {
+	.story-grid--panel:not(.note, .brown-card, .placeholder, .picture-frame) {
 		/* box-shadow: 0 0 10px 10px hsla(0, 0%, 0%, 0.025); */
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
@@ -164,12 +164,32 @@
 		background-repeat: no-repeat;
 		bottom: 0;
 		right: 0;
-		/* height: 2.8rem; */
-		/* aspect-ratio: 241/107; */
 	}
 
 	/* Scotch tape effect */
-	.story-grid--panel.frame {
+	.story-grid--panel.brown-card {
+		background: transparent;
+	}
+
+	.story-grid--panel.picture-frame {
+		background-image: url('/assets/ldd/frames/picture-frame--body.png');
+		background-size: 100%;
+		aspect-ratio: 1842/2276;
+		border: none;
+		box-shadow: none;
+		max-width: 200px;
+	}
+
+	:global(.story-grid--panel.picture-frame .media-wrapper) {
+		background: transparent;
+	}
+
+	:global(.story-grid--panel.picture-frame .media-wrapper img) {
+		aspect-ratio: 1583/2013;
+		object-fit: cover;
+	}
+
+	:global(.story-grid--panel.picture-frame .media-wrapper) {
 		background: transparent;
 	}
 
@@ -225,11 +245,6 @@
 		transition: transform 1s ease-in-out;
 	}
 
-	/* img.float-in-place {
-		animation: floatEffect 3s ease-in-out infinite;
-		animation-delay: random(1s, 3s);
-	} */
-
 	/* Fly-out Effects */
 	.story-grid--panel.has-image:hover .panel-object.right {
 		transform: translateX(-60%) rotate(-10deg);
@@ -262,26 +277,9 @@
 		transform: translateY(-2px);
 		cursor: pointer;
 		will-change: transform, background;
-		/* background: rgba(0, 0, 0, 0.05); */
 	}
 
 	:global(.story-grid--panel.has-link:hover .inline-image-wrapper figure) {
 		transform: rotate(0deg) translateY(2px);
-		/* transition-delay: 0.1s; */
 	}
-
-	/* @keyframes floatEffect {
-		0% {
-			transform: translateY(0px);
-			scale: 1;
-		}
-		50% {
-			transform: translateY(-3px);
-			scale: 1.015;
-		}
-		100% {
-			scale: 1;
-			transform: translateY(0px);
-		}
-	} */
 </style>

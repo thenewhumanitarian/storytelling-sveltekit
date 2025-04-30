@@ -54,7 +54,7 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div
-		class={`story-grid--container desktop ${blok.size}`}
+		class={`story-grid--container justify-center items-center desktop ${blok.size}`}
 		style={`grid-template-columns: repeat(${state.columns}, 1fr); grid-template-rows: ${state.gridTemplateRows};`}
 	>
 		{#if blok.text && blok.text !== ''}

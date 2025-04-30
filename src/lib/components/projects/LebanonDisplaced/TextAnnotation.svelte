@@ -106,6 +106,7 @@
 		padding: 0.1rem 0;
 		border-radius: 0;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		font-family: 'ff-amman-serif-pro', serif;
 	}
 
 	/* Fix the arrow color (svg fill) */

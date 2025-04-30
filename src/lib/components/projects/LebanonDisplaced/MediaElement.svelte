@@ -2,8 +2,6 @@
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { openLightbox } from '$lib/stores/lightbox';
 
-	// const maxWidth = 400;
-
 	interface Props {
 		blok: any;
 	}
@@ -19,7 +17,7 @@
 </script>
 
 <button
-	class="media-element"
+	class={`media-element ${blok.lightbox ? 'lightbox' : 'no-lightbox'}`}
 	bind:this={element}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	onclick={() => openLightbox(blok.media?.filename.toString())}
@@ -71,15 +69,15 @@
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		overflow: visible; /* ✅ This is missing */
+		overflow: visible;
 		transform-origin: center center;
 	}
 
-	.media-element .media-wrapper {
+	.media-element:not(.no-lightbox) .media-wrapper {
 		border: 0.5px solid transparent;
 	}
 
-	.media-element:hover .media-wrapper {
+	.media-element:not(.no-lightbox):hover .media-wrapper {
 		border: 0.5px solid #282828;
 	}
 
@@ -88,10 +86,11 @@
 		background: #ffe0b5;
 		padding: 0.5rem;
 		box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
-		width: 175px;
+		width: 100%;
+		max-width: 200px;
 		height: auto;
 		display: inline-block;
-		overflow: visible; /* 👈 Add this! */
+		overflow: visible;
 	}
 
 	.media-wrapper img,
