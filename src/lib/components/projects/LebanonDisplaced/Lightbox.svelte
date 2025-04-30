@@ -188,7 +188,7 @@
 											</figcaption>
 										{/if}
 										<button
-											class="caption-toggle bg-opacity-70 px-3 py-1 text-white opacity-80 hover:underline hover:opacity-100 absolute -bottom-7 text-sm  right-0"
+											class="caption-toggle absolute -bottom-7 right-0 bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100"
 											onclick={() => (state.showCaption = !state.showCaption)}
 										>
 											{state.showCaption ? 'Hide caption' : 'Show caption'}
@@ -370,6 +370,13 @@
 		cursor: pointer;
 		will-change: color;
 		transition: color 0.5s;
+	}
+
+	@media screen and (max-width: 640px) {
+		.lightbox-close {
+			top: 0.75rem;
+			right: 0.5rem;
+		}
 	}
 
 	.lightbox-close:hover,
