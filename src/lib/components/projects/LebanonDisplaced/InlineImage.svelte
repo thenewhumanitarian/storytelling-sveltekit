@@ -72,20 +72,17 @@
 					/>
 				{/if}
 				{#if blok.bgColor === 'bg-transparent'}
-					{#if blok.tape?.includes('tr')}
-						<span class="tape tape-tl"></span>
-					{/if}
 					{#if blok.tape?.includes('tl')}
-						<span class="tape tape-tl"></span>
+						<span class={`tape tape-tl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 					{/if}
 					{#if blok.tape?.includes('tr')}
-						<span class="tape tape-tr"></span>
+						<span class={`tape tape-tr ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 					{/if}
 					{#if blok.tape?.includes('bl')}
-						<span class="tape tape-bl"></span>
+						<span class={`tape tape-bl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 					{/if}
 					{#if blok.tape?.includes('br')}
-						<span class="tape tape-br"></span>
+						<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 					{/if}
 				{/if}
 			</button>
@@ -96,16 +93,16 @@
 
 			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'bg-scrap-paper'}
 				{#if blok.tape?.includes('tl')}
-					<span class="tape tape-tl"></span>
+					<span class={`tape tape-tl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 				{/if}
 				{#if blok.tape?.includes('tr')}
-					<span class="tape tape-tr"></span>
+					<span class={`tape tape-tr ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 				{/if}
 				{#if blok.tape?.includes('bl')}
-					<span class="tape tape-bl"></span>
+					<span class={`tape tape-bl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 				{/if}
 				{#if blok.tape?.includes('br')}
-					<span class="tape tape-br"></span>
+					<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 				{/if}
 			{/if}
 		</figure>
@@ -281,5 +278,37 @@
 		bottom: calc(var(--tape-width) * -0.15);
 		right: calc(var(--tape-width) * -0.35);
 		transform: rotate(-45deg);
+	}
+
+	/* Picture Frame */
+	.tape-br.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--br.png');
+		aspect-ratio: 538/303;
+		opacity: 1;
+		background-size: cover;
+	}
+
+	.tape-tr.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tr.png');
+		aspect-ratio: 421/458;
+		opacity: 1;
+		background-size: cover;
+		top: calc(var(--tape-height) * -0.5);
+	}
+
+	.tape-tl.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		aspect-ratio: 502/250;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(-15deg);
+	}
+
+	.tape-bl.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--bl.png');
+		aspect-ratio: 757/248;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(3deg);
 	}
 </style>
