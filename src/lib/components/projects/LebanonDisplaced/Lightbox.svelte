@@ -74,13 +74,13 @@
 				swiper = new Swiper(swiperEl, {
 					modules: [Navigation, Pagination, Keyboard],
 					initialSlide: state.index ?? 0,
-					simulateTouch: true,
-					grabCursor: true,
-					threshold: 10,
-					zoom: {
-						maxRatio: 3,
-						minRatio: 1
-					},
+					// simulateTouch: true,
+					// threshold: 10,
+					// zoom: {
+					// 	maxRatio: 3,
+					// 	minRatio: 1
+					// },
+					// grabCursor: true,
 					navigation: {
 						nextEl: '.swiper-button-next',
 						prevEl: '.swiper-button-prev'

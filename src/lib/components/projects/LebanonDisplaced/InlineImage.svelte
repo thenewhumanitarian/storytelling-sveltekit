@@ -40,8 +40,8 @@
 				class={`relative flex h-full w-full items-center justify-center`}
 				onclick={() => openLightbox(blok.media?.filename.toString())}
 				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
-				data-lightbox
-				data-lightbox-src={blok.media?.filename}
+				data-lightbox={blok.lightbox ? 'true' : 'false'}
+				data-lightbox-src={blok.lightbox ? blok.media?.filename : ''}
 				data-lightbox-type="image"
 				data-lightbox-caption={blok.caption || ''}
 				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
