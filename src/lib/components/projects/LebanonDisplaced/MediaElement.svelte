@@ -1,51 +1,38 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
-	import { onMount } from 'svelte';
+	import { openLightbox } from '$lib/stores/lightbox';
 
-	import { registerMediaElement, setIndexFromSrc } from '$lib/stores/lightbox';
-
-	const maxWidth = 400;
+	// const maxWidth = 400;
 
 	interface Props {
-		blok: any; // TODO: Define type if you want
+		blok: any;
 	}
 
 	let { blok = {} }: Props = $props();
-
 	let element: HTMLElement;
 
-	onMount(() => {
-		// Extract dimensions from URL like ".../5712x4284/..."
-		const match = blok.media.filename.match(/\/(\d+)x(\d+)\//);
-		const width = match ? parseInt(match[1], 10) : undefined;
-		const height = match ? parseInt(match[2], 10) : undefined;
-
-		if (blok?.media?.filename) {
-			registerMediaElement({
-				src: blok.media.filename,
-				type: blok.media.filename.includes('.mp4') ? 'video' : 'image',
-				caption: blok.caption || '',
-				element,
-				width,
-				height
-			});
-		}
-	});
-
-	function openLightbox() {
-		if (document.body.classList.contains('is-storyblok-editor')) return;
-		setIndexFromSrc(blok.media.filename);
-	}
+	// Extract width/height from Storyblok filename (e.g. ".../5712x4284/...")
+	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
+	const width = match ? parseInt(match[1], 10) : undefined;
+	const height = match ? parseInt(match[2], 10) : undefined;
+	const type = blok.media?.filename?.includes('.mp4') ? 'video' : 'image';
 </script>
 
 <button
 	class="media-element"
 	bind:this={element}
-	onclick={openLightbox}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
+	onclick={() => openLightbox(blok.media?.filename.toString())}
+	data-lightbox-src={blok.media?.filename}
+	data-lightbox
+	data-lightbox-type={type}
+	data-lightbox-caption={blok.caption || ''}
+	data-lightbox-alt={blok.media?.alt || 'Alt text for thiw photo is missing. Apologies.'}
+	data-lightbox-width={width}
+	data-lightbox-height={height}
 >
 	<div class="media-wrapper">
-		{#if blok.media?.filename.includes('.mp4')}
+		{#if type === 'video'}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
 			<img
@@ -54,7 +41,6 @@
 			/>
 		{/if}
 
-		<!-- Scotch tape corners -->
 		{#if blok.tape?.includes('tl')}
 			<span class="tape tape-tl"></span>
 		{/if}

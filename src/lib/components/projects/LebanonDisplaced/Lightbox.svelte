@@ -1,9 +1,5 @@
 <script lang="ts">
 	import { tick, getContext, onMount, onDestroy } from 'svelte';
-
-	const lang = getContext('lang');
-	const isRtl = lang === 'ar';
-
 	import Swiper from 'swiper';
 	import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 	import 'swiper/css';
@@ -12,36 +8,21 @@
 
 	import { lightboxItems, currentIndex } from '$lib/stores/lightbox';
 
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
+
 	let swiperEl: HTMLDivElement;
 	let swiper: Swiper | undefined;
-
-	// Stop all videos when the lightbox is closed
-	$effect(() => {
-		if (!state.isVisible && swiper) {
-			swiper.destroy(true, true);
-			swiper = undefined;
-		}
-	});
-
-	onMount(() => {
-		const handleKeydown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
-				close();
-			}
-		};
-		window.addEventListener('keydown', handleKeydown);
-
-		onDestroy(() => {
-			window.removeEventListener('keydown', handleKeydown);
-		});
-	});
+	let videoEls: (HTMLVideoElement | undefined)[] = [];
 
 	const state = $state<{
 		index: number | null;
 		isVisible: boolean;
+		showCaption: boolean;
 	}>({
 		index: null,
-		isVisible: false
+		isVisible: false,
+		showCaption: true
 	});
 
 	$effect(() => {
@@ -51,55 +32,91 @@
 
 	const close = () => currentIndex.set(null);
 
-	$effect(async () => {
+	function buildLightboxItemsFromDOM(): LightboxItem[] {
+		const elements = Array.from(document.querySelectorAll('[data-lightbox]')) as HTMLElement[];
+		const seen = new Set<string>();
+
+		return elements
+			.map((el) => {
+				const src = el.getAttribute('data-lightbox-src') || '';
+				if (!src || seen.has(src)) return null;
+				seen.add(src);
+
+				return {
+					src,
+					type: (el.getAttribute('data-lightbox-type') || 'image') as 'image' | 'video',
+					width: parseInt(el.getAttribute('data-lightbox-width') || '0', 10),
+					height: parseInt(el.getAttribute('data-lightbox-height') || '0', 10),
+					caption: el.getAttribute('data-lightbox-caption') || '' // ✅ always string
+				} satisfies LightboxItem;
+			})
+			.filter(Boolean) as LightboxItem[];
+	}
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKeydown);
+		onDestroy(() => window.removeEventListener('keydown', handleKeydown));
+	});
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') close();
+	}
+
+	$effect(() => {
 		if (!state.isVisible || state.index === null) return;
 
-		await tick(); // Ensure DOM
+		(async () => {
+			await tick(); // Ensure DOM is updated
 
-		if (!swiper) {
-			swiper = new Swiper(swiperEl, {
-				modules: [Navigation, Pagination, Keyboard],
-				initialSlide: state.index ?? 0,
-				zoom: {
-					maxRatio: 3,
-					minRatio: 1
-				},
-				navigation: {
-					nextEl: '.swiper-button-next',
-					prevEl: '.swiper-button-prev'
-				},
-				pagination: {
-					el: '.swiper-pagination',
-					clickable: true
-				},
-				keyboard: {
-					enabled: true
-				},
-				hashNavigation: {
-					watchState: true
-				},
-				observer: true,
-				observeSlideChildren: true
-			});
+			lightboxItems.set(buildLightboxItemsFromDOM());
 
-			swiper.on('slideChange', () => {
-				currentIndex.set(swiper.realIndex);
-				swiper.pagination?.update?.();
-
-				// 🔇 Pause all videos except the active one
-				videoEls.forEach((video, i) => {
-					if (!video) return;
-					if (i === swiper.realIndex) {
-						video.play().catch(() => {});
-					} else {
-						video.pause();
-						video.currentTime = 0; // optional: reset video to beginning
-					}
+			if (!swiper) {
+				swiper = new Swiper(swiperEl, {
+					modules: [Navigation, Pagination, Keyboard],
+					initialSlide: state.index ?? 0,
+					simulateTouch: true,
+					grabCursor: true,
+					threshold: 10,
+					zoom: {
+						maxRatio: 3,
+						minRatio: 1
+					},
+					navigation: {
+						nextEl: '.swiper-button-next',
+						prevEl: '.swiper-button-prev'
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true
+					},
+					keyboard: {
+						enabled: true
+					},
+					hashNavigation: {
+						watchState: true
+					},
+					observer: true,
+					observeSlideChildren: true
 				});
-			});
-		} else {
-			swiper.slideTo(state.index, 0);
-		}
+
+				swiper.on('slideChange', () => {
+					currentIndex.set(swiper.realIndex);
+					swiper.pagination?.update?.();
+
+					videoEls.forEach((video, i) => {
+						if (!video) return;
+						if (i === swiper.realIndex) {
+							video.play().catch(() => {});
+						} else {
+							video.pause();
+							video.currentTime = 0;
+						}
+					});
+				});
+			} else {
+				swiper.slideTo(state.index, 0);
+			}
+		})();
 	});
 
 	$effect(() => {
@@ -109,19 +126,11 @@
 		}
 	});
 
-	let videoEls: (HTMLVideoElement | undefined)[] = [];
-
 	$effect(() => {
 		if (!swiper || !$lightboxItems.length) return;
-
 		videoEls.forEach((video, i) => {
 			if (!video) return;
-
-			if (i === swiper.realIndex) {
-				video.play().catch(() => {});
-			} else {
-				video.pause();
-			}
+			i === swiper.realIndex ? video.play().catch(() => {}) : video.pause();
 		});
 	});
 
@@ -132,32 +141,19 @@
 	}
 </script>
 
+<!-- Lightbox UI -->
 {#if state.isVisible && state.index !== null && $lightboxItems[state.index]}
 	<div
 		class="lightbox-overlay"
 		role="dialog"
 		tabindex="0"
-		onclick={(e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			close();
-		}}
-		onkeydown={(e) => {
-			if (e.key === 'Escape') {
-				e.preventDefault();
-				close();
-			}
-		}}
+		onclick={(e) => (e.preventDefault(), e.stopPropagation(), close())}
 	>
-		<!-- Swiper Root -->
 		<div
 			bind:this={swiperEl}
 			class="swiper lightbox-swiper"
 			role="region"
-			onclick={(e) => {
-				e.preventDefault();
-				e.stopPropagation();
-			}}
+			onclick={(e) => (e.preventDefault(), e.stopPropagation())}
 			dir={isRtl ? 'rtl' : 'ltr'}
 		>
 			<div class="swiper-wrapper">
@@ -167,7 +163,7 @@
 							<figure class="media-figure bg-brown">
 								<div
 									style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
-									class="absolute left-0 top-0 h-full w-full bg-lebgreen"
+									class="absolute left-0 top-0 h-full w-full sm:bg-lebgreen"
 								></div>
 								<img
 									src={`${item.src}/m/1024x0`}
@@ -178,16 +174,26 @@
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
 									loading="lazy"
-									class="absolute left-0 top-0 h-full w-full object-contain"
+									class="absolute left-0 top-0 hidden h-full w-full object-contain sm:block"
 								/>
 								{#if item.caption}
-									<figcaption
-										class="media-caption"
-										style={`text-align: ${isRtl ? 'right' : 'left'}`}
-										dir={isRtl ? 'rtl' : 'ltr'}
-									>
-										{decodeHTML(item.caption)}
-									</figcaption>
+									<div class="flex flex-row">
+										{#if state.showCaption}
+											<figcaption
+												class="media-caption"
+												style={`text-align: ${isRtl ? 'right' : 'left'}`}
+												dir={isRtl ? 'rtl' : 'ltr'}
+											>
+												{decodeHTML(item.caption)}
+											</figcaption>
+										{/if}
+										<button
+											class="caption-toggle bg-opacity-70 px-3 py-1 text-white opacity-80 hover:underline hover:opacity-100 absolute -bottom-7 text-sm  right-0"
+											onclick={() => (state.showCaption = !state.showCaption)}
+										>
+											{state.showCaption ? 'Hide caption' : 'Show caption'}
+										</button>
+									</div>
 								{/if}
 							</figure>
 						{:else if item.type === 'video'}
@@ -198,23 +204,11 @@
 					</div>
 				{/each}
 			</div>
-
-			<!-- Navigation -->
 			<div class="swiper-button-prev"></div>
 			<div class="swiper-button-next"></div>
 			<div class="swiper-pagination"></div>
 		</div>
-
-		<!-- Close Button -->
-		<button
-			class="lightbox-close"
-			onclick={(e) => {
-				e.preventDefault();
-				close();
-			}}
-		>
-			×
-		</button>
+		<button class="lightbox-close" onclick={(e) => (e.preventDefault(), close())}>×</button>
 	</div>
 {/if}
 
@@ -243,6 +237,26 @@
 		height: 1rem;
 		border-radius: 1px;
 	}
+	@media screen and (max-width: 640px) {
+		:global(.swiper-pagination) {
+			padding: 0 1.5rem;
+		}
+		:global(.swiper-pagination-bullet) {
+			width: 0.6rem;
+			height: 0.6rem;
+		}
+		:global(.swiper-pagination-bullet-active) {
+			width: 1.8rem;
+			height: 0.6rem;
+		}
+		:global(
+			.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
+			.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet
+		) {
+			margin: 0 0.125rem;
+		}
+	}
+
 	.lightbox-overlay {
 		z-index: 9999;
 		position: fixed;

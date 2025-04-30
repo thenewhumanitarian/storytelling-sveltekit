@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
-	import { onMount } from 'svelte';
-	import { registerMediaElement, setIndexFromSrc } from '$lib/stores/lightbox';
+	import { openLightbox } from '$lib/stores/lightbox';
 	import ScrapBookPaper from '$lib/components/projects/LebanonDisplaced/ScrapBookPaper.svelte';
 
 	const { blok } = $props();
@@ -15,12 +14,6 @@
 
 	let figureEl: HTMLElement;
 
-	function openLightbox() {
-		if (!blok.lightbox) return;
-		if (document.body.classList.contains('is-storyblok-editor')) return;
-		setIndexFromSrc(blok.media.filename);
-	}
-
 	function escapeHTML(str: string) {
 		return str
 			.replace(/&/g, '&amp;')
@@ -30,25 +23,9 @@
 			.replace(/'/g, '&#039;');
 	}
 
-	onMount(() => {
-		if (blok?.media?.filename && figureEl) {
-			if (!blok.lightbox) return;
-
-			// Extract dimensions from URL like ".../5712x4284/..."
-			const match = blok.media.filename.match(/\/(\d+)x(\d+)\//);
-			const width = match ? parseInt(match[1], 10) : undefined;
-			const height = match ? parseInt(match[2], 10) : undefined;
-
-			registerMediaElement({
-				src: blok.media.filename,
-				type: 'image',
-				caption: escapeHTML(blok.caption || ''),
-				element: figureEl,
-				width,
-				height
-			});
-		}
-	});
+	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
+	const width = match ? parseInt(match[1], 10) : undefined;
+	const height = match ? parseInt(match[2], 10) : undefined;
 </script>
 
 <div class="inline-image-wrapper" use:storyblokEditable={blok}>
@@ -61,8 +38,15 @@
 			<button
 				type="button"
 				class={`relative flex h-full w-full items-center justify-center`}
-				onclick={openLightbox}
+				onclick={() => openLightbox(blok.media?.filename.toString())}
 				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
+				data-lightbox
+				data-lightbox-src={blok.media?.filename}
+				data-lightbox-type="image"
+				data-lightbox-caption={blok.caption || ''}
+				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
+				data-lightbox-width={width}
+				data-lightbox-height={height}
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
