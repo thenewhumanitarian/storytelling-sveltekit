@@ -184,7 +184,7 @@
 		background: transparent;
 	}
 
-	:global(.story-grid--panel.picture-frame .media-wrapper img) {
+	:global(.story-grid--panel.picture-frame .media-wrapper img, .story-grid--panel.picture-frame .media-wrapper video) {
 		aspect-ratio: 1583/2013;
 		object-fit: cover;
 	}

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { openLightbox } from '$lib/stores/lightbox';
 
@@ -14,10 +16,21 @@
 	const width = match ? parseInt(match[1], 10) : undefined;
 	const height = match ? parseInt(match[2], 10) : undefined;
 	const type = blok.media?.filename?.includes('.mp4') ? 'video' : 'image';
+
+	onMount(() => {
+		if (blok.pictureFrame && element) {
+			const tapeElements = element.querySelectorAll('.tape');
+
+			tapeElements.forEach((el) => {
+				const randomDeg = Math.random() * 180 - 90; // Random angle between -90 and 90 degrees
+				el.style.transform += ` rotate(${randomDeg.toFixed(2)}deg)`;
+			});
+		}
+	});
 </script>
 
 <button
-	class={`media-element ${blok.lightbox ? 'lightbox' : 'no-lightbox'}`}
+	class={`media-element ${blok.lightbox ? 'lightbox' : 'no-lightbox'} ${blok.pictureFrame ? 'picture-frame' : ''}`}
 	bind:this={element}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	onclick={() => openLightbox(blok.media?.filename.toString())}
@@ -40,16 +53,16 @@
 		{/if}
 
 		{#if blok.tape?.includes('tl')}
-			<span class="tape tape-tl"></span>
+			<span class={`tape tape-tl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 		{/if}
 		{#if blok.tape?.includes('tr')}
-			<span class="tape tape-tr"></span>
+			<span class={`tape tape-tr ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 		{/if}
 		{#if blok.tape?.includes('bl')}
-			<span class="tape tape-bl"></span>
+			<span class={`tape tape-bl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 		{/if}
 		{#if blok.tape?.includes('br')}
-			<span class="tape tape-br"></span>
+			<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 		{/if}
 	</div>
 </button>
@@ -137,5 +150,36 @@
 		bottom: calc(var(--tape-width) * -0.15);
 		right: calc(var(--tape-width) * -0.35);
 		transform: rotate(-45deg);
+	}
+
+	.tape-br.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--br.png');
+		aspect-ratio: 538/303;
+		opacity: 1;
+		background-size: cover;
+	}
+
+	.tape-tr.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tr.png');
+		aspect-ratio: 421/458;
+		opacity: 1;
+		background-size: cover;
+		top: calc(var(--tape-height) * -0.5);
+	}
+
+	.tape-tl.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		aspect-ratio: 502/250;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(-15deg);
+	}
+
+	.tape-bl.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--bl.png');
+		aspect-ratio: 757/248;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(3deg);
 	}
 </style>
