@@ -68,7 +68,7 @@
 	@media screen and (max-width: 660px) {
 		.content-wrapper {
 			width: 100%;
-			padding: 1.5rem 1rem;
+			padding: 1rem 1rem;
 		}
 		.content-wrapper.small {
 			margin: 2rem 1rem;

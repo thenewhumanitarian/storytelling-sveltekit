@@ -84,7 +84,7 @@
 		justify-content: space-between;
 		height: 100%;
 		width: 100%;
-		max-width: 55%;
+		max-width: 45%;
 		padding-top: 6rem;
 	}
 
@@ -112,7 +112,7 @@
 	}
 
 	.intro-credit {
-		max-width: 60%;
+		max-width: 90%;
 	}
 
 	@media screen and (max-width: 640px) {
