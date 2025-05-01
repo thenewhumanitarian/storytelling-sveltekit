@@ -80,7 +80,7 @@
 	style="--grid-rows: auto;"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div class={`story-grid--container mobile ${blok.size}`}>
+	<div class={`story-grid--container flex items-center justify-center mobile ${blok.size}`}>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
@@ -118,7 +118,7 @@
 
 	@media screen and (max-width: 750px) {
 		.story-grid--wrapper.mobile {
-			display: block;
+			display: flex;
 		}
 
 		.story-grid--wrapper.desktop {

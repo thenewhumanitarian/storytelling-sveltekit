@@ -30,7 +30,7 @@
 </script>
 
 <button
-	class={`media-element ${blok.lightbox ? 'lightbox' : 'no-lightbox'} ${blok.pictureFrame ? 'picture-frame' : ''}`}
+	class={`media-element ${blok.pictureFrame ? 'picture-frame' : ''} ${blok.lightbox ? 'lightbox' : 'no-lightbox'}`}
 	bind:this={element}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	onclick={() => openLightbox(blok.media?.filename.toString())}
@@ -42,7 +42,7 @@
 	data-lightbox-width={width}
 	data-lightbox-height={height}
 >
-	<div class="media-wrapper">
+	<div class={`media-wrapper ${blok.pictureFrame ? 'picture-frame' : ''}`}>
 		{#if type === 'video'}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
 		{:else}
@@ -97,13 +97,17 @@
 	.media-wrapper {
 		position: relative;
 		background: #ffe0b5;
-		padding: 0.5rem;
-		box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+		padding: 1rem;
 		width: 100%;
 		max-width: 200px;
 		height: auto;
 		display: inline-block;
 		overflow: visible;
+		box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
+	}
+
+	.media-wrapper.picture-frame {
+		box-shadow: none;
 	}
 
 	.media-wrapper img,

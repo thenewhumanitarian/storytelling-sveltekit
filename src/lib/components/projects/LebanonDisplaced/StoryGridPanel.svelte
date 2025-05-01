@@ -84,7 +84,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel hover-transit block sm:hidden panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel hover-transit flex sm:hidden panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -156,8 +156,10 @@
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
-	:global(.story-grid-panel.picture-frame-landscape) {
-		padding: 1rem;
+	:global(.story-grid--panel.picture-frame-landscape) {
+		/* display: flex; */
+		align-items: center;
+		justify-content: center;
 	}
 
 	.story-grid--panel.note {
@@ -190,10 +192,9 @@
 	}
 
 	.story-grid--panel.picture-frame-landscape {
-		aspect-ratio: 2276/1842;
 		background-image: url('/assets/ldd/frames/picture-frame--body--landscape.png');
 		background-size: 100%;
-		aspect-ratio: 1842/2276;
+		aspect-ratio: 2/1.75;
 		border: none;
 		box-shadow: none;
 		max-width: 200px;
@@ -218,7 +219,7 @@
 		.story-grid--panel.picture-frame-landscape .media-wrapper img,
 		.story-grid--panel.picture-frame-landscape .media-wrapper video
 	) {
-		aspect-ratio: 2013/1583;
+		aspect-ratio: 4/3;
 		object-fit: cover;
 	}
 
