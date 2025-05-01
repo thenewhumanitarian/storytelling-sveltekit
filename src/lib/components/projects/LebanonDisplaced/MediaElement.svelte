@@ -97,7 +97,7 @@
 	.media-wrapper {
 		position: relative;
 		background: #ffe0b5;
-		padding: 1rem;
+		padding: 0.5rem;
 		width: 100%;
 		max-width: 200px;
 		height: auto;
@@ -106,8 +106,17 @@
 		box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
 	}
 
-	.media-wrapper.picture-frame {
-		box-shadow: none;
+	.media-wrapper.picture-frame,
+	.media-wrapper.picture-frame-landscape {
+		padding: 0.75rem;
+	}
+
+	@media screen and (max-width: 640px) {
+		.media-wrapper.picture-frame,
+		.media-wrapper.picture-frame-landscape {
+			box-shadow: none;
+			padding: 1rem;
+		}
 	}
 
 	.media-wrapper img,

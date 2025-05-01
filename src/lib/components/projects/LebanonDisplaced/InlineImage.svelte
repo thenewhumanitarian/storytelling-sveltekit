@@ -38,7 +38,7 @@
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
-			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'my-3 p-3'}`}
+			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'p-2'}`}
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
 		>
 			<button
