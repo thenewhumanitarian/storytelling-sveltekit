@@ -177,8 +177,8 @@
 		aspect-ratio: 421/458;
 		opacity: 1;
 		background-size: cover;
-		top: calc(var(--tape-height) * -0.1);
-		right: calc(var(--tape-width) * -0.175);
+		top: calc(var(--tape-height) * -0.4);
+		right: calc(var(--tape-width) * -0.35);
 	}
 
 	.tape-tl.picture-frame {
@@ -187,7 +187,7 @@
 		opacity: 1;
 		background-size: cover;
 		transform: rotate(-15deg);
-		top: calc(var(--tape-height) * -0.05);
+		top: calc(var(--tape-height) * -0.5);
 		right: calc(var(--tape-width) * -0.15);
 	}
 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { reinitStoryblok } from '$lib/utils/storyblok';
-
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
 	import type { PageData } from './$types';
 

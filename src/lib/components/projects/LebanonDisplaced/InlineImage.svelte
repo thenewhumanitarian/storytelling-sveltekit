@@ -207,13 +207,17 @@
 			margin: 2.5rem auto;
 		}
 
+		.inline-image-wrapper.no-lightbox {
+			margin: 1rem auto;
+		}
+
 		.align-left,
 		.align-right,
 		.align-center {
 			float: none;
 			margin: 3rem auto;
 			width: 100%;
-			max-width: 400px;
+			max-width: 360px;
 		}
 
 		.align-left figcaption,
