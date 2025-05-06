@@ -109,11 +109,11 @@
 					/>
 				{/if}
 				<span
-					class="pointer-events-auto mb-1 inline-block font-serif text-xl font-bold hover:text-burgundy hover:underline"
+					class="pointer-events-auto mb-1 inline-block font-serif text-xl font-bold text-burgundy hover:underline"
 				>
 					{item.content.pageTitleShort || item.content.pageTitle}
 				</span>
-				<p class="line-clamp-5 font-amman text-base text-gray-700">
+				<p class="line-clamp-5 font-amman text-base text-black">
 					{item.content.previewText || item.content.pageDescription}
 				</p>
 				<div

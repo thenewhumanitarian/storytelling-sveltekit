@@ -117,7 +117,8 @@
 	:global(.tippy-content) {
 		display: block;
 		width: 100%;
-		padding: 0.1rem 0.4rem;
+		/* padding: 0.1rem 0.4rem; */
+		padding: 0.5rem;
 	}
 
 	:global(.tippy-content > p) {
