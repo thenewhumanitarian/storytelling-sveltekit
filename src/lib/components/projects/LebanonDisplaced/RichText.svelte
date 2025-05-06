@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { onMount } from 'svelte'; // ✅ correct import
-	import { richTextResolver } from '@storyblok/richtext';
+	import { richTextResolver, MarkTypes } from '@storyblok/richtext';
+
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 
 	import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.svelte';
 	import PullQuote from '$lib/components/projects/LebanonDisplaced/PullQuote.svelte';
@@ -33,6 +35,29 @@
 					return `<line-break data-blok='${escapeHTML(JSON.stringify(blok))}'></line-break>`;
 				}
 				return '';
+			},
+			[MarkTypes.LINK]: (node) => {
+				const { href = '', target, rel, linktype, anchor } = node.attrs || {};
+
+				// Use PUBLIC_BASE_URL from your environment
+				const basePath = `${PUBLIC_BASE_URL}/stories/2025/lebanon-displacement-diaries`;
+
+				const isInternal = linktype === 'story' && href.startsWith('/');
+				const cleanHref = href.startsWith('/') ? href.slice(1) : href;
+
+				let finalHref = isInternal ? `${basePath}/${cleanHref}` : href;
+
+				if (anchor) {
+					finalHref += `#${anchor}`;
+				}
+
+				const targetAttr = target ? ` target="${target}"` : '';
+				const relAttr = rel ? ` rel="${rel}"` : '';
+
+				// Use .text for plain links or map/render for rich children
+				const content = node.text || node.content?.map(render).join('') || '';
+
+				return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
 			}
 		}
 	});
