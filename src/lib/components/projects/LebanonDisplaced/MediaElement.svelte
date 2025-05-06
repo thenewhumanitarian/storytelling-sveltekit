@@ -45,7 +45,7 @@
 	<div class={`media-wrapper ${blok.pictureFrame ? 'picture-frame' : ''}`}>
 		{#if type === 'video'}
 			<video src={blok.media.filename} autoplay loop muted playsinline />
-		{:else}
+		{:else if blok.media?.filename}
 			<img
 				src={`${blok.media.filename}/m/240x0/filters:format(webp):quality(80)`}
 				alt={blok.media.alt || 'Photo alt text is missing.'}
