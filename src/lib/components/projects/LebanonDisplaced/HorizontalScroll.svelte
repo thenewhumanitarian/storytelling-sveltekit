@@ -5,7 +5,8 @@
 	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
 
 	const { items, lang } = $props();
-	const repeatedItems = Array.from({ length: 10 }, () => items[(Math.random() * items.length) | 0]);
+	// const repeatedItems = Array.from({ length: 10 }, () => items[(Math.random() * items.length) | 0]);
+	const repeatedItems = items;
 
 	let scrollWrapper: HTMLDivElement;
 	let isDown = false;
@@ -93,7 +94,7 @@
 >
 	<div class="horizontal-scroll-content flex h-full gap-6">
 		<div class="w-[20px] shrink-0"></div>
-		{#each repeatedItems as item, i (i)}
+		{#each items as item, i (item.uuid || i)}
 			<a
 				data-sveltekit-reload
 				onclick={handleClick}
@@ -110,7 +111,7 @@
 				<span
 					class="pointer-events-auto mb-1 inline-block font-serif text-xl font-bold hover:text-burgundy hover:underline"
 				>
-					{item.content.pageTitle}
+					{item.content.pageTitleShort || item.content.pageTitle}
 				</span>
 				<p class="line-clamp-5 font-amman text-base text-gray-700">
 					{item.content.previewText || item.content.pageDescription}

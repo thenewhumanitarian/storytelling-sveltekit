@@ -130,7 +130,13 @@
 		font-size: 0.9rem !important;
 		font-family: 'Roboto', sans-serif !important;
 		width: 100%;
+		text-align: left;
 		/* display: block; */
+	}
+
+	:global(.arabic .tippy-content *) {
+		text-align: right;
+		direction: rtl;
 	}
 
 	:global(.text-annotation) {

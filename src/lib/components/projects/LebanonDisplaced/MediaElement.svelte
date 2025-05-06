@@ -15,7 +15,7 @@
 	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
 	const width = match ? parseInt(match[1], 10) : undefined;
 	const height = match ? parseInt(match[2], 10) : undefined;
-	const type = blok.media?.filename?.includes('.mp4') ? 'video' : 'image';
+	const type = blok.media?.filename?.toLowerCase().includes('.mp4') ? 'video' : 'image';
 
 	onMount(() => {
 		if (blok.pictureFrame && element) {

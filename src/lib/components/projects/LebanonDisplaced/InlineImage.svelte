@@ -126,9 +126,9 @@
 		transform: rotate(-0deg);
 	}
 
-	.inline-image-wrapper:hover figure:not(.bg-transparent, .no-lightbox, .bg-scrap-paper) {
+	/* .inline-image-wrapper:hover figure:not(.bg-transparent, .no-lightbox, .bg-scrap-paper) {
 		border: 0.5px solid #282828;
-	}
+	} */
 
 	.inline-image-wrapper:hover figure.bg-scrap-paper {
 		border: 0.5px solid transparent !important;
