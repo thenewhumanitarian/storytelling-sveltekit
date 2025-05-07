@@ -1,4 +1,29 @@
-<a href="https://www.thenewhumanitarian.org/" title="The New Humanitarian">
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	let linkHref = 'https://www.thenewhumanitarian.org';
+
+	onMount(() => {
+		if (typeof window !== 'undefined') {
+			const path = window.location.pathname;
+			const isArabic = path.includes('/ar/');
+			const isOnHomePage = path.endsWith('/home') || path.endsWith('/home/');
+
+			if (!isOnHomePage) {
+				linkHref = isArabic
+					? '/stories/2025/lebanon-displacement-diaries/ar/home'
+					: '/stories/2025/lebanon-displacement-diaries/home';
+			}
+		}
+	});
+</script>
+
+<a
+	href={linkHref || 'https://www.thenewhumanitarian.org'}
+	rel={'external nofollow noopener'}
+	title="The New Humanitarian"
+	data-sveltekit-reload
+>
 	<div class="logo">
 		<svg xmlns="http://www.w3.org/2000/svg" id="ANIMATED-LOGO" viewBox="0 0 405.32 109.7">
 			<defs
