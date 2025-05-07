@@ -99,17 +99,19 @@
 				data-sveltekit-reload
 				onclick={handleClick}
 				href={`/stories/2025/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
-				class="related-diaries--container pointer-events-none relative flex h-full max-w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-4 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
+				class="related-diaries--container pointer-events-none relative flex h-full max-w-[280px] shrink-0 select-none flex-col justify-start border-[0.5px] border-black bg-brown p-2 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
 			>
 				{#if item.content?.previewImage?.filename}
-					<img
-						src={`${item.content.previewImage.filename}/m/640x360/filters:format(jpg):quality(50)`}
-						alt={item.content.pageTitle}
-						class="mb-4 w-full object-cover"
-					/>
+					<div class="flex h-full w-full items-center justify-center bg-transparent">
+						<img
+							src={`${item.content.previewImage.filename}/m/644x540/filters:format(webp):quality(50)`}
+							alt={item.content.pageTitle}
+							class="w-full object-cover"
+						/>
+					</div>
 				{/if}
 				<span
-					class="pointer-events-auto mb-1 inline-block font-serif text-xl font-bold text-burgundy hover:underline"
+					class="pointer-events-auto mt-2 mb-0.5 inline-block font-serif text-xl font-bold text-lebgreen hover:underline"
 				>
 					{item.content.pageTitleShort || item.content.pageTitle}
 				</span>
@@ -117,9 +119,9 @@
 					{item.content.previewText || item.content.pageDescription}
 				</p>
 				<div
-					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
+					class={`read-more-tag pointer-events-auto absolute top-0 z-50 flex origin-left items-center justify-center bg-brown shadow border-l-[0.5px] border-b-[0.5px] border-lebblack px-2 py-1`}
 				>
-					<h3 class="m-0 inline p-0 text-base text-white hover:underline">Read</h3>
+					<h3 class="m-0 inline p-0 text-base text-lebgreen hover:underline">Read</h3>
 				</div>
 			</a>
 		{/each}

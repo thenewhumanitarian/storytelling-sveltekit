@@ -14,14 +14,14 @@
 
 	let figureEl: HTMLElement;
 
-	function escapeHTML(str: string) {
-		return str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#039;');
-	}
+	// function escapeHTML(str: string) {
+	// 	return str
+	// 		.replace(/&/g, '&amp;')
+	// 		.replace(/</g, '&lt;')
+	// 		.replace(/>/g, '&gt;')
+	// 		.replace(/"/g, '&quot;')
+	// 		.replace(/'/g, '&#039;');
+	// }
 
 	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
 	const width = match ? parseInt(match[1], 10) : undefined;
@@ -134,9 +134,9 @@
 		border: 0.5px solid transparent !important;
 	}
 
-	.inline-image-wrapper:hover figure.bg-transparent:not(.no-lightbox) {
+	/* .inline-image-wrapper:hover figure.bg-transparent:not(.no-lightbox) {
 		border: 0.5px solid #282828;
-	}
+	} */
 	figure:not(.bg-transparent, .bg-scrap-paper) {
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
@@ -147,9 +147,9 @@
 		padding: 0;
 	}
 
-.align-right {
-	margin-top: 2rem;
-}
+	.align-right {
+		margin-top: 2rem;
+	}
 
 	.align-left {
 		float: left;
