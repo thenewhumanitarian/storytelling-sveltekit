@@ -157,12 +157,16 @@
 	:global(.storyblok--richtext p) {
 		display: block;
 		white-space: normal;
-		font-size: 1.1rem;
+		font-size: 1.2rem;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		font-weight: medium;
-		line-height: 1.25;
+		line-height: 1.3;
 	}
+
+	/* :global(.arabic p) {
+		font-size: 1.3rem;
+	} */
 
 	:global(.storyblok--richtext a:hover) {
 		text-decoration: underline;
@@ -236,6 +240,7 @@
 	:global(.arabic *) {
 		direction: rtl;
 	}
+
 
 	:global(.arabic *:not(.text-center, .text-right)) {
 		text-align: right;

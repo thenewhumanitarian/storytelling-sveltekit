@@ -147,13 +147,17 @@
 		padding: 0;
 	}
 
+.align-right {
+	margin-top: 2rem;
+}
+
 	.align-left {
 		float: left;
 		width: 50%;
 		margin-left: -25%;
 		margin-right: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
-		margin-top: 1rem;
+		margin-top: 2rem;
 		margin-bottom: 1rem;
 	}
 

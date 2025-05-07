@@ -8,27 +8,27 @@
         h1 {
             font-family: sans-serif;
         }
-        
+
         header {
             border-bottom: 1px dotted #aaa;
             background-color: #666;
         }
-        
+
         .wrapper {
             width: 49%;
             height: 100%;
             border: 1px dotted #aaa;
         }
-        
+
         iframe {
             width: 100%;
             height: 100%;
         }
-        
+
         .wrapper-new {
             float: left;
         }
-        
+
         .wrapper-old {
             float: right;
         }
@@ -41,7 +41,7 @@
                 return;
             }
             var old = fragment.replace('/embed/index.html', '/embed/old-index.html')
-            console.log(`old is ${old}`)
+            // console.log(`old is ${old}`)
             document.getElementById('timeline-old').src = old
             document.getElementById('timeline-new').src = fragment
         }

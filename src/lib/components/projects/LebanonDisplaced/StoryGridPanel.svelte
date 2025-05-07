@@ -23,6 +23,8 @@
 	});
 
 	const hasLink = blok.link?.id || blok.link?.url;
+
+	// console.log(blok.textAlign);
 </script>
 
 <div
@@ -56,7 +58,7 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`read-more-tag absolute bg-lebgreen ${blok.textAlign === 'left' ? 'right-0' : 'left-0'} z-50 flex origin-left items-center justify-center px-2 py-1`}
+				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag absolute -z-1 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
 			>
 				<h3 class="m-0 p-0 text-white group-hover:underline">Read</h3>
 			</div>
@@ -132,6 +134,36 @@
 		transition: opacity 0.5s;
 	}
 
+	.read-more-tag {
+		top: 0;
+	}
+
+	.read-more-tag.left {
+		left: 0;
+		right: unset;
+	}
+
+	.read-more-tag.right {
+		right: 0;
+		left: unset;
+	}
+
+	@media screen and (max-width: 925px) {
+		.read-more-tag {
+			top: 0;
+			bottom: unset;
+		}
+		.read-more-tag.right,
+		.read-more-tag.left {
+			left: 0;
+			right: unset;
+		}
+		:global(.arabic .read-more-tag.right, .arabic .read-more-tag.left) {
+			left: unset;
+			right: 0;
+		}
+	}
+
 	@media screen and (max-width: 640px) {
 		.stpo .story-grid--panel {
 			grid-column: span 1 !important;
@@ -167,14 +199,6 @@
 		background-size: contain;
 		border-color: transparent;
 		width: 100%;
-	}
-
-	/* Read more tag */
-	.read-more-tag {
-		background-size: 100%;
-		background-repeat: no-repeat;
-		bottom: 0;
-		right: 0;
 	}
 
 	/* Scotch tape effect */

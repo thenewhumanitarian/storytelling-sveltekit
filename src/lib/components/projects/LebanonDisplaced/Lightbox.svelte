@@ -19,10 +19,12 @@
 		index: number | null;
 		isVisible: boolean;
 		showCaption: boolean;
+		imagesLoaded: boolean[];
 	}>({
 		index: null,
 		isVisible: false,
-		showCaption: true
+		showCaption: true,
+		imagesLoaded: []
 	});
 
 	$effect(() => {
@@ -69,6 +71,8 @@
 			await tick(); // Ensure DOM is updated
 
 			lightboxItems.set(buildLightboxItemsFromDOM());
+
+			state.imagesLoaded = $lightboxItems.map(() => false);
 
 			if (!swiper) {
 				swiper = new Swiper(swiperEl, {
@@ -172,16 +176,17 @@
 									alt={item.alt || 'Photo alt text is missing.'}
 									class="block sm:hidden"
 									loading="lazy"
+									onload={() => (state.imagesLoaded[i] = true)}
 								/>
 								<img
 									src={`${item.src}/m/1024x0`}
 									alt={item.alt || 'Photo alt text is missing.'}
 									class="absolute left-0 top-0 hidden h-full w-full object-contain sm:block"
 									loading="lazy"
-
+									onload={() => (state.imagesLoaded[i] = true)}
 								/>
-								{#if item.caption}
-									<div class="flex flex-row" loading="lazy">
+								{#if item.caption && state.imagesLoaded[i]}
+									<div class="flex flex-row">
 										{#if state.showCaption}
 											<figcaption
 												class="media-caption"
@@ -200,12 +205,20 @@
 									</div>
 								{/if}
 							</figure>
+							<div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 						{:else if item.type === 'video'}
-							<video src={item.src} controls playsinline bind:this={videoEls[i]} class="max-h-full">
+							<video
+								src={item.src}
+								controls
+								playsinline
+								bind:this={videoEls[i]}
+								class="max-h-full"
+								loading="lazy"
+								onload={() => (state.imagesLoaded[i] = true)}
+							>
 								<track kind="captions" src="captions.vtt" srclang="en" label="English" />
 							</video>
 						{/if}
-						<div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 					</div>
 				{/each}
 			</div>
