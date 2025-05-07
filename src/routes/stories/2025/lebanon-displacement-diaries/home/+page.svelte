@@ -11,7 +11,10 @@
 	const { data }: { data: PageData } = $props();
 
 	// Use `let` since these will be updated
-	let story = $state(data.story);
+	let { story } = data;
+
+	let contentBlocks = story?.content?.body || [];
+	let footerBlocks = story?.content?.footer || [];
 
 	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
 	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR;
@@ -77,6 +80,14 @@
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
 {:else if story?.content}
 	<StoryblokComponent blok={story.content} />
+
+	{#if footerBlocks.length > 0}
+		<footer class="footer-content">
+			{#each footerBlocks as blok}
+				<StoryblokComponent {blok} />
+			{/each}
+		</footer>
+	{/if}
 
 	{#if story.content.textAnnotations?.length}
 		{#each story.content.textAnnotations as annotation}

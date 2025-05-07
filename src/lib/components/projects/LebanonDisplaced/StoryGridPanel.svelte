@@ -61,7 +61,7 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag absolute -z-1 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
+				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag -z-1 absolute flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
 			>
 				<h3 class="m-0 p-0 text-white group-hover:underline">Read</h3>
 			</div>

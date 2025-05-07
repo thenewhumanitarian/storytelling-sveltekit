@@ -106,6 +106,12 @@
 		overflow: visible;
 	}
 
+	:global(.storyblok--richtext .intro-text h1) {
+		font-size: 8rem !important;
+		line-height: 1.2;
+		margin-bottom: 0.5rem;
+	}
+
 	:global(.arabic .intro-title) {
 		right: 2.5rem;
 		left: unset;

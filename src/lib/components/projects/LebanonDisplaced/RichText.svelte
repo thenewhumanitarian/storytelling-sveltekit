@@ -57,7 +57,7 @@
 				// Use .text for plain links or map/render for rich children
 				const content = node.text || node.content?.map(render).join('') || '';
 
-				return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
+				return `<a class="font-bold hover:underline text-lebgreen" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
 			}
 		}
 	});
@@ -122,17 +122,29 @@
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
 		font-family: 'GT Sectra Bold', sans-serif;
-		margin-bottom: 0;
-		font-size: 4rem;
 		line-height: 0.875;
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.5rem;
 		letter-spacing: -2px;
+		font-size: 5rem;
 	}
+
 	:global(.storyblok--richtext h2) {
 		margin: 0 0 1rem 0;
 		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: 900;
 		font-size: 2rem;
+	}
+
+	:global(.storyblok--richtext h3) {
+		margin: 0 0 1.25rem 0;
+		/* font-family: 'GT Sectra Bold', serif; */
+		font-family: 'ff-amman-serif-pro', serif;
+		font-size: 1.5rem;
+		font-weight: bold;
+	}
+
+	:global(.storyblok--richtext h4) {
+		font-size: 1.4rem;
 	}
 
 	:global(
@@ -146,12 +158,6 @@
 		display: inline;
 		padding: 0 0.25rem;
 		box-decoration-break: clone;
-	}
-
-	:global(.storyblok--richtext h3) {
-		margin: 0 0 1.25rem 0;
-		font-family: 'GT Sectra Bold', serif;
-		font-size: 1.4rem;
 	}
 
 	:global(.storyblok--richtext p) {
@@ -233,14 +239,14 @@
 		font-family: 'Roboto', sans-serif;
 	}
 	:global(.font-serif *) {
-		font-family: 'GT Sectra Bold', serif;
+		/* font-family: 'GT Sectra Bold', serif; */
+		font-family: 'ff-amman-serif-pro', serif;
 	}
 
 	/* Arabic text styles */
 	:global(.arabic *) {
 		direction: rtl;
 	}
-
 
 	:global(.arabic *:not(.text-center, .text-right)) {
 		text-align: right;

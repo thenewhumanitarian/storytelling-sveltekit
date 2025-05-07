@@ -54,6 +54,7 @@
 		z-index: 1;
 		font-weight: 300;
 		margin: 0 -15%;
+		font-weight: bold;
 		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
 	}
 
@@ -96,6 +97,7 @@
 		font-size: 6rem;
 		height: 1.5rem;
 		color: #636845;
+		font-family: 'GT Sectra Fine', sans-serif;
 	}
 
 	blockquote:before {

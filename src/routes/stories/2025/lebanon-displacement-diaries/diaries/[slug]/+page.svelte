@@ -65,7 +65,7 @@
 	{/if}
 
 	{#if footerBlocks.length > 0}
-		<footer class="footer-content mt-16">
+		<footer class="footer-content">
 			{#each footerBlocks as blok}
 				<StoryblokComponent {blok} />
 			{/each}
