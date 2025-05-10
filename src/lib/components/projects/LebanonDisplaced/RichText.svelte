@@ -126,6 +126,13 @@
 		margin-bottom: 0.5rem;
 		letter-spacing: -2px;
 		font-size: 5rem;
+		text-shadow: 3px 3px 0 rgba(248, 225, 188, 0.8), -3px -5px 0 rgba(248, 225, 188, 0.6);
+	}
+
+	@media screen and (max-width: 1050px) {
+		:global(.storyblok--richtext h1) {
+			font-size: 3.5rem !important;
+		}
 	}
 
 	:global(.storyblok--richtext h2) {
