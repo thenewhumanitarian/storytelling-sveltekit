@@ -62,11 +62,11 @@
 								content: tooltipContent,
 								allowHTML: true,
 								theme: 'light',
-								interactive: true,
+								// interactive: true,
 								delay: [100, 50],
 								placement: 'top',
-								interactiveDebounce: 25,
-								inertia: false
+								interactiveDebounce: 50,
+								inertia: true
 							});
 							frag.appendChild(span);
 						} else {
@@ -104,11 +104,16 @@
 		border-top-color: #f8e1bc !important;
 	}
 
+	:global(.tippy-box[data-theme~='light'][data-placement^='bottom'] > .tippy-arrow::before) {
+		border-bottom-color: #f8e1bc !important;
+	}
+
 	:global(.tippy-content) {
 		display: block;
 		width: 100%;
 		padding: 0.5rem;
 		box-shadow: rgba(0, 0, 0, 0.45) -5px -5px 20px -10px;
+		/* z-index: 1; */
 		/* border: 0.5px solid #282828; */
 	}
 

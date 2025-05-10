@@ -21,9 +21,7 @@
 			'https://storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app'
 		);
 		encodedUrl = encodeURIComponent(siteUrl);
-		message = encodeURIComponent(
-			'Check out The Lebanon Displacement Diaries'
-		);
+		message = encodeURIComponent('Check out The Lebanon Displacement Diaries');
 
 		const socialHandles: object = {
 			bluesky: '@newhumanitarian.bsky.social',

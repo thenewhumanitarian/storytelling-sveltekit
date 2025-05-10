@@ -121,12 +121,15 @@
 	}
 	:global(.storyblok--richtext h1) {
 		font-weight: bold;
-		font-family: 'GT Sectra Bold', sans-serif;
+		/* font-family: 'GT Sectra Bold', sans-serif; */
+		font-family: 'ff-amman-serif-pro', sans-serif;
 		line-height: 0.875;
 		margin-bottom: 0.5rem;
 		letter-spacing: -2px;
 		font-size: 5rem;
-		text-shadow: 3px 3px 0 rgba(248, 225, 188, 0.8), -3px -5px 0 rgba(248, 225, 188, 0.6);
+		text-shadow:
+			3px 3px 0 rgba(248, 225, 188, 0.8),
+			-3px -5px 0 rgba(248, 225, 188, 0.6);
 	}
 
 	@media screen and (max-width: 1050px) {
@@ -137,17 +140,18 @@
 
 	:global(.storyblok--richtext h2) {
 		margin: 0 0 1rem 0;
-		font-family: 'GT Sectra Bold', sans-serif;
+		/* font-family: 'GT Sectra Bold', sans-serif; */
+		font-family: 'ff-amman-serif-pro', sans-serif;
 		font-weight: 900;
 		font-size: 2rem;
 	}
 
 	:global(.storyblok--richtext h3) {
 		margin: 0 0 1.25rem 0;
-		/* font-family: 'GT Sectra Bold', serif; */
 		font-family: 'ff-amman-serif-pro', serif;
-		font-size: 1.5rem;
+		font-size: 1.4rem;
 		font-weight: bold;
+		/* font-family: 'GT Sectra Bold', serif; */
 	}
 
 	:global(.storyblok--richtext h4) {
@@ -245,10 +249,9 @@
 	:global(.font-sans *) {
 		font-family: 'Roboto', sans-serif;
 	}
-	:global(.font-serif *) {
-		/* font-family: 'GT Sectra Bold', serif; */
+	/* :global(.font-serif *) {
 		font-family: 'ff-amman-serif-pro', serif;
-	}
+	} */
 
 	/* Arabic text styles */
 	:global(.arabic *) {

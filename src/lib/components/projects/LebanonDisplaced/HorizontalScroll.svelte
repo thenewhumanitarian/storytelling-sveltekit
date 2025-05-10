@@ -111,7 +111,7 @@
 					</div>
 				{/if}
 				<span
-					class="pointer-events-auto mt-2 mb-0.5 inline-block font-serif text-xl font-bold text-lebgreen hover:underline"
+					class="pointer-events-auto mt-2 mb-0.5 inline-block font-amman text-xl font-bold text-lebgreen hover:underline"
 				>
 					{item.content.pageTitleShort || item.content.pageTitle}
 				</span>
