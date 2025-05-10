@@ -58,7 +58,6 @@
 							const span = document.createElement('span');
 							span.textContent = part;
 							span.classList.add('text-annotation');
-
 							tippy(span, {
 								content: tooltipContent,
 								allowHTML: true,
@@ -67,7 +66,7 @@
 								delay: [100, 50],
 								placement: 'top',
 								interactiveDebounce: 25,
-								inertia: true
+								inertia: false
 							});
 							frag.appendChild(span);
 						} else {
@@ -87,15 +86,6 @@
 <div use:storyblokEditable={blok} class="hidden"></div>
 
 <style>
-	:global(.text-annotation) {
-		background-color: rgba(248, 225, 188, 0.5);
-		padding: 0 0.05rem;
-		cursor: pointer;
-		transition: background 0.3s ease;
-	}
-	:global(.text-annotation:hover) {
-		background-color: rgba(248, 225, 188, 0.8);
-	}
 	/* Example: override light-border theme */
 	:global(.tippy-box[data-theme~='light']) {
 		background-color: #f8e1bc;
@@ -117,8 +107,9 @@
 	:global(.tippy-content) {
 		display: block;
 		width: 100%;
-		/* padding: 0.1rem 0.4rem; */
 		padding: 0.5rem;
+		box-shadow: rgba(0, 0, 0, 0.45) -5px -5px 20px -10px;
+		/* border: 0.5px solid #282828; */
 	}
 
 	:global(.tippy-content > p) {
@@ -126,30 +117,30 @@
 	}
 
 	:global(.tippy-content *) {
-		/* font-weight: normal; */
 		text-decoration: none;
 		font-size: 0.9rem !important;
 		font-family: 'Roboto', sans-serif !important;
 		width: 100%;
 		text-align: left;
-		/* display: block; */
 	}
 
 	:global(.arabic .tippy-content *) {
 		text-align: right;
 		direction: rtl;
 	}
-
 	:global(.text-annotation) {
+		cursor: help;
 		display: inline-flex;
 		align-items: center;
 		background-color: rgba(248, 225, 188, 0.5);
 		margin: 0 0.05rem;
 		padding: 0 0.15rem;
-		cursor: pointer;
 		border-radius: 0.15rem;
 		transition: background 0.3s ease;
 		box-decoration-break: clone;
 		-webkit-box-decoration-break: clone;
+	}
+	:global(.text-annotation:hover) {
+		background-color: rgba(248, 225, 188, 0.8);
 	}
 </style>
