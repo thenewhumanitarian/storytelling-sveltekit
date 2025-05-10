@@ -174,7 +174,7 @@
 	:global(.storyblok--richtext p) {
 		display: block;
 		white-space: normal;
-		font-size: 1.2rem;
+		font-size: 1.25rem;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		font-weight: medium;
@@ -200,7 +200,7 @@
 		}
 
 		:global(.storyblok--richtext h3) {
-			font-size: 1.2rem !important;
+			font-size: 1.4rem !important;
 			line-height: 1.3;
 		}
 	}

@@ -43,7 +43,7 @@
 		>
 			<button
 				type="button"
-				class={`relative flex h-full w-full items-center justify-center ${isStartPage ? 'no-lightbox p-6' : ''}`}
+				class={`relative flex h-full w-full items-center justify-center ${isStartPage ? 'no-lightbox' : ''}`}
 				onclick={() => openLightbox(blok.media?.filename.toString())}
 				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
 				data-lightbox={blok.lightbox ? 'true' : 'false'}
@@ -154,11 +154,11 @@
 	.align-left {
 		float: left;
 		width: 50%;
-		margin-left: -25%;
-		margin-right: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-top: 2rem;
 		margin-bottom: 1rem;
+		margin-left: -5%;
+		margin-right: 5%;
 	}
 
 	.align-left figcaption {
@@ -176,9 +176,9 @@
 	.align-right {
 		float: right;
 		width: 50%;
-		margin-right: -25%;
-		margin-left: 4%;
 		transform: rotate(var(--rotation-angle, 0deg));
+		margin-right: -5%;
+		margin-left: 5%;
 	}
 
 	.align-right:not(.no-margin-y) {
@@ -212,7 +212,7 @@
 		}
 
 		.inline-image-wrapper.no-lightbox {
-			margin: 1rem auto;
+			margin: -1rem auto 0 auto;
 		}
 
 		.align-left,
@@ -222,6 +222,7 @@
 			margin: 3rem auto;
 			width: 100%;
 			max-width: 360px;
+			transform: rotate(0deg);
 		}
 
 		.align-left figcaption,
