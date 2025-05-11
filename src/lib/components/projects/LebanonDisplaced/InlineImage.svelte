@@ -53,6 +53,7 @@
 				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
 				data-lightbox-width={width}
 				data-lightbox-height={height}
+
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
@@ -153,11 +154,11 @@
 
 	.align-left {
 		float: left;
-		width: 50%;
+		width: 40%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-top: 2rem;
 		margin-bottom: 1rem;
-		margin-left: -5%;
+		margin-left: -20%;
 		margin-right: 5%;
 	}
 
@@ -175,9 +176,9 @@
 
 	.align-right {
 		float: right;
-		width: 50%;
+		width: 40%;
 		transform: rotate(var(--rotation-angle, 0deg));
-		margin-right: -5%;
+		margin-right: -20%;
 		margin-left: 5%;
 	}
 
@@ -193,16 +194,16 @@
 
 	@media screen and (max-width: 1200px) {
 		.align-left {
-			margin-left: -15%;
+			margin-left: -2%;
 		}
 
 		.align-right {
-			margin-right: -15%;
+			margin-right: -2%;
 		}
 
 		.align-left,
 		.align-right {
-			width: 50%;
+			width: 40%;
 		}
 	}
 
