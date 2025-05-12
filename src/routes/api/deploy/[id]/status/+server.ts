@@ -16,9 +16,11 @@ export async function GET({ params }) {
   }
 
   const data = await res.json();
+  console.log('✅ Raw Vercel deployment status:', data);
 
+  // Use `readyState` instead of nonexistent `state`
   return json({
-    state: data.state ?? 'unknown',
+    state: data.readyState ?? 'unknown',
     url: data.url ?? ''
   });
 }
