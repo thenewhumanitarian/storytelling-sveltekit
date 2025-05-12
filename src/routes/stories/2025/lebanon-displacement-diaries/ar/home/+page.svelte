@@ -1,41 +1,68 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { reinitStoryblok } from '$lib/utils/storyblok';
+
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
-	import type { PageData } from '../$types';
+	import type { PageData } from './$types';
 
 	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
-	import { useStoryblok } from '$lib/utils/storyblok';
 	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
 	const { data }: { data: PageData } = $props();
 
+	// Use `let` since these will be updated
 	let { story } = data;
 
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 
-	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR === 'true';
+	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
+	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR;
 
-	// Initialize Storyblok client-side if needed
-	$effect(async () => {
-		if (ENABLE_VISUAL_EDITOR && typeof window !== 'undefined') {
-			await useStoryblok();
+	$effect(() => {
+		if (ENABLE_VISUAL_EDITOR && story?.id) {
+			useStoryblokBridge(story.id, (newStory) => {
+				story.content = newStory.content;
+			});
 		}
 	});
 
-	// Setup Storyblok Bridge for live preview
+	// Reactive effect: Initialize the Storyblok Bridge when the story is available and the preview mode is enabled.
 	$effect(() => {
-		if (ENABLE_VISUAL_EDITOR && story?.id) {
+		if (ENABLE_VISUAL_EDITOR && story && story.id) {
 			useStoryblokBridge(
 				story.id,
 				(newStory) => {
 					story.content = newStory.content;
 				},
 				{
+					// Optionally adjust or remove preventClicks if you want elements to be clickable
 					preventClicks: true,
 					resolveLinks: 'url',
-					language: 'ar'
+					language: 'default'
 				}
 			);
+		}
+	});
+
+	// Enable Storyblok bridge in editor mode
+	onMount(async () => {
+		if (
+			typeof window !== 'undefined' &&
+			story?.id &&
+			(document.body.classList.contains('is-storyblok-editor') ||
+				window.location.search.includes('_storyblok'))
+		) {
+			await reinitStoryblok();
+			useStoryblokBridge(story.id, (newStory) => {
+				story = {
+					...story,
+					content: { ...newStory.content },
+					timestamp: new Date().getTime()
+				};
+				contentBlocks = newStory.content.body;
+				footerBlocks = newStory.content.footer;
+			});
 		}
 	});
 </script>
