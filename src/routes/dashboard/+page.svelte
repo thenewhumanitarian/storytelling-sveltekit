@@ -79,7 +79,7 @@
 		type="button"
 		onclick={deploy}
 		disabled={status === 'loading' || status === 'building' || status === 'queued'}
-		class="rounded bg-burgundy px-3 py-1 font-bold text-white"
+		class="rounded-full bg-burgundy px-3 py-1 font-bold text-white"
 	>
 		{#if status === 'loading'}
 			Triggering...
