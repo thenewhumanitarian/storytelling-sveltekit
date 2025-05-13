@@ -57,7 +57,7 @@
 				// Use .text for plain links or map/render for rich children
 				const content = node.text || node.content?.map(render).join('') || '';
 
-				return `<a class="font-bold hover:underline text-lebgreen" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
+				return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
 			}
 		}
 	});

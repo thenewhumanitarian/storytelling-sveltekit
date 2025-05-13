@@ -17,10 +17,10 @@
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 
+	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
 		if (
 			typeof window !== 'undefined' &&
-			PUBLIC_ENABLE_VISUAL_EDITOR === 'true' &&
 			story?.id &&
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'))

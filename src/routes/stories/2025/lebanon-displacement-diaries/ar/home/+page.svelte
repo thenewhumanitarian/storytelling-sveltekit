@@ -20,33 +20,11 @@
 	onMount(async () => {
 		if (
 			typeof window !== 'undefined' &&
-			PUBLIC_ENABLE_VISUAL_EDITOR === 'true' &&
 			story?.id &&
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'))
 		) {
 			console.log('Storyblok editor mode detected');
-			await reinitStoryblok();
-			useStoryblokBridge(story.id, (newStory) => {
-				story = {
-					...story,
-					content: { ...newStory.content },
-					timestamp: new Date().getTime()
-				};
-				contentBlocks = newStory.content.body;
-				footerBlocks = newStory.content.footer;
-			});
-		}
-	});
-
-	// Enable Storyblok bridge in editor mode
-	onMount(async () => {
-		if (
-			typeof window !== 'undefined' &&
-			story?.id &&
-			(document.body.classList.contains('is-storyblok-editor') ||
-				window.location.search.includes('_storyblok'))
-		) {
 			await reinitStoryblok();
 			useStoryblokBridge(story.id, (newStory) => {
 				story = {
