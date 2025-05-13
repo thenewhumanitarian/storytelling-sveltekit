@@ -3,6 +3,7 @@ declare global {
     __storyblokInitialized?: boolean;
   }
 }
+import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
 
 // Import the getContext function from Svelte
 import { getContext } from 'svelte';
@@ -76,7 +77,8 @@ export async function loadStory(slug: string, lang: string = 'en') {
   initStoryblok(); // make sure it's initialized
   const api = await useStoryblokApi();
 
-  const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
+  // const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
+  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
   const res = await api.get(`cdn/stories/diaries/${slug}`, {
     version,
     language: lang || 'en',
