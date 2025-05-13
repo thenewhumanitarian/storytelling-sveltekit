@@ -29,9 +29,7 @@
 
 <svelte:head>
 	<title>TNH| Lebanon Displacement Diaries</title>
-	<meta name="description" content="This is a prototype." />
-	<meta name="robots" content="noindex" />
-	<!-- Need to add more meta data here later -->
+	<meta name="robots" content="index, follow" />
 </svelte:head>
 
 <HeaderComponent />
