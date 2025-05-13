@@ -115,13 +115,17 @@
 				>
 					{item.content.pageTitleShort || item.content.pageTitle}
 				</span>
-				<p class="line-clamp-5 font-amman text-base text-black mb-8">
+				<p class="mb-3 line-clamp-5 font-amman text-base text-black">
 					{item.content.previewText || item.content.pageDescription}
 				</p>
 				<div
-					class={`read-more-tag pointer-events-auto absolute z-50 flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
+					class={`read-more-tag pointer-events-auto z-50 flex origin-left items-center justify-center`}
 				>
-					<h3 class="m-0 inline p-0 text-base text-white font-bold text-sm hover:underline">Read</h3>
+					<h3
+						class="m-0 inline bg-lebgreen px-2 py-1 text-sm font-bold text-white hover:underline shadow w-full text-center"
+					>
+						Read
+					</h3>
 				</div>
 			</a>
 		{/each}
