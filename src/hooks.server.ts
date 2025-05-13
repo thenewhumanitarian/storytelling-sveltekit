@@ -1,23 +1,10 @@
-import type { Handle } from '@sveltejs/kit';
-
-export const handle: Handle = async ({ event, resolve }) => {
-  // Only run this logic in runtime requests (not during prerendering)
-  if (!event.route.id?.startsWith('/_')) {
-    const urlString = event.url.toString();
-    const isEditor =
-      urlString.includes('_storyblok') || urlString.includes('editor=true');
-
-    if (isEditor) {
-      event.locals.isEditor = true;
-      // optionally set headers or cookies for client JS
-    }
-  }
-
+export async function handle({ event, resolve }) {
   const response = await resolve(event);
 
-  // fallback for missing trailing slash HTML pages in static mode
+  // If a 404 occurs and the path ends with a slash, try fetching an `index.html`
   if (response.status === 404 && event.url.pathname.endsWith('/')) {
     try {
+      // Use `event.fetch()` to properly fetch static files
       const staticPath = event.url.pathname + 'index.html';
       const fallbackResponse = await event.fetch(staticPath);
 
@@ -32,4 +19,4 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   return response;
-};
+}
