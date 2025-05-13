@@ -92,7 +92,7 @@ export async function loadAllStoriesExcept(slug: string, lang: string = 'en') {
   initStoryblok(); // ensure Storyblok is initialized once
   const api = await useStoryblokApi();
 
-  const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
+  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
   const res = await api.get('cdn/stories', {
     version,
     starts_with: 'diaries/',
@@ -105,9 +105,7 @@ export async function loadStaticPage(slug: string, lang: string = 'en') {
   initStoryblok(); // ensure Storyblok is initialized once
   const api = await useStoryblokApi();
 
-  const isDev = process.env.NODE_ENV === 'development';
-  const version = isDev ? 'draft' : 'published';
-
+  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
   const res = await api.get(`cdn/stories/${slug}`, {
     version,
     language: lang || 'en',
