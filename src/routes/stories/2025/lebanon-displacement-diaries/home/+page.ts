@@ -1,8 +1,10 @@
+import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+
 import type { PageLoad } from './$types';
 import { loadStaticPage } from '$lib/utils/storyblok';
 
-// export const prerender = true;
-export const ssr = true;
+export const prerender = PUBLIC_ENABLE_VISUAL_EDITOR !== 'true';
+export const ssr = PUBLIC_ENABLE_VISUAL_EDITOR !== 'true';
 
 export const load: PageLoad = async () => {
   try {
