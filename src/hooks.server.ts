@@ -1,24 +1,21 @@
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  // ✅ Only use searchParams logic when not prerendering
-  if (!event.isPrerendering) {
-    const url = event.url;
-    const isStoryblokEditor =
-      url.searchParams.has('_storyblok') ||
-      url.searchParams.has('editor') ||
-      url.pathname.includes('__storyblok');
+  // Only run this logic in runtime requests (not during prerendering)
+  if (!event.route.id?.startsWith('/_')) {
+    const urlString = event.url.toString();
+    const isEditor =
+      urlString.includes('_storyblok') || urlString.includes('editor=true');
 
-    if (isStoryblokEditor) {
-      event.setHeaders({
-        'cache-control': 'no-store'
-      });
+    if (isEditor) {
+      event.locals.isEditor = true;
+      // optionally set headers or cookies for client JS
     }
   }
 
   const response = await resolve(event);
 
-  // ✅ This fallback is fine to keep during prerender
+  // fallback for missing trailing slash HTML pages in static mode
   if (response.status === 404 && event.url.pathname.endsWith('/')) {
     try {
       const staticPath = event.url.pathname + 'index.html';
