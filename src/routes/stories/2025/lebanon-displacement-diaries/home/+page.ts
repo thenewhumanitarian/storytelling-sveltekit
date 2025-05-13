@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 import { loadStaticPage } from '$lib/utils/storyblok';
 
-export const prerender = true;
+// export const prerender = true;
 export const ssr = true;
 
 export const load: PageLoad = async () => {
