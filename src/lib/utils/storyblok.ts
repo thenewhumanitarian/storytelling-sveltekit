@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    __storyblokInitialized?: boolean;
+  }
+}
+
 // Import the getContext function from Svelte
 import { getContext } from 'svelte';
 
@@ -142,10 +148,12 @@ export async function useStoryblok({ bridge = false } = {}) {
       }
     });
   } else if (!window.__storyblokInitialized) {
+    const isEditor = window.location.search.includes('_storyblok') || window.location.search.includes('editor=true');
+
     storyblokInit({
       accessToken: PUBLIC_ACCESS_TOKEN,
       use: [apiPlugin],
-      bridge,
+      bridge: isEditor, // ✅ Only enable in visual editor context
       components: {
         page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
         detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,
@@ -179,7 +187,7 @@ export async function useStoryblok({ bridge = false } = {}) {
 export async function reinitStoryblok() {
   if (typeof window !== 'undefined') {
     window.__storyblokInitialized = false;
-    await useStoryblok({ bridge: true });
+    await useStoryblok({ bridge: true }); // <-- Force enable
   }
 }
 

@@ -16,14 +16,14 @@
 
 	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
-		if (
+		const isStoryblokEditor =
 			typeof window !== 'undefined' &&
-			story?.id &&
 			(document.body.classList.contains('is-storyblok-editor') ||
-				window.location.search.includes('_storyblok'))
-		) {
+				window.location.search.includes('_storyblok'));
+
+		if (isStoryblokEditor && story?.id) {
 			console.log('Storyblok editor mode detected');
-			await reinitStoryblok();
+			await reinitStoryblok(); // includes bridge: true
 			useStoryblokBridge(story.id, (newStory) => {
 				story = {
 					...story,
@@ -35,8 +35,7 @@
 			});
 		}
 	});
-
-	</script>
+</script>
 
 <SEO
 	pageTitle={story?.content?.pageTitle}
