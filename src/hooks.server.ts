@@ -1,12 +1,13 @@
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  // ✅ Only try accessing searchParams in a non-prerender context
+  // ✅ Only use searchParams logic when not prerendering
   if (!event.isPrerendering) {
+    const url = event.url;
     const isStoryblokEditor =
-      event.url.searchParams.has('_storyblok') ||
-      event.url.searchParams.has('editor') ||
-      event.url.pathname.includes('/__storyblok');
+      url.searchParams.has('_storyblok') ||
+      url.searchParams.has('editor') ||
+      url.pathname.includes('__storyblok');
 
     if (isStoryblokEditor) {
       event.setHeaders({
@@ -17,7 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const response = await resolve(event);
 
-  // ✅ Still safe to do this for static fallbacks even during prerender
+  // ✅ This fallback is fine to keep during prerender
   if (response.status === 404 && event.url.pathname.endsWith('/')) {
     try {
       const staticPath = event.url.pathname + 'index.html';
