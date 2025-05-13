@@ -4,7 +4,7 @@
 	import { StoryblokComponent, useStoryblokBridge } from '@storyblok/svelte';
 	import type { PageData } from './$types';
 
-	import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
+	// import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
 	import SEO from '$lib/components/projects/LebanonDisplaced/SEO.svelte';
 
 	const { data }: { data: PageData } = $props();
