@@ -21,7 +21,7 @@
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'));
 
-		if (isStoryblokEditor && story?.id) {
+		// if (isStoryblokEditor && story?.id) {
 			console.log('Storyblok editor mode detected');
 			await reinitStoryblok(); // includes bridge: true
 			useStoryblokBridge(story.id, (newStory) => {
@@ -33,7 +33,7 @@
 				contentBlocks = newStory.content.body;
 				footerBlocks = newStory.content.footer;
 			});
-		}
+		// }
 	});
 </script>
 
