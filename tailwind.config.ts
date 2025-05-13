@@ -31,7 +31,7 @@ export default {
       colors: {
         transparent: 'transparent',
         burgundy: '#9f3e52',
-        brown: '#ffe0b5',
+        brown: '#FFE0B5',
         sun: '#ede580',
         grass: '#AFB87E',
         lebgreen: '#636845',

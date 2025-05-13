@@ -19,12 +19,14 @@
 			<h1>The<br />Lebanon<br />Displacement<br />Diaries</h1>
 		</FadeIn>
 	</div>
-	<div class={`text-brown ${isRtl ? 'text-left' : 'text-right'}`}>
-		<a class="font-medium hover:underline" href={'#'}><p>Footer</p></a>
-		<a class="font-medium hover:underline" href={'#'}><p>Links/Content</p></a>
-		<a class="font-medium hover:underline" href={'#'}><p>To</p></a>
-		<a class="font-medium hover:underline" href={'#'}><p>Be</p></a>
-		<a class="font-medium hover:underline" href={'#'}><p>Done</p></a>
+	<div class={`w-full text-brown ${isRtl ? 'text-left' : 'text-right'}`}>
+		<h2 class="text-3xl text-brown">Some tagline.</h2>
+		<a class="font-medium hover:underline" href={'#'}
+			><p>Illustrations by Sasha (Instagram link)</p></a
+		>
+		<a class="font-medium hover:underline" href={'#'}><p>The New Humanitarian</p></a>
+		<a class="font-medium hover:underline" href={'#'}><p>About</p></a>
+		<!-- <a class="font-medium hover:underline" href={'#'}><p>Images by Pexel</p></a> -->
 	</div>
 </footer>
 
@@ -32,7 +34,7 @@
 	footer {
 		position: relative;
 		background-color: #282828;
-		box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px -10px 20px rgba(0, 0, 0, 0.2);
 		padding: 5.75rem 3rem 3rem 3rem;
 	}
 
@@ -81,12 +83,12 @@
 	}
 	:global(.torn-paper--bottom) {
 		position: absolute;
-		height: 5rem;
 		overflow: hidden;
-		top: -5rem;
 		margin-top: 1rem;
-		background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.webp');
-		background-size: cover;
+		/* background-size: cover; */
+		/* height: 5rem;
+		top: -5rem; */
+		/* background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.webp'); */
 		/* background-color: white; */
 		/* background-image: url('/assets/ldd/patterns/torn-cardboard--bottom.png'); */
 	}

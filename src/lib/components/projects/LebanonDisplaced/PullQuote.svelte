@@ -101,13 +101,13 @@
 	}
 
 	blockquote:before {
-		content: '“';
+		/* content: '“'; */
 		left: 0.25rem;
 		top: -1rem;
 	}
 
 	blockquote:after {
-		content: '”';
+		/* content: '”'; */
 		right: 0.25rem;
 		bottom: 2.4rem;
 	}

@@ -85,13 +85,13 @@
 		height: 100%;
 		width: 100%;
 		max-width: 45%;
-		padding-top: 6rem;
+		padding-top: 4.5rem;
 	}
 
 	@media screen and (max-width: 800px) {
 		.intro-text {
 			max-width: 100%;
-			padding-top: 6rem;
+			padding-top: 5.25rem;
 			justify-content: start;
 		}
 	}

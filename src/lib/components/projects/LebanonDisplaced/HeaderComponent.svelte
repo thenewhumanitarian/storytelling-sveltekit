@@ -4,7 +4,7 @@
 	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
 </script>
 
-<header class={'torn-paper torn-paper--top'}>
+<header class={'torn-paper torn-paper--top bg-brown'}>
 	<div class="flex w-full flex-row items-center justify-between sm:px-2">
 		<div class="flex h-6 w-auto gap-2">
 			<ShareIcons />
@@ -21,49 +21,54 @@
 
 <style>
 	header {
-		height: 8rem;
+		height: 4.5rem;
 		z-index: 555;
 		position: fixed;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0 1rem 3rem 1rem;
+		padding: 0 0.8rem 0rem 0.8rem;
 		width: 100%;
 		top: 0;
+		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
+		background-size: cover;
+		border-bottom: solid 0.5px #282828;
+		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); */
 		/* background-color: #ffe0b5; */
 		/* background-color: transparent; */
 		/* background-color: rgba(232, 193, 136, 1); */
-		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); */
 		/* backdrop-filter: blur(10px); */
 	}
 
 	@media screen and (max-width: 1350px) {
 		header {
-			padding-bottom: 2rem;
+			/* padding-bottom: 2rem; */
+			/* background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.webp'); */
 		}
 	}
 
-	@media screen and (max-width: 1200px) {
+	/* @media screen and (max-width: 1200px) {
 		header {
-			height: 7rem;
+			height: 4.5rem;
 			padding-bottom: 1.8rem;
 		}
-	}
+	} */
 
-	@media screen and (max-width: 900px) {
+	/* @media screen and (max-width: 900px) {
 		header {
 			height: 6rem;
 			padding-bottom: 1rem;
 		}
-	}
+	} */
 
 	@media screen and (max-width: 475px) {
 		header {
 			background-repeat: no-repeat;
 			background-position: top center;
 			background-size: cover;
-			padding-bottom: 0.7rem;
-			height: 5rem;
+			height: 4rem;
+			padding: 0 0.5rem 0rem 0.75rem;
+			/* padding-bottom: 0.7rem; */
 		}
 	}
 
@@ -79,12 +84,12 @@
 	:global(.torn-paper--top) {
 		top: 0;
 		background-position: bottom center;
-		/* background-image: url('/assets/ldd/patterns/torn-cardboard--top.png'); */
-		background-image: url('/assets/ldd/patterns/torn-paper--top--small.webp');
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background-size: cover;
+		/* background-image: url('/assets/ldd/patterns/torn-cardboard--top.png'); */
+		/* background-image: url('/assets/ldd/patterns/torn-paper--top--small.webp'); */
 	}
 	.background-image img {
 		width: 100%;

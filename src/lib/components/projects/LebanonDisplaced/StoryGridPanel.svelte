@@ -30,7 +30,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`
-		story-grid--panel group mx-auto hidden items-center justify-center sm:flex ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
+		story-grid--panel group mx-auto hidden rounded-xs items-center justify-center sm:flex ${hasLink ? 'has-link' : ''} panel-${i + 1} relative ${blok.image && blok.image?.filename ? 'has-image' : ''} ${blok.bgColor} ${blok.rotate ? 'rotate' : ''} ${blok.isPlaceholder ? 'placeholder' : ''}
 	`}
 	style={`
 		--colSpan: span ${blok.colSpan || '1'};
@@ -61,9 +61,9 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag rounded-xs -z-1 absolute flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
+				class={`${blok.textAlign === 'left' ? 'right text-right' : 'left'} read-more-tag rounded-xs -z-1 flex items-center justify-end`}
 			>
-				<h3 class="m-0 p-0 text-white text-base group-hover:underline shadow-lg">Read</h3>
+				<h3 class="m-0 bg-lebgreen px-2 py-1 text-white text-base group-hover:underline shadow-lg">Read</h3>
 			</div>
 		</a>
 	{:else}
@@ -138,23 +138,23 @@
 	}
 
 	.read-more-tag {
-		top: 0.5rem;
+		bottom: 0.5rem;
 	}
 
 	.read-more-tag.left {
-		left: 0.5rem;
-		right: unset;
-	}
-
-	.read-more-tag.right {
 		right: 0.5rem;
 		left: unset;
 	}
 
+	.read-more-tag.right {
+		left: 0.5rem;
+		right: unset;
+	}
+
 	@media screen and (max-width: 925px) {
 		.read-more-tag {
-			top: 0;
-			bottom: unset;
+			bottom: 0;
+			top: unset;
 		}
 		.read-more-tag.right,
 		.read-more-tag.left {
@@ -175,7 +175,6 @@
 
 	.story-grid--panel:not(
 			.note,
-			.brown-card,
 			.placeholder,
 			.picture-frame,
 			.picture-frame-landscape
@@ -183,8 +182,8 @@
 		padding: 1rem;
 		margin: 0 0.5rem;
 		font-size: 1rem;
-		border: solid 0.5px var(--borderColor);
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		border: solid 0.5px var(--borderColor);
 	}
 
 	.story-grid--panel:not(.note, .brown-card, .placeholder, .picture-frame) {
@@ -206,7 +205,8 @@
 
 	/* Scotch tape effect */
 	.story-grid--panel.brown-card {
-		background: transparent;
+		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
+		background-size: cover;
 	}
 
 	.story-grid--panel.picture-frame {

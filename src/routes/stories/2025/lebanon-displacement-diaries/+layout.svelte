@@ -45,9 +45,9 @@
 	main {
 		/* margin: 0; */
 		overflow: hidden;
-		padding-bottom: 4rem;
-		padding-top: 2rem;
 		margin-top: 4rem;
+		padding-top: 2rem;
+		padding-bottom: 2rem;
 		background-color: #afb87e;
 		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
 		background-repeat: repeat;
