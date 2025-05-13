@@ -16,32 +16,26 @@
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 
-	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
-	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR;
-
-	// $effect(() => {
-	// 	if (ENABLE_VISUAL_EDITOR && story?.id) {
-	// 		useStoryblokBridge(story.id, (newStory) => {
-	// 			story.content = newStory.content;
-	// 		});
-	// 	}
-	// });
-
-	// Reactive effect: Initialize the Storyblok Bridge when the story is available and the preview mode is enabled.
-	$effect(() => {
-		if (ENABLE_VISUAL_EDITOR && story && story.id) {
-			useStoryblokBridge(
-				story.id,
-				(newStory) => {
-					story.content = newStory.content;
-				},
-				{
-					// Optionally adjust or remove preventClicks if you want elements to be clickable
-					preventClicks: true,
-					resolveLinks: 'url',
-					language: 'ar'
-				}
-			);
+	// Enable Storyblok bridge in editor mode
+	onMount(async () => {
+		if (
+			typeof window !== 'undefined' &&
+			PUBLIC_ENABLE_VISUAL_EDITOR === 'true' &&
+			story?.id &&
+			(document.body.classList.contains('is-storyblok-editor') ||
+				window.location.search.includes('_storyblok'))
+		) {
+			console.log('Storyblok editor mode detected');
+			await reinitStoryblok();
+			useStoryblokBridge(story.id, (newStory) => {
+				story = {
+					...story,
+					content: { ...newStory.content },
+					timestamp: new Date().getTime()
+				};
+				contentBlocks = newStory.content.body;
+				footerBlocks = newStory.content.footer;
+			});
 		}
 	});
 

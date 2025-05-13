@@ -11,6 +11,7 @@
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 
+	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
 		if (
 			typeof window !== 'undefined' &&
