@@ -61,9 +61,9 @@
 				</FadeIn>
 			{/if}
 			<div
-				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag -z-1 absolute flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
+				class={`${blok.textAlign === 'left' ? 'right' : 'left'} read-more-tag rounded-xs -z-1 absolute flex origin-left items-center justify-center bg-lebgreen px-2 py-1`}
 			>
-				<h3 class="m-0 p-0 text-white group-hover:underline">Read</h3>
+				<h3 class="m-0 p-0 text-white text-base group-hover:underline shadow-lg">Read</h3>
 			</div>
 		</a>
 	{:else}
@@ -138,16 +138,16 @@
 	}
 
 	.read-more-tag {
-		top: 0;
+		top: 0.5rem;
 	}
 
 	.read-more-tag.left {
-		left: 0;
+		left: 0.5rem;
 		right: unset;
 	}
 
 	.read-more-tag.right {
-		right: 0;
+		right: 0.5rem;
 		left: unset;
 	}
 

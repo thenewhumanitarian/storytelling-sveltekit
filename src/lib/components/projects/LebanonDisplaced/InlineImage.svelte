@@ -53,7 +53,6 @@
 				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
 				data-lightbox-width={width}
 				data-lightbox-height={height}
-
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
@@ -163,7 +162,7 @@
 	}
 
 	.align-left figcaption {
-		text-align: right;
+		text-align: left;
 	}
 
 	:global(.arabic .align-left figcaption) {
@@ -171,7 +170,7 @@
 	}
 
 	:global(.arabic .align-right figcaption) {
-		text-align: left;
+		text-align: right;
 	}
 
 	.align-right {

@@ -19,13 +19,13 @@
 	// Use the STORYBLOK_IS_PREVIEW environment variable to determine if the Visual Editor should be enabled
 	const ENABLE_VISUAL_EDITOR = PUBLIC_ENABLE_VISUAL_EDITOR;
 
-	$effect(() => {
-		if (ENABLE_VISUAL_EDITOR && story?.id) {
-			useStoryblokBridge(story.id, (newStory) => {
-				story.content = newStory.content;
-			});
-		}
-	});
+	// $effect(() => {
+	// 	if (ENABLE_VISUAL_EDITOR && story?.id) {
+	// 		useStoryblokBridge(story.id, (newStory) => {
+	// 			story.content = newStory.content;
+	// 		});
+	// 	}
+	// });
 
 	// Reactive effect: Initialize the Storyblok Bridge when the story is available and the preview mode is enabled.
 	$effect(() => {

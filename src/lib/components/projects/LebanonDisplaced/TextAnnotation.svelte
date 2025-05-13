@@ -61,12 +61,12 @@
 							tippy(span, {
 								content: tooltipContent,
 								allowHTML: true,
-								theme: 'light',
-								// interactive: true,
-								delay: [100, 50],
 								placement: 'top',
 								interactiveDebounce: 50,
-								inertia: true
+								inertia: true,
+								theme: 'light',
+								delay: [100, 50]
+								// interactive: true,
 							});
 							frag.appendChild(span);
 						} else {
@@ -88,37 +88,42 @@
 <style>
 	/* Example: override light-border theme */
 	:global(.tippy-box[data-theme~='light']) {
-		background-color: #f8e1bc;
+		background-color: #636845;
 		font-style: normal; /* specifically fix italic inheritance */
 		font-weight: normal;
-		color: #282828;
 		font-size: 1rem;
 		padding: 0.1rem 0;
 		border-radius: 0;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
-		font-family: 'ff-amman-serif-pro', serif;
+		/* background-color: #f8e1bc; */
+		/* color: #282828; */
+	}
+
+	:global(.tippy-content *) {
+		color: white !important;
 	}
 
 	/* Fix the arrow color (svg fill) */
 	:global(.tippy-box[data-theme~='light'][data-placement^='top'] > .tippy-arrow::before) {
-		border-top-color: #f8e1bc !important;
+		border-top-color: #636845 !important;
+		/* border-topa-color: #f8e1bc !important; */
 	}
 
 	:global(.tippy-box[data-theme~='light'][data-placement^='bottom'] > .tippy-arrow::before) {
-		border-bottom-color: #f8e1bc !important;
+		border-bottom-color: #636845 !important;
+		/* border-bottom-color: #f8e1bc !important; */
 	}
 
 	:global(.tippy-content) {
 		display: block;
 		width: 100%;
-		padding: 0.5rem;
-		box-shadow: rgba(0, 0, 0, 0.45) -5px -5px 20px -10px;
-		/* z-index: 1; */
-		/* border: 0.5px solid #282828; */
+		padding: 0.3rem 0.5rem;
+		border-radius: 2px;
 	}
 
 	:global(.tippy-content > p) {
 		margin: 0;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 	}
 
 	:global(.tippy-content *) {
@@ -133,6 +138,8 @@
 		text-align: right;
 		direction: rtl;
 	}
+
+	/* Annotated text */
 	:global(.text-annotation) {
 		cursor: help;
 		display: inline-flex;

@@ -12,7 +12,7 @@
 
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
-	let relatedDiariesBlocks = story?.content?.relatedDiaries || [];
+	// let relatedDiariesBlocks = story?.content?.relatedDiaries || [];
 
 	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
@@ -22,6 +22,7 @@
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'))
 		) {
+			console.log('Storyblok editor mode detected');
 			await reinitStoryblok();
 			useStoryblokBridge(story.id, (newStory) => {
 				story = {
@@ -34,7 +35,6 @@
 			});
 		}
 	});
-</script>
 
 <SEO
 	pageTitle={story?.content?.pageTitle}
