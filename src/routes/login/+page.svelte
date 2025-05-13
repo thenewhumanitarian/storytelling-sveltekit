@@ -52,7 +52,7 @@
 		</label>
 
 		<button
-			class="bg-burgundy cursor-pointer px-3 py-1 text-white hover:font-bold"
+			class="cursor-pointer bg-burgundy px-3 py-1 font-bold text-white"
 			type="submit"
 			{disabled}>Login</button
 		>

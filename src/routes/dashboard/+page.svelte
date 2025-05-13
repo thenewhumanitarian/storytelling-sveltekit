@@ -65,12 +65,12 @@
 </script>
 
 <div class="flex h-screen w-screen flex-col items-center justify-center gap-4 bg-gray-100">
-	<h1>Deployment Dashboard</h1>
+	<h1 class="mb-0">Deployment Dashboard</h1>
 	<button
 		type="button"
 		onclick={deploy}
 		disabled={['loading', 'BUILDING', 'QUEUED', 'INITIALIZING'].includes(status)}
-		class="rounded bg-burgundy px-3 py-1 font-bold text-white"
+		class="rounded-full bg-burgundy px-3 py-1 font-bold text-white"
 	>
 		{#if status === 'loading'}
 			Triggering...
