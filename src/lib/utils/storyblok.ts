@@ -39,7 +39,7 @@ export function initStoryblok() {
   storyblokInit({
     accessToken: PUBLIC_ACCESS_TOKEN,
     use: [apiPlugin],
-    bridge: false, // disable bridge for SSR
+    bridge: typeof window !== 'undefined' && window.location.search.includes('_storyblok'),
     apiOptions: {
       https: true,
       region: PUBLIC_REGION || 'eu'
@@ -115,7 +115,7 @@ export async function useStoryblok({ bridge = false } = {}) {
     storyblokInit({
       accessToken: PUBLIC_ACCESS_TOKEN,
       use: [apiPlugin],
-      bridge: false,
+      bridge: typeof window !== 'undefined' && window.location.search.includes('_storyblok'),
       components: {
         page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
         detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,

@@ -35,7 +35,8 @@
 			});
 		}
 	});
-</script>
+
+	</script>
 
 <SEO
 	pageTitle={story?.content?.pageTitle}
