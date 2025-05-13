@@ -23,6 +23,7 @@
 			(document.body.classList.contains('is-storyblok-editor') ||
 				window.location.search.includes('_storyblok'))
 		) {
+			console.log('Storyblok editor mode detected');
 			await reinitStoryblok();
 			useStoryblokBridge(story.id, (newStory) => {
 				story = {
