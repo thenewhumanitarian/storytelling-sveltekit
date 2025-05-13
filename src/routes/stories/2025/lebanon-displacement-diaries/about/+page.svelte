@@ -15,28 +15,6 @@
 	let contentBlocks = story?.content?.body || [];
 	let footerBlocks = story?.content?.footer || [];
 
-	onMount(async () => {
-		if (
-			typeof window !== 'undefined' &&
-			PUBLIC_ENABLE_VISUAL_EDITOR === 'true' &&
-			story?.id &&
-			(document.body.classList.contains('is-storyblok-editor') ||
-				window.location.search.includes('_storyblok'))
-		) {
-			console.log('Storyblok editor mode detected');
-			await reinitStoryblok();
-			useStoryblokBridge(story.id, (newStory) => {
-				story = {
-					...story,
-					content: { ...newStory.content },
-					timestamp: new Date().getTime()
-				};
-				contentBlocks = newStory.content.body;
-				footerBlocks = newStory.content.footer;
-			});
-		}
-	});
-
 	// Enable Storyblok bridge in editor mode
 	onMount(async () => {
 		if (
@@ -71,7 +49,9 @@
 {#if data.error}
 	<div class="bg-red-600 text-center text-white">⚠️ Error: {data.error.message}</div>
 {:else if story?.content}
-	<StoryblokComponent blok={story.content} />
+	{#each contentBlocks as blok}
+		<StoryblokComponent {blok} />
+	{/each}
 
 	{#if footerBlocks.length > 0}
 		<footer class="footer-content">
