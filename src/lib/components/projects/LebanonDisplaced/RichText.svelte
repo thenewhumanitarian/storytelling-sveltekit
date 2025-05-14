@@ -120,10 +120,9 @@
 		display: block;
 	}
 	:global(.storyblok--richtext h1) {
-		font-weight: bold;
 		font-family: 'GT Sectra Bold', sans-serif;
-		/* font-family: 'ff-amman-serif-pro', sans-serif; */
-		line-height: 0.875;
+		font-weight: 800;
+		line-height: 0.825;
 		margin-bottom: 0.5rem;
 		letter-spacing: -2px;
 		font-size: 5rem;
@@ -140,23 +139,34 @@
 
 	:global(.storyblok--richtext h2) {
 		margin: 0 0 1rem 0;
-		/* font-family: 'ff-amman-serif-pro', sans-serif; */
 		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: 900;
 		font-size: 2rem;
+		/* font-family: 'ff-amman-serif-pro', sans-serif; */
 	}
 
 	:global(.storyblok--richtext h3) {
 		margin: 0 0 1.25rem 0;
-		/* font-family: 'ff-amman-serif-pro', serif; */
 		font-family: 'GT Sectra Bold', sans-serif;
-		font-size: 1.4rem;
+		font-size: 1.5rem;
+		line-height: 1.15;
 		font-weight: bold;
+		/* font-family: 'ff-amman-serif-pro', serif; */
 		/* font-family: 'GT Sectra Bold', serif; */
 	}
 
 	:global(.storyblok--richtext h4) {
 		font-size: 1.4rem;
+	}
+
+	:global(.storyblok--richtext p) {
+		display: block;
+		white-space: normal;
+		font-size: 1.2rem;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		font-weight: medium;
+		line-height: 1.3;
 	}
 
 	:global(
@@ -172,16 +182,6 @@
 		box-decoration-break: clone;
 	}
 
-	:global(.storyblok--richtext p) {
-		display: block;
-		white-space: normal;
-		font-size: 1.25rem;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-		font-weight: medium;
-		line-height: 1.3;
-	}
-
 	/* :global(.arabic p) {
 		font-size: 1.3rem;
 	} */
@@ -193,7 +193,7 @@
 	/* Responsive font sizes */
 	@media screen and (max-width: 640px) {
 		:global(.storyblok--richtext h1) {
-			font-size: 2.3rem !important;
+			font-size: 3rem !important;
 		}
 		:global(.storyblok--richtext h2) {
 			font-size: 1.8rem !important;
@@ -205,6 +205,33 @@
 			line-height: 1.3;
 		}
 	}
+
+	@media screen and (max-width: 420px) {
+		:global(.storyblok--richtext h1) {
+			font-size: 2.2rem !important;
+			line-height: 0.9;
+			letter-spacing: -0.5px;
+		}
+		:global(.storyblok--richtext h2) {
+			font-size: 1.5rem !important;
+			line-height: 1;
+		}
+
+		:global(.storyblok--richtext h3) {
+			font-size: 1.2rem !important;
+			line-height: 1.25;
+			margin-bottom: 1rem;
+		}
+
+		:global(.storyblok--richtext h4) {
+			font-size: 1.2rem !important;
+		}
+
+		:global(.storyblok--richtext p) {
+			font-size: 1.1rem !important;
+		}
+	}
+
 	:global(.storyblok--richtext > img) {
 		float: left;
 		max-width: 50%;
@@ -215,6 +242,7 @@
 	:global(.storyblok--richtext hr) {
 		border-color: #282828;
 		margin: 1rem auto !important;
+		border-top-width: 0.8px;
 	}
 
 	@media screen and (max-width: 945px) {

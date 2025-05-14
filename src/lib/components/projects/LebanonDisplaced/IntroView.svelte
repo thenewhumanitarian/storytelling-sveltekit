@@ -84,8 +84,14 @@
 		justify-content: space-between;
 		height: 100%;
 		width: 100%;
-		max-width: 45%;
+		max-width: 55%;
 		padding-top: 4.5rem;
+	}
+
+	@media screen and (max-width: 1000px) {
+		.intro-text {
+			max-width: 80%;
+		}
 	}
 
 	@media screen and (max-width: 800px) {

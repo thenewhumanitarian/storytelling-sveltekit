@@ -138,6 +138,7 @@
 	}
 
 	.read-more-tag {
+		display: none;
 		bottom: 0.5rem;
 	}
 
@@ -180,7 +181,7 @@
 			.picture-frame-landscape
 		) {
 		padding: 1rem;
-		margin: 0 0.5rem;
+		margin: 0;
 		font-size: 1rem;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 		border: solid 0.5px var(--borderColor);

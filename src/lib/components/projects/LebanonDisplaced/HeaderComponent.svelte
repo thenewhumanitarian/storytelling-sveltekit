@@ -76,10 +76,10 @@
 		position: absolute;
 		left: 0;
 		width: 100%;
-		height: 25vh;
 		z-index: 1;
 		background-position: top center;
 		background-size: cover;
+		/* height: 25vh; */
 	}
 	:global(.torn-paper--top) {
 		top: 0;

@@ -57,7 +57,7 @@
 		font-weight: bold;
 		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
 		background-size: cover;
-		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
+		box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px;
 	}
 
 	blockquote p {
@@ -117,7 +117,7 @@
 	@media screen and (max-width: 850px) {
 		blockquote {
 			padding: 0.5rem 2rem;
-			box-shadow: none;
+			/* box-shadow: none; */
 		}
 		blockquote:before,
 		blockquote:after {

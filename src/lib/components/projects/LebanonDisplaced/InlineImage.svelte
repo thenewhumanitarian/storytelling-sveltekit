@@ -155,13 +155,22 @@
 
 	.align-left {
 		float: left;
-		width: 50%;
+		width: 40%;
 		transform: rotate(var(--rotation-angle, 0deg));
-		/* margin-top: 2rem; */
 		margin-bottom: 1rem;
-		margin-left: -20%;
+		margin-left: -18%;
 		margin-right: 3%;
 		padding-left: 2%;
+		/* margin-top: 2rem; */
+	}
+
+	.align-right {
+		float: right;
+		width: 40%;
+		transform: rotate(var(--rotation-angle, 0deg));
+		margin-right: -18%;
+		margin-left: 3%;
+		padding-right: 2%;
 	}
 
 	.align-left figcaption {
@@ -176,14 +185,7 @@
 		text-align: right;
 	}
 
-	.align-right {
-		float: right;
-		width: 48%;
-		transform: rotate(var(--rotation-angle, 0deg));
-		margin-right: -20%;
-		margin-left: 3%;
-		padding-right: 2%;
-	}
+
 
 	.align-right:not(.no-margin-y) {
 		margin-top: 1rem;
@@ -196,6 +198,10 @@
 	}
 
 	@media screen and (max-width: 1200px) {
+		.align-left,
+		.align-right {
+			width: 38%;
+		}
 		.align-left {
 			margin-left: -15%;
 		}
@@ -204,10 +210,6 @@
 			margin-right: -15%;
 		}
 
-		.align-left,
-		.align-right {
-			width: 40%;
-		}
 	}
 
 	@media screen and (max-width: 925px) {
@@ -245,7 +247,7 @@
 		.align-left,
 		.align-right,
 		.align-center {
-			max-width: 280px;
+			max-width: 240px;
 		}
 	}
 

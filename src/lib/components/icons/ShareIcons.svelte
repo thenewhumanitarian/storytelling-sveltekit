@@ -35,7 +35,7 @@
 	}
 </script>
 
-<div class="share-icons flex items-center justify-center gap-2">
+<div class="share-icons flex items-center justify-center gap-x-2">
 	<!-- Share label only on mobile when icons are hidden -->
 	<button
 		class="block cursor-pointer text-sm text-lebblack sm:hidden"
@@ -46,7 +46,7 @@
 	</button>
 
 	<!-- Icons -->
-	<div class={`flex items-center gap-2 ${showIcons ? 'block' : 'hidden'} sm:flex`}>
+	<div class={`flex items-center gap-1 sm:gap-2 ${showIcons ? 'block' : 'hidden'} sm:flex`}>
 		<!-- BlueSky -->
 		<a
 			class="text-lebblack hover:text-burgundy"
@@ -137,5 +137,14 @@
 	.share-icons a svg {
 		width: 20px;
 		height: 24px;
+	}
+	@media screen and (max-width: 360px) {
+		.share-icons {
+			column-gap: 0;
+		}
+		.share-icons a svg {
+			width: 20px;
+			/* height: 20px; */
+		}
 	}
 </style>

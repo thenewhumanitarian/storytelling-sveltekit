@@ -7,7 +7,7 @@
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 </script>
 
-<footer class={`flex items-center ${isRtl ? 'flex-end flex-row-reverse' : 'flex-start flex-row'}`}>
+<footer class={`flex items-center ${isRtl ? 'flex-end flex-col sm:flex-row-reverse' : 'flex-start flex-col gap-y-5 sm:flex-row'}`}>
 	<div class="torn-paper torn-paper--bottom"></div>
 	<div class={`footer--logo w-full ${isRtl ? 'text-right' : 'text-left'}`}>
 		<FadeIn
@@ -40,37 +40,24 @@
 
 	@media screen and (max-width: 1200px) {
 		footer {
-			padding: 4.75rem 2rem 2rem 2rem;
+			padding: 2rem;
 		}
 	}
 
 	@media screen and (max-width: 900px) {
 		footer {
-			padding: 3.75rem 1rem 1rem 1rem;
-		}
-	}
-
-	@media screen and (max-width: 640px) {
-		footer {
-			padding: 2.75rem 1rem 2rem 1rem;
+			padding: 1rem 1rem 2rem 1rem;
 		}
 	}
 
 	.footer--logo h1 {
 		/* Adjust header logo too if changed here */
 		font-size: 4rem;
-		/* max-width: 320px; */
-		font-size: 4rem;
 		line-height: 0.875;
-		margin-bottom: 2rem;
 		letter-spacing: -2px;
 		color: #ffe0b5;
 		padding-top: 0.75rem;
 		padding-bottom: 0.75rem;
-		/* border-left: 6px solid #ffe0b5;
-		padding-left: 1rem; */
-		/* line-height: 1; */
-		/* color: #ede580; */
 	}
 
 	@media screen and (max-width: 640px) {
@@ -84,7 +71,7 @@
 	:global(.torn-paper--bottom) {
 		position: absolute;
 		overflow: hidden;
-		margin-top: 1rem;
+		/* margin-top: 1rem; */
 		/* background-size: cover; */
 		/* height: 5rem;
 		top: -5rem; */
