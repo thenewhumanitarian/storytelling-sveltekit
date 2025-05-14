@@ -120,24 +120,15 @@
 		will-change: transform;
 		transition: transform 0.8s;
 		border: 0.5px solid transparent;
-		/* padding-bottom: 2rem; */
 	}
 
 	.inline-image-wrapper:hover figure {
 		transform: rotate(-0deg);
 	}
 
-	/* .inline-image-wrapper:hover figure:not(.bg-transparent, .no-lightbox, .bg-scrap-paper) {
-		border: 0.5px solid #282828;
-	} */
-
 	.inline-image-wrapper:hover figure.bg-scrap-paper {
 		border: 0.5px solid transparent !important;
 	}
-
-	/* .inline-image-wrapper:hover figure.bg-transparent:not(.no-lightbox) {
-		border: 0.5px solid #282828;
-	} */
 
 	figure:not(.bg-transparent, .bg-scrap-paper) {
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
@@ -149,28 +140,32 @@
 		padding: 0;
 	}
 
-	/* .align-right {
-		margin-top: 2rem;
-	} */
-
 	.align-left {
 		float: left;
-		width: 40%;
+		width: 50%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-bottom: 1rem;
 		margin-left: -18%;
 		margin-right: 3%;
 		padding-left: 2%;
-		/* margin-top: 2rem; */
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
 	.align-right {
 		float: right;
-		width: 40%;
+		width: 50%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-right: -18%;
 		margin-left: 3%;
 		padding-right: 2%;
+		/* TO BE CHANGED */
+		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+	}
+
+	.align-right.no-lightbox,
+	.align-left.no-lightbox {
+		width: 40%;
+		box-shadow: none;
 	}
 
 	.align-left figcaption {
@@ -185,8 +180,6 @@
 		text-align: right;
 	}
 
-
-
 	.align-right:not(.no-margin-y) {
 		margin-top: 1rem;
 		margin-bottom: 1rem;
@@ -200,8 +193,14 @@
 	@media screen and (max-width: 1200px) {
 		.align-left,
 		.align-right {
+			width: 48%;
+		}
+
+		.align-left.no-lightbox,
+		.align-right.no-lightbox {
 			width: 38%;
 		}
+
 		.align-left {
 			margin-left: -15%;
 		}
@@ -209,7 +208,6 @@
 		.align-right {
 			margin-right: -15%;
 		}
-
 	}
 
 	@media screen and (max-width: 925px) {

@@ -32,8 +32,8 @@
 		top: 0;
 		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
 		background-size: cover;
+		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
 		border-bottom: solid 0.5px #282828;
-		/* box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); */
 		/* background-color: #ffe0b5; */
 		/* background-color: transparent; */
 		/* background-color: rgba(232, 193, 136, 1); */

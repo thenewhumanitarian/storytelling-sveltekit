@@ -9,7 +9,7 @@
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
-		<div class="pull-quote-image--wrapper before z-50 bg-transparent">
+		<div class="pull-quote-image--wrapper before z-50 bg-grass">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image before"
@@ -18,7 +18,7 @@
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after z-50 bg-transparent">
+		<div class="pull-quote-image--wrapper after z-50 bg-grass">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image after scale-x-[-1] rotate-20 -translate-y-0.5"
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 	{/if}
-	<blockquote class={`border-[0.5px] border-lebblack bg-transparent ${blok.name ? 'has-name' : ''}`}>
+	<blockquote class={`border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
 		<p>
 			{blok.text}
 		</p>
@@ -42,22 +42,24 @@
 	.pull-quote-container {
 		position: relative;
 		text-align: center;
-		margin: 3rem auto;
+		margin: 2rem auto;
 	}
 
 	blockquote {
 		position: relative;
 		font-size: 1.75rem;
 		line-height: 1.25;
-		padding: 1.5rem;
+		padding: 1.1rem;
 		margin: 0;
 		z-index: 1;
 		font-weight: 300;
-		margin: 0 -15%;
+		margin: 0;
 		font-weight: bold;
-		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
 		background-size: cover;
-		box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px;
+		border-left: none;
+		border-right: none;
+		/* background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp'); */
+		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
 	}
 
 	blockquote p {
@@ -80,7 +82,7 @@
 		blockquote {
 			font-size: 1.5rem;
 			line-height: 1.15;
-			margin: 1rem -2rem;
+			/* margin: 1rem -2rem; */
 		}
 	}
 
@@ -88,7 +90,7 @@
 		blockquote {
 			font-size: 1.25rem;
 			line-height: 1.2;
-			margin: 1rem -1.6rem;
+			margin: 0;
 			padding: 2rem;
 		}
 	}
