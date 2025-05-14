@@ -31,15 +31,13 @@
 	const hasLightbox = blok.lightbox === true;
 </script>
 
-<div
-	class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}
-	use:storyblokEditable={blok}
->
+<div class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}>
 	{#if blok?.media?.filename}
 		<figure
 			bind:this={figureEl}
 			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'p-2'}`}
 			style={`--rotation-angle: ${blok.rotation || 0}deg`}
+			use:storyblokEditable={blok}
 		>
 			<button
 				type="button"
@@ -88,7 +86,7 @@
 			</button>
 
 			{#if blok.caption}
-				<figcaption>{blok.caption}</figcaption>
+				<figcaption class={`font-amman`}>{blok.caption}</figcaption>
 			{/if}
 
 			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'bg-scrap-paper'}
@@ -145,10 +143,11 @@
 		width: 50%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-bottom: 1rem;
+		margin-top: 1rem;
 		margin-left: -18%;
-		margin-right: 3%;
-		padding-left: 2%;
+		margin-right: 4%;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* padding-left: 2%; */
 	}
 
 	.align-right {
@@ -156,10 +155,11 @@
 		width: 50%;
 		transform: rotate(var(--rotation-angle, 0deg));
 		margin-right: -18%;
-		margin-left: 3%;
-		padding-right: 2%;
-		/* TO BE CHANGED */
+		margin-left: 4%;
+		margin-bottom: 1rem;
+		margin-top: 1rem;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* padding-right: 2%; */
 	}
 
 	.align-right.no-lightbox,
@@ -168,7 +168,7 @@
 		box-shadow: none;
 	}
 
-	.align-left figcaption {
+	:global(.align-left figcaption) {
 		text-align: left;
 	}
 
@@ -177,10 +177,10 @@
 	}
 
 	:global(.arabic .align-right figcaption) {
-		text-align: right;
+		text-align: left;
 	}
 
-	.align-right:not(.no-margin-y) {
+	:global(.align-right:not(.no-margin-y), .align-left:not(.no-margin-y)) {
 		margin-top: 1rem;
 		margin-bottom: 1rem;
 	}
@@ -188,6 +188,14 @@
 	.align-center {
 		margin: 2rem auto;
 		width: 100%;
+	}
+
+	:global(figcaption) {
+		text-align: left;
+	}
+
+	:global(.arabic figcaption) {
+		text-align: right !important;
 	}
 
 	@media screen and (max-width: 1200px) {
@@ -239,6 +247,13 @@
 		.align-center.no-margin-y {
 			margin: 0 auto;
 		}
+
+		.align-left.no-lightbox,
+		.align-right.no-lightbox {
+			width: 100%;
+			max-width: 360px;
+			margin: 1rem auto;
+		}
 	}
 
 	@media screen and (max-width: 640px) {
@@ -246,6 +261,14 @@
 		.align-right,
 		.align-center {
 			max-width: 240px;
+		}
+
+
+		.align-left.no-lightbox,
+		.align-right.no-lightbox {
+			width: 100%;
+			max-width: 320px;
+			margin: 1rem auto;
 		}
 	}
 

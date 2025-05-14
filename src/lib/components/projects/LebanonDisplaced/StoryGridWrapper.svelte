@@ -170,7 +170,7 @@
 	}
 
 	:global(.story-grid--panel .storyblok--richtext *) {
-		margin: 0;
+		/* margin: 0; */
 	}
 
 	:global(.story-grid--panel .storyblok--richtext h1) {
