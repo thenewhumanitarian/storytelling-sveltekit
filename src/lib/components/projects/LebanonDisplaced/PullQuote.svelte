@@ -9,7 +9,7 @@
 	use:storyblokEditable={blok}
 >
 	{#if blok.image?.filename}
-		<div class="pull-quote-image--wrapper before z-50 bg-grass">
+		<div class="pull-quote-image--wrapper before z-50 bg-transparent">
 			<div class="pull-quote-image--container">
 				<img
 					class="pull-quote-image before"
@@ -18,17 +18,17 @@
 				/>
 			</div>
 		</div>
-		<div class="pull-quote-image--wrapper after z-50 bg-grass">
+		<div class="pull-quote-image--wrapper after z-50 bg-transparent">
 			<div class="pull-quote-image--container">
 				<img
-					class="pull-quote-image after"
+					class="pull-quote-image after scale-x-[-1] rotate-20 -translate-y-0.5"
 					src={`${blok.image.filename}/m/60x0`}
 					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>
 	{/if}
-	<blockquote class={`border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
+	<blockquote class={`border-[0.5px] border-lebblack bg-transparent ${blok.name ? 'has-name' : ''}`}>
 		<p>
 			{blok.text}
 		</p>
@@ -55,6 +55,8 @@
 		font-weight: 300;
 		margin: 0 -15%;
 		font-weight: bold;
+		background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp');
+		background-size: cover;
 		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
 	}
 
