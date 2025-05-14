@@ -104,7 +104,7 @@
 
 	@media screen and (max-width: 475px) {
 		.intro-text {
-			padding-top: 5.25rem;
+			padding-top: 5rem;
 		}
 	}
 

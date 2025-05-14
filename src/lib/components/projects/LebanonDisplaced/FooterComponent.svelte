@@ -26,6 +26,8 @@
 		<p>
 			Illustrations by <a
 				class="font-medium hover:underline"
+				target="_blank"
+				rel="noopener noreferrer"
 				href={'https://www.instagram.com/sasha.haddad.illustrations/'}>Sasha Haddad</a
 			>
 		</p>
