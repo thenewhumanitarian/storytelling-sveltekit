@@ -49,7 +49,7 @@
 		padding-top: 2rem;
 		padding-bottom: 2rem;
 		background-color: #afb87e;
-		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
+		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp');
 		background-repeat: repeat;
 	}
 
