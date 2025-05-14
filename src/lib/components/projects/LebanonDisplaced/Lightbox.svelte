@@ -280,7 +280,7 @@
 		position: fixed;
 		inset: 0;
 		background: #ffe0b5;
-		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.png');
+		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp');
 		background-repeat: repeat;
 		display: flex;
 		justify-content: center;
@@ -308,7 +308,7 @@
 	.media-figure video {
 		display: block;
 		object-fit: contain;
-		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		/* box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px; */
 		max-width: 90vw;
 		max-height: 85vh;
 	}
@@ -361,7 +361,7 @@
 		/* max-width: 90vw;
 		max-height: 90vh; */
 		object-fit: contain;
-		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+		box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 10px -10px;
 	}
 
 	.swiper-button-prev,

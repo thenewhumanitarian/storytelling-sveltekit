@@ -53,11 +53,11 @@
 		background-repeat: repeat;
 	}
 
-	:global(main > div.storyblok__outline > div:last-child) {
-		/* padding-bottom: 10rem;
-		margin-bottom: -10rem; */
-		/* background: white; */
-	}
+	/* :global(main > div.storyblok__outline > div:last-child) {
+		padding-bottom: 10rem;
+		margin-bottom: -10rem;
+		background: white;
+	} */
 
 	.background-image {
 		position: fixed;

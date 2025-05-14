@@ -23,7 +23,7 @@
 	</div>
 	<div class={`w-full text-brown ${isRtl ? 'text-left' : 'text-right'}`}>
 		<h2 class="text-2xl text-brown">The end of a war is not the end of the story.</h2>
-		<p>Illustrations by <a class="font-medium hover:underline" href={'#'}>Sasha Haddad</a></p>
+		<p>Illustrations by <a class="font-medium hover:underline" href={'https://www.instagram.com/sasha.haddad.illustrations/'}>Sasha Haddad</a></p>
 		<a class="font-medium hover:underline" href={'#'}><p>About this project</p></a>
 		<p>Back <a class="font-medium hover:underline" href={'#'}>to The New Humanitarian</a></p>
 		<!-- <a class="font-medium hover:underline" href={'#'}><p>Images by Pexel</p></a> -->
