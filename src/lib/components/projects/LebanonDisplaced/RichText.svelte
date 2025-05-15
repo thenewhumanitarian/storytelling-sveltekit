@@ -71,7 +71,9 @@
 					class extends HTMLElement {
 						connectedCallback() {
 							const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
-							mount(InlineImage, { target: this, props: { blok } });
+							const mountPoint = document.createElement('div');
+							this.appendChild(mountPoint);
+							mount(InlineImage, { target: mountPoint, props: { blok } });
 						}
 					}
 				);
@@ -83,7 +85,9 @@
 					class extends HTMLElement {
 						connectedCallback() {
 							const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
-							mount(PullQuote, { target: this, props: { blok } });
+							const mountPoint = document.createElement('div');
+							this.appendChild(mountPoint);
+							mount(PullQuote, { target: mountPoint, props: { blok } });
 						}
 					}
 				);
@@ -95,7 +99,9 @@
 					class extends HTMLElement {
 						connectedCallback() {
 							const blok = JSON.parse(this.getAttribute('data-blok') || '{}');
-							mount(LineBreak, { target: this, props: { blok } });
+							const mountPoint = document.createElement('div');
+							this.appendChild(mountPoint);
+							mount(LineBreak, { target: mountPoint, props: { blok } });
 						}
 					}
 				);
