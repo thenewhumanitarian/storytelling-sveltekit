@@ -182,9 +182,9 @@
 		box-decoration-break: clone;
 	}
 
-	/* :global(.arabic p) {
+	:global(.arabic p) {
 		font-size: 1.3rem;
-	} */
+	}
 
 	:global(.storyblok--richtext a:hover) {
 		text-decoration: underline;

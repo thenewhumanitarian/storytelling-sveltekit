@@ -90,7 +90,7 @@
 
 	@media screen and (max-width: 1000px) {
 		.intro-text {
-			max-width: 80%;
+			max-width: 60%;
 		}
 	}
 
@@ -121,6 +121,7 @@
 	:global(.arabic .intro-title) {
 		right: 2.5rem;
 		left: unset;
+		line-height: 2;
 	}
 
 	.intro-credit {

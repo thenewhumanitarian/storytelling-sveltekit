@@ -188,7 +188,7 @@
 		background-size: cover;
 		transform: rotate(-15deg);
 		top: calc(var(--tape-height) * -0.5);
-		right: calc(var(--tape-width) * -0.15);
+		/* right: calc(var(--tape-width) * -0.15); */
 	}
 
 	.tape-bl.picture-frame {
