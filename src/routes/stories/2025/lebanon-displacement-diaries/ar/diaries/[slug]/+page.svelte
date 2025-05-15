@@ -72,3 +72,9 @@
 {:else}
 	<div class="text-center">Loading content...</div>
 {/if}
+
+<style>
+	:global(.footer-content *:only-child) {
+		margin-bottom: 0 !important;
+	}
+</style>

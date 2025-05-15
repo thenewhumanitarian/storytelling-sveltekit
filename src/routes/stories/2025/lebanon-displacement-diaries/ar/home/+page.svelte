@@ -69,3 +69,9 @@
 {:else}
 	<div class="hidden">Getting Story ready...</div>
 {/if}
+
+<style>
+	:global(.footer-content *:only-child) {
+		margin-bottom: 0 !important;
+	}
+</style>
