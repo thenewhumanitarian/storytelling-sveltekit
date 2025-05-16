@@ -64,6 +64,12 @@
 		{#if blok.tape?.includes('br')}
 			<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
 		{/if}
+		{#if blok.tape?.includes('tc')}
+			<span class={`tape tape-tc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('bc')}
+			<span class={`tape tape-bc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
 	</div>
 </button>
 
@@ -165,6 +171,16 @@
 		transform: rotate(-45deg);
 	}
 
+	.tape-tc {
+		top: calc(var(--tape-height) * -0.8);
+		left: calc(50% - (var(--tape-width) / 2));
+	}
+
+	.tape-bc {
+		bottom: calc(var(--tape-width) * -0.35);
+		left: calc(50% - (var(--tape-width) / 2));
+	}
+
 	.tape-br.picture-frame {
 		background: url('/assets/ldd/frames/picture-frame--tape--br.png');
 		aspect-ratio: 538/303;
@@ -197,5 +213,20 @@
 		opacity: 1;
 		background-size: cover;
 		transform: rotate(3deg);
+	}
+
+	.tape-tc.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		aspect-ratio: 502/250;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(-1deg);
+	}
+	.tape-bc.picture-frame {
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		aspect-ratio: 502/250;
+		opacity: 1;
+		background-size: cover;
+		transform: rotate(-2deg) scaleX(-1);
 	}
 </style>
