@@ -249,10 +249,10 @@
 			transform: rotate(0deg);
 		}
 
-		.align-left figcaption,
+		/* .align-left figcaption,
 		.align-right figcaption {
 			text-align: center;
-		}
+		} */
 
 		.align-left.no-margin-y,
 		.align-right.no-margin-y,
