@@ -22,7 +22,7 @@
 			window.soundciteScriptLoaded = true;
 
 			window.SOUNDCITE_CONFIG = {
-				background_color: '250,225,186' // e.g., bright yellow; use RGB format
+				background_color: '255,224,181' // e.g., bright yellow; use RGB format
 			};
 
 			// Set SoundCite config for isRtl

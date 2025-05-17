@@ -57,7 +57,7 @@
 	{/if}
 
 	{#if relatedDiaries?.length > 0}
-		<section class="related-diaries-wrapper my-16">
+		<section class="related-diaries-wrapper mb-8 mt-16">
 			<HorizontalScroll items={relatedDiaries} lang="ar" />
 		</section>
 	{/if}
