@@ -14,15 +14,6 @@
 
 	let figureEl: HTMLElement;
 
-	// function escapeHTML(str: string) {
-	// 	return str
-	// 		.replace(/&/g, '&amp;')
-	// 		.replace(/</g, '&lt;')
-	// 		.replace(/>/g, '&gt;')
-	// 		.replace(/"/g, '&quot;')
-	// 		.replace(/'/g, '&#039;');
-	// }
-
 	const match = blok.media?.filename?.match(/\/(\d+)x(\d+)\//);
 	const width = match ? parseInt(match[1], 10) : undefined;
 	const height = match ? parseInt(match[2], 10) : undefined;
@@ -156,8 +147,8 @@
 		float: none;
 		margin: 3rem auto;
 		width: 100%;
-		max-width: 360px;
-		transform: rotate(0deg);
+		max-width: 420px;
+		transform: rotate(var(--rotation-angle, 0deg));
 	}
 
 	:global(.content-wrapper .align-left) {
@@ -238,7 +229,7 @@
 		}
 	}
 
-	@media screen and (max-width: 925px) {
+	@media screen and (max-width: 825px) {
 		.inline-image-wrapper {
 			margin: 2.5rem auto;
 		}

@@ -21,23 +21,40 @@
 	$effect(() => {
 		if (!blok.items) return;
 
+		const alternate = blok.alternateColumns === true;
+		const baseCol = blok.columns || 3;
+		const altCol = baseCol === 3 ? 2 : 3;
+
 		let rowCount = 0;
 		let currentRow = 0;
+		let rowIndex = 0;
+		let activeCols = baseCol;
 
-		blok.items.forEach((item: any) => {
+		// store the alternating column pattern
+		const pattern = [];
+
+		blok.items.forEach((item: any, i: number) => {
+			// Switch columns every row if alternateColumns is true
+			if (alternate && currentRow === 0 && i !== 0) {
+				rowIndex++;
+				activeCols = rowIndex % 2 === 0 ? baseCol : altCol;
+			}
+
 			const span = Number(item.colSpan) || 1;
 			currentRow += span;
 
-			if (currentRow > state.columns) {
+			if (currentRow > activeCols) {
 				rowCount++;
+				rowIndex++;
+				activeCols = alternate ? (rowIndex % 2 === 0 ? baseCol : altCol) : baseCol;
 				currentRow = span;
 			}
+
+			pattern.push(activeCols); // store the current column setting per item (optional)
 		});
 
-		// Calculate how many rows of items
 		state.totalRows = rowCount + 1;
 
-		// Conditionally add 'auto' row for title only if blok.text exists
 		const hasText = blok.text && blok.text.trim() !== '';
 		const rows = hasText
 			? `auto ${Array(state.totalRows).fill(rowHeight).join(' ')}`
@@ -54,13 +71,15 @@
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
 	<div
-		class={`story-grid--container justify-center items-center desktop ${blok.size}`}
+		class={`story-grid--container desktop items-center justify-center ${blok.size}`}
 		style={`grid-template-columns: repeat(${state.columns}, 1fr); grid-template-rows: ${state.gridTemplateRows};`}
 	>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-					<h3 class={`pb-0 text-center font-amman font-bold text-2xl ${blok.textColor || 'text-lebblack'}`}>
+					<h3
+						class={`pb-0 text-center font-amman text-2xl font-bold ${blok.textColor || 'text-lebblack'}`}
+					>
 						{blok.text}
 					</h3>
 				</FadeIn>
@@ -80,11 +99,11 @@
 	style="--grid-rows: auto;"
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 >
-	<div class={`story-grid--container flex items-center justify-center mobile ${blok.size}`}>
+	<div class={`story-grid--container mobile flex items-center justify-center ${blok.size}`}>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
 				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
-					<h3 class={`pb-0 text-center font-amman font-bold text-2xl ${blok.textColor}`}>
+					<h3 class={`pb-0 text-center font-amman text-2xl font-bold ${blok.textColor}`}>
 						{blok.text}
 					</h3>
 				</FadeIn>

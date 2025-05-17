@@ -152,7 +152,7 @@
 		right: unset;
 	}
 
-	@media screen and (max-width: 925px) {
+	@media screen and (max-width: 825px) {
 		.read-more-tag {
 			bottom: 0;
 			top: unset;
