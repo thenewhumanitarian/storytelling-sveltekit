@@ -73,8 +73,25 @@
 				<p>About the project</p>
 			</a>
 		{/if}
-		<p>العودة إلى موقع <a class="font-bold hover:underline" href={'#'}>The New Humanitarian</a></p>
-		<!-- <a class="font-medium hover:underline" href={'#'}><p>Images by Pexel</p></a> -->
+		{#if isRtl}
+			<p>
+				العودة إلى موقع <a
+					href="https://www.thenewhumanitarian.org"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="font-bold hover:underline">The New Humanitarian</a
+				>
+			</p>
+		{:else}
+			<p>
+				Back to <a
+					href="https://www.thenewhumanitarian.org"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="font-bold hover:underline">The New Humanitarian</a
+				>
+			</p>
+		{/if}
 	</div>
 </footer>
 
