@@ -6,7 +6,7 @@
 	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
 
 	let backLinkHref = '/stories/2025/lebanon-displacement-diaries/home';
-	let isOnHomePage = false;
+	let isOnHomePage = true;
 
 	onMount(() => {
 		if (typeof window !== 'undefined') {
