@@ -20,11 +20,13 @@
 		isVisible: boolean;
 		showCaption: boolean;
 		imagesLoaded: boolean[];
+		videoIsPlaying: boolean;
 	}>({
 		index: null,
 		isVisible: false,
 		showCaption: true,
-		imagesLoaded: []
+		imagesLoaded: [],
+		videoIsPlaying: false
 	});
 
 	$effect(() => {
@@ -64,6 +66,18 @@
 		if (e.key === 'Escape') close();
 	}
 
+	// Handle video play/pause
+	function handleVideoPlayPause(index: number) {
+		console.log('Video play/pause clicked');
+		if (state.videoIsPlaying) {
+			videoEls[index].pause();
+			videoEls[index].currentTime = 0;
+		} else {
+			videoEls[index].play().catch(() => {});
+		}
+		state.videoIsPlaying = !state.videoIsPlaying;
+	}
+
 	$effect(() => {
 		if (!state.isVisible || state.index === null) return;
 
@@ -79,14 +93,6 @@
 					modules: [Navigation, Pagination, Keyboard],
 					initialSlide: state.index ?? 0,
 					mousewheel: { forceToAxis: true },
-
-					// simulateTouch: true,
-					// threshold: 10,
-					// zoom: {
-					// 	maxRatio: 3,
-					// 	minRatio: 1
-					// },
-					// grabCursor: true,
 					navigation: {
 						nextEl: '.swiper-button-next',
 						prevEl: '.swiper-button-prev'
@@ -113,6 +119,7 @@
 						if (!video) return;
 						if (i === swiper.realIndex) {
 							video.play().catch(() => {});
+							state.videoIsPlaying = true;
 						} else {
 							video.pause();
 							video.currentTime = 0;
@@ -166,7 +173,7 @@
 				{#each $lightboxItems as item, i}
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
-							<figure class="media-figure bg-brown">
+							<figure class="media-figure bg-transparent">
 								<div
 									style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
 									class="absolute left-0 top-0 h-full w-full sm:bg-lebgreen"
@@ -207,17 +214,39 @@
 							</figure>
 							<div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
 						{:else if item.type === 'video'}
-							<video
-								src={item.src}
-								controls
-								playsinline
-								bind:this={videoEls[i]}
-								class="max-h-full"
-								loading="lazy"
-								onload={() => (state.imagesLoaded[i] = true)}
-							>
-								<track kind="captions" src="captions.vtt" srclang="en" label="English" />
-							</video>
+							<figure class="media-figure bg-transparent">
+								<video
+									src={item.src}
+									controls={false}
+									playsinline
+									bind:this={videoEls[i]}
+									class="max-h-full"
+									loading="lazy"
+									onload={() => (state.imagesLoaded[i] = true)}
+								/>
+								<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
+									{state.videoIsPlaying ? '⏸️' : '▶️'}
+								</button>
+								{#if item.caption}
+									<div class="flex flex-row">
+										{#if state.showCaption}
+											<figcaption
+												class="media-caption video"
+												style={`text-align: ${isRtl ? 'right' : 'left'}`}
+												dir={isRtl ? 'rtl' : 'ltr'}
+											>
+												{decodeHTML(item.caption)}
+											</figcaption>
+										{/if}
+										<button
+											class={`caption-toggle absolute top-0 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100`}
+											onclick={() => (state.showCaption = !state.showCaption)}
+										>
+											{state.showCaption ? 'Hide caption' : 'Show caption'}
+										</button>
+									</div>
+								{/if}
+							</figure>
 						{/if}
 					</div>
 				{/each}
@@ -255,6 +284,20 @@
 		height: 1rem;
 		border-radius: 1px;
 	}
+
+	.video--play {
+		position: absolute;
+		top: 0;
+		left: 0;
+		color: white;
+		border: none;
+		padding: 1rem 0.5rem;
+		font-size: 2rem;
+		cursor: pointer;
+		/* background-color: rgba(0, 0, 0, 0.5); */
+		/* transform: translate(-50%, -50%); */
+	}
+
 	@media screen and (max-width: 640px) {
 		:global(.swiper-pagination) {
 			padding: 0 1.5rem;
@@ -306,7 +349,6 @@
 	.media-figure video {
 		display: block;
 		object-fit: contain;
-		/* box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px; */
 		max-width: 90vw;
 		max-height: 85vh;
 	}
@@ -330,8 +372,6 @@
 		text-align: start;
 		font-size: 0.9rem;
 		box-sizing: border-box;
-		/* transform: translateX(-50%); */
-		/* max-width: 90vw; */
 	}
 
 	.swiper {
@@ -356,8 +396,6 @@
 
 	.lightbox-media img,
 	.lightbox-media video {
-		/* max-width: 90vw;
-		max-height: 90vh; */
 		object-fit: contain;
 		box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 10px -10px;
 	}
