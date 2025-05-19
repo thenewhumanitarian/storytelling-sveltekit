@@ -5,7 +5,7 @@
 	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
 	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
 
-	let linkHref = '/stories/2025/lebanon-displacement-diaries/home';
+	let backLinkHref = '/stories/2025/lebanon-displacement-diaries/home';
 	let isOnHomePage = false;
 
 	onMount(() => {
@@ -15,7 +15,7 @@
 			const isOnHomePage = path.endsWith('/home') || path.endsWith('/home/');
 
 			if (!isOnHomePage) {
-				linkHref = isArabic
+				backLinkHref = isArabic
 					? '/stories/2025/lebanon-displacement-diaries/ar/home'
 					: '/stories/2025/lebanon-displacement-diaries/home';
 			}
@@ -41,7 +41,15 @@
 			<div
 				class={`back--button hidden transition-all duration-200 ease-in-out hover:bg-burgundy hover:text-white ${isOnHomePage ? 'sm:hidden' : 'sm:block'}`}
 			>
-				<a class="px-2 py-1" href={linkHref}> ↩ </a>
+				<a
+					data-sveltekit-reload
+					data-sveltekit-preload-data
+					data-sveltekit-preload
+					class="px-2 py-1"
+					href={backLinkHref}
+				>
+					↩
+				</a>
 			</div>
 			<LanguageSwitch />
 		</div>
