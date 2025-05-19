@@ -26,7 +26,7 @@
 		isVisible: false,
 		showCaption: true,
 		imagesLoaded: [],
-		videoIsPlaying: false
+		videoIsPlaying: true
 	});
 
 	$effect(() => {
@@ -180,14 +180,14 @@
 								></div>
 								<img
 									src={`${item.src}/m/1024x0`}
-									alt={item.alt || 'Photo alt text is missing.'}
+									alt={item.caption || 'Photo alt text is missing.'}
 									class="block sm:hidden"
 									loading="lazy"
 									onload={() => (state.imagesLoaded[i] = true)}
 								/>
 								<img
 									src={`${item.src}/m/1024x0`}
-									alt={item.alt || 'Photo alt text is missing.'}
+									alt={item.caption || 'Photo alt text is missing.'}
 									class="absolute left-0 top-0 hidden h-full w-full object-contain sm:block"
 									loading="lazy"
 									onload={() => (state.imagesLoaded[i] = true)}
@@ -219,10 +219,11 @@
 									src={item.src}
 									controls={false}
 									playsinline
-									bind:this={videoEls[i]}
 									class="max-h-full"
 									loading="lazy"
 									onload={() => (state.imagesLoaded[i] = true)}
+									autoplay
+									bind:this={videoEls[i]}
 								/>
 								<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
 									{state.videoIsPlaying ? '⏹️' : '▶️'}
@@ -291,7 +292,7 @@
 		left: 0;
 		color: white;
 		border: none;
-		padding: 1rem 0.5rem;
+		padding: 0.8rem 0.5rem;
 		font-size: 2rem;
 		cursor: pointer;
 		/* background-color: rgba(0, 0, 0, 0.5); */

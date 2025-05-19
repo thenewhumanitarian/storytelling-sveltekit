@@ -34,32 +34,7 @@
 		background-size: cover;
 		box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
 		border-bottom: solid 0.5px #282828;
-		/* background-color: #ffe0b5; */
-		/* background-color: transparent; */
-		/* background-color: rgba(232, 193, 136, 1); */
-		/* backdrop-filter: blur(10px); */
 	}
-
-	@media screen and (max-width: 1350px) {
-		header {
-			/* padding-bottom: 2rem; */
-			/* background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.webp'); */
-		}
-	}
-
-	/* @media screen and (max-width: 1200px) {
-		header {
-			height: 4.5rem;
-			padding-bottom: 1.8rem;
-		}
-	} */
-
-	/* @media screen and (max-width: 900px) {
-		header {
-			height: 6rem;
-			padding-bottom: 1rem;
-		}
-	} */
 
 	@media screen and (max-width: 475px) {
 		header {
@@ -68,7 +43,6 @@
 			background-size: cover;
 			height: 4rem;
 			padding: 0 0.5rem 0rem 0.75rem;
-			/* padding-bottom: 0.7rem; */
 		}
 	}
 
@@ -88,8 +62,6 @@
 		align-items: center;
 		justify-content: center;
 		background-size: cover;
-		/* background-image: url('/assets/ldd/patterns/torn-cardboard--top.png'); */
-		/* background-image: url('/assets/ldd/patterns/torn-paper--top--small.webp'); */
 	}
 	.background-image img {
 		width: 100%;

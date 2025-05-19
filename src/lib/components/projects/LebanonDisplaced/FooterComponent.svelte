@@ -78,12 +78,5 @@
 	:global(.torn-paper--bottom) {
 		position: absolute;
 		overflow: hidden;
-		/* margin-top: 1rem; */
-		/* background-size: cover; */
-		/* height: 5rem;
-		top: -5rem; */
-		/* background-image: url('/assets/ldd/patterns/torn-paper--bottom--small.webp'); */
-		/* background-color: white; */
-		/* background-image: url('/assets/ldd/patterns/torn-cardboard--bottom.png'); */
 	}
 </style>

@@ -23,9 +23,6 @@
 
 	const fileName = blok.media?.filename?.split('/').pop();
 	const fileExtension = fileName?.split('.').pop();
-	// const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(
-	// 	fileExtension?.toLowerCase() || ''
-	// );
 	const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension?.toLowerCase() || '');
 </script>
 
@@ -44,7 +41,7 @@
 				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
 				data-lightbox={blok.lightbox ? 'true' : 'false'}
 				data-lightbox-src={blok.lightbox ? blok.media?.filename : ''}
-				data-lightbox-type="image"
+				data-lightbox-type={isVideo ? 'video' : 'image'}
 				data-lightbox-caption={blok.caption || ''}
 				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
 				data-lightbox-width={width}
