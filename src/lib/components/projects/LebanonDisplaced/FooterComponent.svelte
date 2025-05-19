@@ -18,11 +18,19 @@
 			blurAmount={30}
 			containerClasses={`flex w-full ${isRtl ? 'justify-end' : 'justify-start'}`}
 		>
-			<h1>The<br />Lebanon<br />Displacement<br />Diaries</h1>
+			{#if isRtl}
+				<h1 style="line-height: 1.1;">يوميات<br />النزوح في<br />لبنان</h1>
+			{:else}
+				<h1>The<br />Lebanon<br />Displacement<br />Diaries</h1>
+			{/if}
 		</FadeIn>
 	</div>
 	<div class={`w-full text-brown ${isRtl ? 'text-left' : 'text-right'}`}>
-		<h2 class="text-2xl text-brown">The end of a war is not the end of the story.</h2>
+		{#if isRtl}
+			<h2 class="text-2xl text-brown">نهاية الحرب ليست بنهاية القصة.</h2>
+		{:else}
+			<h2 class="text-2xl text-brown">The end of a war is not the end of the story.</h2>
+		{/if}
 		<p>
 			Illustrations by <a
 				class="font-medium hover:underline"
@@ -42,7 +50,7 @@
 		position: relative;
 		background-color: #282828;
 		box-shadow: 0px -10px 20px rgba(0, 0, 0, 0.2);
-		padding: 5.75rem 3rem 3rem 3rem;
+		padding: 4rem 3rem 4rem 3rem;
 	}
 
 	@media screen and (max-width: 1200px) {

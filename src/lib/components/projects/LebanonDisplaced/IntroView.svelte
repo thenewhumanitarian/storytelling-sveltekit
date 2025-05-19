@@ -9,11 +9,11 @@
 	const hasMobileImage = !!blok.backgroundImageMobile?.filename;
 
 	const bgImage = hasDesktopImage
-		? `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(50)`
+		? `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(80)`
 		: '';
 
 	const bgImageMobile = hasMobileImage
-		? `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(50)`
+		? `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(80)`
 		: bgImage; // fallback to desktop if mobile is missing
 </script>
 
