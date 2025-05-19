@@ -19,7 +19,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: url('/assets/ldd/patterns/scrapbook-paper--white.png') no-repeat top center;
+		background: url('/assets/ldd/patterns/scrapbook-paper--white.webp') no-repeat top center;
 		background-size: contain;
 		transform: scale(1) translateY(0) rotate(1deg);
 		transition: transform 0.5s ease-in-out;

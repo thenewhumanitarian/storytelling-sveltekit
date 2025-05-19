@@ -182,14 +182,14 @@
 	}
 
 	.tape-br.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--br.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--br.webp');
 		aspect-ratio: 538/303;
 		opacity: 1;
 		background-size: cover;
 	}
 
 	.tape-tr.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--tr.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--tr.webp');
 		aspect-ratio: 421/458;
 		opacity: 1;
 		background-size: cover;
@@ -198,7 +198,7 @@
 	}
 
 	.tape-tl.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.webp');
 		aspect-ratio: 502/250;
 		opacity: 1;
 		background-size: cover;
@@ -208,7 +208,7 @@
 	}
 
 	.tape-bl.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--bl.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--bl.webp');
 		aspect-ratio: 757/248;
 		opacity: 1;
 		background-size: cover;
@@ -216,14 +216,14 @@
 	}
 
 	.tape-tc.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.webp');
 		aspect-ratio: 502/250;
 		opacity: 1;
 		background-size: cover;
 		transform: rotate(-1deg);
 	}
 	.tape-bc.picture-frame {
-		background: url('/assets/ldd/frames/picture-frame--tape--tl.png');
+		background: url('/assets/ldd/frames/picture-frame--tape--tl.webp');
 		aspect-ratio: 502/250;
 		opacity: 1;
 		background-size: cover;

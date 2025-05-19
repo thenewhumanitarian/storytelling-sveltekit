@@ -198,7 +198,7 @@
 	}
 
 	.story-grid--panel.note {
-		background-image: url('/assets/ldd/patterns/scrapbook-note.png');
+		background-image: url('/assets/ldd/patterns/scrapbook-note.webp');
 		background-size: contain;
 		border-color: transparent;
 		width: 100%;
@@ -211,7 +211,7 @@
 	}
 
 	.story-grid--panel.picture-frame {
-		background-image: url('/assets/ldd/frames/picture-frame--body.png');
+		background-image: url('/assets/ldd/frames/picture-frame--body.webp');
 		background-size: 100%;
 		aspect-ratio: 1842/2276;
 		border: none;
@@ -220,7 +220,7 @@
 	}
 
 	.story-grid--panel.picture-frame-landscape {
-		background-image: url('/assets/ldd/frames/picture-frame--body--landscape.png');
+		background-image: url('/assets/ldd/frames/picture-frame--body--landscape.webp');
 		background-size: 100%;
 		aspect-ratio: 2/1.75;
 		border: none;

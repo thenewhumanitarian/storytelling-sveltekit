@@ -288,8 +288,6 @@
 		padding: 2rem;
 		box-sizing: border-box;
 		overflow: hidden;
-		/* background-image: url('/assets/ldd/patterns/beige-paper-texture.png'); */
-		/* background-size: cover; */
 	}
 
 	.lightbox-overlay:hover {
