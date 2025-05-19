@@ -1,7 +1,32 @@
 <script>
+	import { onMount } from 'svelte';
+
 	import Logo from '$lib/components/icons/Logo.svelte';
 	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
 	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
+
+	let linkHref = '/stories/2025/lebanon-displacement-diaries/home';
+	let isOnHomePage = false;
+
+	onMount(() => {
+		if (typeof window !== 'undefined') {
+			const path = window.location.pathname;
+			const isArabic = path.includes('/ar/');
+			const isOnHomePage = path.endsWith('/home') || path.endsWith('/home/');
+
+			if (!isOnHomePage) {
+				linkHref = isArabic
+					? '/stories/2025/lebanon-displacement-diaries/ar/home'
+					: '/stories/2025/lebanon-displacement-diaries/home';
+			}
+		}
+
+		// Check if already on Homepage
+		if (typeof window !== 'undefined') {
+			const path = window.location.pathname;
+			isOnHomePage = path.endsWith('/home') || path.endsWith('/home/');
+		}
+	});
 </script>
 
 <header class={'torn-paper torn-paper--top bg-brown'}>
@@ -12,7 +37,12 @@
 		<div class="absolute left-1/2 -translate-x-1/2">
 			<Logo />
 		</div>
-		<div class="w-16 text-right">
+		<div class="flex w-16 items-center justify-end gap-2 text-right">
+			<div
+				class={`back--button hidden transition-all duration-200 ease-in-out hover:bg-burgundy hover:text-white ${isOnHomePage ? 'sm:hidden' : 'sm:block'}`}
+			>
+				<a class="px-2 py-1" href={linkHref}> ↩ </a>
+			</div>
 			<LanguageSwitch />
 		</div>
 	</div>
@@ -36,6 +66,11 @@
 		border-bottom: solid 0.5px #282828;
 	}
 
+	.back--button {
+		border: solid 1px #6b7280;
+		padding: 0.5rem 0.25rem;
+	}
+
 	@media screen and (max-width: 475px) {
 		header {
 			background-repeat: no-repeat;
@@ -53,7 +88,6 @@
 		z-index: 1;
 		background-position: top center;
 		background-size: cover;
-		/* height: 25vh; */
 	}
 	:global(.torn-paper--top) {
 		top: 0;

@@ -6,6 +6,7 @@
 <div
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
 	class={`content-wrapper ${blok.borderColor === 'black' ? 'border-[0.5px] border-black' : ''} ${blok?.backgroundColor || 'bg-transparent'} ${blok?.size}`}
+	id={blok.id || ''}
 >
 	<div class="content-wrapper--container">
 		{#if blok}
@@ -32,7 +33,10 @@
 		width: 100%;
 		margin: 2rem auto;
 		max-width: 800px;
-		/* aspect-ratio: 3/2; */
+	}
+
+	.content-wrapper[id] {
+		scroll-margin-top: 5rem;
 	}
 
 	@media screen and (max-width: 660px) {

@@ -1,8 +1,18 @@
 <script>
 	import { getContext } from 'svelte';
 
+	import {
+		PUBLIC_BASE_URL,
+		PUBLIC_LDD_AR_BASE_PATH,
+		PUBLIC_LDD_EN_BASE_PATH
+	} from '$env/static/public';
+
 	const lang = getContext('lang');
 	const isRtl = lang === 'ar';
+
+	const aboutLink = isRtl
+		? `${PUBLIC_BASE_URL}${PUBLIC_LDD_AR_BASE_PATH}/home/#about`
+		: `${PUBLIC_BASE_URL}${PUBLIC_LDD_EN_BASE_PATH}/home/#about`;
 
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 </script>
@@ -25,22 +35,45 @@
 			{/if}
 		</FadeIn>
 	</div>
-	<div class={`w-full text-brown ${isRtl ? 'text-left' : 'text-right'}`}>
+	<div
+		dir={isRtl ? 'rtl' : 'ltr'}
+		class={`w-full text-brown ${isRtl ? 'text-left' : 'text-right'} font-amman`}
+	>
 		{#if isRtl}
 			<h2 class="text-2xl text-brown">نهاية الحرب ليست بنهاية القصة.</h2>
 		{:else}
-			<h2 class="text-2xl text-brown">The end of a war is not the end of the story.</h2>
+			<h2 class="mb-3 text-2xl text-brown">The end of a war is not the end of the story.</h2>
 		{/if}
-		<p>
-			Illustrations by <a
-				class="font-medium hover:underline"
-				target="_blank"
-				rel="noopener noreferrer"
-				href={'https://www.instagram.com/sasha.haddad.illustrations/'}>Sasha Haddad</a
-			>
-		</p>
-		<a class="font-medium hover:underline" href={'#'}><p>About this project</p></a>
-		<p>Back <a class="font-medium hover:underline" href={'#'}>to The New Humanitarian</a></p>
+		{#if isRtl}
+			<p class="font-amman">
+				الرسومات التوضيحية من تنفيذ <a
+					class="font-bold hover:underline"
+					target="_blank"
+					rel="noopener noreferrer"
+					href={'https://www.instagram.com/sasha.haddad.illustrations/'}
+					>ساشا حداد
+				</a>
+			</p>
+		{:else}
+			<p class="font-amman">
+				Illustrations by <a
+					class="font-bold hover:underline"
+					target="_blank"
+					rel="noopener noreferrer"
+					href={'https://www.instagram.com/sasha.haddad.illustrations/'}>Sasha Haddad</a
+				>
+			</p>
+		{/if}
+		{#if isRtl}
+			<a class="font-bold hover:underline" href={aboutLink}>
+				<p>معلومات عامة حول المشروع</p>
+			</a>
+		{:else}
+			<a class="font-bold hover:underline" href={aboutLink}>
+				<p>About the project</p>
+			</a>
+		{/if}
+		<p>العودة إلى موقع <a class="font-bold hover:underline" href={'#'}>The New Humanitarian</a></p>
 		<!-- <a class="font-medium hover:underline" href={'#'}><p>Images by Pexel</p></a> -->
 	</div>
 </footer>
@@ -73,6 +106,7 @@
 		color: #ffe0b5;
 		padding-top: 0.75rem;
 		padding-bottom: 0.75rem;
+		margin-bottom: 0;
 	}
 
 	@media screen and (max-width: 640px) {

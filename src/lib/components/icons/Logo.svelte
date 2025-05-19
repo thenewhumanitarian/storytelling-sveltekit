@@ -19,8 +19,9 @@
 </script>
 
 <a
-	href={linkHref || 'https://www.thenewhumanitarian.org'}
+	href={'https://www.thenewhumanitarian.org'}
 	rel={'external nofollow noopener'}
+	target="_blank"
 	title="The New Humanitarian"
 	data-sveltekit-reload
 >
