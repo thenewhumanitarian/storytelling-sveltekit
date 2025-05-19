@@ -18,8 +18,26 @@
 </script>
 
 <svelte:head>
-	<link rel="preload" as="image" href={bgImage} />
-	<link rel="preload" as="image" href={bgImageMobile} media="(max-width: 825px)" />
+	{#if bgImage}
+		<link
+			rel="preload"
+			as="image"
+			href={bgImage}
+			type="image/webp"
+			imagesrcset={`${bgImage} 1x`}
+			media="(min-width: 826px)"
+		/>
+	{/if}
+	{#if bgImageMobile}
+		<link
+			rel="preload"
+			as="image"
+			href={bgImageMobile}
+			type="image/webp"
+			imagesrcset={`${bgImageMobile} 1x`}
+			media="(max-width: 825px)"
+		/>
+	{/if}
 </svelte:head>
 
 <div
