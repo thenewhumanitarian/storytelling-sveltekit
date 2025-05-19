@@ -61,23 +61,21 @@
 							{/if}
 						</div>
 					</ScrapBookPaper>
+				{:else if isVideo}
+					<video
+						class={`inline-image ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
+						src={blok.media.filename}
+						autoplay
+						loop
+						muted
+						playsinline
+					/>
 				{:else}
-					{#if isVideo}
-						<video
-							class={`inline-image ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
-							src={blok.media.filename}
-							autoplay
-							loop
-							muted
-							playsinline
-						/>
-					{:else}
 					<img
 						class={`inline-image`}
 						src={`${blok.media.filename}/m/480x0`}
 						alt={blok.caption || 'Photo alt text is missing.'}
 					/>
-					{/if}
 				{/if}
 				{#if blok.bgColor === 'bg-transparent'}
 					{#if blok.tape?.includes('tl')}
@@ -248,7 +246,17 @@
 		}
 	}
 
-	@media screen and (max-width: 925px) {
+	@media screen and (max-width: 1000px) {
+		:global(.story-grid--panel .align-left, .story-grid--panel .align-right) {
+			float: none;
+			margin: 3rem auto;
+			width: 100%;
+			max-width: 360px;
+			transform: rotate(0deg);
+		}
+	}
+
+	@media screen and (max-width: 825px) {
 		.inline-image-wrapper {
 			margin: 2.5rem auto;
 		}
