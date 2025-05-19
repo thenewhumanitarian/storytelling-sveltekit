@@ -1,8 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { PUBLIC_BASE_URL } from '$env/static/public';
-
-	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
 
 	const { items, lang } = $props();
 	const repeatedItems = items;

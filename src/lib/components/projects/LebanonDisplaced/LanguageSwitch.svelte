@@ -1,17 +1,17 @@
 <script>
 	import { page } from '$app/stores';
-	import { PUBLIC_BASE_PATH, PUBLIC_AR_PATH } from '$env/static/public';
+	import { PUBLIC_LDD_EN_BASE_PATH, PUBLIC_LDD_AR_BASE_PATH } from '$env/static/public';
 
 	// Reactive current path
 	$: currentPath = $page.url.pathname;
 
-	$: englishUrl = currentPath.startsWith(PUBLIC_AR_PATH)
-		? currentPath.replace(PUBLIC_AR_PATH, PUBLIC_BASE_PATH)
+	$: englishUrl = currentPath.startsWith(PUBLIC_LDD_AR_BASE_PATH)
+		? currentPath.replace(PUBLIC_LDD_AR_BASE_PATH, PUBLIC_LDD_EN_BASE_PATH)
 		: currentPath;
 
-	$: arabicUrl = currentPath.startsWith(PUBLIC_AR_PATH)
+	$: arabicUrl = currentPath.startsWith(PUBLIC_LDD_AR_BASE_PATH)
 		? currentPath
-		: currentPath.replace(PUBLIC_BASE_PATH, PUBLIC_AR_PATH);
+		: currentPath.replace(PUBLIC_LDD_EN_BASE_PATH, PUBLIC_LDD_AR_BASE_PATH);
 
 	function handleChange(event) {
 		event.preventDefault();
