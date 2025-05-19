@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	const { items, lang } = $props();
+	const isRtl = lang === 'ar';
 	const repeatedItems = items;
 
 	let scrollWrapper: HTMLDivElement;
@@ -119,7 +120,7 @@
 					<h3
 						class="m-0 w-full bg-lebgreen px-2 py-1 text-center text-sm font-bold text-white shadow hover:underline"
 					>
-						Read
+						{isRtl ? 'قراءة' : 'Read'}
 					</h3>
 				</div>
 			</a>

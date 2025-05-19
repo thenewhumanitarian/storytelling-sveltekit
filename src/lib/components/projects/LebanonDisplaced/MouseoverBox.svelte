@@ -24,7 +24,7 @@
 			</div>
 
 			<div class="text-content--hover font-serif">
-				<h2 class:hidden={lang === 'ar'}>Read more →</h2>
+				<h2 class:hidden={lang === 'ar'}>Read more→</h2>
 				<h2 class:hidden={lang !== 'ar'} dir="rtl">اقرأ المزيد←</h2>
 			</div>
 
