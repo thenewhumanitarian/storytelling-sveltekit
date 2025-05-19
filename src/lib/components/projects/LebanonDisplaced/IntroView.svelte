@@ -12,8 +12,12 @@
 		? `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(80)`
 		: '';
 
-	const bgImageMobile = hasMobileImage
+	const bgImageTablet = hasMobileImage
 		? `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(80)`
+		: bgImage; // fallback to desktop if mobile is missing
+
+	const bgImageMobile = hasMobileImage
+		? `${blok.backgroundImageMobile.filename}/m/420x0/filters:format(webp):quality(80)`
 		: bgImage; // fallback to desktop if mobile is missing
 </script>
 
@@ -28,13 +32,23 @@
 			media="(min-width: 826px)"
 		/>
 	{/if}
+	{#if bgImageTablet}
+		<link
+			rel="preload"
+			as="image"
+			href={bgImageTablet}
+			type="image/webp"
+			imagesrcset={`${bgImageTablet} 1x`}
+			media="(max-width: 825px)"
+		/>
+	{/if}
 	{#if bgImageMobile}
 		<link
 			rel="preload"
 			as="image"
 			href={bgImageMobile}
 			type="image/webp"
-			imagesrcset={`${bgImageMobile} 1x`}
+			imagesrcset={`${bgImageTablet} 1x`}
 			media="(max-width: 825px)"
 		/>
 	{/if}
@@ -45,6 +59,7 @@
 	class={`intro-view--wrapper z-10 border-b-4 border-lebgreen ${className}`}
 	style={`
 	--intro-bg-desktop: ${bgImage ? `url("${bgImage}")` : 'none'};
+	--intro-bg-tablet: ${bgImageTablet ? `url("${bgImageTablet}")` : 'none'};
 	--intro-bg-mobile: ${bgImageMobile ? `url("${bgImageMobile}")` : 'none'};
 	background-color: ${blok.backgroundColor};
 `}
@@ -87,6 +102,14 @@
 	}
 
 	@media screen and (max-width: 800px) {
+		.intro-view--wrapper {
+			padding: 0.5rem 1rem 1rem;
+			height: 100svh !important;
+			background-image: var(--intro-bg-tablet);
+		}
+	}
+
+	@media screen and (max-width: 420px) {
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
