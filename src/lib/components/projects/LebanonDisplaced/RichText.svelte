@@ -57,7 +57,12 @@
 				// Use .text for plain links or map/render for rich children
 				const content = node.text || node.content?.map(render).join('') || '';
 
-				return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
+				// Target _blank if external link
+				if (isInternal) {
+					return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
+				} else {
+					return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}" target="_blank" rel="noopener noreferrer">${content}</a>`;
+				}
 			}
 		}
 	});
