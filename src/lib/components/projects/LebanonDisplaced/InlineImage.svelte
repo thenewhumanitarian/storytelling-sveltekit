@@ -170,7 +170,7 @@
 		transform: rotate(var(--rotation-angle, 0deg));
 	}
 
-	:global(.content-wrapper .align-left) {
+	:global(.content-wrapper .align-left, .story-grid--panel .align-left) {
 		float: left;
 		margin-left: -18%;
 		width: 50%;
@@ -181,7 +181,7 @@
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
-	:global(.content-wrapper .align-right) {
+	:global(.content-wrapper .align-right, .story-grid--panel .align-right) {
 		float: right;
 		width: 50%;
 		transform: rotate(var(--rotation-angle, 0deg));
@@ -248,7 +248,7 @@
 		}
 	}
 
-	@media screen and (max-width: 825px) {
+	@media screen and (max-width: 925px) {
 		.inline-image-wrapper {
 			margin: 2.5rem auto;
 		}
