@@ -237,10 +237,10 @@
 											</figcaption>
 										{/if}
 										<button
-											class={`caption-toggle absolute top-0 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100`}
+											class={`caption-toggle absolute top-1 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-90 hover:underline hover:opacity-100 transition:all duration-500`}
 											onclick={() => (state.showCaption = !state.showCaption)}
 										>
-											{state.showCaption ? 'Hide caption' : 'Show caption'}
+											{state.showCaption ? '◉ Hide caption' : '◎ Show caption'}
 										</button>
 									</div>
 								{/if}
@@ -277,10 +277,10 @@
 											</figcaption>
 										{/if}
 										<button
-											class={`caption-toggle absolute top-0 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-80 hover:underline hover:opacity-100`}
+											class={`caption-toggle absolute top-1 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-90 hover:underline hover:opacity-100 transition:all duration-500`}
 											onclick={() => (state.showCaption = !state.showCaption)}
 										>
-											{state.showCaption ? 'Hide caption' : 'Show caption'}
+											{state.showCaption ? '◉ Hide caption' : '◎ Show caption'}
 										</button>
 									</div>
 								{/if}
