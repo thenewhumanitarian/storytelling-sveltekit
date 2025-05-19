@@ -266,7 +266,7 @@
 
 	/* :global(.storyblok--richtext p:not(:last-child)) { */
 	:global(.storyblok--richtext p:only-child) {
-		margin-bottom: 1rem !important;
+		margin-bottom: 1rem;
 	}
 
 	:global(.storyblok--richtext h2:only-child) {

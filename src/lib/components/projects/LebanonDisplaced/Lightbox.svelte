@@ -68,7 +68,7 @@
 
 	// Handle video play/pause
 	function handleVideoPlayPause(index: number) {
-		console.log('Video play/pause clicked');
+		// console.log('Video play/pause clicked');
 		if (state.videoIsPlaying) {
 			videoEls[index].pause();
 			videoEls[index].currentTime = 0;
@@ -225,7 +225,7 @@
 									onload={() => (state.imagesLoaded[i] = true)}
 								/>
 								<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
-									{state.videoIsPlaying ? '⏸️' : '▶️'}
+									{state.videoIsPlaying ? '⏹️' : '▶️'}
 								</button>
 								{#if item.caption}
 									<div class="flex flex-row">

@@ -64,7 +64,7 @@
 
 	blockquote p {
 		margin-top: 1.5rem;
-		margin-bottom: 1.5rem;
+		margin-bottom: 1.5rem !important;
 		font-size: 1.6rem;
 	}
 

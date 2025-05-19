@@ -20,6 +20,13 @@
 
 	const isStartPage = blok.bgColor === 'bg-transparent' && blok.lightbox === false;
 	const hasLightbox = blok.lightbox === true;
+
+	const fileName = blok.media?.filename?.split('/').pop();
+	const fileExtension = fileName?.split('.').pop();
+	// const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(
+	// 	fileExtension?.toLowerCase() || ''
+	// );
+	const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension?.toLowerCase() || '');
 </script>
 
 <div class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}>
@@ -46,19 +53,34 @@
 				{#if blok.bgColor === 'bg-scrap-paper'}
 					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
 						<div class="h-full w-full p-10">
-							<img
-								class="inline-image"
-								src={`${blok.media.filename}/m/480x0`}
-								alt={blok.media.alt || 'Photo alt text is missing.'}
-							/>
+							{#if isVideo}
+								<video src={blok.media.filename} autoplay loop muted playsinline />
+							{:else}
+								<img
+									class="inline-image"
+									src={`${blok.media.filename}/m/480x0`}
+									alt={blok.caption || 'Photo alt text is missing.'}
+								/>
+							{/if}
 						</div>
 					</ScrapBookPaper>
 				{:else}
+					{#if isVideo}
+						<video
+							class={`inline-image ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
+							src={blok.media.filename}
+							autoplay
+							loop
+							muted
+							playsinline
+						/>
+					{:else}
 					<img
 						class={`inline-image`}
 						src={`${blok.media.filename}/m/480x0`}
-						alt={blok.media.alt || 'Photo alt text is missing.'}
+						alt={blok.caption || 'Photo alt text is missing.'}
 					/>
+					{/if}
 				{/if}
 				{#if blok.bgColor === 'bg-transparent'}
 					{#if blok.tape?.includes('tl')}
