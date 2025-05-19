@@ -28,7 +28,7 @@
 			</div>
 		</div>
 	{/if}
-	<blockquote class={`border-[0.5px] border-lebblack bg-grass ${blok.name ? 'has-name' : ''}`}>
+	<blockquote class={`border-[0.5px] border-lebblack text-center bg-grass ${blok.name ? 'has-name' : ''}`}>
 		<p>
 			{blok.text}
 		</p>
