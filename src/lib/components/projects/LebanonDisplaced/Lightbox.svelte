@@ -21,12 +21,14 @@
 		showCaption: boolean;
 		imagesLoaded: boolean[];
 		videoIsPlaying: boolean;
+		videoAudio: boolean;
 	}>({
 		index: null,
 		isVisible: false,
 		showCaption: true,
 		imagesLoaded: [],
-		videoIsPlaying: true
+		videoIsPlaying: true,
+		videoAudio: true
 	});
 
 	$effect(() => {
@@ -35,6 +37,16 @@
 	});
 
 	const close = () => currentIndex.set(null);
+
+	function handleToggleAudio(index: number) {
+		const video = videoEls[index];
+		state.videoAudio = !state.videoAudio;
+		if (video) {
+			video.muted = !state.videoAudio;
+			video.volume = state.videoAudio ? 1 : 0;
+			console.log('Audio toggled, muted:', video.muted);
+		}
+	}
 
 	function buildLightboxItemsFromDOM(): LightboxItem[] {
 		const elements = Array.from(document.querySelectorAll('[data-lightbox]')) as HTMLElement[];
@@ -68,7 +80,7 @@
 
 	// Handle video play/pause
 	function handleVideoPlayPause(index: number) {
-		// console.log('Video play/pause clicked');
+		console.log('Video play/pause clicked');
 		if (state.videoIsPlaying) {
 			videoEls[index].pause();
 			videoEls[index].currentTime = 0;
@@ -77,6 +89,28 @@
 		}
 		state.videoIsPlaying = !state.videoIsPlaying;
 	}
+
+	/* Video play, pause and mute, unmute management */
+	// $effect(() => {
+	// 	if (!swiper || !$lightboxItems.length || state.index === null) return;
+
+	// 	$lightboxItems.forEach((item, i) => {
+	// 		const video = videoEls[i];
+	// 		if (!video || item.type !== 'video') return;
+
+	// 		const isActive = i === swiper.realIndex && state.isVisible;
+
+	// 		if (isActive) {
+	// 			if (state.videoIsPlaying) video.play().catch(() => {});
+	// 			else video.pause();
+	// 			video.muted = !state.videoAudio;
+	// 		} else {
+	// 			video.pause();
+	// 			video.muted = true;
+	// 			video.currentTime = 0;
+	// 		}
+	// 	});
+	// });
 
 	$effect(() => {
 		if (!state.isVisible || state.index === null) return;
@@ -118,7 +152,14 @@
 					videoEls.forEach((video, i) => {
 						if (!video) return;
 						if (i === swiper.realIndex) {
-							video.play().catch(() => {});
+							console.log('Playing video');
+							video.muted = !state.videoAudio;
+							video
+								.play()
+								.then(() => {
+									console.log('Playing:', video.src, 'Muted:', video.muted);
+								})
+								.catch(console.error);
 							state.videoIsPlaying = true;
 						} else {
 							video.pause();
@@ -137,14 +178,6 @@
 			swiper.destroy(true, true);
 			swiper = undefined;
 		}
-	});
-
-	$effect(() => {
-		if (!swiper || !$lightboxItems.length) return;
-		videoEls.forEach((video, i) => {
-			if (!video) return;
-			i === swiper.realIndex ? video.play().catch(() => {}) : video.pause();
-		});
 	});
 
 	function decodeHTML(html: string): string {
@@ -217,17 +250,21 @@
 							<figure class="media-figure bg-transparent">
 								<video
 									src={item.src}
-									controls={false}
 									playsinline
+									controls={false}
 									class="max-h-full"
 									loading="lazy"
-									onload={() => (state.imagesLoaded[i] = true)}
-									autoplay
 									bind:this={videoEls[i]}
+									muted={!state.videoAudio}
 								/>
-								<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
-									{state.videoIsPlaying ? '⏹️' : '▶️'}
-								</button>
+								<div class="video--controls">
+									<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
+										{state.videoIsPlaying ? '⏹️' : '▶️'}
+									</button>
+									<button class="video--audio z-10" onclick={() => handleToggleAudio(i)}>
+										{state.videoAudio ? '🔉' : '🔇'}
+									</button>
+								</div>
 								{#if item.caption}
 									<div class="flex flex-row">
 										{#if state.showCaption}
@@ -286,13 +323,21 @@
 		border-radius: 1px;
 	}
 
-	.video--play {
+	.video--controls {
 		position: absolute;
 		top: 0;
 		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.video--play,
+	.video--audio {
 		color: white;
 		border: none;
-		padding: 0.8rem 0.5rem;
+		padding: 0.8rem 0 0 0.5rem;
 		font-size: 2rem;
 		cursor: pointer;
 		/* background-color: rgba(0, 0, 0, 0.5); */
