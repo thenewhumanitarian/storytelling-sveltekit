@@ -91,6 +91,15 @@
 	}
 
 	$effect(() => {
+		if (!state.isVisible && swiper) {
+			swiper.destroy(true, true);
+			swiper = undefined;
+
+			state.imagesLoaded = []; // Optional: reset if Lightbox is closed
+		}
+	});
+
+	$effect(() => {
 		if (!state.isVisible || state.index === null) return;
 
 		(async () => {
