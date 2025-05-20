@@ -39,7 +39,7 @@
 >
 	{#if blok.link.id || blok.link.url}
 		<a
-			href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+			href={`${blok.link ? `${baseUrl}/stories/2025/05/22/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
 			class="font-reset"
 			data-sveltekit-reload
 			data-sveltekit-preload-data
@@ -98,7 +98,7 @@
 >
 	{#if blok.link.id || blok.link.url}
 		<a
-			href={`${blok.link ? `${baseUrl}/stories/2025/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
+			href={`${blok.link ? `${baseUrl}/stories/2025/05/22/lebanon-displacement-diaries/${blok.link.cached_url.startsWith('/') ? blok.link.cached_url.slice(1) : blok.link.cached_url}` : '#'}`}
 			class="font-reset"
 		>
 			{#if blok.items}

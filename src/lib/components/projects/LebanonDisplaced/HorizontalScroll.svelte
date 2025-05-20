@@ -90,7 +90,7 @@
 			<a
 				data-sveltekit-reload
 				onclick={handleClick}
-				href={`/stories/2025/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
+				href={`/stories/2025/05/22/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
 				class="related-diaries--container pointer-events-none relative flex max-w-[280px] shrink-0 select-none flex-col justify-between border-[0.5px] border-black bg-brown p-2 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
 			>
 				{#if item.content?.previewImage?.filename}
