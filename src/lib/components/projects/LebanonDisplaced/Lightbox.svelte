@@ -90,28 +90,6 @@
 		state.videoIsPlaying = !state.videoIsPlaying;
 	}
 
-	/* Video play, pause and mute, unmute management */
-	// $effect(() => {
-	// 	if (!swiper || !$lightboxItems.length || state.index === null) return;
-
-	// 	$lightboxItems.forEach((item, i) => {
-	// 		const video = videoEls[i];
-	// 		if (!video || item.type !== 'video') return;
-
-	// 		const isActive = i === swiper.realIndex && state.isVisible;
-
-	// 		if (isActive) {
-	// 			if (state.videoIsPlaying) video.play().catch(() => {});
-	// 			else video.pause();
-	// 			video.muted = !state.videoAudio;
-	// 		} else {
-	// 			video.pause();
-	// 			video.muted = true;
-	// 			video.currentTime = 0;
-	// 		}
-	// 	});
-	// });
-
 	$effect(() => {
 		if (!state.isVisible || state.index === null) return;
 
@@ -120,7 +98,12 @@
 
 			lightboxItems.set(buildLightboxItemsFromDOM());
 
-			state.imagesLoaded = $lightboxItems.map(() => false);
+			// state.imagesLoaded = $lightboxItems.map(() => false);
+
+			// Only initialize if not already filled
+			if (state.imagesLoaded.length !== $lightboxItems.length) {
+				state.imagesLoaded = $lightboxItems.map(() => false);
+			}
 
 			if (!swiper) {
 				swiper = new Swiper(swiperEl, {
@@ -225,9 +208,9 @@
 									loading="lazy"
 									onload={() => (state.imagesLoaded[i] = true)}
 								/>
-								{#if item.caption && state.imagesLoaded[i]}
+								{#if item.caption}
 									<div class="flex flex-row">
-										{#if state.showCaption}
+										{#if state.showCaption && state.imagesLoaded[i]}
 											<figcaption
 												class="media-caption"
 												style={`text-align: ${isRtl ? 'right' : 'left'}`}
@@ -236,12 +219,32 @@
 												{decodeHTML(item.caption)}
 											</figcaption>
 										{/if}
-										<button
-											class={`caption-toggle absolute top-1 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-90 hover:underline hover:opacity-100 transition:all duration-500`}
-											onclick={() => (state.showCaption = !state.showCaption)}
-										>
-											{state.showCaption ? '◉ Hide caption' : '◎ Show caption'}
-										</button>
+
+										{#if state.showCaption && state.imagesLoaded[i]}
+											<div
+												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
+											>
+												<button
+													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+													onclick={() => (state.showCaption = !state.showCaption)}
+												>
+													{state.showCaption ? 'Hide caption' : 'Show caption'}
+												</button>
+												<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
+											</div>
+										{:else}
+											<div
+												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
+											>
+												<button
+													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+													onclick={() => (state.showCaption = !state.showCaption)}
+												>
+													{state.showCaption ? 'Hide caption' : 'Show caption'}
+												</button>
+												<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
+											</div>
+										{/if}
 									</div>
 								{/if}
 							</figure>
@@ -277,7 +280,7 @@
 											</figcaption>
 										{/if}
 										<button
-											class={`caption-toggle absolute top-1 text-sm ${isRtl ? 'left-0' : 'right-0'} bg-opacity-70 px-3 py-1 text-sm text-white opacity-90 hover:underline hover:opacity-100 transition:all duration-500`}
+											class={`caption-toggle absolute top-1 text-sm ${isRtl ? 'left-0' : 'right-0'} transition:all bg-opacity-70 py-1 text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
 											onclick={() => (state.showCaption = !state.showCaption)}
 										>
 											{state.showCaption ? '◉ Hide caption' : '◎ Show caption'}
