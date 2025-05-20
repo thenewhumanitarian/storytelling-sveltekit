@@ -70,7 +70,7 @@
 			</a>
 		{:else}
 			<a class="font-bold hover:underline" href={aboutLink}>
-				<p>About the project</p>
+				<p>About this project</p>
 			</a>
 		{/if}
 		{#if isRtl}

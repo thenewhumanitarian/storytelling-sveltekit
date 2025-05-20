@@ -310,6 +310,14 @@
 		direction: rtl;
 	}
 
+	:global(.arabic h1) {
+		margin-bottom: 0.75rem;
+	}
+
+	:global(.arabic .intro-text h1:last-child) {
+		margin-bottom: 1rem;
+	}
+
 	:global(.arabic *:not(.text-center, .text-right)) {
 		text-align: right;
 	}

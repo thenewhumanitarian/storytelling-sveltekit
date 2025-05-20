@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
+
 	import { storyblokEditable } from '@storyblok/svelte';
 	import { richTextResolver } from '@storyblok/richtext';
+
 	import tippy from 'tippy.js';
 	import 'tippy.js/dist/tippy.css';
+
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
 
 	const { blok } = $props();
 
@@ -58,13 +63,16 @@
 							const span = document.createElement('span');
 							span.textContent = part;
 							span.classList.add('text-annotation');
+							if(isRtl) {
+								span.classList.add('arabic');
+							}
 							tippy(span, {
 								content: tooltipContent,
 								allowHTML: true,
 								placement: 'top',
 								interactiveDebounce: 50,
 								inertia: true,
-								theme: 'light',
+								theme: isRtl ? 'light arabic' : 'light',
 								delay: [100, 50]
 								// interactive: true,
 							});
@@ -83,7 +91,7 @@
 	});
 </script>
 
-<div use:storyblokEditable={blok} class="hidden"></div>
+<div class={`hidden ${isRtl ? 'arabic' : 'english'}`} use:storyblokEditable={blok}></div>
 
 <style>
 	/* Example: override light-border theme */
@@ -96,8 +104,6 @@
 		border-radius: 0;
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 		z-index: 1;
-		/* background-color: #f8e1bc; */
-		/* color: #282828; */
 	}
 
 	:global(.tippy-content *) {
@@ -128,7 +134,11 @@
 
 	:global(.tippy-content > p) {
 		margin: 0;
-		/* font-family: 'ff-amman-serif-pro', serif; */
+	}
+
+	:global([data-theme="light arabic"] .tippy-content > p) {
+		text-align: right !important;
+		direction: rtl;
 	}
 
 	:global(.tippy-content *) {
