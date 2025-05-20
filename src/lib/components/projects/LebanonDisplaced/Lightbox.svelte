@@ -22,13 +22,15 @@
 		imagesLoaded: boolean[];
 		videoIsPlaying: boolean;
 		videoAudio: boolean;
+		audioIcon: string;
 	}>({
 		index: null,
 		isVisible: false,
 		showCaption: true,
 		imagesLoaded: [],
 		videoIsPlaying: true,
-		videoAudio: true
+		videoAudio: true,
+		audioIcon: '🔉'
 	});
 
 	$effect(() => {
@@ -41,11 +43,25 @@
 	function handleToggleAudio(index: number) {
 		const video = videoEls[index];
 		state.videoAudio = !state.videoAudio;
+
 		if (video) {
 			video.muted = !state.videoAudio;
 			video.volume = state.videoAudio ? 1 : 0;
 			console.log('Audio toggled, muted:', video.muted);
 		}
+
+		// Animate icon between 🔊 and 🔉
+		let icons = ['🔊', '🔉'];
+		let i = 0;
+		const interval = setInterval(() => {
+			state.audioIcon = icons[i % 2];
+			i++;
+			if (i > 3) {
+				clearInterval(interval);
+				// Set final icon after animation
+				state.audioIcon = state.videoAudio ? '🔉' : '🔇';
+			}
+		}, 250);
 	}
 
 	function buildLightboxItemsFromDOM(): LightboxItem[] {
@@ -107,8 +123,6 @@
 
 			lightboxItems.set(buildLightboxItemsFromDOM());
 
-			// state.imagesLoaded = $lightboxItems.map(() => false);
-
 			// Only initialize if not already filled
 			if (state.imagesLoaded.length !== $lightboxItems.length) {
 				state.imagesLoaded = $lightboxItems.map(() => false);
@@ -136,6 +150,22 @@
 					observer: true,
 					observeSlideChildren: true
 				});
+
+				// ✅ One-time initial autoplay if initial slide is a video
+				const initialIndex = state.index ?? 0;
+				const initialItem = $lightboxItems[initialIndex];
+				const initialVideo = videoEls[initialIndex];
+
+				if (initialItem?.type === 'video' && initialVideo) {
+					initialVideo.muted = !state.videoAudio;
+					initialVideo
+						.play()
+						.then(() => {
+							console.log('Initial video playing:', initialVideo.src);
+						})
+						.catch(console.error);
+					state.videoIsPlaying = true;
+				}
 
 				swiper.on('slideChange', () => {
 					currentIndex.set(swiper.realIndex);
@@ -265,6 +295,7 @@
 								<video
 									src={item.src}
 									playsinline
+									loop
 									controls={false}
 									class="max-h-full"
 									loading="lazy"
@@ -278,7 +309,7 @@
 										{state.videoIsPlaying ? '⏹️' : '▶️'}
 									</button>
 									<button class="video--audio z-10" onclick={() => handleToggleAudio(i)}>
-										{state.videoAudio ? '🔉' : '🔇'}
+										{state.audioIcon}
 									</button>
 								</div>
 								{#if item.caption}

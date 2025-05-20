@@ -66,6 +66,8 @@
 		border-radius: 0px !important;
 		padding: 0.75rem 1rem;
 		font-family: 'ff-amman-serif-pro', serif;
+		font-size: 1.1rem;
+		line-height: 1.5;
 	}
 
 	:global(.arabic .soundcite-play:before) {
