@@ -229,30 +229,32 @@
 											</figcaption>
 										{/if}
 
-										{#if state.showCaption && state.imagesLoaded[i]}
-											<div
-												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
-											>
-												<button
-													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
-													onclick={() => (state.showCaption = !state.showCaption)}
+										{#if state.imagesLoaded[i]}
+											{#if state.showCaption}
+												<div
+													class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 												>
-													{state.showCaption ? 'Hide caption' : 'Show caption'}
-												</button>
-												<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
-											</div>
-										{:else}
-											<div
-												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
-											>
-												<button
-													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
-													onclick={() => (state.showCaption = !state.showCaption)}
+													<button
+														class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+														onclick={() => (state.showCaption = !state.showCaption)}
+													>
+														{state.showCaption ? 'Hide caption' : 'Show caption'}
+													</button>
+													<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
+												</div>
+											{:else}
+												<div
+													class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 												>
-													{state.showCaption ? 'Hide caption' : 'Show caption'}
-												</button>
-												<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
-											</div>
+													<button
+														class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+														onclick={() => (state.showCaption = !state.showCaption)}
+													>
+														{state.showCaption ? 'Hide caption' : 'Show caption'}
+													</button>
+													<span class="text-sm text-burgundy">{state.showCaption ? '◉' : '◎'}</span>
+												</div>
+											{/if}
 										{/if}
 									</div>
 								{/if}
@@ -266,10 +268,12 @@
 									controls={false}
 									class="max-h-full"
 									loading="lazy"
-									bind:this={videoEls[i]}
 									muted={!state.videoAudio}
+									bind:this={videoEls[i]}
 								/>
-								<div class={`video--controls flex items-center justify-center pt-3 ${isRtl ? 'right-2' : 'left-2'}`}>
+								<div
+									class={`video--controls flex items-center justify-center pt-3 ${isRtl ? 'right-2' : 'left-2'}`}
+								>
 									<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
 										{state.videoIsPlaying ? '⏹️' : '▶️'}
 									</button>
@@ -288,6 +292,7 @@
 												{decodeHTML(item.caption)}
 											</figcaption>
 										{/if}
+
 										{#if state.showCaption && state.imagesLoaded[i]}
 											<div
 												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
