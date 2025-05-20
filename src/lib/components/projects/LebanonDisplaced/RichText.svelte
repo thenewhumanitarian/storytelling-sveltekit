@@ -312,8 +312,13 @@
 
 	:global(.arabic h1) {
 		margin-bottom: 0.75rem;
+		/* font-family: 'ff-amman-serif-pro', serif !important; */
+		font-family: 'Geeza Pro', serif !important;
 	}
 
+	:global(.arabic h3) {
+		font-family: 'Geeza Pro', serif !important;
+	}
 	:global(.arabic .intro-text h1:last-child) {
 		margin-bottom: 1rem;
 	}
