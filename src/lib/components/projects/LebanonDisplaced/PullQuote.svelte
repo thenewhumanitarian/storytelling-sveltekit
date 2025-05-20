@@ -21,14 +21,16 @@
 		<div class="pull-quote-image--wrapper after z-50 bg-grass">
 			<div class="pull-quote-image--container">
 				<img
-					class="pull-quote-image after scale-x-[-1] rotate-20 -translate-y-0.5"
+					class="pull-quote-image after rotate-20 -translate-y-0.5 scale-x-[-1]"
 					src={`${blok.image.filename}/m/60x0`}
 					alt={blok.image.alt || 'Small illustration as part of the pull quote.'}
 				/>
 			</div>
 		</div>
 	{/if}
-	<blockquote class={`border-[0.5px] border-lebblack text-center bg-grass ${blok.name ? 'has-name' : ''}`}>
+	<blockquote
+		class={`border-[0.5px] border-lebblack bg-grass text-center ${blok.name ? 'has-name' : ''}`}
+	>
 		<p>
 			{blok.text}
 		</p>
@@ -168,5 +170,9 @@
 		bottom: 0;
 		left: 50%;
 		transform: translate(-50%, 50%);
+	}
+
+	:global(.arabic blockquote) {
+		font-family: 'Geeza Pro', serif;
 	}
 </style>
