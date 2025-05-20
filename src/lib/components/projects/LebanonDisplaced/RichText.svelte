@@ -176,7 +176,7 @@
 		font-size: 1.2rem;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
-		font-weight: medium;
+		font-weight: 400;
 		line-height: 1.3;
 	}
 
