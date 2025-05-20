@@ -40,7 +40,7 @@
 				const { href = '', target, rel, linktype, anchor } = node.attrs || {};
 
 				// Use PUBLIC_BASE_URL from your environment
-				const basePath = `${PUBLIC_BASE_URL}/stories/2025/lebanon-displacement-diaries`;
+				const basePath = `${PUBLIC_BASE_URL}/stories/2025/05/22/lebanon-displacement-diaries`;
 
 				const isInternal = linktype === 'story' && href.startsWith('/');
 				const cleanHref = href.startsWith('/') ? href.slice(1) : href;
