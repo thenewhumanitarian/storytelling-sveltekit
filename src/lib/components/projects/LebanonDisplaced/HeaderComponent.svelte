@@ -16,8 +16,8 @@
 
 			if (!isOnHomePage) {
 				backLinkHref = isArabic
-					? '/stories/2025/lebanon-displacement-diaries/ar/home'
-					: '/stories/2025/lebanon-displacement-diaries/home';
+					? '/stories/2025/05/22/lebanon-displacement-diaries/ar/home'
+					: '/stories/2025/05/22/lebanon-displacement-diaries/home';
 			}
 		}
 
