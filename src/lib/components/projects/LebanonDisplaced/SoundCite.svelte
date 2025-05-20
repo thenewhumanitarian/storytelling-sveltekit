@@ -8,7 +8,6 @@
 	const lang = getContext('lang');
 	const isRtl = lang === 'ar';
 
-	// const id = `soundcite-${blok._uid}`;
 	const text = blok.text;
 	const url = blok.audio?.filename || '';
 	const start = 0;
@@ -62,12 +61,13 @@
 		display: inline-block;
 		cursor: pointer;
 		color: inherit;
-		text-decoration: underline;
 		border-radius: 0px !important;
-		padding: 0.75rem 1rem;
+		padding: 0.75rem 0.5rem;
 		font-family: 'ff-amman-serif-pro', serif;
-		font-size: 1.1rem;
-		line-height: 1.5;
+		font-size: 1.2rem;
+		/* margin: 0.5rem 0; */
+		/* line-height: 1.5; */
+		/* text-decoration: underline; */
 	}
 
 	:global(.arabic .soundcite-play:before) {

@@ -125,7 +125,7 @@
 		justify-content: space-between;
 		height: 100%;
 		width: 100%;
-		max-width: 60%;
+		max-width: 50%;
 		padding-top: 4.5rem;
 	}
 

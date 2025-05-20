@@ -5,7 +5,7 @@
 	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
 	import LanguageSwitch from '$lib/components/projects/LebanonDisplaced/LanguageSwitch.svelte';
 
-	let backLinkHref = '/stories/2025/lebanon-displacement-diaries/home';
+	let backLinkHref = '/stories/2025/05/22/lebanon-displacement-diaries/home';
 	let isOnHomePage = true;
 
 	onMount(() => {

@@ -101,7 +101,7 @@
   }
   var style = document.createElement("style");
   style.type = "text/css";
-  style.innerHTML = ".soundcite-loaded { background-color: rgba(" + SOUNDCITE_CONFIG.background_color + ",.5) }";
+  style.innerHTML = ".soundcite-loaded { background-color: rgba(" + SOUNDCITE_CONFIG.background_color + ",0) }";
   document.getElementsByTagName("head")[0].appendChild(style);
   var bind = function (func, context) {
     var slice = Array.prototype.slice;

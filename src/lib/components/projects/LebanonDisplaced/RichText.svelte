@@ -152,8 +152,18 @@
 		margin: 0 0 1rem 0;
 		font-family: 'GT Sectra Bold', sans-serif;
 		font-weight: 900;
-		font-size: 2rem;
-		/* font-family: 'ff-amman-serif-pro', sans-serif; */
+		font-size: 2.5rem;
+		line-height: 1;
+	}
+
+	:global(.arabic .storyblok--richtext h2) {
+		line-height: 1.2;
+	}
+
+	@media screen and (max-width: 1050px) {
+		:global(.storyblok--richtext h2) {
+			font-size: 2rem !important;
+		}
 	}
 
 	:global(.storyblok--richtext h3) {
@@ -162,8 +172,6 @@
 		font-size: 1.5rem;
 		line-height: 1.15;
 		font-weight: bold;
-		/* font-family: 'ff-amman-serif-pro', serif; */
-		/* font-family: 'GT Sectra Bold', serif; */
 	}
 
 	:global(.storyblok--richtext h4) {

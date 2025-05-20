@@ -51,7 +51,7 @@
 		position: relative;
 		font-size: 1.75rem;
 		line-height: 1.25;
-		padding: 1.1rem;
+		padding: 1.1rem 0;
 		margin: 0;
 		z-index: 1;
 		font-weight: 300;
@@ -60,8 +60,6 @@
 		background-size: cover;
 		border-left: none;
 		border-right: none;
-		/* background-image: url('/assets/ldd/patterns/paper-texture--landscape.webp'); */
-		/* box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 20px -20px; */
 	}
 
 	blockquote p {
@@ -93,7 +91,7 @@
 			font-size: 1.25rem;
 			line-height: 1.2;
 			margin: 0;
-			padding: 2rem;
+			padding: 2rem 0;
 		}
 	}
 
@@ -120,8 +118,7 @@
 
 	@media screen and (max-width: 850px) {
 		blockquote {
-			padding: 0.5rem 2rem;
-			/* box-shadow: none; */
+			padding: 0.25rem 0 0.5rem 0;
 		}
 		blockquote:before,
 		blockquote:after {
