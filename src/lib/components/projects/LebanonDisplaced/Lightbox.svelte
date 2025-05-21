@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { tick, getContext, onMount, onDestroy } from 'svelte';
 	import Swiper from 'swiper';
-	import { Navigation, Pagination, Keyboard } from 'swiper/modules';
+	import { Navigation, Pagination, Keyboard, Zoom } from 'swiper/modules';
 	import 'swiper/css';
 	import 'swiper/css/navigation';
 	import 'swiper/css/pagination';
+	import 'swiper/css/zoom';
 
 	import { lightboxItems, currentIndex } from '$lib/stores/lightbox';
 
@@ -22,7 +23,7 @@
 		imagesLoaded: boolean[];
 		videoIsPlaying: boolean;
 		videoAudio: boolean;
-		audioIcon: string;
+		isZoomed: boolean;
 	}>({
 		index: null,
 		isVisible: false,
@@ -30,7 +31,7 @@
 		imagesLoaded: [],
 		videoIsPlaying: true,
 		videoAudio: true,
-		audioIcon: '🔉'
+		isZoomed: false
 	});
 
 	$effect(() => {
@@ -49,19 +50,6 @@
 			video.volume = state.videoAudio ? 1 : 0;
 			console.log('Audio toggled, muted:', video.muted);
 		}
-
-		// Animate icon between 🔊 and 🔉
-		let icons = ['🔊', '🔉'];
-		let i = 0;
-		const interval = setInterval(() => {
-			state.audioIcon = icons[i % 2];
-			i++;
-			if (i > 3) {
-				clearInterval(interval);
-				// Set final icon after animation
-				state.audioIcon = state.videoAudio ? '🔉' : '🔇';
-			}
-		}, 250);
 	}
 
 	function buildLightboxItemsFromDOM(): LightboxItem[] {
@@ -130,7 +118,8 @@
 
 			if (!swiper) {
 				swiper = new Swiper(swiperEl, {
-					modules: [Navigation, Pagination, Keyboard],
+					modules: [Navigation, Pagination, Keyboard, Zoom],
+					zoom: true,
 					initialSlide: state.index ?? 0,
 					mousewheel: { forceToAxis: true },
 					navigation: {
@@ -166,6 +155,10 @@
 						.catch(console.error);
 					state.videoIsPlaying = true;
 				}
+
+				swiper.on('zoomChange', (swiperInstance, scale) => {
+					state.isZoomed = scale > 1;
+				});
 
 				swiper.on('slideChange', () => {
 					currentIndex.set(swiper.realIndex);
@@ -230,24 +223,32 @@
 						{#if item.type === 'image'}
 							<figure class="media-figure bg-transparent">
 								<div
+									class="swiper-zoom-container"
 									style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
-									class="absolute left-0 top-0 h-full w-full sm:bg-lebgreen"
-								></div>
-								<img
-									src={`${item.src}/m/1024x0`}
-									alt={item.caption || 'Photo alt text is missing.'}
-									class="block sm:hidden"
-									loading="lazy"
-									onload={() => (state.imagesLoaded[i] = true)}
-								/>
-								<img
-									src={`${item.src}/m/1024x0`}
-									alt={item.caption || 'Photo alt text is missing.'}
-									class="absolute left-0 top-0 hidden h-full w-full object-contain sm:block"
-									loading="lazy"
-									onload={() => (state.imagesLoaded[i] = true)}
-								/>
-								{#if item.caption}
+								>
+									<img
+										src={`${item.src}/m/1024x0`}
+										alt={item.caption || 'Photo alt text is missing.'}
+										class="max-h-full w-full object-contain"
+										loading="lazy"
+										onload={() => (state.imagesLoaded[i] = true)}
+									/>
+								</div>
+								{#if !state.isZoomed}
+									<div
+										class={`absolute top-0.5 flex items-center justify-center gap-1 ${isRtl ? 'right-2' : 'left-2'}`}
+									>
+										<button
+											class={`caption-toggle transition:all pb-[2px] text-lg text-white opacity-90 duration-500 hover:text-burgundy hover:opacity-100`}
+											onclick={() => {
+												swiper?.zoom?.toggle?.();
+											}}
+										>
+											⛶
+										</button>
+									</div>
+								{/if}
+								{#if item.caption && !state.isZoomed}
 									<div class="flex flex-row">
 										{#if state.showCaption && state.imagesLoaded[i]}
 											<figcaption
@@ -259,13 +260,13 @@
 											</figcaption>
 										{/if}
 
-										{#if state.imagesLoaded[i]}
+										{#if state.imagesLoaded[i] && !state.isZoomed}
 											{#if state.showCaption}
 												<div
 													class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 												>
 													<button
-														class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+														class={`caption-toggle transition:all pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100 `}
 														onclick={() => (state.showCaption = !state.showCaption)}
 													>
 														{state.showCaption ? 'Hide caption' : 'Show caption'}
@@ -277,7 +278,7 @@
 													class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 												>
 													<button
-														class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+														class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100 `}
 														onclick={() => (state.showCaption = !state.showCaption)}
 													>
 														{state.showCaption ? 'Hide caption' : 'Show caption'}
@@ -309,7 +310,7 @@
 										{state.videoIsPlaying ? '⏹️' : '▶️'}
 									</button>
 									<button class="video--audio z-10" onclick={() => handleToggleAudio(i)}>
-										{state.audioIcon}
+										{state.videoAudio ? '🔊' : '🔇'}
 									</button>
 								</div>
 								{#if item.caption}
@@ -329,7 +330,7 @@
 												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 											>
 												<button
-													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100 `}
 													onclick={() => (state.showCaption = !state.showCaption)}
 												>
 													{state.showCaption ? 'Hide caption' : 'Show caption'}
@@ -341,7 +342,7 @@
 												class={`absolute top-2 flex items-center justify-center gap-1 ${isRtl ? 'left-3' : 'right-3'}`}
 											>
 												<button
-													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100`}
+													class={`caption-toggle transition:all bg-opacity-70 pb-[2px] text-sm text-white opacity-90 duration-500 hover:underline hover:opacity-100 `}
 													onclick={() => (state.showCaption = !state.showCaption)}
 												>
 													{state.showCaption ? 'Hide caption' : 'Show caption'}
@@ -379,8 +380,14 @@
 	}
 
 	:global(.swiper-pagination-bullets) {
-		top: 0 !important; /* move bullets up */
+		top: 1.5rem !important; /* move bullets up */
 		bottom: unset !important;
+	}
+
+	@media screen and (max-width: 640px) {
+		:global(.swiper-pagination-bullets) {
+			top: 0.8rem !important; /* move bullets up */
+		}
 	}
 
 	:global(.swiper-pagination-bullet-active) {
@@ -438,9 +445,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 2rem;
 		box-sizing: border-box;
 		overflow: hidden;
+		/* padding: 2rem; */
 	}
 
 	.lightbox-overlay:hover {
@@ -509,6 +516,13 @@
 	.lightbox-media video {
 		object-fit: contain;
 		box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 10px -10px;
+	}
+
+	@media screen and (max-width: 500px) {
+		.lightbox-media img,
+		.lightbox-media video {
+			box-shadow: none;
+		}
 	}
 
 	.swiper-button-prev,
