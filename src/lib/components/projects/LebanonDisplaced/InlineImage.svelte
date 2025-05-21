@@ -63,7 +63,7 @@
 					</ScrapBookPaper>
 				{:else if isVideo}
 					<video
-						class={`inline-image ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
+						class={`inline-video inline-image max-h-[80vh] ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
 						src={blok.media.filename}
 						autoplay
 						loop

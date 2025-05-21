@@ -467,7 +467,7 @@
 		.media-figure img,
 		.media-figure video {
 			max-width: 100%;
-			max-height: 100%;
+			max-height: 80vh;
 		}
 	}
 
