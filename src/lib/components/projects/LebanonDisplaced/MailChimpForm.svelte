@@ -2,17 +2,41 @@
 	import { storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
 
-	let formId = `form-${blok._uid}`;
+	const formId = `form-${blok._uid}`;
+	const formActionUrl =
+		blok.formActionUrl ||
+		'https://thenewhumanitarian.us12.list-manage.com/subscribe/post?u=31c0c755a8105c17c23d89842&id=d842d98289&f_id=002838e0f0';
 
-	// Optional: load external Mailchimp JS only once
-	let scriptLoaded = false;
-	function loadMailchimpScript() {
-		if (scriptLoaded) return;
-		scriptLoaded = true;
-		const script = document.createElement('script');
-		script.src = '//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js';
-		script.async = true;
-		document.body.appendChild(script);
+	const state = $state({
+		submitting: false,
+		success: false,
+		error: ''
+	});
+
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+		state.submitting = true;
+		state.success = false;
+		state.error = '';
+
+		const form = event.target as HTMLFormElement;
+		const formData = new FormData(form);
+
+		try {
+			await fetch(form.action, {
+				method: 'POST',
+				mode: 'no-cors',
+				body: formData
+			});
+
+			state.success = true;
+			form.reset();
+		} catch (err) {
+			state.error = 'There was a problem submitting the form.';
+			console.error('Mailchimp error:', err);
+		} finally {
+			state.submitting = false;
+		}
 	}
 </script>
 
@@ -21,75 +45,104 @@
 	id={formId}
 	class="mailchimp-form-container my-4 border-[0.5px] border-lebblack bg-transparent p-4"
 >
-	<form action={blok.formActionUrl} method="post" target="_blank" novalidate class="validate">
+	<form action={formActionUrl} method="post" target="_blank" novalidate on:submit={handleSubmit}>
 		{#if blok.formTitle}
-			<h3>{blok.formTitle}</h3>
+			<h3 class="mb-3 font-amman text-xl">{blok.formTitle}</h3>
 		{/if}
 
-		<!-- Email field (basic example) -->
-		<div class="mc-field-group font-amman">
-			<label for="mce-EMAIL">Email <span class="asterisk">*</span></label>
+		<!-- Email -->
+		<div class="mc-field-group mb-3 text-left font-amman">
+			<label for="mce-EMAIL" class="mb-1 block text-left font-bold">
+				Email <span class="asterisk">*</span>
+			</label>
 			<input
 				type="email"
 				name="EMAIL"
-				class="required email border-lebgreen focus:border-lebgreen focus:outline-burgundy focus:ring-lebgreen"
 				id="mce-EMAIL"
-				placeholder="Enter your email"
 				required
+				class="required email w-full border-lebgreen px-3 py-2 font-normal focus:outline-burgundy"
+				placeholder="Enter your email"
 			/>
 		</div>
 
-		<!-- Additional dynamic fields (optional) -->
-		{#each blok.fields || [] as field}
-			{#if field.type === 'checkbox'}
-				<div class="mc-field-group input-group">
-					<label>
-						<input type="checkbox" name={field.name} id={field.id} value="true" />
-						{field.label}
-					</label>
-				</div>
-			{:else if field.type === 'text'}
-				<div class="mc-field-group">
-					<label for={field.id}>{field.label}</label>
-					<input type="text" name={field.name} id={field.id} />
-				</div>
-			{/if}
-		{/each}
+		<!-- Weekly newsletter checkboxes -->
+		<div class="mc-field-group input-group mb-4 text-left font-amman">
+			<strong class="mb-1 block">Also subscribe to our weekly newsletter:</strong>
+			<ul class="pl-2">
+				<li class="mb-1">
+					<input
+						class="checkbox focus:ring-2 focus:ring-burgundy"
+						type="checkbox"
+						name="group[3777][67108864]"
+						id="mce-group[3777]-3777-0"
+						value="true"
+					/>
+					<label for="mce-group[3777]-3777-0" class="ml-1">English</label>
+				</li>
+				<!-- <li class="mb-1">
+					<input
+						class="checkbox focus:ring-2 focus:ring-burgundy"
+						type="checkbox"
+						name="group[3777][134217728]"
+						id="mce-group[3777]-3777-1"
+						value="true"
+					/>
+					<label for="mce-group[3777]-3777-1" class="ml-1">العربية</label>
+				</li>
+				<li class="mb-1">
+					<input
+						class="checkbox focus:ring-2 focus:ring-burgundy"
+						type="checkbox"
+						name="group[3777][268435456]"
+						id="mce-group[3777]-3777-2"
+						value="true"
+					/>
+					<label for="mce-group[3777]-3777-2" class="ml-1">Français</label>
+				</li> -->
+			</ul>
+		</div>
+
+		<!-- Hidden tag for LDD -->
+		<input type="hidden" name="tags" value="12166124" />
 
 		<!-- Honeypot -->
 		<div style="position: absolute; left: -5000px;" aria-hidden="true">
 			<input type="text" name="b_fake_field" tabindex="-1" />
 		</div>
 
+		<!-- Feedback messages -->
+		{#if state.submitting}
+			<p class="text-sm italic text-lebgreen">Submitting...</p>
+		{:else if state.success}
+			<p class="font-amman text-sm text-lebblack">Thank you for subscribing! Please check your email inbox to confirm the subscription.</p>
+		{:else if state.error}
+			<p class="font-amman text-sm text-red-600">{state.error}</p>
+		{/if}
+
 		<!-- Submit -->
-		<div class="clear cursor-pointer bg-lebgreen px-3 py-1 hover:bg-burgundy">
-			<input
+		<div class="mt-4">
+			<button
 				type="submit"
-				class="button font-amman text-white"
-				value={blok.submitText || 'Subscribe'}
-			/>
+				disabled={state.submitting}
+				class="button cursor-pointer bg-lebgreen px-4 py-2 font-amman text-white hover:bg-burgundy disabled:cursor-not-allowed disabled:opacity-60"
+			>
+				{state.submitting ? 'Sending...' : blok.submitText || 'Subscribe'}
+			</button>
 		</div>
 	</form>
 </div>
 
 <style>
-	/* .mailchimp-form-container {
-		background: #fff;
-		padding: 1rem;
-		border: 1px solid #ccc;
-		width: 100%;
-		max-width: 600px;
-	} */
-	label {
-		display: block;
-		margin-bottom: 0.5rem;
-		text-align: left;
-		padding-left: 0.25rem;
+	.asterisk {
+		color: red;
+		margin-left: 0.25rem;
 	}
-	input[type='email'],
-	input[type='text'] {
-		width: 100%;
-		padding: 0.5rem;
-		margin-bottom: 1rem;
+
+	.checkbox:checked,
+	.checkbox:focus,
+	.checkbox:active {
+		background-color: #9f3e52 !important;
+		border-color: #9f3e52 !important;
+		outline: none !important;
 	}
 </style>
