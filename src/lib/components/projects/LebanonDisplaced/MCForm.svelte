@@ -59,103 +59,93 @@
 		{/if}
 
 		<!-- Email -->
-		<div class="mc-field-group mb-3 text-left font-amman">
-			<label for="mce-EMAIL" class="mb-1 block text-left font-bold">
-				{#if isRtl}
-					البريد الإلكتروني
-				{:else}
-					Email
-				{/if} <span class="asterisk">*</span>
-			</label>
-			<input
-				type="email"
-				name="EMAIL"
-				id="mce-EMAIL"
-				required
-				class="required email w-full border-lebgreen px-3 py-2 font-normal focus:outline-burgundy"
-				placeholder="Enter your email"
-			/>
-		</div>
+		{#if !state.success}
+			<div class="mc-field-group mb-3 text-left font-amman">
+				<label for="mce-EMAIL" class="mb-1 block text-left font-bold">
+					{#if isRtl}
+						البريد الإلكتروني
+					{:else}
+						Email
+					{/if} <span class="asterisk">*</span>
+				</label>
+				<input
+					type="email"
+					name="EMAIL"
+					id="mce-EMAIL"
+					required
+					class="required email w-full border-lebgreen px-3 py-2 font-normal focus:outline-burgundy"
+					placeholder="Enter your email"
+				/>
+			</div>
 
-		<!-- Weekly newsletter checkboxes -->
-		<div class="mc-field-group input-group mb-4 text-left font-amman" dir={isRtl ? 'rtl' : 'ltr'}>
-			<strong class="mb-1 block"> </strong>
-			<ul class="pl-2">
-				<li class="mb-1">
-					<input
-						class="checkbox focus:ring-2 focus:ring-burgundy"
-						type="checkbox"
-						name="group[3777][67108864]"
-						id="mce-group[3777]-3777-0"
-						value="true"
-					/>
-					<label for="mce-group[3777]-3777-0" class="ml-1">
-						{#if isRtl}
-							اشترك في النشرة الإخبارية الأسبوعية
-						{:else}
-							Also subscribe to our weekly newsletter
-						{/if}
-					</label>
-				</li>
-				<!-- <li class="mb-1">
-					<input
-						class="checkbox focus:ring-2 focus:ring-burgundy"
-						type="checkbox"
-						name="group[3777][134217728]"
-						id="mce-group[3777]-3777-1"
-						value="true"
-					/>
-					<label for="mce-group[3777]-3777-1" class="ml-1">العربية</label>
-				</li>
-				<li class="mb-1">
-					<input
-						class="checkbox focus:ring-2 focus:ring-burgundy"
-						type="checkbox"
-						name="group[3777][268435456]"
-						id="mce-group[3777]-3777-2"
-						value="true"
-					/>
-					<label for="mce-group[3777]-3777-2" class="ml-1">Français</label>
-				</li> -->
-			</ul>
-		</div>
+			<!-- Weekly newsletter checkboxes -->
+			<div class="mc-field-group input-group mb-4 text-left font-amman" dir={isRtl ? 'rtl' : 'ltr'}>
+				<strong class="mb-1 block"> </strong>
+				<ul class="pl-2">
+					<li class="mb-1">
+						<input
+							class="checkbox focus:ring-2 focus:ring-burgundy"
+							type="checkbox"
+							name="group[3777][67108864]"
+							id="mce-group[3777]-3777-0"
+							value="true"
+						/>
+						<label for="mce-group[3777]-3777-0" class="ml-1">
+							{#if isRtl}
+								اشترك في النشرة الإخبارية الأسبوعية
+							{:else}
+								Also subscribe to our weekly newsletter
+							{/if}
+						</label>
+					</li>
+				</ul>
+			</div>
 
-		<!-- Hidden tag for LDD -->
-		<input type="hidden" name="tags" value="12166124" />
+			<!-- Hidden tag for LDD -->
+			<input type="hidden" name="tags" value="12166124" />
 
-		<!-- Honeypot -->
-		<div style="position: absolute; left: -5000px;" aria-hidden="true">
-			<input type="text" name="b_fake_field" tabindex="-1" />
-		</div>
+			<!-- Honeypot -->
+			<div style="position: absolute; left: -5000px;" aria-hidden="true">
+				<input type="text" name="b_fake_field" tabindex="-1" />
+			</div>
+		{/if}
 
 		<!-- Feedback messages -->
 		{#if state.submitting}
-			<p class="text-sm italic text-lebgreen">Submitting...</p>
+			<p class="text-center font-amman text-lebgreen">Submitting...</p>
 		{:else if state.success}
-			<p class="font-amman text-lebblack">
-				Thank you for subscribing! Please check your email inbox to confirm the subscription.
+			<p class="w-full bg-brown p-2 text-center font-amman text-lebblack">
+				{#if isRtl}
+					<span class="font-bold">شكرا على الاشتراك!</span><br />
+					يرجى التحقق من صندوق بريدك الإلكتروني لتأكيد الاشتراك.
+				{:else}
+					<span class="font-bold">Thank you for subscribing!</span><br />Please check your email
+					inbox to confirm the subscription.
+				{/if}
 			</p>
 		{:else if state.error}
 			<p class="font-amman text-sm text-red-600">{state.error}</p>
 		{/if}
 
 		<!-- Submit -->
-		<div class="mt-4">
-			<button
-				type="submit"
-				disabled={state.submitting}
-				class="button cursor-pointer bg-lebgreen px-4 py-2 font-amman text-white hover:bg-burgundy disabled:cursor-not-allowed disabled:opacity-60"
-			>
-				{state.submitting ? 'Sending...' : blok.submitText || 'Subscribe'}
-			</button>
-		</div>
+		{#if !state.success}
+			<div class="mt-4 text-center">
+				<button
+					type="submit"
+					disabled={state.submitting}
+					class="button w-full cursor-pointer bg-lebgreen px-4 py-2 font-amman text-white hover:bg-burgundy disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					{state.submitting ? 'Sending...' : blok.submitText || 'Subscribe'}
+				</button>
+			</div>
+		{/if}
 	</form>
 </div>
 
 <style>
 	:global(.arabic .signup *) {
 		direction: rtl;
-		text-align: right;
+		/* text-align: right; */
 	}
 
 	.asterisk {
