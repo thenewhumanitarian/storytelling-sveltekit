@@ -66,14 +66,14 @@
 						البريد الإلكتروني
 					{:else}
 						Email
-					{/if} <span class="asterisk">*</span>
+					{/if}<span class="asterisk text-burgundy">*</span>
 				</label>
 				<input
 					type="email"
 					name="EMAIL"
 					id="mce-EMAIL"
 					required
-					class="required email w-full border-lebgreen px-3 py-2 focus:border-lebgreen focus:outline-burgundy focus:ring-lebgreen bg-brown text-lebblack"
+					class="required email w-full border-lebgreen bg-brown px-3 py-2 text-lebblack focus:border-lebgreen focus:outline-burgundy focus:ring-lebgreen"
 					placeholder={isRtl ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
 					aria-label={isRtl ? 'البريد الإلكتروني' : 'Email'}
 					aria-required="true"
@@ -86,7 +86,7 @@
 				<ul class="pl-2">
 					<li class="mb-1">
 						<input
-							class="checkbox focus:ring-2 focus:ring-burgundy"
+							class="checkbox focus:ring-burgundy focus:outline-burgundy bg-brown focus:border-lebgreen"
 							type="checkbox"
 							name="group[3777][67108864]"
 							id="mce-group[3777]-3777-0"
@@ -149,7 +149,6 @@
 	}
 
 	.asterisk {
-		color: red;
 		margin-left: 0.25rem;
 	}
 
