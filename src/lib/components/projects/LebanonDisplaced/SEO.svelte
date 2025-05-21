@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { PUBLIC_GA4_ID } from '$env/static/public';
 
 	const isProduction = import.meta.env.MODE === 'production';
@@ -21,6 +22,35 @@
 		pageTwitterSite = '@newhumanitarian',
 		pageTwitterCreator = '@newhumanitarian'
 	} = $props();
+
+	onMount(() => {
+		if (!shouldEmbedGA) return;
+
+		const initGA = () => {
+			// Load GA script
+			const script = document.createElement('script');
+			script.setAttribute('async', '');
+			script.src = `https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA4_ID}`;
+			document.head.appendChild(script);
+
+			// Inline config script
+			const inline = document.createElement('script');
+			inline.innerHTML = `
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+				gtag('config', '${PUBLIC_GA4_ID}');
+			`;
+			document.head.appendChild(inline);
+		};
+
+		// Prefer requestIdleCallback if available
+		if ('requestIdleCallback' in window) {
+			(requestIdleCallback as any)(initGA);
+		} else {
+			setTimeout(initGA, 2000); // fallback if not supported
+		}
+	});
 </script>
 
 <svelte:head>
@@ -42,7 +72,7 @@
 	{/if}
 
 	<!-- Google Analytics GA4 (if enabled) -->
-	{#if shouldEmbedGA}
+	<!-- {#if shouldEmbedGA}
 		{@html `
 			<script async src="https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA4_ID}"></script>
 			<script>
@@ -52,7 +82,7 @@
 				gtag('config', '${PUBLIC_GA4_ID}');
 			</script>
 		`}
-	{/if}
+	{/if} -->
 
 	<!-- Open Graph -->
 	<meta property="og:site_name" content="The New Humanitarian" />
