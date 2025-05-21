@@ -222,16 +222,14 @@
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
 							<figure class="media-figure bg-transparent">
-								<div
-									class="swiper-zoom-container"
-									style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
-								>
+								<div class="swiper-zoom-container bg-lebgreen">
 									<img
 										src={`${item.src}/m/1024x0`}
 										alt={item.caption || 'Photo alt text is missing.'}
 										class="max-h-full w-full object-contain"
 										loading="lazy"
 										onload={() => (state.imagesLoaded[i] = true)}
+										style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
 									/>
 								</div>
 								{#if !state.isZoomed}
@@ -239,7 +237,7 @@
 										class={`absolute top-0.5 flex items-center justify-center gap-1 ${isRtl ? 'right-2' : 'left-2'}`}
 									>
 										<button
-											class={`caption-toggle transition:all pb-[2px] text-lg text-white opacity-90 duration-500 hover:text-burgundy hover:opacity-100`}
+											class={`caption-toggle transition:all pb-[2px] text-lg text-white opacity-90 duration-500 hover:text-burgundy hover:opacity-100 lg:text-2xl`}
 											onclick={() => {
 												swiper?.zoom?.toggle?.();
 											}}
@@ -540,11 +538,11 @@
 	.lightbox-close {
 		position: fixed;
 		top: 1rem;
-		right: 1rem;
+		right: 0.5rem;
 		background: none;
 		border: none;
 		color: white;
-		font-size: 4rem;
+		font-size: 5rem;
 		z-index: 1001;
 		cursor: pointer;
 		will-change: color;
@@ -554,7 +552,7 @@
 	@media screen and (max-width: 640px) {
 		.lightbox-close {
 			top: 0.75rem;
-			right: 0.5rem;
+			right: 0.25rem;
 		}
 	}
 
