@@ -48,7 +48,7 @@
 <div
 	use:storyblokEditable={blok}
 	id={formId}
-	class="mailchimp-form-container my-4 border-[0.5px] border-lebblack bg-transparent p-4"
+	class="mailchimp-form-container my-4 bg-transparent"
 >
 	<form
 		class="signup"
@@ -56,7 +56,7 @@
 		method="post"
 		target="_blank"
 		novalidate
-		onsubmit={handleSubmit}
+		on:submit={handleSubmit}
 	>
 		{#if blok.formTitle}
 			<h3 class="mb-3 font-amman text-xl">{blok.formTitle}</h3>
@@ -136,7 +136,7 @@
 		{#if state.submitting}
 			<p class="text-sm italic text-lebgreen">Submitting...</p>
 		{:else if state.success}
-			<p class="font-amman text-sm text-lebblack">
+			<p class="font-amman text-lebblack">
 				Thank you for subscribing! Please check your email inbox to confirm the subscription.
 			</p>
 		{:else if state.error}

@@ -326,6 +326,7 @@
 
 	:global(.arabic h3) {
 		font-family: 'Geeza Pro', serif !important;
+		line-height: 1.4;
 	}
 
 	:global(.arabic .intro-title h3) {
