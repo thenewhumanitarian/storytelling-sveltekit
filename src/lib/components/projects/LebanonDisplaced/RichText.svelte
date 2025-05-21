@@ -327,6 +327,11 @@
 	:global(.arabic h3) {
 		font-family: 'Geeza Pro', serif !important;
 	}
+
+	:global(.arabic .intro-title h3) {
+		line-height: 1.78;
+	}
+
 	:global(.arabic .intro-text h1:last-child) {
 		margin-bottom: 1rem;
 	}
