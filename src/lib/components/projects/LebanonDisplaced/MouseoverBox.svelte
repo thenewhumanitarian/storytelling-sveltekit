@@ -103,7 +103,7 @@
 	.box--wrapper .name {
 		position: absolute;
 		top: -1.5rem;
-		font-family: 'GT Sectra Bold', sans-serif;
+		font-family: 'GT Sectra Bold', serif;
 		font-weight: bold;
 		font-size: 2rem;
 		padding: 0.5rem 1rem;

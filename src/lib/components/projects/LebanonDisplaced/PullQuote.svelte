@@ -54,12 +54,12 @@
 		padding: 1.1rem 0;
 		margin: 0;
 		z-index: 1;
-		font-weight: 300;
 		margin: 0;
 		font-weight: bold;
 		background-size: cover;
 		border-left: none;
 		border-right: none;
+		/* font-weight: 300; */
 	}
 
 	blockquote p {
@@ -169,7 +169,11 @@
 		transform: translate(-50%, 50%);
 	}
 
-	/* :global(.arabic blockquote) {
+	:global(.arabic blockquote) {
 		font-family: 'Geeza Pro', serif;
-	} */
+	}
+
+	:global(.arabic blockquote p) {
+		font-weight: bold;
+	}
 </style>
