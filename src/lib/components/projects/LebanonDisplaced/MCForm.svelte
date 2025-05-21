@@ -45,11 +45,7 @@
 	}
 </script>
 
-<div
-	use:storyblokEditable={blok}
-	id={formId}
-	class="mailchimp-form-container my-4 bg-transparent"
->
+<div use:storyblokEditable={blok} id={formId} class="mailchimp-form-container my-4 bg-transparent">
 	<form
 		class="signup"
 		action={formActionUrl}
