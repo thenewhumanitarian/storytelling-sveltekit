@@ -18,7 +18,7 @@
 	if (browser) {
 		siteUrl = window.location.href.replace(
 			'https://localhost:5173',
-			'https://svelte.thenewhumanitarian.org'
+			'https://interactive.thenewhumanitarian.org'
 		);
 		encodedUrl = encodeURIComponent(siteUrl);
 		message = encodeURIComponent('Check out The Lebanon Displacement Diaries');

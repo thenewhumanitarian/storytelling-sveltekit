@@ -51,7 +51,7 @@
 		position: relative;
 		font-size: 1.75rem;
 		line-height: 1.25;
-		padding: 1.1rem 0;
+		padding: 1.1rem 0 1.2rem 0;
 		margin: 0;
 		z-index: 1;
 		margin: 0;
