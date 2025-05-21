@@ -1,107 +1,95 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { storyblokEditable } from '@storyblok/svelte';
+	const { blok } = $props();
 
-	onMount(async () => {
-		// Load Mailchimp validation script dynamically
+	let formId = `form-${blok._uid}`;
+
+	// Optional: load external Mailchimp JS only once
+	let scriptLoaded = false;
+	function loadMailchimpScript() {
+		if (scriptLoaded) return;
+		scriptLoaded = true;
 		const script = document.createElement('script');
-		script.src = 'https://s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js';
-		script.onload = () => {
-			(function ($) {
-				window.fnames = [
-					'EMAIL',
-					'FNAME',
-					'LNAME',
-					'ORG',
-					'ORGTYPE',
-					'UPDATES',
-					'MMERGE6',
-					'',
-					'COUNTRY'
-				];
-				window.ftypes = [
-					'email',
-					'text',
-					'text',
-					'text',
-					'dropdown',
-					'radio',
-					'text',
-					'',
-					'dropdown'
-				];
-			})(window.jQuery);
-			window.$mcj = window.jQuery.noConflict(true);
-		};
+		script.src = '//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js';
+		script.async = true;
 		document.body.appendChild(script);
-	});
+	}
 </script>
 
-<div id="mc_embed_signup">
-	<form
-		action="https://thenewhumanitarian.us12.list-manage.com/subscribe/post?u=31c0c755a8105c17c23d89842&amp;id=d842d98289&amp;f_id=002838e0f0"
-		method="post"
-		id="mc-embedded-subscribe-form"
-		name="mc-embedded-subscribe-form"
-		class="validate"
-		target="_blank"
-		novalidate
-	>
-		<div id="mc_embed_signup_scroll">
-			<div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+<div
+	use:storyblokEditable={blok}
+	id={formId}
+	class="mailchimp-form-container my-4 border-[0.5px] border-lebblack bg-transparent p-4"
+>
+	<form action={blok.formActionUrl} method="post" target="_blank" novalidate class="validate">
+		{#if blok.formTitle}
+			<h3>{blok.formTitle}</h3>
+		{/if}
 
-			<div class="mc-field-group">
-				<label for="mce-EMAIL">Email address (required)* <span class="asterisk">*</span></label>
-				<input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required />
-				<span id="mce-EMAIL-HELPERTEXT" class="helper_text">Please put your email address</span>
-			</div>
+		<!-- Email field (basic example) -->
+		<div class="mc-field-group font-amman">
+			<label for="mce-EMAIL">Email <span class="asterisk">*</span></label>
+			<input
+				type="email"
+				name="EMAIL"
+				class="required email border-lebgreen focus:border-lebgreen focus:outline-burgundy focus:ring-lebgreen"
+				id="mce-EMAIL"
+				placeholder="Enter your email"
+				required
+			/>
+		</div>
 
-			<div class="mc-field-group input-group">
-				<strong>Sign up for our weekly newsletter</strong>
-				<ul>
-					<li>
-						<input
-							type="checkbox"
-							name="group[3777][67108864]"
-							id="mce-group[3777]-3777-0"
-							value=""
-						/>
-						<label for="mce-group[3777]-3777-0">English</label>
-					</li>
-				</ul>
-			</div>
+		<!-- Additional dynamic fields (optional) -->
+		{#each blok.fields || [] as field}
+			{#if field.type === 'checkbox'}
+				<div class="mc-field-group input-group">
+					<label>
+						<input type="checkbox" name={field.name} id={field.id} value="true" />
+						{field.label}
+					</label>
+				</div>
+			{:else if field.type === 'text'}
+				<div class="mc-field-group">
+					<label for={field.id}>{field.label}</label>
+					<input type="text" name={field.name} id={field.id} />
+				</div>
+			{/if}
+		{/each}
 
-			<div id="mce-responses" class="clear">
-				<div class="response" id="mce-error-response" style="display:none"></div>
-				<div class="response" id="mce-success-response" style="display:none"></div>
-			</div>
+		<!-- Honeypot -->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true">
+			<input type="text" name="b_fake_field" tabindex="-1" />
+		</div>
 
-			<div aria-hidden="true" style="position: absolute; left: -5000px;">
-				<input type="text" name="b_31c0c755a8105c17c23d89842_d842d98289" tabindex="-1" value="" />
-			</div>
-
-			<div class="clear">
-				<input
-					type="submit"
-					name="subscribe"
-					id="mc-embedded-subscribe"
-					class="button"
-					value="Subscribe"
-				/>
-			</div>
+		<!-- Submit -->
+		<div class="clear cursor-pointer bg-lebgreen px-3 py-1 hover:bg-burgundy">
+			<input
+				type="submit"
+				class="button font-amman text-white"
+				value={blok.submitText || 'Subscribe'}
+			/>
 		</div>
 	</form>
 </div>
 
 <style>
-	@import url('https://cdn-images.mailchimp.com/embedcode/classic-061523.css');
-
-	#mc_embed_signup {
+	/* .mailchimp-form-container {
 		background: #fff;
-		clear: left;
-		font:
-			14px Helvetica,
-			Arial,
-			sans-serif;
+		padding: 1rem;
+		border: 1px solid #ccc;
+		width: 100%;
 		max-width: 600px;
+	} */
+	label {
+		display: block;
+		margin-bottom: 0.5rem;
+		text-align: left;
+		padding-left: 0.25rem;
+	}
+	input[type='email'],
+	input[type='text'] {
+		width: 100%;
+		padding: 0.5rem;
+		margin-bottom: 1rem;
 	}
 </style>

@@ -169,7 +169,7 @@
 		transform: translate(-50%, 50%);
 	}
 
-	:global(.arabic blockquote) {
+	/* :global(.arabic blockquote) {
 		font-family: 'Geeza Pro', serif;
-	}
+	} */
 </style>
