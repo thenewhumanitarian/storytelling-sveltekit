@@ -80,7 +80,7 @@
 	</button>
 
 	{#if status.toLocaleUpperCase() === 'INITIALIZING'}
-		<p>🔄 Deployment is initializing...</p>
+		<p>🔄 Deployment is initialising...</p>
 	{:else if status.toLocaleUpperCase() === 'LOADING'}
 		<p>⚡️ Deployment loading.</p>
 	{:else if status.toLocaleUpperCase() === 'IDLE'}
