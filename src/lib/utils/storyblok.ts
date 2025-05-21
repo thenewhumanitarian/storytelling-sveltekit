@@ -32,7 +32,7 @@ import InlineImage from '$lib/components/projects/LebanonDisplaced/InlineImage.s
 import HorizontalSpacer from '$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte';
 import HorizontalScroll from '$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte';
 import TextAnnotation from '$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte';
-import MailchimpForm from '$lib/components/projects/LebanonDisplaced/MailchimpForm.svelte';
+import MailchimpForm from '$lib/components/projects/LebanonDisplaced/MCForm.svelte';
 
 // Import Access token and region from env variables
 import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
@@ -142,7 +142,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
         horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
         textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
-        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MailchimpForm.svelte")).default,
+        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MCForm.svelte")).default,
       },
       apiOptions: {
         https: true,
@@ -175,7 +175,7 @@ export async function useStoryblok({ bridge = false } = {}) {
         horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
         horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
         textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
-        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MailchimpForm.svelte")).default,
+        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MCForm.svelte")).default,
       },
       apiOptions: {
         https: true,
