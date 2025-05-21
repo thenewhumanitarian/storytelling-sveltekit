@@ -222,7 +222,7 @@
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
 							<figure class="media-figure bg-transparent">
-								<div class="swiper-zoom-container bg-lebgreen">
+								<div class="swiper-zoom-container sm:bg-lebgreen">
 									<img
 										src={`${item.src}/m/1024x0`}
 										alt={item.caption || 'Photo alt text is missing.'}
@@ -302,7 +302,7 @@
 									bind:this={videoEls[i]}
 								/>
 								<div
-									class={`video--controls flex items-center justify-center pt-3 ${isRtl ? 'right-2' : 'left-2'}`}
+									class={`video--controls flex items-center justify-center pt-2 sm:pt-3 ${isRtl ? 'right-2' : 'left-2'}`}
 								>
 									<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
 										{state.videoIsPlaying ? '⏹️' : '▶️'}
@@ -410,10 +410,14 @@
 		border: none;
 		font-size: 2rem;
 		cursor: pointer;
-		/* padding: 0.8rem 0 0 0; */
 	}
 
 	@media screen and (max-width: 640px) {
+		.video--play,
+		.video--audio {
+			font-size: 1.4rem;
+		}
+
 		:global(.swiper-pagination) {
 			padding: 0 1.5rem;
 		}
@@ -452,6 +456,8 @@
 		cursor: grab;
 	}
 
+
+
 	.media-figure {
 		position: relative;
 		display: flex;
@@ -465,14 +471,14 @@
 		display: block;
 		object-fit: contain;
 		max-width: 90vw;
-		max-height: 85vh;
+		/* max-height: 85vh; */
 	}
 
 	@media screen and (max-width: 640px) {
 		.media-figure img,
 		.media-figure video {
 			max-width: 100%;
-			max-height: 80vh;
+			/* max-height: 80vh; */
 		}
 	}
 
@@ -512,8 +518,9 @@
 
 	.lightbox-media img,
 	.lightbox-media video {
-		object-fit: contain;
+		object-fit: cover;
 		box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 10px -10px;
+		max-height: 80vh;
 	}
 
 	@media screen and (max-width: 500px) {
@@ -551,8 +558,9 @@
 
 	@media screen and (max-width: 640px) {
 		.lightbox-close {
+			font-size: 3.5rem;
 			top: 0.75rem;
-			right: 0.25rem;
+			right: 0.5rem;
 		}
 	}
 
