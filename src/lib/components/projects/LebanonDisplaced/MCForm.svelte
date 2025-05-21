@@ -73,8 +73,10 @@
 					name="EMAIL"
 					id="mce-EMAIL"
 					required
-					class="required email w-full border-lebgreen px-3 py-2 font-normal focus:outline-burgundy"
-					placeholder="Enter your email"
+					class="required email w-full border-lebgreen px-3 py-2 focus:border-lebgreen focus:outline-burgundy focus:ring-lebgreen bg-brown text-lebblack"
+					placeholder={isRtl ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
+					aria-label={isRtl ? 'البريد الإلكتروني' : 'Email'}
+					aria-required="true"
 				/>
 			</div>
 
@@ -111,9 +113,7 @@
 		{/if}
 
 		<!-- Feedback messages -->
-		{#if state.submitting}
-			<p class="text-center font-amman text-lebgreen">Submitting...</p>
-		{:else if state.success}
+		{#if state.success}
 			<p class="w-full bg-brown p-2 text-center font-amman text-lebblack">
 				{#if isRtl}
 					<span class="font-bold">شكرا على الاشتراك!</span><br />
@@ -135,7 +135,7 @@
 					disabled={state.submitting}
 					class="button w-full cursor-pointer bg-lebgreen px-4 py-2 font-amman text-white hover:bg-burgundy disabled:cursor-not-allowed disabled:opacity-60"
 				>
-					{state.submitting ? 'Sending...' : blok.submitText || 'Subscribe'}
+					{state.submitting ? 'Sending' : blok.submitText || 'Subscribe'}
 				</button>
 			</div>
 		{/if}

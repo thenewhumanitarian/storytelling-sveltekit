@@ -58,7 +58,7 @@
 				const content = node.text || node.content?.map(render).join('') || '';
 
 				// Target _blank if external link
-				if (isInternal) {
+				if (isInternal || href.endsWith('/home')) {
 					return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}"${targetAttr}${relAttr}>${content}</a>`;
 				} else {
 					return `<a class="font-bold hover:underline text-burgundy" href="${finalHref}" target="_blank" rel="noopener noreferrer">${content}</a>`;
