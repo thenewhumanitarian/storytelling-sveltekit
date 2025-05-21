@@ -91,7 +91,7 @@
 				data-sveltekit-reload
 				onclick={handleClick}
 				href={`/stories/2025/05/22/lebanon-displacement-diaries/${lang === 'en' ? '' : `${lang}/`}diaries/${item.slug.startsWith('/') ? item.slug.slice(1) : item.slug}`}
-				class="related-diaries--container pointer-events-none relative flex max-w-[280px] shrink-0 select-none flex-col justify-between border-[0.5px] border-black bg-brown p-2 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
+				class="group related-diaries--container pointer-events-none relative flex max-w-[280px] shrink-0 select-none flex-col justify-between border-[0.5px] border-black bg-brown p-2 text-lebblack shadow transition-all duration-300 ease-in-out hover:shadow-xl sm:w-[280px]"
 			>
 				{#if item.content?.previewImage?.filename}
 					<div class="aspect-[4/3] w-full bg-transparent">
@@ -105,7 +105,7 @@
 
 				<div class="mb-3 mt-2 flex flex-grow flex-col justify-start">
 					<span
-						class="pointer-events-auto font-amman text-xl font-bold text-lebgreen hover:underline"
+						class="pointer-events-auto font-amman text-xl font-bold text-lebgreen group-hover:underline"
 					>
 						{item.content.pageTitleShort || item.content.pageTitle}
 					</span>
@@ -118,7 +118,7 @@
 					class="read-more-tag pointer-events-auto z-50 flex origin-left items-center justify-center"
 				>
 					<h3
-						class="m-0 w-full bg-lebgreen px-2 py-1 text-center text-sm font-bold text-white shadow hover:underline"
+						class="m-0 w-full bg-lebgreen px-2 py-1 text-center text-sm font-bold text-white shadow group-hover:underline"
 					>
 						{isRtl ? 'قراءة' : 'Read'}
 					</h3>
