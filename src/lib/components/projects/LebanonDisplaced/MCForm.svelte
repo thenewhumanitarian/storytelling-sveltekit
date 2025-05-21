@@ -1,6 +1,11 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+
 	import { storyblokEditable } from '@storyblok/svelte';
 	const { blok } = $props();
+
+	const lang = getContext('lang');
+	const isRtl = lang === 'ar';
 
 	const formId = `form-${blok._uid}`;
 	const formActionUrl =
@@ -45,7 +50,14 @@
 	id={formId}
 	class="mailchimp-form-container my-4 border-[0.5px] border-lebblack bg-transparent p-4"
 >
-	<form action={formActionUrl} method="post" target="_blank" novalidate on:submit={handleSubmit}>
+	<form
+		class="signup"
+		action={formActionUrl}
+		method="post"
+		target="_blank"
+		novalidate
+		onsubmit={handleSubmit}
+	>
 		{#if blok.formTitle}
 			<h3 class="mb-3 font-amman text-xl">{blok.formTitle}</h3>
 		{/if}
@@ -53,7 +65,11 @@
 		<!-- Email -->
 		<div class="mc-field-group mb-3 text-left font-amman">
 			<label for="mce-EMAIL" class="mb-1 block text-left font-bold">
-				Email <span class="asterisk">*</span>
+				{#if isRtl}
+					البريد الإلكتروني
+				{:else}
+					Email
+				{/if} <span class="asterisk">*</span>
 			</label>
 			<input
 				type="email"
@@ -66,8 +82,8 @@
 		</div>
 
 		<!-- Weekly newsletter checkboxes -->
-		<div class="mc-field-group input-group mb-4 text-left font-amman">
-			<strong class="mb-1 block">Also subscribe to our weekly newsletter:</strong>
+		<div class="mc-field-group input-group mb-4 text-left font-amman" dir={isRtl ? 'rtl' : 'ltr'}>
+			<strong class="mb-1 block"> </strong>
 			<ul class="pl-2">
 				<li class="mb-1">
 					<input
@@ -77,7 +93,13 @@
 						id="mce-group[3777]-3777-0"
 						value="true"
 					/>
-					<label for="mce-group[3777]-3777-0" class="ml-1">English</label>
+					<label for="mce-group[3777]-3777-0" class="ml-1">
+						{#if isRtl}
+							اشترك في النشرة الإخبارية الأسبوعية
+						{:else}
+							Also subscribe to our weekly newsletter
+						{/if}
+					</label>
 				</li>
 				<!-- <li class="mb-1">
 					<input
@@ -114,7 +136,9 @@
 		{#if state.submitting}
 			<p class="text-sm italic text-lebgreen">Submitting...</p>
 		{:else if state.success}
-			<p class="font-amman text-sm text-lebblack">Thank you for subscribing! Please check your email inbox to confirm the subscription.</p>
+			<p class="font-amman text-sm text-lebblack">
+				Thank you for subscribing! Please check your email inbox to confirm the subscription.
+			</p>
 		{:else if state.error}
 			<p class="font-amman text-sm text-red-600">{state.error}</p>
 		{/if}
@@ -133,6 +157,11 @@
 </div>
 
 <style>
+	:global(.arabic .signup *) {
+		direction: rtl;
+		text-align: right;
+	}
+
 	.asterisk {
 		color: red;
 		margin-left: 0.25rem;
