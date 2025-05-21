@@ -12,9 +12,17 @@
 		? `${blok.backgroundImage.filename}/m/1280x0/filters:format(webp):quality(80)`
 		: '';
 
+	const bgImagePreviewDesktop = hasDesktopImage
+		? `${blok.backgroundImage.filename}/m/20x0/filters:format(webp):quality(50)`
+		: '';
+
 	const bgImageTablet = hasMobileImage
 		? `${blok.backgroundImageMobile.filename}/m/800x0/filters:format(webp):quality(80)`
 		: bgImage; // fallback to desktop if mobile is missing
+
+	const bgImagePreviewMobile = hasMobileImage
+		? `${blok.backgroundImageMobile.filename}/m/20x0/filters:format(webp):quality(50)`
+		: bgImagePreviewDesktop; // fallback to desktop if mobile is missing
 
 	const bgImageMobile = hasMobileImage
 		? `${blok.backgroundImageMobile.filename}/m/420x0/filters:format(webp):quality(80)`
@@ -29,6 +37,16 @@
 			href={bgImage}
 			type="image/webp"
 			imagesrcset={`${bgImage} 1x`}
+			media="(min-width: 826px)"
+		/>
+	{/if}
+	{#if bgImagePreviewDesktop}
+		<link
+			rel="preload"
+			as="image"
+			href={bgImagePreviewDesktop}
+			type="image/webp"
+			imagesrcset={`${bgImagePreviewDesktop} 1x`}
 			media="(min-width: 826px)"
 		/>
 	{/if}
@@ -61,9 +79,16 @@
 	--intro-bg-desktop: ${bgImage ? `url("${bgImage}")` : 'none'};
 	--intro-bg-tablet: ${bgImageTablet ? `url("${bgImageTablet}")` : 'none'};
 	--intro-bg-mobile: ${bgImageMobile ? `url("${bgImageMobile}")` : 'none'};
+	--intro-bg-preview-desktop: ${bgImagePreviewDesktop ? `url("${bgImagePreviewDesktop}")` : 'none'};
+	--intro-bg-preview-mobile: ${bgImagePreviewMobile ? `url("${bgImagePreviewMobile}")` : 'none'};
 	background-color: ${blok.backgroundColor};
 `}
 >
+	<div class="preview-image--desktop"></div>
+	<div class="desktop-image"></div>
+	<div class="preview-image--mobile"></div>
+	<div class="mobile-image"></div>
+
 	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
 		<div class="intro-title text-shadow">
@@ -95,17 +120,82 @@
 		margin-top: -6rem;
 		border-bottom: 6px solid inherit;
 		z-index: 0;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		/* background-image: var(--intro-bg-desktop); */
+	}
+
+	.intro-view--wrapper .preview-image--desktop {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		background-image: var(--intro-bg-preview-desktop);
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+
+	.intro-view--wrapper .preview-image--desktop {
+		display: none;
+	}
+
+	.intro-view--wrapper .desktop-image {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
 		background-image: var(--intro-bg-desktop);
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
 	}
 
+	.intro-view--wrapper .preview-image--mobile {
+		display: none;
+	}
+
 	@media screen and (max-width: 800px) {
+		.intro-view--wrapper .desktop-image,
+		.intro-view--wrapper .preview-image {
+			display: none;
+		}
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
-			background-image: var(--intro-bg-tablet);
+			/* background-image: var(--intro-bg-tablet); */
+		}
+
+		.intro-view--wrapper .preview-image--mobile {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+			background-image: var(--intro-bg-preview-mobile);
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+		.intro-view--wrapper .mobile-image {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+			background-image: var(--intro-bg-mobile);
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
 		}
 	}
 
@@ -113,7 +203,7 @@
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
-			background-image: var(--intro-bg-mobile);
+			/* background-image: var(--intro-bg-mobile); */
 		}
 	}
 
