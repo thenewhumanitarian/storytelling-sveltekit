@@ -39,16 +39,23 @@
 		</div>
 		<div class="flex w-16 items-center justify-end gap-2 text-right">
 			<div
-				class={`back--button hidden transition-all duration-200 ease-in-out hover:bg-burgundy hover:text-white ${isOnHomePage ? 'sm:hidden' : 'sm:block'}`}
+				class={`back--button group hidden transition-all duration-200 ease-in-out hover:bg-burgundy hover:text-white ${isOnHomePage ? 'sm:hidden' : 'sm:block'}`}
 			>
 				<a
 					data-sveltekit-reload
 					data-sveltekit-preload-data
 					data-sveltekit-preload
-					class="px-2 py-1"
 					href={backLinkHref}
+					class="relative flex items-center gap-1 px-2 py-0 focus:outline-none focus:ring-2 focus:ring-burgundy"
+					aria-label="Back"
+					title="Back to home"
 				>
-					↩
+					<span aria-hidden="true">↩</span>
+					<span
+						class="sr-only group-hover:absolute group-hover:left-1/2 group-hover:top-full group-hover:mt-1 group-hover:-translate-x-1/2 group-hover:bg-white group-hover:px-2 group-hover:py-1 group-hover:text-xs group-hover:text-lebblack"
+					>
+						Back
+					</span>
 				</a>
 			</div>
 			<LanguageSwitch />
