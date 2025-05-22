@@ -16,6 +16,18 @@
 	let swiper: Swiper | undefined;
 	let videoEls: (HTMLVideoElement | undefined)[] = [];
 
+	const playIcon =
+		'<svg fill="current" style="fill: current;" class="play icon fill-current w-full h-auto" height="30" viewBox="0 0 134 134" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_5_2)"><path d="M66.6667 11.1093C81.4013 11.1093 95.5307 16.9635 105.953 27.38C116.37 37.8019 122.224 51.932 122.224 66.6667C122.224 81.4013 116.37 95.5307 105.953 105.953C95.5315 116.37 81.4013 122.224 66.6667 122.224C51.932 122.224 37.8027 116.37 27.38 105.953C16.9633 95.5315 11.1093 81.4013 11.1093 66.6667C11.125 51.9373 16.9843 37.8173 27.4013 27.4013C37.8184 16.9853 51.9373 11.1253 66.6667 11.1093ZM66.6667 0C48.984 0 32.0267 7.026 19.5267 19.5267C7.02667 32.0273 0 48.9853 0 66.6667C0 84.348 7.026 101.307 19.5267 113.807C32.0273 126.307 48.9853 133.333 66.6667 133.333C84.348 133.333 101.307 126.307 113.807 113.807C126.307 101.306 133.333 84.348 133.333 66.6667C133.333 48.9853 126.307 32.0267 113.807 19.5267C101.306 7.02667 84.348 0 66.6667 0ZM50 94.4427V38.8907L100 67.4787L50 94.4427Z" fill="white"/></g><defs><clipPath id="clip0_5_2"><rect width="133.333" height="133.333" fill="white"/></clipPath></defs></svg>';
+
+	const stopIcon =
+		'<svg fill="current" style="fill: current;" class="stop icon fill-current w-full h-auto" width="100%" viewBox="0 0 134 134" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M66.6667 0.666664C30.4013 0.666664 0.802673 30.2653 0.802673 66.5307C0.802673 102.796 30.272 132.395 66.6667 132.395C102.932 132.395 132.531 102.925 132.531 66.5307C132.531 30.2653 102.932 0.666664 66.6667 0.666664ZM66.6667 121.197C36.5307 121.197 12 96.6667 12 66.5307C12 36.3947 36.5307 11.864 66.6667 11.864C96.8027 11.864 121.333 36.3947 121.333 66.5307C121.469 96.6667 96.932 121.197 66.6667 121.197Z" fill="white"/><path d="M44 44H89V89H44V44Z" fill="white"/></svg>';
+
+	const audioOnIcon =
+		'<svg fill="current" style="fill: current;" class="stop icon fill-current w-full h-auto" width="100%" viewBox="0 0 134 134" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M66.6667 0.666656C30.4013 0.666656 0.802673 30.2653 0.802673 66.5307C0.802673 102.796 30.272 132.395 66.6667 132.395C102.932 132.395 132.531 102.925 132.531 66.5307C132.531 30.2653 102.932 0.666656 66.6667 0.666656ZM66.6667 121.197C36.5307 121.197 12 96.6667 12 66.5307C12 36.3947 36.5307 11.864 66.6667 11.864C96.8027 11.864 121.333 36.3947 121.333 66.5307C121.469 96.6667 96.932 121.197 66.6667 121.197Z" fill="white"/><path d="M60.0827 34.416L40.192 49.9787L25.796 50.2078C23.52 50.2443 21.6971 52.0985 21.6971 54.3745V79.5252C21.6971 81.8689 23.6293 83.7544 25.9731 83.6918L40.1917 83.3168L60.0824 98.8795C62.8168 101.02 66.8168 99.0722 66.8168 95.5983V37.697C66.8168 34.2282 62.8223 32.2753 60.0827 34.416ZM81.776 47.9947L75.0989 55.9895C78.276 58.6405 80.0938 62.5311 80.0938 66.6613C80.0938 70.7811 78.2812 74.6665 75.1198 77.3176L81.8124 85.302C87.3436 80.6665 90.5103 73.8697 90.5103 66.662C90.5103 59.438 87.3281 52.6347 81.776 47.9947ZM95.0364 32.8693L88.6615 41.1089C96.6407 47.2808 101.219 56.5929 101.219 66.6663C101.219 76.734 96.6459 86.0463 88.6719 92.2183L95.0468 100.458C105.588 92.2964 111.635 79.9845 111.635 66.6659C111.63 53.3481 105.583 41.0307 95.0364 32.8693Z" fill="white"/></svg>';
+
+	const audioOffIcon =
+		'<svg fill="current" style="fill: current;" class="stop icon fill-current w-full h-auto" width="100%" viewBox="0 0 134 134" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M66.6667 0.666656C30.4013 0.666656 0.802673 30.2653 0.802673 66.5307C0.802673 102.796 30.272 132.395 66.6667 132.395C102.932 132.395 132.531 102.925 132.531 66.5307C132.531 30.2653 102.932 0.666656 66.6667 0.666656ZM66.6667 121.197C36.5307 121.197 12 96.6667 12 66.5307C12 36.3947 36.5307 11.864 66.6667 11.864C96.8027 11.864 121.333 36.3947 121.333 66.5307C121.469 96.6667 96.932 121.197 66.6667 121.197Z" fill="white"/><path opacity="0.8" d="M60.0827 34.416L40.192 49.9787L25.796 50.2078C23.52 50.2443 21.6971 52.0985 21.6971 54.3745V79.5252C21.6971 81.8689 23.6293 83.7544 25.9731 83.6918L40.1917 83.3168L60.0824 98.8795C62.8168 101.02 66.8168 99.0722 66.8168 95.5983V37.697C66.8168 34.2282 62.8223 32.2753 60.0827 34.416ZM81.776 47.9947L75.0989 55.9895C78.276 58.6405 80.0938 62.5311 80.0938 66.6613C80.0938 70.7811 78.2812 74.6665 75.1198 77.3176L81.8124 85.302C87.3436 80.6665 90.5103 73.8697 90.5103 66.662C90.5103 59.438 87.3281 52.6347 81.776 47.9947ZM95.0364 32.8693L88.6615 41.1089C96.6407 47.2808 101.219 56.5929 101.219 66.6663C101.219 76.734 96.6459 86.0463 88.6719 92.2183L95.0468 100.458C105.588 92.2964 111.635 79.9845 111.635 66.6659C111.63 53.3481 105.583 41.0307 95.0364 32.8693Z" fill="white"/><rect x="107.388" y="19" width="11" height="125" transform="rotate(45 107.388 19)" fill="black"/></svg>';
+
 	const state = $state<{
 		index: number | null;
 		isVisible: boolean;
@@ -232,7 +244,7 @@
 										style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
 									/>
 								</div>
-								{#if !state.isZoomed}
+								{#if !state.isZoomed && state.imagesLoaded[i]}
 									<div
 										class={`absolute top-0.5 flex items-center justify-center gap-1 ${isRtl ? 'right-2' : 'left-2'}`}
 									>
@@ -302,13 +314,25 @@
 									bind:this={videoEls[i]}
 								/>
 								<div
-									class={`video--controls flex items-center justify-center pt-2 sm:pt-3 ${isRtl ? 'right-2' : 'left-2'}`}
+									class={`video--controls flex items-center justify-center pt-2 sm:pt-2 ${isRtl ? 'right-2' : 'left-2'}`}
 								>
 									<button class="video--play z-10" onclick={() => handleVideoPlayPause(i)}>
-										{state.videoIsPlaying ? '⏹️' : '▶️'}
+										<span class="video--icons relative block h-6 w-6 sm:h-8 sm:w-8">
+											{#if state.videoIsPlaying}
+												{@html stopIcon}
+											{:else}
+												{@html playIcon}
+											{/if}
+										</span>
 									</button>
 									<button class="video--audio z-10" onclick={() => handleToggleAudio(i)}>
-										{state.videoAudio ? '🔊' : '🔇'}
+										<span class="video--icons relative block h-6 w-6 sm:h-8 sm:w-8">
+											{#if state.videoAudio}
+												{@html audioOnIcon}
+											{:else}
+												{@html audioOffIcon}
+											{/if}
+										</span>
 									</button>
 								</div>
 								{#if item.caption}
@@ -369,6 +393,15 @@
 		width: 1rem;
 		height: 1rem;
 		border-radius: 1px;
+		opacity: 1;
+	}
+
+	.video--icons {
+		opacity: 0.8;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.video--icons:hover {
 		opacity: 1;
 	}
 
@@ -455,8 +488,6 @@
 	.lightbox-overlay:hover {
 		cursor: grab;
 	}
-
-
 
 	.media-figure {
 		position: relative;
