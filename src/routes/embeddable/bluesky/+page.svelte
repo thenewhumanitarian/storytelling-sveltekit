@@ -1,22 +1,22 @@
-<!--
-  Embeds the Bluesky profile for @newhumanitarian.bsky.social using the bsky-embed web component.
-  See: https://bsky.app/profile/newhumanitarian.bsky.social
--->
-
 <script>
 	import { onMount } from 'svelte';
-	// Dynamically import the Bluesky embed web component on mount.
+
 	onMount(async () => {
-		// @ts-expect-error: No type definitions for bsky-embed web component
+		// Dynamically import the Bluesky web component
 		await import('bsky-embed/dist/bsky-embed.es.js');
-		// Dynamic height for SharePoint embedding
+
 		const resize = () => {
-			window.parent.postMessage({
-				type: 'resize',
-				height: document.body.scrollHeight
-			}, '*');
+			window.parent.postMessage(
+				{
+					type: 'resize',
+					height: document.documentElement.scrollHeight
+				},
+				'*'
+			);
 		};
-		window.addEventListener('load', resize);
+
+		// Trigger resize after content has rendered
+		setTimeout(resize, 100); // debounce in case of layout shift
 		window.addEventListener('resize', resize);
 	});
 </script>
