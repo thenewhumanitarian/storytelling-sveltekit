@@ -9,6 +9,15 @@
 	onMount(async () => {
 		// @ts-expect-error: No type definitions for bsky-embed web component
 		await import('bsky-embed/dist/bsky-embed.es.js');
+		// Dynamic height for SharePoint embedding
+		const resize = () => {
+			window.parent.postMessage({
+				type: 'resize',
+				height: document.body.scrollHeight
+			}, '*');
+		};
+		window.addEventListener('load', resize);
+		window.addEventListener('resize', resize);
 	});
 </script>
 
