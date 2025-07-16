@@ -59,6 +59,7 @@
     "@storyblok/richtext": "^3.2.0",
     "@storyblok/svelte": "^4.0.11",
     "@sveltejs/enhanced-img": "^0.4.4",
+    "bsky-embed": "^0.2.5",
     "csv-parse": "^5.6.0",
     "d3": "^7.9.0",
     "d3-array": "^3.2.4",
