@@ -1,6 +1,7 @@
 <script lang="ts">
-	import GazaMap from '$lib/components/GazaMap/GazaMap.svelte';
-	import Timeline from '$lib/components/GazaMap/Timeline.svelte';
+	import GazaMap from '$lib/components/gaza-map/GazaMap.svelte';
+	import Timeline from '$lib/components/gaza-map/Timeline.svelte';
+	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 
 	let { data } = $props();
 	const { incidentsData } = data;
@@ -26,7 +27,16 @@
 
 	let gazaMapRef = $state<{
 		setSelectionOriginToClick: () => void;
+		flyToMarkerByChronoId: (id: number) => void;
 	} | null>(null);
+	let gazaCardsRef = $state<any>(null);
+
+	function handleCardInView(id: number) {
+		setSelectedMarkerId(id);
+		if (gazaMapRef && gazaMapRef.flyToMarkerByChronoId) {
+			gazaMapRef.flyToMarkerByChronoId(id);
+		}
+	}
 </script>
 
 <main data-iframe-height={true}>
@@ -42,7 +52,17 @@
 				{selectedWeekStartDate}
 			/>
 		</div>
-		<div class="absolute bottom-0 left-0 z-30 w-full bg-white">
+		<!-- Cards container (under timeline) -->
+		<div class="absolute bottom-0 left-0 z-20 w-full bg-white flex">
+			<GazaCards
+				bind:this={gazaCardsRef}
+				incidentsData={incidentsData}
+				selectedMarkerId={selectedMarkerId}
+				onCardInView={handleCardInView}
+			/>
+		</div>
+		<!-- Timeline overlay (above cards) -->
+		<div class="absolute bottom-0 left-0 z-30 w-full">
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}
@@ -50,6 +70,7 @@
 				{selectedWeekStartDate}
 				{setSelectedWeek}
 				{selectedMarkerId}
+				scrollToCard={gazaCardsRef ? gazaCardsRef.scrollToCard : undefined}
 			/>
 		</div>
 	</section>

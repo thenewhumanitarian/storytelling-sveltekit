@@ -2,8 +2,10 @@
 	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import 'mapbox-gl/dist/mapbox-gl.css';
-	import GazaCards from '$lib/components/GazaMap/GazaCards.svelte';
+	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 	import type { IncidentData } from './types';
+	import { fade } from 'svelte/transition';
+	import GazaOverlay from './GazaOverlay.svelte';
 
 	const MAPBOX_TOKEN =
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
@@ -52,6 +54,33 @@
 		cardsComponent?.scrollToCard(id);
 	}
 
+	// Add derived for selected event
+	const selectedEvent = $derived(() => {
+		const selected = incidentsData.find((i) => i.chronoId === selectedMarkerId);
+		return selected && selected.type === 'event' ? selected : null;
+	});
+
+	// Only show overlay if the selected card is an event and is the top visible card
+	const showEventOverlay = $derived(() => {
+		const selected = incidentsData.find((i) => i.chronoId === selectedMarkerId);
+		return selected && selected.type === 'event';
+	});
+
+	export function flyToMarkerByChronoId(id: number) {
+		const incident = incidentsData.find((i) => i.chronoId === id);
+		if (
+			incident &&
+			incident.type === 'incident' &&
+			typeof incident.latitude === 'number' &&
+			typeof incident.longitude === 'number' &&
+			!isNaN(incident.latitude) &&
+			!isNaN(incident.longitude) &&
+			map
+		) {
+			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM });
+		}
+	}
+
 	onMount(() => {
 		mapboxgl.accessToken = MAPBOX_TOKEN;
 		const mapInstance = new mapboxgl.Map({
@@ -94,7 +123,13 @@
 
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			incidentsData.forEach((incident, idx) => {
+				// Only render markers for incidents with valid coordinates
+				if (incident.type !== 'incident' || typeof incident.latitude !== 'number' || typeof incident.longitude !== 'number' || isNaN(incident.latitude) || isNaN(incident.longitude)) {
+					return;
+				}
 				const { chronoId, latitude, longitude, title, description, killedOrWounded } = incident;
+				const lat = latitude as number;
+				const lng = longitude as number;
 				const el = document.createElement('div');
 				el.className = `custom-marker marker-${idx}`;
 
@@ -111,7 +146,7 @@
 				// 	`);
 
 				const marker = new mapboxgl.Marker({ element: el })
-					.setLngLat([longitude, latitude])
+					.setLngLat([lng, lat])
 					// .setPopup(popup)
 					.addTo(map!);
 
@@ -122,7 +157,7 @@
 					// closeAllPopups(chronoId);
 					setSelectedMarkerId(chronoId);
 					scrollToIncidentCard(chronoId);
-					map?.flyTo({ center: [longitude, latitude], zoom: ZOOM_ZOOM });
+					map?.flyTo({ center: [lng, lat], zoom: ZOOM_ZOOM });
 				});
 
 				// popup.on('open', () => {
@@ -143,16 +178,24 @@
 			// Convert incidents to GeoJSON FeatureCollection
 			const heatmapGeoJSON = {
 				type: 'FeatureCollection',
-				features: incidentsData.map((incident) => ({
-					type: 'Feature',
-					properties: {
-						intensity: Math.pow(incident.killedOrWounded || 1, 1.3)
-					},
-					geometry: {
-						type: 'Point',
-						coordinates: [incident.longitude, incident.latitude]
-					}
-				}))
+				features: incidentsData
+					.filter((incident) =>
+						incident.type === 'incident' &&
+						typeof incident.latitude === 'number' &&
+						typeof incident.longitude === 'number' &&
+						!isNaN(incident.latitude) &&
+						!isNaN(incident.longitude)
+					)
+					.map((incident) => ({
+						type: 'Feature',
+						properties: {
+							intensity: Math.pow((incident.killedOrWounded || 1), 1.3)
+						},
+						geometry: {
+							type: 'Point',
+							coordinates: [incident.longitude as number, incident.latitude as number]
+						}
+					}))
 			};
 
 			// Add source for heatmap
@@ -260,21 +303,11 @@
 	});
 </script>
 
-<div bind:this={mapContainer} class="map-container w-1/2"></div>
-
-<GazaCards
-	bind:this={cardsComponent}
-	{selectedMarkerId}
-	incidentsData={incidentsData.sort((a, b) => a.chronoId - b.chronoId)}
-	onCardInView={(id) => {
-		const incident = incidentsData.find((i) => i.chronoId === id);
-		if (incident && map) {
-			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM }); // Fly to the incident
-			selectionOrigin = 'scroll'; // Set selection origin to scroll
-			setSelectedMarkerId(id); // Update selected marker ID
-		}
-	}}
-/>
+<div bind:this={mapContainer} class="map-container w-1/2 relative">
+	{#if showEventOverlay()}
+		<GazaOverlay event={selectedEvent()} />
+	{/if}
+</div>
 
 {#if clickedCoordinates}
 	<div class="absolute left-0 top-0 z-10 ml-4 mt-4 rounded border bg-gray-100/90 p-2 text-sm">

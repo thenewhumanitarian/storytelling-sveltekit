@@ -1,5 +1,5 @@
 <script lang="ts">
-	// import { incidentsData } from '$lib/components/GazaMap/incidents';
+	// import { incidentsData } from '$lib/components/gaza-map/incidents';
 	import { onMount } from 'svelte';
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { extent, rollup, sum } from 'd3-array';
@@ -13,7 +13,8 @@
 		gazaMapRef,
 		selectedWeekStartDate,
 		setSelectedWeek,
-		selectedMarkerId
+		selectedMarkerId,
+		scrollToCard = undefined
 	}: {
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
@@ -21,13 +22,15 @@
 		selectedWeekStartDate: Date | null;
 		setSelectedWeek: (date: Date | null, firstIncidentId: number | null) => void;
 		selectedMarkerId: number | null;
+		scrollToCard?: (id: number) => void;
 	} = $props();
 
 	// --- Internal State ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
-	const svgHeight = 120; // Constant height of SVG area
+	const svgHeight = 140; // Increased from 120 to 140 for accessibility highlight
 	const barWidth = 12; // Constant width of bars
+	const barTopPadding = 16; // Extra space above bars for highlight
 	const axisPaddingBottom = 18; // Space below the axis line for labels etc.
 	const barPaddingBottom = 0; // Space between bottom of bar and axis line
 	// const horizontalPadding = 0; // Padding at the ends of the timeline axis
@@ -70,7 +73,7 @@
 		})).sort((a, b) => a.weekStartDate.getTime() - b.weekStartDate.getTime());
 	});
 
-	const maxBarHeight = $derived(svgHeight - axisPaddingBottom - barPaddingBottom);
+	const maxBarHeight = $derived(svgHeight - axisPaddingBottom - barPaddingBottom - barTopPadding);
 
 	const timeScale = $derived.by(() => {
 		if (!containerWidth || weeklyAggregatedData.length === 0) {
@@ -83,7 +86,7 @@
 
 		return scaleTime()
 			.domain([minDate, maxDate])
-			.range([barWidth / 2, containerWidth - barWidth / 2])
+			.range([barWidth / 2, containerWidth - barWidth / 2]);
 	});
 
 	const heightScale = $derived.by(() => {
@@ -113,6 +116,10 @@
 			value: maxWeek.totalKilledOrWounded
 		};
 	});
+
+	// Add derived for events
+	const events = $derived(parsedIncidents.filter((d) => d.type === 'event'));
+	const incidents = $derived(parsedIncidents.filter((d) => d.type === 'incident'));
 
 	onMount(() => {
 		if (!timelineContainer) return; // Guard
@@ -167,6 +174,55 @@
 >
 	{#if containerWidth > 0 && weeklyAggregatedData.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
+			<!-- Dotted event axis line -->
+			<line
+				x1={timeScale.range()[0]}
+				y1={40}
+				x2={timeScale.range()[1]}
+				y2={40}
+				stroke="#888"
+				stroke-width="1"
+				stroke-dasharray="2,3"
+			/>
+			<!-- Events label -->
+			<text
+				x={timeScale.range()[0] + 8}
+				y={35}
+				class="fill-zinc-500 font-sans text-xs"
+				text-anchor="start"
+			>
+				Events
+			</text>
+			<!-- Event Symbols (top of chart) -->
+			{#each events as event (event.chronoId)}
+				{@const xPos = timeScale(new Date(event.date))}
+				{@const isActive = selectedMarkerId === event.chronoId}
+				<g
+					class="event-symbol cursor-pointer"
+					onclick={() => {
+						setSelectedWeek(null, event.chronoId);
+						scrollToCard?.(event.chronoId);
+					}}
+					onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+					onmouseleave={handleMouseLeave}
+					tabindex="0"
+					aria-label={`Event: ${event.title}`}
+					role="button"
+				>
+					<circle
+						cx={xPos}
+						cy={40}
+						r={isActive ? 12 : 8}
+						fill="#9F3E52"
+						stroke={isActive ? '#9F3E52' : '#282828'}
+						stroke-width={isActive ? 2 : 0}
+						style={isActive
+							? 'filter: drop-shadow(0 0 6px #9F3E5288); transition: all 0.2s;'
+							: 'transition: all 0.2s;'}
+					/>
+					<title>{event.title}</title>
+				</g>
+			{/each}
 			<!-- Axis Line -->
 			<line
 				x1={timeScale.range()[0]}
@@ -177,29 +233,32 @@
 				stroke-width="1"
 			/>
 
-			{#if maxBarLabel}
-				{@const isLeftSide = maxBarLabel.x < containerWidth / 2}
-				{@const lineStartX = isLeftSide ? maxBarLabel.x : maxBarLabel.x - 20}
-				{@const lineEndX = isLeftSide ? maxBarLabel.x + 20 : maxBarLabel.x}
-				{@const labelX = isLeftSide ? maxBarLabel.x : maxBarLabel.x - 20}
-				{@const labelDx = isLeftSide ? 20 : -20}
-				{@const textAnchor = isLeftSide ? 'start' : 'end'}
+			{#if maxBarLabel && typeof maxBarLabel?.x === 'number' && typeof maxBarLabel?.y === 'number'}
+				{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
+				{@const isRightThird = maxBarLabel.x < containerWidth / 3}
+				{@const labelSide = isLeftThird ? 'left' : 'right'}
+				{@const lineLength = 40}
+				{@const lineStartX = labelSide === 'left' ? maxBarLabel.x - lineLength : maxBarLabel.x}
+				{@const lineEndX = labelSide === 'left' ? maxBarLabel.x : maxBarLabel.x + lineLength}
+				{@const labelX =
+					labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
+				{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
 
-				<!-- Line from bar to label -->
+				<!-- Horizontal line from bar to label -->
+				{@const labelYOffset = 13}
 				<line
 					x1={lineStartX}
+					y1={maxBarLabel.y + labelYOffset}
 					x2={lineEndX}
-					y1={Math.max(maxBarLabel.y, 6)}
-					y2={Math.max(maxBarLabel.y, 6)}
+					y2={maxBarLabel.y + labelYOffset}
 					stroke="#9f3e52"
 					stroke-width="1"
 				/>
 
 				<!-- Label -->
 				<text
-					x={labelX}
-					y={Math.max(maxBarLabel.y, 10)}
-					dx={labelDx}
+					x={labelX - 3}
+					y={maxBarLabel.y + labelYOffset + 3}
 					text-anchor={textAnchor}
 					class="fill-[#9f3e52] font-sans text-xs font-semibold"
 				>
@@ -217,7 +276,10 @@
 
 				<g
 					class="group cursor-pointer focus:outline-none"
-					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
+					onclick={() => {
+						handleClick(weekData.weekStartDate, weekData.firstChronoId);
+						scrollToCard?.(weekData.firstChronoId);
+					}}
 					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
 					onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
 					onmouseleave={handleMouseLeave}
@@ -253,9 +315,12 @@
 						y={yPos}
 						width={barWidth}
 						height={barHeight}
-						rx="1"
-						ry="1"
+						rx={isSelected ? barWidth / 2 : 1}
+						ry={isSelected ? barWidth / 2 : 1}
 						fill={isSelected ? '#f2b0b8' : '#9f3e52'}
+						style={isSelected
+							? 'stroke: #9F3E52; stroke-width: 4; filter: drop-shadow(0 0 6px #9F3E5288); transition: all 0.2s;'
+							: 'stroke: none; transition: all 0.2s;'}
 					>
 						<title>
 							Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
@@ -284,8 +349,11 @@
 				</text>
 
 				<!-- Right Tick + Label -->
-				{@const lastX = timeScale(weeklyAggregatedData.at(-1).weekStartDate) - 1}
-				<line x1={lastX} y1={0} x2={lastX} y2={15} stroke="gray" stroke-width="1" />
+				{@const lastWeek = weeklyAggregatedData.at(-1)}
+				{#if lastWeek}
+					{@const lastX = timeScale(lastWeek.weekStartDate) - 1}
+					<line x1={lastX} y1={0} x2={lastX} y2={15} stroke="gray" stroke-width="1" />
+				{/if}
 				<text
 					x={endRange}
 					y={10}

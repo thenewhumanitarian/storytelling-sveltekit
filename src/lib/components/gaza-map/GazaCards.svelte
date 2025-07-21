@@ -17,14 +17,18 @@
 	// console.log(incidentsData);
 
 	export function scrollToCard(id: number) {
-		// console.log('Scroll to ID: ', id);
-
 		const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 		if (el && container) {
-			const targetOffsetTop =
-				el.getBoundingClientRect().top - container.getBoundingClientRect().top;
+			const TIMELINE_HEIGHT = 120; // px, must match the timeline SVG height
+			const containerRect = container.getBoundingClientRect();
+			const elRect = el.getBoundingClientRect();
+			const containerScrollTop = container.scrollTop;
+			const elOffsetTop = elRect.top - containerRect.top + containerScrollTop;
+			const elHeight = elRect.height;
+			const containerHeight = containerRect.height - TIMELINE_HEIGHT;
+			const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
 			container.scrollTo({
-				top: container.scrollTop + targetOffsetTop - 40,
+				top: scrollTo,
 				behavior: 'smooth'
 			});
 		}
@@ -115,7 +119,7 @@
 
 <div
 	bind:this={container}
-	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll bg-transparent pb-36 pt-6 shadow-lg"
+	class="stack-cards js-stack-cards fixed right-0 top-0 z-10 h-full w-1/2 overflow-y-scroll scrollbar-none bg-transparent pb-36 pt-6 shadow-lg"
 >
 	<div class="fixed right-0 top-0 z-50 flex h-10 w-1/2 items-center justify-between bg-white px-4">
 		<button
@@ -131,3 +135,14 @@
 		<GazaCard {incident} {selectedMarkerId} />
 	{/each}
 </div>
+
+<style>
+/* Hide scrollbar for all browsers */
+.stack-cards::-webkit-scrollbar {
+	display: none;
+}
+.stack-cards {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+</style>
