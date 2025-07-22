@@ -19,10 +19,11 @@
 
 	let isMobile = $state(false);
 
+	function updateIsMobile() {
+		isMobile = window.innerWidth < 640;
+	}
+
 	onMount(() => {
-		function updateIsMobile() {
-			isMobile = window.innerWidth < 640;
-		}
 		updateIsMobile();
 		window.addEventListener('resize', updateIsMobile);
 
@@ -201,14 +202,52 @@
 			onCardInView(next.chronoId);
 		}
 	}
+
+	let isDragging = false;
+	let dragStartX = 0;
+	let dragStartScrollLeft = 0;
+
+	function handleDesktopMouseDown(e: MouseEvent) {
+		if (e.button !== 0) return; // Only left mouse button
+		isDragging = true;
+		dragStartX = e.clientX;
+		dragStartScrollLeft = container.scrollLeft;
+		container.classList.add('dragging');
+		document.body.style.cursor = 'grabbing';
+	}
+	function handleDesktopMouseMove(e: MouseEvent) {
+		if (!isDragging) return;
+		const dx = e.clientX - dragStartX;
+		container.scrollLeft = dragStartScrollLeft - dx;
+	}
+	function handleDesktopMouseUp() {
+		isDragging = false;
+		container.classList.remove('dragging');
+		document.body.style.cursor = '';
+	}
+
+	onMount(() => {
+		// Desktop drag-to-scroll events
+		container.addEventListener('mousedown', handleDesktopMouseDown);
+		window.addEventListener('mousemove', handleDesktopMouseMove);
+		window.addEventListener('mouseup', handleDesktopMouseUp);
+
+		return () => {
+			window.removeEventListener('resize', updateIsMobile);
+			container.removeEventListener('mousedown', handleDesktopMouseDown);
+			window.removeEventListener('mousemove', handleDesktopMouseMove);
+			window.removeEventListener('mouseup', handleDesktopMouseUp);
+		};
+	});
 </script>
 
 <div
 	bind:this={container}
-	class="stack-cards js-stack-cards scrollbar-none fixed right-0 top-0 z-10 hidden h-full w-full overflow-y-scroll bg-transparent pb-36 pt-10 shadow-lg sm:block sm:w-1/2"
+	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none pb-36 sm:block sm:w-1/2 cursor-grab sm:cursor-default"
+	class:cursor-grabbing={isDragging}
 >
 	<div
-		class="fixed right-0 top-0 z-50 flex h-10 w-full items-center justify-between bg-white px-4 sm:w-1/2"
+		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 sm:w-1/2 backdrop-blur"
 	>
 		<button
 			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
@@ -227,14 +266,21 @@
 <!-- MOBILE: horizontal snap row (easy to revert, just remove this block) -->
 <div
 	bind:this={mobileContainer}
-	class="stack-cards--mobile flex w-full snap-x snap-mandatory overflow-x-auto bg-transparent sm:hidden"
+	class="flex w-full overflow-x-auto bg-transparent stack-cards--mobile snap-x snap-mandatory sm:hidden"
 	onscroll={handleMobileScroll}
 >
-	{#each incidentsData as incident (incident.chronoId)}
-		<div class="w-full flex-shrink-0 snap-center" data-id={incident.chronoId}>
-			<GazaCard {incident} {selectedMarkerId}>
+	{#each incidentsData as incident, i (incident.chronoId)}
+		<div class="flex-shrink-0 w-full snap-center" data-id={incident.chronoId}>
+			<GazaCard
+				{incident}
+				{selectedMarkerId}
+				goToPrevCard={() => i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null}
+				goToNextCard={() => i < incidentsData.length - 1 ? scrollToCard(incidentsData[i + 1].chronoId) : null}
+				hasPrev={i > 0}
+				hasNext={i < incidentsData.length - 1}
+			>
 				<!-- Read more button for mobile, inside the card -->
-				<button slot="readmore" class="mt-2 block w-full rounded bg-burgundy py-2 text-white font-semibold text-sm sm:hidden" onclick={() => openModal(incident)}>
+				<button slot="readmore" class="block w-full py-2 mt-2 text-sm font-semibold text-white bg-burgundy sm:hidden" onclick={() => openModal(incident)}>
 					Read more
 				</button>
 			</GazaCard>

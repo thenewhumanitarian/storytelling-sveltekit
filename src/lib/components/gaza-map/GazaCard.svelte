@@ -1,22 +1,43 @@
 <script>
-	let { incident, selectedMarkerId } = $props();
+	let { incident, selectedMarkerId, goToPrevCard = null, goToNextCard = null, hasPrev = false, hasNext = false } = $props();
 	import moment from 'moment';
 </script>
 
 <div
-	class="stack-cards__item js-stack-cards__item mx-4 my-4 overflow-hidden border border-zinc-400 bg-white p-4 transition-colors duration-200 sm:h-auto"
+	class="p-3 mx-4 my-4 overflow-hidden transition-colors duration-200 bg-white border stack-cards__item js-stack-cards__item cursor-grab sm:cursor-default border-zinc-400"
 	class:bg-zinc-100={incident.chronoId === selectedMarkerId}
 	class:border-burgundy={incident.type === 'event'}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}
-		<div class="flex items-center gap-2">
-			<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">Event</span>
-			<span class="text-sm text-gray-700">
-				{moment(incident.date).format('DD MMMM YYYY')}
-			</span>
+		<div class="flex items-center justify-between gap-2 sm:gap-2">
+			<div class="flex items-center gap-2">
+				<span class="px-2 py-1 text-sm font-bold text-white bg-burgundy">Event</span>
+				<span class="text-sm text-gray-700">
+					{moment(incident.date).format('DD MMMM YYYY')}
+				</span>
+			</div>
+			<!-- Mobile arrows -->
+			<div class="flex gap-1 sm:hidden">
+				<button
+					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+					onclick={goToPrevCard}
+					disabled={!hasPrev}
+					aria-label="Previous"
+				>
+					←
+				</button>
+				<button
+					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+					onclick={goToNextCard}
+					disabled={!hasNext}
+					aria-label="Next"
+				>
+					→
+				</button>
+			</div>
 		</div>
-		<h3 class="mb-1 mt-2 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
+		<h3 class="mt-2 mb-1 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
 		{#if incident.description && incident.description.includes('<')}
 			<div class="hidden text-sm text-gray-700 sm:block sm:text-lg">
 				{@html incident.description}
@@ -24,24 +45,40 @@
 		{:else}
 			<p class="hidden text-sm text-gray-700 sm:block sm:text-lg">{incident.description}</p>
 		{/if}
-		<slot name="readmore" />
+		<slot name="readmore"></slot>
 	{:else}
 		<div
 			class:opacity-100={incident.chronoId === selectedMarkerId}
 			class:opacity-30={incident.chronoId !== selectedMarkerId}
 		>
-			<!-- <p class="hidden font-mono text-sm text-zinc-500">
-				﹟ ID: {incident.id} | ⏱ ChronoID: {incident.chronoId} | Date: {moment(
-					incident.date
-				).format('DD MMMM YYYY')}
-			</p> -->
-			<div class="flex items-center gap-2">
-				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">Incident</span>
-				<span class="text-sm text-gray-700">
-					{moment(incident.date).format('DD MMMM YYYY')}
-				</span>
+			<div class="flex items-center justify-between gap-2 sm:gap-2">
+				<div class="flex items-center gap-2">
+					<span class="px-2 py-1 text-sm font-bold text-white bg-burgundy">Incident</span>
+					<span class="text-sm text-gray-700">
+						{moment(incident.date).format('DD MMMM YYYY')}
+					</span>
+				</div>
+				<!-- Mobile arrows -->
+				<div class="flex gap-1 sm:hidden">
+					<button
+						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+						onclick={goToPrevCard}
+						disabled={!hasPrev}
+						aria-label="Previous"
+					>
+						←
+					</button>
+					<button
+						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+						onclick={goToNextCard}
+						disabled={!hasNext}
+						aria-label="Next"
+					>
+						→
+					</button>
+				</div>
 			</div>
-			<h3 class="mb-1 mt-2 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
+			<h3 class="mt-2 mb-1 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
 			<h5 class="mb-2 text-sm italic text-gray-600 sm:text-base">
 				{incident.killedOrWounded} killed/wounded
 			</h5>
@@ -49,7 +86,7 @@
 			{#if incident.videoUrl}
 				<div class="hidden sm:block">
 					<video
-						class="aspect-video video relative mt-2 w-full rounded-lg"
+						class="relative w-full mt-2 rounded-lg aspect-video video"
 						src={incident.videoUrl}
 						controls
 						aria-label={incident.videoCaption || incident.title}
@@ -58,7 +95,7 @@
 			{:else if incident.imageUrl}
 				<div class="hidden sm:block">
 					<img
-						class="aspect-video video relative mt-2 w-full rounded-lg"
+						class="relative w-full mt-2 rounded-lg aspect-video video"
 						src={incident.imageUrl}
 						alt={incident.imageCaption || incident.title}
 					/>

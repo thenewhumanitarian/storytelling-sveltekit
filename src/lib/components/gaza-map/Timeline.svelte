@@ -166,7 +166,7 @@
 
 <div
 	bind:this={timelineContainer}
-	class="box-border flex h-36 w-full items-center overflow-hidden border-t border-gray-300 bg-white/90"
+	class="box-border flex items-center w-full overflow-hidden border-t border-gray-300 h-36 bg-white/80 backdrop-blur"
 >
 	{#if containerWidth > 0 && weeklyAggregatedData.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
@@ -183,7 +183,7 @@
 			<text
 				x={timeScale.range()[0] + 8}
 				y={35}
-				class="fill-zinc-500 font-sans text-xs"
+				class="font-sans text-xs fill-zinc-500"
 				text-anchor="start"
 			>
 				Events
@@ -194,7 +194,7 @@
 				{@const xPos = timeScale(new Date(event.date))}
 				{@const isActive = selectedMarkerId === event.chronoId}
 				<g
-					class="event-symbol cursor-pointer"
+					class="cursor-pointer event-symbol"
 					onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
 					onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 					onmouseleave={handleMouseLeave}
@@ -264,7 +264,7 @@
 				{@const yPos = axisY - barHeight - barPaddingBottom}
 				{@const isSelected = activeWeekStartDate()?.getTime() === weekData.weekStartDate.getTime()}
 				<g
-					class="group cursor-pointer focus:outline-none"
+					class="cursor-pointer group focus:outline-none"
 					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
 					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
 					onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
@@ -361,7 +361,7 @@
 				<text
 					x={endRange}
 					y={10}
-					class="fill-gray-400 font-sans text-xs"
+					class="font-sans text-xs fill-gray-400"
 					text-anchor="end"
 					dx="-10"
 				>
