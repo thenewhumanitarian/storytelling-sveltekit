@@ -41,7 +41,7 @@
 
 <main class="h-screen bg-white">
 	<section class="flex flex-col w-full h-full min-h-0">
-		<div class="flex-grow min-h-[120px] max-h-[80svh]">
+		<div class="max-h-[80svh] min-h-[120px] flex-grow">
 			<GazaMap
 				bind:this={gazaMapRef}
 				{selectedMarkerId}
@@ -60,7 +60,7 @@
 				onCardInView={handleCardInView}
 			/>
 		</div>
-		<div class="w-full">
+		<div class="z-30 w-full">
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}
