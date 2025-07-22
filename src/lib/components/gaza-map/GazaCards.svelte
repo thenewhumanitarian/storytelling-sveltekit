@@ -195,7 +195,7 @@
 	onscroll={handleMobileScroll}
 >
 	{#each incidentsData as incident (incident.chronoId)}
-		<div class="w-4/5 flex-shrink-0 snap-center" data-id={incident.chronoId}>
+		<div class="w-full flex-shrink-0 snap-center" data-id={incident.chronoId}>
 			<GazaCard {incident} {selectedMarkerId} />
 		</div>
 	{/each}

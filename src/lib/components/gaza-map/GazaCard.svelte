@@ -16,7 +16,7 @@
 				{moment(incident.date).format('DD MMMM YYYY')}
 			</span>
 		</div>
-		<h3 class="mb-1 mt-2 text-base font-bold leading-tight sm:text-xl">{incident.title}</h3>
+		<h3 class="mb-1 mt-2 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
 		{#if incident.description && incident.description.includes('<')}
 			<div class="hidden text-sm text-gray-700 sm:block sm:text-lg">
 				{@html incident.description}
@@ -40,7 +40,7 @@
 					{moment(incident.date).format('DD MMMM YYYY')}
 				</span>
 			</div>
-			<h3 class="mb-1 mt-2 text-base font-bold leading-tight sm:text-xl">{incident.title}</h3>
+			<h3 class="mb-1 mt-2 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
 			<h5 class="mb-2 text-sm italic text-gray-600 sm:text-base">
 				{incident.killedOrWounded} killed/wounded
 			</h5>
@@ -64,19 +64,19 @@
 			{/if}
 			{#if incident.description && incident.description.includes('<')}
 				<div
-					class="line-clamp-3 text-sm leading-tight text-gray-700 sm:line-clamp-none sm:block sm:text-lg"
+					class="hidden text-sm leading-tight text-gray-700 sm:line-clamp-none sm:block sm:text-lg"
 				>
 					{@html incident.description}
 				</div>
 			{:else}
 				<p
-					class="line-clamp-3 text-sm leading-tight text-gray-700 sm:line-clamp-none sm:block sm:text-lg"
+					class="hidden text-sm leading-tight text-gray-700 sm:line-clamp-none sm:block sm:text-lg"
 				>
 					{incident.description}
 				</p>
 			{/if}
 			{#if incident.videoCaption}
-				<p class="line-clamp-3 pt-1 text-sm text-zinc-500 sm:line-clamp-none sm:block sm:text-lg">
+				<p class="hidden pt-1 text-sm text-zinc-500 sm:line-clamp-none sm:block sm:text-lg">
 					{incident.videoCaption}
 				</p>
 			{/if}
@@ -95,7 +95,7 @@
 
 	@media (width <= 640px) {
 		.stack-cards__item {
-			min-height: unset;
+			min-height: calc(100% - 32px);
 		}
 	}
 

@@ -1,21 +1,24 @@
 <script lang="ts">
-import type { IncidentData } from './types';
-import { fade } from 'svelte/transition';
+	import type { IncidentData } from './types';
+	import { fade } from 'svelte/transition';
 
-export let event: IncidentData | null = null;
+	export let event: IncidentData | null = null;
 </script>
 
 {#if event}
-	<div class="absolute inset-0 z-40 flex items-center justify-center bg-black/70" transition:fade={{ duration: 250 }}>
+	<div
+		class="absolute inset-0 z-40 flex items-center justify-center bg-black/70"
+		transition:fade={{ duration: 250 }}
+	>
 		{#if event.imageUrl}
 			<img
 				src={event.imageUrl}
 				alt=""
-				class="absolute inset-0 w-full h-full object-cover blur-lg scale-125 z-0 pointer-events-none select-none"
+				class="pointer-events-none absolute inset-0 z-0 h-full w-full scale-125 select-none object-cover blur-lg"
 				aria-hidden="true"
 			/>
 		{/if}
-		<div class="relative z-10 flex items-center justify-center w-full h-full">
+		<div class="relative z-10 flex h-full w-full items-center justify-center">
 			{#if event.videoUrl}
 				<video
 					class="max-h-full max-w-full shadow-lg"
@@ -31,10 +34,12 @@ export let event: IncidentData | null = null;
 					alt={event.imageCaption || event.title}
 				/>
 			{:else}
-				<div class="flex items-center justify-center w-full h-full bg-gray-300">
-					<span class="text-5xl font-bold text-gray-800 text-center w-full p-8 font-title">{event.title}</span>
+				<div class="flex h-full w-full items-center justify-center bg-gray-300">
+					<span class="w-full p-8 text-center font-title text-2xl sm:text-5xl font-bold text-gray-800"
+						>{event.title}</span
+					>
 				</div>
 			{/if}
 		</div>
 	</div>
-{/if} 
+{/if}
