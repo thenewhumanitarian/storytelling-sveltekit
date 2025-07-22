@@ -11,9 +11,7 @@
 </script>
 
 <div
-	class="p-3 my-4 overflow-hidden transition-colors duration-200 bg-white border sm:mx-4 stack-cards__item js-stack-cards__item border-zinc-400 sm:cursor-default"
-	class:bg-zinc-100={incident.chronoId === selectedMarkerId}
-	class:border-burgundy={incident.type === 'event'}
+	class={'${incident.chronoId === selectedMarkerId ? "bg-zinc-200" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 bg-white p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default'}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}
@@ -44,7 +42,7 @@
 				</button>
 			</div>
 		</div>
-		<h3 class="mt-2 mb-1 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
+		<h3 class="mt-2 mb-1 text-lg font-bold leading-tight line-clamp-1 sm:text-xl">{incident.title}</h3>
 		{#if incident.description && incident.description.includes('<')}
 			<div class="hidden text-sm text-gray-700 sm:block sm:text-lg">
 				{@html incident.description}
@@ -54,10 +52,7 @@
 		{/if}
 		<slot name="readmore"></slot>
 	{:else}
-		<div
-			class:opacity-100={incident.chronoId === selectedMarkerId}
-			class:opacity-30={incident.chronoId !== selectedMarkerId}
-		>
+		<div class={`${incident.chronoId === selectedMarkerId ? '' : 'sm:opacity-30'}`}>
 			<div class="flex items-center justify-between gap-2 sm:gap-2">
 				<div class="flex items-center gap-2">
 					<span class="px-2 py-1 text-sm font-bold text-white bg-burgundy">Incident</span>
@@ -85,7 +80,7 @@
 					</button>
 				</div>
 			</div>
-			<h3 class="mt-2 mb-1 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
+			<h3 class="mt-2 mb-1 text-lg font-bold leading-tight line-clamp-1 sm:text-xl">{incident.title}</h3>
 			<h5 class="mb-2 text-sm italic text-gray-600 sm:text-base">
 				{incident.killedOrWounded} killed/wounded
 			</h5>
