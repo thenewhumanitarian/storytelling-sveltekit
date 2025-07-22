@@ -24,6 +24,7 @@
 		{:else}
 			<p class="hidden text-sm text-gray-700 sm:block sm:text-lg">{incident.description}</p>
 		{/if}
+		<slot name="readmore" />
 	{:else}
 		<div
 			class:opacity-100={incident.chronoId === selectedMarkerId}
@@ -44,6 +45,7 @@
 			<h5 class="mb-2 text-sm italic text-gray-600 sm:text-base">
 				{incident.killedOrWounded} killed/wounded
 			</h5>
+			<slot name="readmore" />
 			{#if incident.videoUrl}
 				<div class="hidden sm:block">
 					<video

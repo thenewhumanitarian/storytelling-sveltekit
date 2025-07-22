@@ -7,7 +7,7 @@
 
 {#if event}
 	<div
-		class="absolute inset-0 z-40 flex items-center justify-center bg-black/70"
+		class="absolute inset-0 z-20 flex items-center justify-center bg-black/70"
 		transition:fade={{ duration: 250 }}
 	>
 		{#if event.imageUrl}

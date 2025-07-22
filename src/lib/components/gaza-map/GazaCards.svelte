@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { IncidentData } from './types';
 	import GazaCard from './GazaCard.svelte';
+	import GazaCardModal from './GazaCardModal.svelte';
 
 	// Props
 	let {
@@ -24,6 +25,12 @@
 		}
 		updateIsMobile();
 		window.addEventListener('resize', updateIsMobile);
+
+		// Ensure first card is active on mobile load
+		if (isMobile && incidentsData.length > 0 && (selectedMarkerId === null || selectedMarkerId === undefined)) {
+			onCardInView(incidentsData[0].chronoId);
+		}
+
 		return () => window.removeEventListener('resize', updateIsMobile);
 	});
 
@@ -165,6 +172,35 @@
 
 		cards.forEach((card) => observer.observe(card));
 	});
+
+	let modalOpen = $state(false);
+	let modalIncident: IncidentData | null = $state(null);
+
+	function openModal(incident: IncidentData) {
+		modalIncident = incident;
+		modalOpen = true;
+	}
+	function closeModal() {
+		modalOpen = false;
+	}
+	function goToModalPrev() {
+		if (!modalIncident) return;
+		const idx = incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId);
+		if (idx > 0) {
+			const prev = incidentsData[idx - 1];
+			modalIncident = prev;
+			onCardInView(prev.chronoId);
+		}
+	}
+	function goToModalNext() {
+		if (!modalIncident) return;
+		const idx = incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId);
+		if (idx < incidentsData.length - 1) {
+			const next = incidentsData[idx + 1];
+			modalIncident = next;
+			onCardInView(next.chronoId);
+		}
+	}
 </script>
 
 <div
@@ -191,14 +227,29 @@
 <!-- MOBILE: horizontal snap row (easy to revert, just remove this block) -->
 <div
 	bind:this={mobileContainer}
-	class="stack-cards--mobile flex w-full snap-x snap-mandatory space-x-4 overflow-x-auto bg-transparent sm:hidden"
+	class="stack-cards--mobile flex w-full snap-x snap-mandatory overflow-x-auto bg-transparent sm:hidden"
 	onscroll={handleMobileScroll}
 >
 	{#each incidentsData as incident (incident.chronoId)}
 		<div class="w-full flex-shrink-0 snap-center" data-id={incident.chronoId}>
-			<GazaCard {incident} {selectedMarkerId} />
+			<GazaCard {incident} {selectedMarkerId}>
+				<!-- Read more button for mobile, inside the card -->
+				<button slot="readmore" class="mt-2 block w-full rounded bg-burgundy py-2 text-white font-semibold text-sm sm:hidden" onclick={() => openModal(incident)}>
+					Read more
+				</button>
+			</GazaCard>
 		</div>
 	{/each}
+	{#if modalOpen && modalIncident}
+		<GazaCardModal
+			incident={modalIncident!}
+			onClose={closeModal}
+			onPrev={goToModalPrev}
+			onNext={goToModalNext}
+			hasPrev={incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId) > 0}
+			hasNext={incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId) < incidentsData.length - 1}
+		/>
+	{/if}
 </div>
 
 <style>

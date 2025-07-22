@@ -62,7 +62,7 @@
 			/>
 		</div>
 		<!-- Timeline overlay (above cards) -->
-		<div class="absolute bottom-0 left-0 z-30 w-full">
+		<div class="absolute bottom-0 left-0 z-10 w-full">
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}
