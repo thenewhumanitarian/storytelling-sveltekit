@@ -40,7 +40,7 @@
 </script>
 
 <main data-iframe-height={true}>
-	<section class="relative flex h-screen w-full flex-col" data-iframe-height={true}>
+	<section class="relative flex h-screen w-full flex-col overflow-hidden" data-iframe-height={true}>
 		<div class="flex-grow">
 			<GazaMap
 				bind:this={gazaMapRef}
@@ -53,7 +53,7 @@
 			/>
 		</div>
 		<!-- Cards container (under timeline) -->
-		<div class="absolute bottom-0 left-0 z-20 w-full bg-white flex">
+		<div class="absolute bottom-[144px] left-0 z-20 w-full bg-white flex">
 			<GazaCards
 				bind:this={gazaCardsRef}
 				incidentsData={incidentsData}
@@ -82,6 +82,7 @@
 		body {
 			height: 100%;
 			margin: 0;
+			overflow: hidden;
 		}
 	</style>
 </svelte:head>

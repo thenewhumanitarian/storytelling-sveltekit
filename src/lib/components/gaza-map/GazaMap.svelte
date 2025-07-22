@@ -4,7 +4,6 @@
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 	import type { IncidentData } from './types';
-	import { fade } from 'svelte/transition';
 	import GazaOverlay from './GazaOverlay.svelte';
 
 	const MAPBOX_TOKEN =
@@ -19,8 +18,7 @@
 		highlightedMarkerId,
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
-		incidentsData,
-		selectedWeekStartDate
+		incidentsData
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
@@ -124,7 +122,13 @@
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			incidentsData.forEach((incident, idx) => {
 				// Only render markers for incidents with valid coordinates
-				if (incident.type !== 'incident' || typeof incident.latitude !== 'number' || typeof incident.longitude !== 'number' || isNaN(incident.latitude) || isNaN(incident.longitude)) {
+				if (
+					incident.type !== 'incident' ||
+					typeof incident.latitude !== 'number' ||
+					typeof incident.longitude !== 'number' ||
+					isNaN(incident.latitude) ||
+					isNaN(incident.longitude)
+				) {
 					return;
 				}
 				const { chronoId, latitude, longitude, title, description, killedOrWounded } = incident;
@@ -179,17 +183,18 @@
 			const heatmapGeoJSON = {
 				type: 'FeatureCollection',
 				features: incidentsData
-					.filter((incident) =>
-						incident.type === 'incident' &&
-						typeof incident.latitude === 'number' &&
-						typeof incident.longitude === 'number' &&
-						!isNaN(incident.latitude) &&
-						!isNaN(incident.longitude)
+					.filter(
+						(incident) =>
+							incident.type === 'incident' &&
+							typeof incident.latitude === 'number' &&
+							typeof incident.longitude === 'number' &&
+							!isNaN(incident.latitude) &&
+							!isNaN(incident.longitude)
 					)
 					.map((incident) => ({
 						type: 'Feature',
 						properties: {
-							intensity: Math.pow((incident.killedOrWounded || 1), 1.3)
+							intensity: Math.pow(incident.killedOrWounded || 1, 1.3)
 						},
 						geometry: {
 							type: 'Point',
@@ -303,7 +308,7 @@
 	});
 </script>
 
-<div bind:this={mapContainer} class="map-container w-1/2 relative">
+<div bind:this={mapContainer} class="map-container relative w-full sm:w-1/2">
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
 	{/if}
@@ -323,6 +328,13 @@
 		/* width: 100%; */ /* Handled by Tailwind */
 		min-height: 300px; /* Ensure minimum map height */
 		height: calc(100% - 144px);
+	}
+
+	@media (width <= 640px) {
+		.map-container {
+			height: 50%;
+			height: 50svh;
+		}
 	}
 
 	/* Keep custom popup styling if needed, or rely on Tailwind in setHTML */

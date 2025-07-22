@@ -1,12 +1,12 @@
 <script lang="ts">
-	// import { incidentsData } from '$lib/components/gaza-map/incidents';
-	import { onMount } from 'svelte';
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { extent, rollup, sum } from 'd3-array';
 	import { timeWeek } from 'd3-time';
 	import type { IncidentData } from './types';
 	import moment from 'moment';
+	import { onMount } from 'svelte';
 
+	// --- Component Properties ---
 	let {
 		setHighlightedMarkerId,
 		incidentsData,
@@ -25,25 +25,23 @@
 		scrollToCard?: (id: number) => void;
 	} = $props();
 
-	// --- Internal State ---
+	// --- Internal State & Constants ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
-	const svgHeight = 140; // Increased from 120 to 140 for accessibility highlight
-	const barWidth = 12; // Constant width of bars
-	const barTopPadding = 16; // Extra space above bars for highlight
-	const axisPaddingBottom = 18; // Space below the axis line for labels etc.
-	const barPaddingBottom = 0; // Space between bottom of bar and axis line
-	// const horizontalPadding = 0; // Padding at the ends of the timeline axis
-
+	const svgHeight = 140;
+	const barWidth = 12;
+	const barTopPadding = 16;
+	const axisPaddingBottom = 18;
+	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
+	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
 		incidentsData
 			.map((d) => ({ ...d, dateObj: new Date(d.date) }))
-			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()) // NB!! ensure that incidents are sorted by date first!!! otherwise cannot get the correct markerId when selecting a week.
+			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
 
-	// Find currently selected week start date
 	const activeWeekStartDate = $derived(() => {
 		if (selectedMarkerId === null) return null;
 		const activeIncident = incidentsData.find((i) => i.chronoId === selectedMarkerId);
@@ -51,21 +49,18 @@
 		return timeWeek.floor(new Date(activeIncident.date));
 	});
 
-	// Create weekly aggregated data
 	const weeklyAggregatedData = $derived.by(() => {
 		if (parsedIncidents.length === 0) return [];
 
-		// Group by the start of the week (Sunday) and sum killedOrWounded, and find first incident for the week's chronoId
 		const rolledUp = rollup(
 			parsedIncidents,
 			(v) => ({
-				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded), // Summing function
-				firstChronoId: v[0].chronoId // Assuming already sorted, the first item in 'v' is the earliest in the week
+				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded),
+				firstChronoId: v[0].chronoId
 			}),
-			(d) => timeWeek.floor(d.dateObj) // Key selector (start of the week)
+			(d) => timeWeek.floor(d.dateObj)
 		);
 
-		// Convert Map to array of objects and sort by week start date
 		return Array.from(rolledUp, ([weekStartDate, values]) => ({
 			weekStartDate,
 			totalKilledOrWounded: values.totalKilledOrWounded,
@@ -79,11 +74,9 @@
 		if (!containerWidth || weeklyAggregatedData.length === 0) {
 			return scaleTime().domain([new Date(), new Date()]).range([0, 0]);
 		}
-
 		const dateDomain = extent(weeklyAggregatedData, (d) => d.weekStartDate) as [Date, Date];
-		let minDate = timeWeek.floor(dateDomain[0]!);
-		let maxDate = timeWeek.floor(dateDomain[1]!); // ✅ this aligns the last bar with the right edge
-
+		const minDate = timeWeek.floor(dateDomain[0]!);
+		const maxDate = timeWeek.floor(dateDomain[1]!);
 		return scaleTime()
 			.domain([minDate, maxDate])
 			.range([barWidth / 2, containerWidth - barWidth / 2]);
@@ -93,10 +86,8 @@
 		if (weeklyAggregatedData.length === 0) {
 			return scaleLinear().domain([0, 1]).range([0, maxBarHeight]);
 		}
-		// const maxKilled = Math.max(...parsedIncidents.map((d) => d.killedOrWounded), 1);
-		// return scaleLinear().domain([0, maxKilled]).range([5, maxBarHeight]); // Min height 5px
 		const maxWeeklyKilled = Math.max(...weeklyAggregatedData.map((d) => d.totalKilledOrWounded), 1);
-		return scaleLinear().domain([0, maxWeeklyKilled]).range([5, maxBarHeight]); // Min height 5px
+		return scaleLinear().domain([0, maxWeeklyKilled]).range([5, maxBarHeight]);
 	});
 
 	const maxWeek = $derived.by(() => {
@@ -109,7 +100,6 @@
 
 	const maxBarLabel = $derived.by(() => {
 		if (!maxWeek || !timeScale || !heightScale) return null;
-
 		return {
 			x: timeScale(maxWeek.weekStartDate),
 			y: axisY - heightScale(maxWeek.totalKilledOrWounded) - barPaddingBottom - 6,
@@ -117,54 +107,60 @@
 		};
 	});
 
-	// Add derived for events
 	const events = $derived(parsedIncidents.filter((d) => d.type === 'event'));
-	const incidents = $derived(parsedIncidents.filter((d) => d.type === 'incident'));
 
+	// --- Lifecycle ---
 	onMount(() => {
-		if (!timelineContainer) return; // Guard
+		if (!timelineContainer) return;
 		const resizeObserver = new ResizeObserver((entries) => {
 			if (entries[0]) {
 				containerWidth = entries[0].contentRect.width;
 			}
 		});
 		resizeObserver.observe(timelineContainer);
-		containerWidth = timelineContainer.offsetWidth; // Initial set
+		containerWidth = timelineContainer.offsetWidth;
 
-		return () => resizeObserver.disconnect(); // Use disconnect for simplicity
+		return () => resizeObserver.disconnect();
 	});
 
 	// --- Interaction Handlers ---
 	function handleMouseEnter(weekStartDate: Date) {
-		setHighlightedMarkerId(null); //
+		// CORRECTED: Find the corresponding week's data to highlight it.
+		const week = weeklyAggregatedData.find(
+			(w) => w.weekStartDate.getTime() === weekStartDate.getTime()
+		);
+		if (week) {
+			// Assuming we want to highlight the first incident of the hovered week.
+			// This behavior might need adjustment based on desired UX.
+			setHighlightedMarkerId(week.firstChronoId);
+		}
 	}
 
 	function handleMouseLeave() {
-		setHighlightedMarkerId(null); // Call parent's update function
+		setHighlightedMarkerId(null);
 	}
 
 	function handleClick(weekStartDate: Date, firstChronoId: number) {
-		if (gazaMapRef?.setSelectionOriginToClick) {
-			gazaMapRef.setSelectionOriginToClick();
-		}
-		// Toggle selection: if clicking the already selected week, deselect it.
+		gazaMapRef?.setSelectionOriginToClick?.();
 		if (selectedWeekStartDate && selectedWeekStartDate.getTime() === weekStartDate.getTime()) {
 			setSelectedWeek(null, null);
 		} else {
 			setSelectedWeek(weekStartDate, firstChronoId);
 		}
+		if (scrollToCard) {
+			scrollToCard(firstChronoId);
+		}
 	}
 
 	function handleKeyDown(event: KeyboardEvent, weekStartDate: Date, firstChronoId: number) {
-		event.preventDefault();
 		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
 			handleClick(weekStartDate, firstChronoId);
 		}
 	}
 
 	function formatDate(date: Date): string {
 		return moment(date).format('DD MMMM YYYY');
-		// return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); // Simpler format
 	}
 </script>
 
@@ -184,7 +180,6 @@
 				stroke-width="1"
 				stroke-dasharray="2,3"
 			/>
-			<!-- Events label -->
 			<text
 				x={timeScale.range()[0] + 8}
 				y={35}
@@ -193,16 +188,14 @@
 			>
 				Events
 			</text>
-			<!-- Event Symbols (top of chart) -->
+
+			<!-- Event Symbols -->
 			{#each events as event (event.chronoId)}
 				{@const xPos = timeScale(new Date(event.date))}
 				{@const isActive = selectedMarkerId === event.chronoId}
 				<g
 					class="event-symbol cursor-pointer"
-					onclick={() => {
-						setSelectedWeek(null, event.chronoId);
-						scrollToCard?.(event.chronoId);
-					}}
+					onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
 					onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 					onmouseleave={handleMouseLeave}
 					tabindex="0"
@@ -216,14 +209,14 @@
 						fill="#9F3E52"
 						stroke={isActive ? '#9F3E52' : '#282828'}
 						stroke-width={isActive ? 2 : 0}
-						style={isActive
-							? 'filter: drop-shadow(0 0 6px #9F3E5288); transition: all 0.2s;'
-							: 'transition: all 0.2s;'}
+						style:filter={isActive ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
+						style:transition="all 0.2s"
 					/>
 					<title>{event.title}</title>
 				</g>
 			{/each}
-			<!-- Axis Line -->
+
+			<!-- Main Axis Line -->
 			<line
 				x1={timeScale.range()[0]}
 				y1={axisY}
@@ -233,9 +226,9 @@
 				stroke-width="1"
 			/>
 
-			{#if maxBarLabel && typeof maxBarLabel?.x === 'number' && typeof maxBarLabel?.y === 'number'}
+			<!-- Max Bar Label -->
+			{#if maxBarLabel && typeof maxBarLabel?.x === 'number'}
 				{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
-				{@const isRightThird = maxBarLabel.x < containerWidth / 3}
 				{@const labelSide = isLeftThird ? 'left' : 'right'}
 				{@const lineLength = 40}
 				{@const lineStartX = labelSide === 'left' ? maxBarLabel.x - lineLength : maxBarLabel.x}
@@ -243,8 +236,6 @@
 				{@const labelX =
 					labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
 				{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
-
-				<!-- Horizontal line from bar to label -->
 				{@const labelYOffset = 13}
 				<line
 					x1={lineStartX}
@@ -254,8 +245,6 @@
 					stroke="#9f3e52"
 					stroke-width="1"
 				/>
-
-				<!-- Label -->
 				<text
 					x={labelX - 3}
 					y={maxBarLabel.y + labelYOffset + 3}
@@ -266,20 +255,17 @@
 				</text>
 			{/if}
 
-			<!-- Weekly Bars -->
+			<!-- Weekly Bars (REFACTORED) -->
+			<!-- This single loop now handles both selected and unselected states, -->
+			<!-- making the code much cleaner and easier to maintain. -->
 			{#each weeklyAggregatedData as weekData (weekData.weekStartDate.toISOString())}
 				{@const xPos = timeScale(weekData.weekStartDate)}
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
-				{@const activeWeek = activeWeekStartDate()}
-				{@const isSelected = activeWeek?.getTime() === weekData.weekStartDate.getTime()}
-
+				{@const isSelected = activeWeekStartDate()?.getTime() === weekData.weekStartDate.getTime()}
 				<g
 					class="group cursor-pointer focus:outline-none"
-					onclick={() => {
-						handleClick(weekData.weekStartDate, weekData.firstChronoId);
-						scrollToCard?.(weekData.firstChronoId);
-					}}
+					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
 					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
 					onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
 					onmouseleave={handleMouseLeave}
@@ -289,7 +275,6 @@
 					aria-label={`Week starting ${formatDate(weekData.weekStartDate)}: ${weekData.totalKilledOrWounded} killed/wounded`}
 					role="button"
 				>
-					<!-- Tooltip below bar -->
 					<text
 						x={xPos < containerWidth * 0.1
 							? xPos - 5
@@ -306,11 +291,9 @@
 					>
 						Week of {moment(weekData.weekStartDate).format('D MMMM Y')}
 					</text>
-
-					<!-- Bar -->
 					<rect
 						class:group-hover:fill-[#f2b0b8]={!isSelected}
-						class="transition-colors duration-500 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+						class="transition-all duration-200 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 						x={xPos - barWidth / 2}
 						y={yPos}
 						width={barWidth}
@@ -318,9 +301,9 @@
 						rx={isSelected ? barWidth / 2 : 1}
 						ry={isSelected ? barWidth / 2 : 1}
 						fill={isSelected ? '#f2b0b8' : '#9f3e52'}
-						style={isSelected
-							? 'stroke: #9F3E52; stroke-width: 4; filter: drop-shadow(0 0 6px #9F3E5288); transition: all 0.2s;'
-							: 'stroke: none; transition: all 0.2s;'}
+						style:stroke={isSelected ? '#9F3E52' : 'none'}
+						style:stroke-width={isSelected ? 4 : 0}
+						style:filter={isSelected ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
 					>
 						<title>
 							Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
@@ -329,13 +312,37 @@
 				</g>
 			{/each}
 
-			<!-- Date Labels ABOVE bars -->
+			<!-- Date Labels & Range Lines -->
 			{#if timeScale.domain()[0] && timeScale.domain()[1]}
 				{@const [startRange, endRange] = timeScale.range()}
 				{@const [startDate, endDate] = timeScale.domain()}
+				{@const firstX = timeScale(weeklyAggregatedData[0].weekStartDate) - 0.5}
+				{@const lastWeek = weeklyAggregatedData.at(-1)}
+				{@const lastX = lastWeek ? timeScale(lastWeek.weekStartDate) + 0.5 : null}
 
-				<!-- Left Tick + Label -->
-				{@const firstX = timeScale(weeklyAggregatedData[0].weekStartDate) + 1}
+				{#if lastX !== null}
+					<line
+						x1={firstX}
+						y1={0}
+						x2={firstX}
+						y2={axisY}
+						stroke="#bbb"
+						stroke-width="1"
+						stroke-dasharray="4,3"
+						opacity="0.5"
+					/>
+					<line
+						x1={lastX}
+						y1={0}
+						x2={lastX}
+						y2={axisY}
+						stroke="#bbb"
+						stroke-width="1"
+						stroke-dasharray="4,3"
+						opacity="0.5"
+					/>
+				{/if}
+
 				<line x1={firstX} y1={0} x2={firstX} y2={15} stroke="gray" stroke-width="1" />
 				<text
 					x={startRange}
@@ -348,10 +355,7 @@
 					{formatDate(startDate)}
 				</text>
 
-				<!-- Right Tick + Label -->
-				{@const lastWeek = weeklyAggregatedData.at(-1)}
-				{#if lastWeek}
-					{@const lastX = timeScale(lastWeek.weekStartDate) - 1}
+				{#if lastX !== null}
 					<line x1={lastX} y1={0} x2={lastX} y2={15} stroke="gray" stroke-width="1" />
 				{/if}
 				<text
@@ -359,7 +363,7 @@
 					y={10}
 					class="fill-gray-400 font-sans text-xs"
 					text-anchor="end"
-					dx="-23"
+					dx="-10"
 				>
 					{formatDate(timeWeek.floor(endDate))}
 				</text>

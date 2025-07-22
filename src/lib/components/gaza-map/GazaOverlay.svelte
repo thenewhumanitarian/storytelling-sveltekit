@@ -32,7 +32,7 @@ export let event: IncidentData | null = null;
 				/>
 			{:else}
 				<div class="flex items-center justify-center w-full h-full bg-gray-300">
-					<span class="text-4xl font-bold text-gray-800 text-center w-full">{event.title}</span>
+					<span class="text-5xl font-bold text-gray-800 text-center w-full p-8 font-title">{event.title}</span>
 				</div>
 			{/if}
 		</div>
