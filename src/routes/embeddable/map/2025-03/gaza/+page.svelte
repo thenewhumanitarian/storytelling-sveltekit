@@ -40,7 +40,7 @@
 </script>
 
 <main data-iframe-height={true}>
-	<section class="relative flex h-screen w-full flex-col overflow-hidden" data-iframe-height={true}>
+	<section class="relative flex flex-col w-full h-screen overflow-hidden" data-iframe-height={true}>
 		<div class="flex-grow">
 			<GazaMap
 				bind:this={gazaMapRef}
@@ -62,7 +62,7 @@
 			/>
 		</div>
 		<!-- Timeline overlay (above cards) -->
-		<div class="absolute bottom-0 left-0 z-10 w-full">
+		<div class="absolute bottom-0 left-0 z-10 w-full sm:z-20">
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}
