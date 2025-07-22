@@ -53,16 +53,20 @@
 			/>
 		</div>
 		<!-- Cards container (under timeline) -->
-		<div class="absolute bottom-[144px] left-0 z-20 w-full bg-white flex">
+		<div
+			class="sm:top-unset absolute left-0 top-[20svh] z-20 flex min-h-[20svh] w-full bg-transparent sm:left-auto sm:right-0 sm:bottom-0 sm:w-1/2"
+		>
 			<GazaCards
 				bind:this={gazaCardsRef}
-				incidentsData={incidentsData}
-				selectedMarkerId={selectedMarkerId}
+				{incidentsData}
+				{selectedMarkerId}
 				onCardInView={handleCardInView}
 			/>
 		</div>
 		<!-- Timeline overlay (above cards) -->
-		<div class="absolute bottom-0 left-0 z-10 w-full sm:z-20">
+		<div
+			class="bottom-unset absolute left-0 top-[50svh] z-10 w-full sm:bottom-0 sm:top-auto sm:z-20"
+		>
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}

@@ -28,7 +28,11 @@
 		window.addEventListener('resize', updateIsMobile);
 
 		// Ensure first card is active on mobile load
-		if (isMobile && incidentsData.length > 0 && (selectedMarkerId === null || selectedMarkerId === undefined)) {
+		if (
+			isMobile &&
+			incidentsData.length > 0 &&
+			(selectedMarkerId === null || selectedMarkerId === undefined)
+		) {
 			onCardInView(incidentsData[0].chronoId);
 		}
 
@@ -186,7 +190,7 @@
 	}
 	function goToModalPrev() {
 		if (!modalIncident) return;
-		const idx = incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId);
+		const idx = incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId);
 		if (idx > 0) {
 			const prev = incidentsData[idx - 1];
 			modalIncident = prev;
@@ -195,7 +199,7 @@
 	}
 	function goToModalNext() {
 		if (!modalIncident) return;
-		const idx = incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId);
+		const idx = incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId);
 		if (idx < incidentsData.length - 1) {
 			const next = incidentsData[idx + 1];
 			modalIncident = next;
@@ -243,11 +247,11 @@
 
 <div
 	bind:this={container}
-	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none pb-36 sm:block sm:w-1/2 cursor-grab sm:cursor-default"
+	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none cursor-grab pb-36 sm:block sm:w-1/2 sm:cursor-default"
 	class:cursor-grabbing={isDragging}
 >
 	<div
-		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 sm:w-1/2 backdrop-blur"
+		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 backdrop-blur sm:w-1/2"
 	>
 		<button
 			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
@@ -270,17 +274,22 @@
 	onscroll={handleMobileScroll}
 >
 	{#each incidentsData as incident, i (incident.chronoId)}
-		<div class="flex-shrink-0 w-full snap-center" data-id={incident.chronoId}>
+		<div class="flex-shrink-0 w-full snap-center min-h-[20svh] h-full" data-id={incident.chronoId}>
 			<GazaCard
 				{incident}
 				{selectedMarkerId}
-				goToPrevCard={() => i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null}
-				goToNextCard={() => i < incidentsData.length - 1 ? scrollToCard(incidentsData[i + 1].chronoId) : null}
+				goToPrevCard={() => (i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null)}
+				goToNextCard={() =>
+					i < incidentsData.length - 1 ? scrollToCard(incidentsData[i + 1].chronoId) : null}
 				hasPrev={i > 0}
 				hasNext={i < incidentsData.length - 1}
 			>
 				<!-- Read more button for mobile, inside the card -->
-				<button slot="readmore" class="block w-full py-2 mt-2 text-sm font-semibold text-white bg-burgundy sm:hidden" onclick={() => openModal(incident)}>
+				<button
+					slot="readmore"
+					class="block w-full py-2 mt-2 text-sm font-semibold text-white bg-burgundy sm:hidden"
+					onclick={() => openModal(incident)}
+				>
 					Read more
 				</button>
 			</GazaCard>
@@ -292,8 +301,9 @@
 			onClose={closeModal}
 			onPrev={goToModalPrev}
 			onNext={goToModalNext}
-			hasPrev={incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId) > 0}
-			hasNext={incidentsData.findIndex(i => i.chronoId === modalIncident!.chronoId) < incidentsData.length - 1}
+			hasPrev={incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId) > 0}
+			hasNext={incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId) <
+				incidentsData.length - 1}
 		/>
 	{/if}
 </div>
@@ -312,4 +322,9 @@
 		height: calc(50svh - 144px);
 		overflow-y: hidden;
 	}
+	/* @media (width <= 640px) {
+		.stack-cards--mobile {
+			height: 20svh;
+		}
+	} */
 </style>

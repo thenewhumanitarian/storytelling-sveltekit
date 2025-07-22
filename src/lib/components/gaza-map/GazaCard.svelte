@@ -1,10 +1,17 @@
 <script>
-	let { incident, selectedMarkerId, goToPrevCard = null, goToNextCard = null, hasPrev = false, hasNext = false } = $props();
+	let {
+		incident,
+		selectedMarkerId,
+		goToPrevCard = null,
+		goToNextCard = null,
+		hasPrev = false,
+		hasNext = false
+	} = $props();
 	import moment from 'moment';
 </script>
 
 <div
-	class="p-3 mx-4 my-4 overflow-hidden transition-colors duration-200 bg-white border stack-cards__item js-stack-cards__item cursor-grab sm:cursor-default border-zinc-400"
+	class="p-3 mx-4 my-4 overflow-hidden transition-colors duration-200 bg-white border stack-cards__item js-stack-cards__item cursor-grab border-zinc-400 sm:cursor-default"
 	class:bg-zinc-100={incident.chronoId === selectedMarkerId}
 	class:border-burgundy={incident.type === 'event'}
 	data-id={incident.chronoId}
@@ -20,7 +27,7 @@
 			<!-- Mobile arrows -->
 			<div class="flex gap-1 sm:hidden">
 				<button
-					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToPrevCard}
 					disabled={!hasPrev}
 					aria-label="Previous"
@@ -28,7 +35,7 @@
 					←
 				</button>
 				<button
-					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToNextCard}
 					disabled={!hasNext}
 					aria-label="Next"
@@ -61,7 +68,7 @@
 				<!-- Mobile arrows -->
 				<div class="flex gap-1 sm:hidden">
 					<button
-						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 						onclick={goToPrevCard}
 						disabled={!hasPrev}
 						aria-label="Previous"
@@ -69,7 +76,7 @@
 						←
 					</button>
 					<button
-						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:opacity-50 disabled:pointer-events-none"
+						class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 						onclick={goToNextCard}
 						disabled={!hasNext}
 						aria-label="Next"

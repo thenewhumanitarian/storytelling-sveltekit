@@ -263,54 +263,113 @@
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
 				{@const isSelected = activeWeekStartDate()?.getTime() === weekData.weekStartDate.getTime()}
-				<g
-					class="cursor-pointer group focus:outline-none"
-					onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
-					onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
-					onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
-					onmouseleave={handleMouseLeave}
-					onfocusin={() => handleMouseEnter(weekData.weekStartDate)}
-					onfocusout={handleMouseLeave}
-					tabindex="0"
-					aria-label={`Week starting ${formatDate(weekData.weekStartDate)}: ${weekData.totalKilledOrWounded} killed/wounded`}
-					role="button"
-				>
-					<text
-						x={xPos < containerWidth * 0.1
-							? xPos - 5
-							: xPos > containerWidth * 0.9
-								? xPos + 5
-								: xPos}
-						y={axisY + 14}
-						text-anchor={xPos < containerWidth * 0.1
-							? 'start'
-							: xPos > containerWidth * 0.9
-								? 'end'
-								: 'middle'}
-						class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+				{#if !isSelected}
+					<g
+						class="cursor-pointer group focus:outline-none"
+						onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
+						onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
+						onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
+						onmouseleave={handleMouseLeave}
+						onfocusin={() => handleMouseEnter(weekData.weekStartDate)}
+						onfocusout={handleMouseLeave}
+						tabindex="0"
+						aria-label={`Week starting ${formatDate(weekData.weekStartDate)}: ${weekData.totalKilledOrWounded} killed/wounded`}
+						role="button"
 					>
-						Week of {moment(weekData.weekStartDate).format('D MMMM Y')}
-					</text>
-					<rect
-						class:group-hover:fill-[#f2b0b8]={!isSelected}
-						class="transition-all duration-200 ease-in-out group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-						x={xPos - barWidth / 2}
-						y={yPos}
-						width={barWidth}
-						height={barHeight}
-						rx={isSelected ? barWidth / 2 : 1}
-						ry={isSelected ? barWidth / 2 : 1}
-						fill={isSelected ? '#f2b0b8' : '#9f3e52'}
-						style:stroke={isSelected ? '#9F3E52' : 'none'}
-						style:stroke-width={isSelected ? 4 : 0}
-						style:filter={isSelected ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
-					>
-						<title>
-							Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
-						</title>
-					</rect>
-				</g>
+						<text
+							x={xPos < containerWidth * 0.1
+								? xPos - 5
+								: xPos > containerWidth * 0.9
+									? xPos + 5
+									: xPos}
+							y={axisY + 14}
+							text-anchor={xPos < containerWidth * 0.1
+								? 'start'
+								: xPos > containerWidth * 0.9
+									? 'end'
+									: 'middle'}
+							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+						>
+							Week of {moment(weekData.weekStartDate).format('D MMMM Y')}
+						</text>
+						<rect
+							class:group-hover:fill-[#f2b0b8]={!isSelected}
+							class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+							x={xPos - barWidth / 2}
+							y={yPos}
+							width={barWidth}
+							height={barHeight}
+							rx={isSelected ? barWidth / 2 : 1}
+							ry={isSelected ? barWidth / 2 : 1}
+							fill={isSelected ? '#f2b0b8' : '#9f3e52'}
+							style:stroke={isSelected ? '#9F3E52' : 'none'}
+							style:stroke-width={isSelected ? 4 : 0}
+							style:filter={isSelected ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
+						>
+							<title>
+								Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
+							</title>
+						</rect>
+					</g>
+				{/if}
 			{/each}
+
+			{#if activeWeekStartDate()}
+				{@const activeDate = activeWeekStartDate()}
+				{@const selectedWeek = activeDate ? weeklyAggregatedData.find(w => w.weekStartDate.getTime() === activeDate.getTime()) : undefined}
+				{#if selectedWeek}
+					{@const xPos = timeScale(selectedWeek.weekStartDate)}
+					{@const barHeight = heightScale(selectedWeek.totalKilledOrWounded)}
+					{@const yPos = axisY - barHeight - barPaddingBottom}
+					<g
+						class="cursor-pointer group focus:outline-none"
+						onclick={() => handleClick(selectedWeek.weekStartDate, selectedWeek.firstChronoId)}
+						onkeydown={(e) => handleKeyDown(e, selectedWeek.weekStartDate, selectedWeek.firstChronoId)}
+						onmouseenter={() => handleMouseEnter(selectedWeek.weekStartDate)}
+						onmouseleave={handleMouseLeave}
+						onfocusin={() => handleMouseEnter(selectedWeek.weekStartDate)}
+						onfocusout={handleMouseLeave}
+						tabindex="0"
+						aria-label={`Week starting ${formatDate(selectedWeek.weekStartDate)}: ${selectedWeek.totalKilledOrWounded} killed/wounded`}
+						role="button"
+					>
+						<text
+							x={xPos < containerWidth * 0.1
+								? xPos - 5
+								: xPos > containerWidth * 0.9
+									? xPos + 5
+									: xPos}
+							y={axisY + 14}
+							text-anchor={xPos < containerWidth * 0.1
+								? 'start'
+								: xPos > containerWidth * 0.9
+									? 'end'
+									: 'middle'}
+							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+						>
+							Week of {moment(selectedWeek.weekStartDate).format('D MMMM Y')}
+						</text>
+						<rect
+							class:group-hover:fill-[#f2b0b8]={true}
+							class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+							x={xPos - barWidth / 2}
+							y={yPos}
+							width={barWidth}
+							height={barHeight}
+							rx={barWidth / 2}
+							ry={barWidth / 2}
+							fill="#f2b0b8"
+							style:stroke="#9F3E52"
+							style:stroke-width={4}
+							style:filter={'drop-shadow(0 0 6px #9F3E5288)'}
+						>
+							<title>
+								Week starting {formatDate(selectedWeek.weekStartDate)} - {selectedWeek.totalKilledOrWounded} killed/wounded
+							</title>
+						</rect>
+					</g>
+				{/if}
+			{/if}
 
 			<!-- Date Labels & Range Lines -->
 			{#if timeScale.domain()[0] && timeScale.domain()[1]}
