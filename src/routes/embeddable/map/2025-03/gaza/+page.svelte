@@ -39,9 +39,9 @@
 	}
 </script>
 
-<main data-iframe-height={true}>
-	<section class="relative flex flex-col w-full h-screen overflow-hidden" data-iframe-height={true}>
-		<div class="flex-grow">
+<main class="h-screen bg-white">
+	<section class="flex flex-col w-full h-full min-h-0">
+		<div class="flex-grow min-h-[120px] max-h-[80svh]">
 			<GazaMap
 				bind:this={gazaMapRef}
 				{selectedMarkerId}
@@ -52,10 +52,7 @@
 				{selectedWeekStartDate}
 			/>
 		</div>
-		<!-- Cards container (under timeline) -->
-		<div
-			class="sm:top-unset absolute left-0 top-[20svh] z-20 flex min-h-[20svh] w-full bg-transparent sm:left-auto sm:right-0 sm:bottom-0 sm:w-1/2"
-		>
+		<div class="w-full">
 			<GazaCards
 				bind:this={gazaCardsRef}
 				{incidentsData}
@@ -63,10 +60,7 @@
 				onCardInView={handleCardInView}
 			/>
 		</div>
-		<!-- Timeline overlay (above cards) -->
-		<div
-			class="bottom-unset absolute left-0 top-[50svh] z-10 w-full sm:bottom-0 sm:top-auto sm:z-20"
-		>
+		<div class="w-full">
 			<Timeline
 				{setHighlightedMarkerId}
 				{incidentsData}
@@ -87,6 +81,19 @@
 			height: 100%;
 			margin: 0;
 			overflow: hidden;
+		}
+		.map-container {
+			width: 100%;
+			height: 100%;
+			min-height: 120px;
+			max-height: 80svh;
+		}
+		@media (max-width: 640px) {
+			.map-container {
+				min-height: 120px;
+				max-height: 80svh;
+				height: 100%;
+			}
 		}
 	</style>
 </svelte:head>

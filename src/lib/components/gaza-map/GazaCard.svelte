@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="p-3 mx-4 my-4 overflow-hidden transition-colors duration-200 bg-white border stack-cards__item js-stack-cards__item cursor-grab border-zinc-400 sm:cursor-default"
+	class="p-3 my-4 overflow-hidden transition-colors duration-200 bg-white border sm:mx-4 stack-cards__item js-stack-cards__item border-zinc-400 sm:cursor-default"
 	class:bg-zinc-100={incident.chronoId === selectedMarkerId}
 	class:border-burgundy={incident.type === 'event'}
 	data-id={incident.chronoId}

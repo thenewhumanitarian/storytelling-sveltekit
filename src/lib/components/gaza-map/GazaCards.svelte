@@ -319,7 +319,7 @@
 	}
 	.stack-cards--mobile {
 		overflow-x: auto;
-		height: calc(50svh - 144px);
+		height: calc(50svh - 130px);
 		overflow-y: hidden;
 	}
 	/* @media (width <= 640px) {
