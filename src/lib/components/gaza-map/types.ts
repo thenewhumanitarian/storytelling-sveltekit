@@ -13,4 +13,5 @@ export interface IncidentData {
   imageCaption?: string;
   videoUrl?: string;
   videoCaption?: string;
+  sources?: string;
 }

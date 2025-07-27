@@ -52,8 +52,11 @@
 	const weeklyAggregatedData = $derived.by(() => {
 		if (parsedIncidents.length === 0) return [];
 
+		// Filter to only include incidents for bar aggregation
+		const incidentsOnly = parsedIncidents.filter((d) => d.type === 'incident');
+
 		const rolledUp = rollup(
-			parsedIncidents,
+			incidentsOnly,
 			(v) => ({
 				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded),
 				firstChronoId: v[0].chronoId
@@ -189,33 +192,6 @@
 				Events
 			</text>
 
-			<!-- Event Symbols -->
-			{#each events as event (event.chronoId)}
-				{@const xPos = timeScale(new Date(event.date))}
-				{@const isActive = selectedMarkerId === event.chronoId}
-				<g
-					class="cursor-pointer event-symbol"
-					onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
-					onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-					onmouseleave={handleMouseLeave}
-					tabindex="0"
-					aria-label={`Event: ${event.title}`}
-					role="button"
-				>
-					<circle
-						cx={xPos}
-						cy={40}
-						r={isActive ? 12 : 8}
-						fill="#9F3E52"
-						stroke={isActive ? '#9F3E52' : '#282828'}
-						stroke-width={isActive ? 2 : 0}
-						style:filter={isActive ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
-						style:transition="all 0.2s"
-					/>
-					<title>{event.title}</title>
-				</g>
-			{/each}
-
 			<!-- Main Axis Line -->
 			<line
 				x1={timeScale.range()[0]}
@@ -255,9 +231,37 @@
 				</text>
 			{/if}
 
-			<!-- Weekly Bars (REFACTORED) -->
-			<!-- This single loop now handles both selected and unselected states, -->
-			<!-- making the code much cleaner and easier to maintain. -->
+			<!-- Inactive Event Symbols (render first, behind active elements) -->
+			{#each events as event (event.chronoId)}
+				{@const xPos = timeScale(new Date(event.date))}
+				{@const isActive = selectedMarkerId === event.chronoId}
+				{#if !isActive}
+					{@const size = 8}
+					<g
+						class="cursor-pointer event-symbol group focus:outline-none"
+						onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
+						onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+						onmouseleave={handleMouseLeave}
+						onfocusin={() => setHighlightedMarkerId(event.chronoId)}
+						onfocusout={handleMouseLeave}
+						tabindex="0"
+						aria-label={`Event: ${event.title}`}
+						role="button"
+					>
+						<polygon
+							points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+							fill="#4B5563"
+							stroke="#1F2937"
+							stroke-width={0}
+							style:transition="all 0.2s"
+							class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+						/>
+						<title>{event.title}</title>
+					</g>
+				{/if}
+			{/each}
+
+			<!-- Inactive Weekly Bars (render first, behind active elements) -->
 			{#each weeklyAggregatedData as weekData (weekData.weekStartDate.toISOString())}
 				{@const xPos = timeScale(weekData.weekStartDate)}
 				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
@@ -299,12 +303,10 @@
 							y={yPos}
 							width={barWidth}
 							height={barHeight}
-							rx={isSelected ? barWidth / 2 : 1}
-							ry={isSelected ? barWidth / 2 : 1}
-							fill={isSelected ? '#f2b0b8' : '#9f3e52'}
-							style:stroke={isSelected ? '#9F3E52' : 'none'}
-							style:stroke-width={isSelected ? 4 : 0}
-							style:filter={isSelected ? 'drop-shadow(0 0 6px #9F3E5288)' : 'none'}
+							rx={1}
+							ry={1}
+							fill="#9f3e52"
+							style:stroke="none"
 						>
 							<title>
 								Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
@@ -314,6 +316,38 @@
 				{/if}
 			{/each}
 
+			<!-- Active Event Symbols (render last, on top) -->
+			{#each events as event (event.chronoId)}
+				{@const xPos = timeScale(new Date(event.date))}
+				{@const isActive = selectedMarkerId === event.chronoId}
+				{#if isActive}
+					{@const size = 12}
+					<g
+						class="cursor-pointer event-symbol group focus:outline-none"
+						onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
+						onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+						onmouseleave={handleMouseLeave}
+						onfocusin={() => setHighlightedMarkerId(event.chronoId)}
+						onfocusout={handleMouseLeave}
+						tabindex="0"
+						aria-label={`Event: ${event.title}`}
+						role="button"
+					>
+						<polygon
+							points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+							fill="#D1D5DB"
+							stroke="#374151"
+							stroke-width={4}
+							style:filter="drop-shadow(0 0 6px #37415188)"
+							style:transition="all 0.2s"
+							class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+						/>
+						<title>{event.title}</title>
+					</g>
+				{/if}
+			{/each}
+
+			<!-- Active Weekly Bars (render last, on top) -->
 			{#if activeWeekStartDate()}
 				{@const activeDate = activeWeekStartDate()}
 				{@const selectedWeek = activeDate ? weeklyAggregatedData.find(w => w.weekStartDate.getTime() === activeDate.getTime()) : undefined}
@@ -356,8 +390,8 @@
 							y={yPos}
 							width={barWidth}
 							height={barHeight}
-							rx={barWidth / 2}
-							ry={barWidth / 2}
+							rx={1}
+							ry={1}
 							fill="#f2b0b8"
 							style:stroke="#9F3E52"
 							style:stroke-width={4}

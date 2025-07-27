@@ -284,14 +284,31 @@
 				hasPrev={i > 0}
 				hasNext={i < incidentsData.length - 1}
 			>
-				<!-- Read more button for mobile, inside the card -->
-				<button
-					slot="readmore"
-					class="block w-full py-2 mt-2 text-sm font-semibold text-white bg-burgundy sm:hidden"
-					onclick={() => openModal(incident)}
-				>
-					Read more
-				</button>
+				<div slot="readmore" class="sm:hidden">
+					{#if incident.sources && incident.sources.trim() !== ''}
+						<div class="flex gap-2">
+							<button
+								class="flex-1 py-2 text-sm font-semibold text-white bg-burgundy"
+								onclick={() => openModal(incident)}
+							>
+								Read more
+							</button>
+							<button
+								class="flex-1 py-2 text-sm font-semibold text-white bg-zinc-600"
+								onclick={() => openModal(incident)}
+							>
+								Show sources
+							</button>
+						</div>
+					{:else}
+						<button
+							class="block w-full py-2 text-sm font-semibold text-white bg-burgundy"
+							onclick={() => openModal(incident)}
+						>
+							Read more
+						</button>
+					{/if}
+				</div>
 			</GazaCard>
 		</div>
 	{/each}
