@@ -506,21 +506,47 @@
 					{@const lastPeriod = aggregatedData.at(-1)}
 					{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
 
-
-
 					<!-- Dashed lines from axis to date labels -->
-					<line x1={firstX} y1={axisY} x2={firstX} y2={svgHeight + dateLabelsHeight} stroke="gray" stroke-width="1" stroke-dasharray="4,3" />
+					<line
+						x1={firstX}
+						y1={axisY}
+						x2={firstX}
+						y2={svgHeight + dateLabelsHeight}
+						stroke="gray"
+						stroke-width="1"
+						stroke-dasharray="4,3"
+					/>
 					{#if lastX !== null}
-						<line x1={lastX} y1={axisY} x2={lastX} y2={svgHeight + dateLabelsHeight} stroke="gray" stroke-width="1" stroke-dasharray="4,3" />
+						<line
+							x1={lastX}
+							y1={axisY}
+							x2={lastX}
+							y2={svgHeight + dateLabelsHeight}
+							stroke="gray"
+							stroke-width="1"
+							stroke-dasharray="4,3"
+						/>
 					{/if}
 
 					<!-- Solid lines aligned with date labels -->
-					<line x1={firstX} y1={svgHeight + dateLabelsHeight} x2={firstX} y2={svgHeight + dateLabelsHeight + 8} stroke="gray" stroke-width="1" />
+					<line
+						x1={firstX}
+						y1={svgHeight + dateLabelsHeight}
+						x2={firstX}
+						y2={svgHeight + dateLabelsHeight + 8}
+						stroke="gray"
+						stroke-width="1"
+					/>
 					{#if lastX !== null}
-						<line x1={lastX} y1={svgHeight + dateLabelsHeight} x2={lastX} y2={svgHeight + dateLabelsHeight + 8} stroke="gray" stroke-width="1" />
+						<line
+							x1={lastX}
+							y1={svgHeight + dateLabelsHeight}
+							x2={lastX}
+							y2={svgHeight + dateLabelsHeight + 8}
+							stroke="gray"
+							stroke-width="1"
+						/>
 					{/if}
-
-
 				{/if}
 
 				<!-- Tooltip -->
@@ -529,9 +555,9 @@
 					{@const isLast5Percent = tooltipData.x > containerWidth * 0.95}
 
 					{@const textX = isFirst5Percent
-						? tooltipData.x + 5
+						? tooltipData.x + 2
 						: isLast5Percent
-							? tooltipData.x - 5
+							? tooltipData.x - 2
 							: tooltipData.x}
 					{@const textY = tooltipData.y}
 					{@const textAnchor = isFirst5Percent ? 'start' : isLast5Percent ? 'end' : 'middle'}
@@ -549,10 +575,10 @@
 	<!-- Date Labels - Between chart and toggle -->
 	{#if parsedIncidents.length > 0}
 		<div class="flex w-full items-center justify-between px-0 py-0">
-			<span class="text-xs text-gray-500 font-sans pl-2">
+			<span class="pl-2 font-sans text-xs text-gray-500">
 				{formatDate(new Date(parsedIncidents[0].date))}
 			</span>
-			<span class="text-xs text-gray-500 font-sans pr-2">
+			<span class="pr-2 font-sans text-xs text-gray-500">
 				{formatDate(new Date(parsedIncidents[parsedIncidents.length - 1].date))}
 			</span>
 		</div>

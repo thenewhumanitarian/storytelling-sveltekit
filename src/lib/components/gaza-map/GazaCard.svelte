@@ -174,7 +174,6 @@
 
 <style lang="postcss">
 	.stack-cards__item {
-		top: 2.5rem;
 		min-height: 50svh; /* Use svh for better viewport handling */
 		transform-origin: center top;
 		transition: transform 0.2s ease;
@@ -191,5 +190,23 @@
 
 	.video {
 		aspect-ratio: 16/9;
+	}
+
+	/* Style links within the card descriptions */
+	:global(.stack-cards__item a) {
+		font-weight: bold;
+		text-decoration: underline;
+		color: #9f3e52; /* burgundy color to match the theme */
+		transition: color 0.2s ease;
+	}
+
+	:global(.stack-cards__item a:hover) {
+		color: #7c2d3f; /* darker burgundy on hover */
+		text-decoration: underline;
+	}
+
+	:global(.stack-cards__item a:focus) {
+		outline: 2px solid #9f3e52;
+		outline-offset: 2px;
 	}
 </style>

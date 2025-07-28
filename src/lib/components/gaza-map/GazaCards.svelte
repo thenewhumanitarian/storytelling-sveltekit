@@ -3,6 +3,7 @@
 	import type { IncidentData } from './types';
 	import GazaCard from './GazaCard.svelte';
 	import GazaCardModal from './GazaCardModal.svelte';
+	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
 
 	// Props
 	let {
@@ -180,6 +181,8 @@
 
 	let modalOpen = $state(false);
 	let modalIncident: IncidentData | null = $state(null);
+	let sourcesOverlayOpen = $state(false);
+	let sourcesIncident: IncidentData | null = $state(null);
 
 	function openModal(incident: IncidentData) {
 		modalIncident = incident;
@@ -187,6 +190,13 @@
 	}
 	function closeModal() {
 		modalOpen = false;
+	}
+	function openSourcesOverlay(incident: IncidentData) {
+		sourcesIncident = incident;
+		sourcesOverlayOpen = true;
+	}
+	function closeSourcesOverlay() {
+		sourcesOverlayOpen = false;
 	}
 	function goToModalPrev() {
 		if (!modalIncident) return;
@@ -247,7 +257,7 @@
 
 <div
 	bind:this={container}
-	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none cursor-grab pb-36 sm:block sm:w-1/2 sm:cursor-default"
+	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none cursor-grab pb-48 sm:block sm:w-1/2 sm:cursor-default"
 	class:cursor-grabbing={isDragging}
 >
 	<div
@@ -295,7 +305,7 @@
 							</button>
 							<button
 								class="flex-1 py-2 text-sm font-semibold text-white bg-zinc-600"
-								onclick={() => openModal(incident)}
+								onclick={() => openSourcesOverlay(incident)}
 							>
 								Show sources
 							</button>
@@ -321,6 +331,12 @@
 			hasPrev={incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId) > 0}
 			hasNext={incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId) <
 				incidentsData.length - 1}
+		/>
+	{/if}
+	{#if sourcesOverlayOpen && sourcesIncident}
+		<GazaSourcesOverlay
+			incident={sourcesIncident!}
+			onClose={closeSourcesOverlay}
 		/>
 	{/if}
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GazaMap from '$lib/components/gaza-map/GazaMap.svelte';
-	import Timeline from '$lib/components/gaza-map/Timeline.svelte';
+	import Timeline from '$lib/components/gaza-map/GazaTimeline.svelte';
 	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 	import { onMount } from 'svelte';
 
