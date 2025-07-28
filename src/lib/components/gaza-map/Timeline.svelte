@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { extent, rollup, sum } from 'd3-array';
-	import { timeWeek } from 'd3-time';
+	import { timeWeek, timeMonth } from 'd3-time';
 	import type { IncidentData } from './types';
 	import moment from 'moment';
 	import { onMount } from 'svelte';
@@ -28,12 +28,15 @@
 	// --- Internal State & Constants ---
 	let timelineContainer: HTMLElement | undefined = $state();
 	let containerWidth = $state(0);
+	let groupingMode = $state<'weekly' | 'monthly'>('weekly'); // Toggle between weekly and monthly
+	let isMobile = $state(false); // Track mobile state for SSR-safe default
 	const svgHeight = 140;
 	const barWidth = 12;
 	const barTopPadding = 16;
 	const axisPaddingBottom = 18;
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
+	const toggleHeight = 40; // Height for the toggle switch area
 
 	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
@@ -42,18 +45,21 @@
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
 
-	const activeWeekStartDate = $derived(() => {
+	const activePeriodStartDate = $derived(() => {
 		if (selectedMarkerId === null) return null;
 		const activeIncident = incidentsData.find((i) => i.chronoId === selectedMarkerId);
 		if (!activeIncident) return null;
-		return timeWeek.floor(new Date(activeIncident.date));
+		const date = new Date(activeIncident.date);
+		return groupingMode === 'weekly' ? timeWeek.floor(date) : timeMonth.floor(date);
 	});
 
-	const weeklyAggregatedData = $derived.by(() => {
+	const aggregatedData = $derived.by(() => {
 		if (parsedIncidents.length === 0) return [];
 
 		// Filter to only include incidents for bar aggregation
 		const incidentsOnly = parsedIncidents.filter((d) => d.type === 'incident');
+
+		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 
 		const rolledUp = rollup(
 			incidentsOnly,
@@ -61,52 +67,53 @@
 				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded),
 				firstChronoId: v[0].chronoId
 			}),
-			(d) => timeWeek.floor(d.dateObj)
+			(d) => timeFloor(d.dateObj)
 		);
 
-		return Array.from(rolledUp, ([weekStartDate, values]) => ({
-			weekStartDate,
+		return Array.from(rolledUp, ([periodStartDate, values]) => ({
+			periodStartDate: periodStartDate as Date,
 			totalKilledOrWounded: values.totalKilledOrWounded,
 			firstChronoId: values.firstChronoId
-		})).sort((a, b) => a.weekStartDate.getTime() - b.weekStartDate.getTime());
+		})).sort((a, b) => a.periodStartDate.getTime() - b.periodStartDate.getTime());
 	});
 
 	const maxBarHeight = $derived(svgHeight - axisPaddingBottom - barPaddingBottom - barTopPadding);
 
 	const timeScale = $derived.by(() => {
-		if (!containerWidth || weeklyAggregatedData.length === 0) {
+		if (!containerWidth || aggregatedData.length === 0) {
 			return scaleTime().domain([new Date(), new Date()]).range([0, 0]);
 		}
-		const dateDomain = extent(weeklyAggregatedData, (d) => d.weekStartDate) as [Date, Date];
-		const minDate = timeWeek.floor(dateDomain[0]!);
-		const maxDate = timeWeek.floor(dateDomain[1]!);
+		const dateDomain = extent(aggregatedData, (d) => d.periodStartDate) as [Date, Date];
+		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
+		const minDate = timeFloor(dateDomain[0]!);
+		const maxDate = timeFloor(dateDomain[1]!);
 		return scaleTime()
 			.domain([minDate, maxDate])
 			.range([barWidth / 2, containerWidth - barWidth / 2]);
 	});
 
 	const heightScale = $derived.by(() => {
-		if (weeklyAggregatedData.length === 0) {
+		if (aggregatedData.length === 0) {
 			return scaleLinear().domain([0, 1]).range([0, maxBarHeight]);
 		}
-		const maxWeeklyKilled = Math.max(...weeklyAggregatedData.map((d) => d.totalKilledOrWounded), 1);
-		return scaleLinear().domain([0, maxWeeklyKilled]).range([5, maxBarHeight]);
+		const maxPeriodKilled = Math.max(...aggregatedData.map((d) => d.totalKilledOrWounded), 1);
+		return scaleLinear().domain([0, maxPeriodKilled]).range([5, maxBarHeight]);
 	});
 
-	const maxWeek = $derived.by(() => {
-		if (weeklyAggregatedData.length === 0) return null;
-		return weeklyAggregatedData.reduce(
+	const maxPeriod = $derived.by(() => {
+		if (aggregatedData.length === 0) return null;
+		return aggregatedData.reduce(
 			(max, d) => (d.totalKilledOrWounded > max.totalKilledOrWounded ? d : max),
-			weeklyAggregatedData[0]
+			aggregatedData[0]
 		);
 	});
 
 	const maxBarLabel = $derived.by(() => {
-		if (!maxWeek || !timeScale || !heightScale) return null;
+		if (!maxPeriod || !timeScale || !heightScale) return null;
 		return {
-			x: timeScale(maxWeek.weekStartDate),
-			y: axisY - heightScale(maxWeek.totalKilledOrWounded) - barPaddingBottom - 6,
-			value: maxWeek.totalKilledOrWounded
+			x: timeScale(maxPeriod.periodStartDate),
+			y: axisY - heightScale(maxPeriod.totalKilledOrWounded) - barPaddingBottom - 6,
+			value: maxPeriod.totalKilledOrWounded
 		};
 	});
 
@@ -114,6 +121,26 @@
 
 	// --- Lifecycle ---
 	onMount(() => {
+		// SSR-safe mobile detection and default grouping mode
+		const checkMobile = () => {
+			const mobile = window.innerWidth < 640; // Match Tailwind sm: breakpoint
+			isMobile = mobile;
+			
+			// Set default grouping mode based on screen size
+			if (mobile && groupingMode === 'weekly') {
+				groupingMode = 'monthly';
+			} else if (!mobile && groupingMode === 'monthly') {
+				groupingMode = 'weekly';
+			}
+		};
+
+		// Initial check
+		checkMobile();
+
+		// Listen for resize events
+		window.addEventListener('resize', checkMobile);
+
+		// Timeline container setup
 		if (!timelineContainer) return;
 		const resizeObserver = new ResizeObserver((entries) => {
 			if (entries[0]) {
@@ -123,19 +150,21 @@
 		resizeObserver.observe(timelineContainer);
 		containerWidth = timelineContainer.offsetWidth;
 
-		return () => resizeObserver.disconnect();
+		return () => {
+			window.removeEventListener('resize', checkMobile);
+			resizeObserver.disconnect();
+		};
 	});
 
 	// --- Interaction Handlers ---
-	function handleMouseEnter(weekStartDate: Date) {
-		// CORRECTED: Find the corresponding week's data to highlight it.
-		const week = weeklyAggregatedData.find(
-			(w) => w.weekStartDate.getTime() === weekStartDate.getTime()
+	function handleMouseEnter(periodStartDate: Date) {
+		// Find the corresponding period's data to highlight it.
+		const period = aggregatedData.find(
+			(p) => p.periodStartDate.getTime() === periodStartDate.getTime()
 		);
-		if (week) {
-			// Assuming we want to highlight the first incident of the hovered week.
-			// This behavior might need adjustment based on desired UX.
-			setHighlightedMarkerId(week.firstChronoId);
+		if (period) {
+			// Highlight the first incident of the hovered period
+			setHighlightedMarkerId(period.firstChronoId);
 		}
 	}
 
@@ -169,9 +198,13 @@
 
 <div
 	bind:this={timelineContainer}
-	class="box-border flex items-center w-full overflow-hidden border-t border-gray-300 h-36 bg-white/80 backdrop-blur"
+	class="box-border flex flex-col w-full overflow-hidden bg-white/80 backdrop-blur sm:border-t sm:border-gray-200"
+	style="height: {svgHeight + toggleHeight}px;"
 >
-	{#if containerWidth > 0 && weeklyAggregatedData.length > 0}
+	<!-- Chart Container -->
+	<div class="flex items-center w-full h-{svgHeight}px">
+
+	{#if containerWidth > 0 && aggregatedData.length > 0}
 		<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
 			<!-- Dotted event axis line -->
 			<line
@@ -213,17 +246,19 @@
 					labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
 				{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
 				{@const labelYOffset = 13}
+				{@const minY = 25} // Minimum Y position to prevent overlap
+				{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
 				<line
 					x1={lineStartX}
-					y1={maxBarLabel.y + labelYOffset}
+					y1={adjustedY}
 					x2={lineEndX}
-					y2={maxBarLabel.y + labelYOffset}
+					y2={adjustedY}
 					stroke="#9f3e52"
 					stroke-width="1"
 				/>
 				<text
 					x={labelX - 3}
-					y={maxBarLabel.y + labelYOffset + 3}
+					y={adjustedY + 3}
 					text-anchor={textAnchor}
 					class="fill-[#9f3e52] font-sans text-xs font-semibold"
 				>
@@ -237,9 +272,10 @@
 				{@const isActive = selectedMarkerId === event.chronoId}
 				{#if !isActive}
 					{@const size = 8}
+					{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 					<g
 						class="cursor-pointer event-symbol group focus:outline-none"
-						onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
+						onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 						onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 						onmouseleave={handleMouseLeave}
 						onfocusin={() => setHighlightedMarkerId(event.chronoId)}
@@ -261,23 +297,23 @@
 				{/if}
 			{/each}
 
-			<!-- Inactive Weekly Bars (render first, behind active elements) -->
-			{#each weeklyAggregatedData as weekData (weekData.weekStartDate.toISOString())}
-				{@const xPos = timeScale(weekData.weekStartDate)}
-				{@const barHeight = heightScale(weekData.totalKilledOrWounded)}
+			<!-- Inactive Period Bars (render first, behind active elements) -->
+			{#each aggregatedData as periodData (periodData.periodStartDate.toISOString())}
+				{@const xPos = timeScale(periodData.periodStartDate)}
+				{@const barHeight = heightScale(periodData.totalKilledOrWounded)}
 				{@const yPos = axisY - barHeight - barPaddingBottom}
-				{@const isSelected = activeWeekStartDate()?.getTime() === weekData.weekStartDate.getTime()}
+				{@const isSelected = activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
 				{#if !isSelected}
 					<g
 						class="cursor-pointer group focus:outline-none"
-						onclick={() => handleClick(weekData.weekStartDate, weekData.firstChronoId)}
-						onkeydown={(e) => handleKeyDown(e, weekData.weekStartDate, weekData.firstChronoId)}
-						onmouseenter={() => handleMouseEnter(weekData.weekStartDate)}
+						onclick={() => handleClick(periodData.periodStartDate, periodData.firstChronoId)}
+						onkeydown={(e) => handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId)}
+						onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
 						onmouseleave={handleMouseLeave}
-						onfocusin={() => handleMouseEnter(weekData.weekStartDate)}
+						onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
 						onfocusout={handleMouseLeave}
 						tabindex="0"
-						aria-label={`Week starting ${formatDate(weekData.weekStartDate)}: ${weekData.totalKilledOrWounded} killed/wounded`}
+						aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(periodData.periodStartDate)}: ${periodData.totalKilledOrWounded} killed/wounded`}
 						role="button"
 					>
 						<text
@@ -294,7 +330,7 @@
 									: 'middle'}
 							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 						>
-							Week of {moment(weekData.weekStartDate).format('D MMMM Y')}
+							{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(periodData.periodStartDate).format('D MMMM Y')}
 						</text>
 						<rect
 							class:group-hover:fill-[#f2b0b8]={!isSelected}
@@ -309,7 +345,7 @@
 							style:stroke="none"
 						>
 							<title>
-								Week starting {formatDate(weekData.weekStartDate)} - {weekData.totalKilledOrWounded} killed/wounded
+								{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(periodData.periodStartDate)} - {periodData.totalKilledOrWounded} killed/wounded
 							</title>
 						</rect>
 					</g>
@@ -322,9 +358,10 @@
 				{@const isActive = selectedMarkerId === event.chronoId}
 				{#if isActive}
 					{@const size = 12}
+					{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 					<g
 						class="cursor-pointer event-symbol group focus:outline-none"
-						onclick={() => handleClick(timeWeek.floor(new Date(event.date)), event.chronoId)}
+						onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 						onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 						onmouseleave={handleMouseLeave}
 						onfocusin={() => setHighlightedMarkerId(event.chronoId)}
@@ -347,24 +384,24 @@
 				{/if}
 			{/each}
 
-			<!-- Active Weekly Bars (render last, on top) -->
-			{#if activeWeekStartDate()}
-				{@const activeDate = activeWeekStartDate()}
-				{@const selectedWeek = activeDate ? weeklyAggregatedData.find(w => w.weekStartDate.getTime() === activeDate.getTime()) : undefined}
-				{#if selectedWeek}
-					{@const xPos = timeScale(selectedWeek.weekStartDate)}
-					{@const barHeight = heightScale(selectedWeek.totalKilledOrWounded)}
+			<!-- Active Period Bars (render last, on top) -->
+			{#if activePeriodStartDate()}
+				{@const activeDate = activePeriodStartDate()}
+				{@const selectedPeriod = activeDate ? aggregatedData.find(p => p.periodStartDate.getTime() === activeDate.getTime()) : undefined}
+				{#if selectedPeriod}
+					{@const xPos = timeScale(selectedPeriod.periodStartDate)}
+					{@const barHeight = heightScale(selectedPeriod.totalKilledOrWounded)}
 					{@const yPos = axisY - barHeight - barPaddingBottom}
 					<g
 						class="cursor-pointer group focus:outline-none"
-						onclick={() => handleClick(selectedWeek.weekStartDate, selectedWeek.firstChronoId)}
-						onkeydown={(e) => handleKeyDown(e, selectedWeek.weekStartDate, selectedWeek.firstChronoId)}
-						onmouseenter={() => handleMouseEnter(selectedWeek.weekStartDate)}
+						onclick={() => handleClick(selectedPeriod.periodStartDate, selectedPeriod.firstChronoId)}
+						onkeydown={(e) => handleKeyDown(e, selectedPeriod.periodStartDate, selectedPeriod.firstChronoId)}
+						onmouseenter={() => handleMouseEnter(selectedPeriod.periodStartDate)}
 						onmouseleave={handleMouseLeave}
-						onfocusin={() => handleMouseEnter(selectedWeek.weekStartDate)}
+						onfocusin={() => handleMouseEnter(selectedPeriod.periodStartDate)}
 						onfocusout={handleMouseLeave}
 						tabindex="0"
-						aria-label={`Week starting ${formatDate(selectedWeek.weekStartDate)}: ${selectedWeek.totalKilledOrWounded} killed/wounded`}
+						aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(selectedPeriod.periodStartDate)}: ${selectedPeriod.totalKilledOrWounded} killed/wounded`}
 						role="button"
 					>
 						<text
@@ -381,7 +418,7 @@
 									: 'middle'}
 							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 						>
-							Week of {moment(selectedWeek.weekStartDate).format('D MMMM Y')}
+							{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(selectedPeriod.periodStartDate).format('D MMMM Y')}
 						</text>
 						<rect
 							class:group-hover:fill-[#f2b0b8]={true}
@@ -398,7 +435,7 @@
 							style:filter={'drop-shadow(0 0 6px #9F3E5288)'}
 						>
 							<title>
-								Week starting {formatDate(selectedWeek.weekStartDate)} - {selectedWeek.totalKilledOrWounded} killed/wounded
+								{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(selectedPeriod.periodStartDate)} - {selectedPeriod.totalKilledOrWounded} killed/wounded
 							</title>
 						</rect>
 					</g>
@@ -409,9 +446,9 @@
 			{#if timeScale.domain()[0] && timeScale.domain()[1]}
 				{@const [startRange, endRange] = timeScale.range()}
 				{@const [startDate, endDate] = timeScale.domain()}
-				{@const firstX = timeScale(weeklyAggregatedData[0].weekStartDate) - 0.5}
-				{@const lastWeek = weeklyAggregatedData.at(-1)}
-				{@const lastX = lastWeek ? timeScale(lastWeek.weekStartDate) + 0.5 : null}
+				{@const firstX = timeScale(aggregatedData[0].periodStartDate) - 0.5}
+				{@const lastPeriod = aggregatedData.at(-1)}
+				{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
 
 				{#if lastX !== null}
 					<line
@@ -458,9 +495,29 @@
 					text-anchor="end"
 					dx="-10"
 				>
-					{formatDate(timeWeek.floor(endDate))}
+					{formatDate((groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor)(endDate))}
 				</text>
 			{/if}
 		</svg>
 	{/if}
+	</div>
+
+	<!-- Toggle Switch for Weekly/Monthly - Centered underneath chart -->
+	<div class="flex items-center justify-center w-full h-{toggleHeight}px px-4">
+		<div class="flex items-center gap-2 bg-white/90 px-3 py-2 shadow-sm">
+			<span class="text-sm font-medium text-gray-600">Group by:</span>
+			<button
+				class="px-3 py-1 text-sm font-medium rounded-full transition-colors {groupingMode === 'weekly' ? 'bg-burgundy text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
+				onclick={() => groupingMode = 'weekly'}
+			>
+				Weekly
+			</button>
+			<button
+				class="px-3 py-1 text-sm font-medium rounded-full transition-colors {groupingMode === 'monthly' ? 'bg-burgundy text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
+				onclick={() => groupingMode = 'monthly'}
+			>
+				Monthly
+			</button>
+		</div>
+	</div>
 </div>

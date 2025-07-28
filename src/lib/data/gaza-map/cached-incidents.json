@@ -1,7 +1,7 @@
 {
   "incidentsData": [
     {
-      "id": 21,
+      "id": 1,
       "type": "incident",
       "latitude": 31.51718,
       "longitude": 34.44657,
@@ -18,7 +18,7 @@
       "weekYear": "02-2024"
     },
     {
-      "id": 1,
+      "id": 2,
       "type": "incident",
       "latitude": 31.501,
       "longitude": 34.4668,
@@ -35,7 +35,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 2,
+      "id": 3,
       "type": "event",
       "date": "2024-03-25",
       "title": "Something big happened here",
@@ -49,7 +49,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "incident",
       "latitude": 31.5283,
       "longitude": 34.4421,
@@ -66,7 +66,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 4,
+      "id": 5,
       "type": "incident",
       "latitude": 31.2989,
       "longitude": 34.24,
@@ -83,7 +83,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 5,
+      "id": 6,
       "type": "incident",
       "latitude": 31.3445,
       "longitude": 34.3088,
@@ -100,7 +100,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 6,
+      "id": 7,
       "type": "incident",
       "latitude": 31.4167,
       "longitude": 34.3333,
@@ -117,7 +117,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 7,
+      "id": 8,
       "type": "incident",
       "latitude": 31.55,
       "longitude": 34.4833,
@@ -134,7 +134,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 8,
+      "id": 9,
       "type": "incident",
       "latitude": 31.5378,
       "longitude": 34.4953,
@@ -151,7 +151,7 @@
       "weekYear": "13-2024"
     },
     {
-      "id": 9,
+      "id": 10,
       "type": "incident",
       "latitude": 31.5472,
       "longitude": 34.5422,
@@ -168,7 +168,7 @@
       "weekYear": "14-2024"
     },
     {
-      "id": 10,
+      "id": 11,
       "type": "incident",
       "latitude": 31.5075,
       "longitude": 34.4567,
@@ -185,7 +185,7 @@
       "weekYear": "14-2024"
     },
     {
-      "id": 11,
+      "id": 12,
       "type": "incident",
       "latitude": 31.3667,
       "longitude": 34.3333,
@@ -202,7 +202,7 @@
       "weekYear": "14-2024"
     },
     {
-      "id": 12,
+      "id": 13,
       "type": "incident",
       "latitude": 31.415,
       "longitude": 34.36,
@@ -219,7 +219,7 @@
       "weekYear": "16-2024"
     },
     {
-      "id": 16,
+      "id": 14,
       "type": "incident",
       "latitude": 31.41,
       "longitude": 34.3,
@@ -236,7 +236,7 @@
       "weekYear": "18-2024"
     },
     {
-      "id": 17,
+      "id": 15,
       "type": "incident",
       "latitude": 31.42,
       "longitude": 34.31,
@@ -253,7 +253,7 @@
       "weekYear": "18-2024"
     },
     {
-      "id": 19,
+      "id": 16,
       "type": "incident",
       "latitude": 31.401,
       "longitude": 34.35,
@@ -270,7 +270,7 @@
       "weekYear": "18-2024"
     },
     {
-      "id": 20,
+      "id": 17,
       "type": "incident",
       "latitude": 31.3667,
       "longitude": 34.3333,
@@ -287,7 +287,7 @@
       "weekYear": "18-2024"
     },
     {
-      "id": 27,
+      "id": 18,
       "type": "event",
       "latitude": 31.29804,
       "longitude": 34.24419,
@@ -303,7 +303,7 @@
       "weekYear": "19-2024"
     },
     {
-      "id": 15,
+      "id": 19,
       "type": "incident",
       "latitude": 31.45,
       "longitude": 34.41,
@@ -320,7 +320,7 @@
       "weekYear": "20-2024"
     },
     {
-      "id": 14,
+      "id": 20,
       "type": "incident",
       "latitude": 31.503,
       "longitude": 34.472,
@@ -337,7 +337,7 @@
       "weekYear": "20-2024"
     },
     {
-      "id": 13,
+      "id": 21,
       "type": "incident",
       "latitude": 31.34,
       "longitude": 34.3,
@@ -354,7 +354,7 @@
       "weekYear": "20-2024"
     },
     {
-      "id": 23,
+      "id": 22,
       "type": "incident",
       "latitude": 31.52922,
       "longitude": 34.47938,
@@ -371,7 +371,7 @@
       "weekYear": "42-2024"
     },
     {
-      "id": 22,
+      "id": 23,
       "type": "incident",
       "latitude": 31.37123,
       "longitude": 34.33581,
@@ -388,7 +388,7 @@
       "weekYear": "14-2025"
     },
     {
-      "id": 26,
+      "id": 24,
       "type": "event",
       "latitude": 31.34799,
       "longitude": 34.25612,
@@ -421,7 +421,24 @@
       "weekYear": "21-2025"
     },
     {
-      "id": 24,
+      "id": 26,
+      "type": "incident",
+      "latitude": 31.50531,
+      "longitude": 34.46177,
+      "date": "2025-05-28",
+      "killedOrWounded": 50,
+      "title": "Israeli strike hits bakery in Gaza City",
+      "description": "At least 10 civilians were killed and more than 60 wounded.",
+      "sources": "",
+      "imageUrl": "",
+      "imageCaption": "",
+      "videoUrl": "",
+      "videoCaption": "",
+      "chronoId": 25,
+      "weekYear": "22-2025"
+    },
+    {
+      "id": 27,
       "type": "incident",
       "latitude": 31.55759,
       "longitude": 34.46368,
@@ -434,15 +451,15 @@
       "imageCaption": "",
       "videoUrl": "",
       "videoCaption": "",
-      "chronoId": 25,
+      "chronoId": 26,
       "weekYear": "26-2025"
     }
   ],
-  "lastUpdated": "2025-07-28T07:59:09.150Z",
-  "buildTime": "2025-07-28T07:59:09.150Z",
+  "lastUpdated": "2025-07-28T09:46:14.077Z",
+  "buildTime": "2025-07-28T09:46:14.077Z",
   "metadata": {
-    "totalRecords": 26,
-    "incidents": 23,
+    "totalRecords": 27,
+    "incidents": 24,
     "events": 3,
     "dateRange": {
       "start": "2024-01-09",

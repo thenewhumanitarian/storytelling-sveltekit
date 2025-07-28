@@ -60,7 +60,7 @@
 			// Desktop: vertical stack
 			const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 			if (el && container) {
-				const TIMELINE_HEIGHT = 120; // px, must match the timeline SVG height
+				const TIMELINE_HEIGHT = 160; // px, updated to match the new timeline height (140 + 40)
 				const containerRect = container.getBoundingClientRect();
 				const elRect = el.getBoundingClientRect();
 				const containerScrollTop = container.scrollTop;
@@ -274,7 +274,7 @@
 	onscroll={handleMobileScroll}
 >
 	{#each incidentsData as incident, i (incident.chronoId)}
-		<div class="flex-shrink-0 w-full snap-center min-h-[20svh] h-full" data-id={incident.chronoId}>
+		<div class="flex-shrink-0 w-full snap-center min-h-[25svh] h-full" data-id={incident.chronoId}>
 			<GazaCard
 				{incident}
 				{selectedMarkerId}
@@ -338,6 +338,12 @@
 		overflow-x: auto;
 		/* height: calc(50svh - 145px); */
 		overflow-y: hidden;
+		/* Hide scrollbar for all browsers */
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* Internet Explorer 10+ */
+	}
+	.stack-cards--mobile::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
 	}
 	/* @media (width <= 640px) {
 		.stack-cards--mobile {

@@ -195,6 +195,7 @@
 	@media (width <= 640px) {
 		.stack-cards__item {
 			min-height: calc(100% - 32px);
+			margin-bottom: 1rem; /* Add extra bottom margin on mobile */
 		}
 	}
 
