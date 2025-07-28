@@ -4,8 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "node scripts/pre-fetch-data.js && vite build",
     "preview": "vite preview",
+    "pre-fetch-data": "node scripts/pre-fetch-data.js",
+    "pre-fetch-gaza": "node scripts/pre-fetch-data.js gaza",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
@@ -49,6 +51,7 @@
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tailwindcss": "^3.4.9",
+    "ts-node": "^10.9.2",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.0.0",
     "vite": "^5.0.3"

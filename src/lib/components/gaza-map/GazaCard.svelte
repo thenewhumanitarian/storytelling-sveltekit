@@ -8,6 +8,8 @@
 		hasNext = false
 	} = $props();
 	import moment from 'moment';
+	
+	let showSources = $state(false);
 </script>
 
 <div
@@ -150,6 +152,7 @@
 					<div class="sm:mt-4 sm:flex sm:justify-start">
 						<button
 							class="bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-700 hover:text-zinc-50"
+							onclick={() => (showSources = true)}
 						>
 							Show sources
 						</button>
@@ -159,6 +162,24 @@
 				</div>
 			{/if}
 			<slot name="readmore"></slot>
+		</div>
+	{/if}
+	
+	{#if showSources}
+		<div class="absolute inset-0 z-40 flex items-center justify-center bg-white/95 bg-opacity-95 rounded-lg shadow-lg p-4">
+			<div class="relative w-full">
+				<button 
+					class="absolute top-2 right-2 text-2xl text-zinc-400 hover:text-burgundy" 
+					onclick={() => (showSources = false)} 
+					aria-label="Close sources overlay"
+				>×</button>
+				<h4 class="mb-2 text-base font-bold text-burgundy">Sources</h4>
+				{#if incident.sources && incident.sources.includes('<')}
+					<div class="text-sm text-gray-700 overflow-y-auto max-h-48">{@html incident.sources}</div>
+				{:else if incident.sources}
+					<div class="text-sm text-gray-700 overflow-y-auto max-h-48">{incident.sources}</div>
+				{/if}
+			</div>
 		</div>
 	{/if}
 </div>
