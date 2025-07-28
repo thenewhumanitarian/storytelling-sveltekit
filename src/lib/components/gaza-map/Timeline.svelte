@@ -32,13 +32,14 @@
 	let isMobile = $state(false); // Track mobile state for SSR-safe default
 	let tooltipVisible = $state(false);
 	let tooltipData = $state<{ x: number; y: number; value: number } | null>(null);
-	const svgHeight = 140;
+	const svgHeight = 140; // Reduced back to original height
 	const barWidth = 12;
 	const barTopPadding = 16;
 	const axisPaddingBottom = 18;
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
-	const toggleHeight = 40; // Height for the toggle switch area
+	const toggleHeight = 24; // Height for the toggle switch area (further reduced)
+	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
 
 	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
@@ -245,7 +246,7 @@
 <div
 	bind:this={timelineContainer}
 	class="box-border flex w-full flex-col overflow-hidden bg-white/80 backdrop-blur sm:border-t sm:border-gray-200"
-	style="height: {svgHeight + toggleHeight}px;"
+	style="height: {svgHeight + dateLabelsHeight + toggleHeight}px;"
 >
 	<!-- Chart Container -->
 	<div class="flex w-full items-center h-{svgHeight}px">
@@ -280,37 +281,6 @@
 					stroke-width="1"
 				/>
 
-				<!-- Max Bar Label -->
-				{#if maxBarLabel && typeof maxBarLabel?.x === 'number'}
-					{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
-					{@const labelSide = isLeftThird ? 'left' : 'right'}
-					{@const lineLength = 40}
-					{@const lineStartX = labelSide === 'left' ? maxBarLabel.x - lineLength : maxBarLabel.x}
-					{@const lineEndX = labelSide === 'left' ? maxBarLabel.x : maxBarLabel.x + lineLength}
-					{@const labelX =
-						labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
-					{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
-					{@const labelYOffset = 13}
-					{@const minY = 25} // Minimum Y position to prevent overlap
-					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
-					<line
-						x1={lineStartX}
-						y1={adjustedY}
-						x2={lineEndX}
-						y2={adjustedY}
-						stroke="#9f3e52"
-						stroke-width="1"
-					/>
-					<text
-						x={labelX - 3}
-						y={adjustedY + 3}
-						text-anchor={textAnchor}
-						class="fill-[#9f3e52] font-sans text-xs font-semibold"
-					>
-						{maxBarLabel.value} killed/wounded
-					</text>
-				{/if}
-
 				<!-- Inactive Event Symbols (render first, behind active elements) -->
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(new Date(event.date))}
@@ -319,7 +289,7 @@
 						{@const size = 8}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
-							class="event-symbol group cursor-pointer focus:outline-none"
+							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-none"
 							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
@@ -351,7 +321,7 @@
 						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
 					{#if !isSelected}
 						<g
-							class="group cursor-pointer focus:outline-none"
+							class="period-bar period-bar--inactive group cursor-pointer focus:outline-none"
 							onclick={() => handleBarClick(periodData.periodStartDate, periodData.firstChronoId)}
 							onkeydown={(e) =>
 								handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId)}
@@ -376,6 +346,7 @@
 										? 'end'
 										: 'middle'}
 								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
 							>
 								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
 									periodData.periodStartDate
@@ -401,38 +372,7 @@
 					{/if}
 				{/each}
 
-				<!-- Active Event Symbols (render last, on top) -->
-				{#each events as event (event.chronoId)}
-					{@const xPos = timeScale(new Date(event.date))}
-					{@const isActive = selectedMarkerId === event.chronoId}
-					{#if isActive}
-						{@const size = 12}
-						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
-						<g
-							class="event-symbol group cursor-pointer focus:outline-none"
-							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
-							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
-							onfocusout={handleMouseLeave}
-							tabindex="0"
-							aria-label={`Event: ${event.title}`}
-							role="button"
-						>
-							<polygon
-								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
-								fill="#D1D5DB"
-								stroke="#374151"
-								stroke-width={4}
-								style:transition="all 0.2s"
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-							/>
-							<title>{event.title}</title>
-						</g>
-					{/if}
-				{/each}
-
-				<!-- Active Period Bars (render last, on top) -->
+				<!-- Active Period Bars (render before active events) -->
 				{#if activePeriodStartDate()}
 					{@const activeDate = activePeriodStartDate()}
 					{@const selectedPeriod = activeDate
@@ -443,7 +383,7 @@
 						{@const barHeight = heightScale(selectedPeriod.totalKilledOrWounded)}
 						{@const yPos = axisY - barHeight - barPaddingBottom}
 						<g
-							class="group cursor-pointer focus:outline-none"
+							class="period-bar period-bar--active group cursor-pointer focus:outline-none"
 							onclick={() =>
 								handleBarClick(selectedPeriod.periodStartDate, selectedPeriod.firstChronoId)}
 							onkeydown={(e) =>
@@ -469,6 +409,7 @@
 										? 'end'
 										: 'middle'}
 								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
 							>
 								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
 									selectedPeriod.periodStartDate
@@ -494,6 +435,68 @@
 					{/if}
 				{/if}
 
+				<!-- Active Event Symbols (render last, on top) -->
+				{#each events as event (event.chronoId)}
+					{@const xPos = timeScale(new Date(event.date))}
+					{@const isActive = selectedMarkerId === event.chronoId}
+					{#if isActive}
+						{@const size = 12}
+						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						<g
+							class="event-symbol event-symbol--active group cursor-pointer focus:outline-none"
+							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+							onmouseleave={handleMouseLeave}
+							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
+							onfocusout={handleMouseLeave}
+							tabindex="0"
+							aria-label={`Event: ${event.title}`}
+							role="button"
+						>
+							<polygon
+								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								fill="#D1D5DB"
+								stroke="#374151"
+								stroke-width={4}
+								style:transition="all 0.2s"
+								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+							/>
+							<title>{event.title}</title>
+						</g>
+					{/if}
+				{/each}
+
+				<!-- Max Bar Label (render after active elements to be behind them) -->
+				{#if maxBarLabel && typeof maxBarLabel?.x === 'number'}
+					{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
+					{@const labelSide = isLeftThird ? 'left' : 'right'}
+					{@const lineLength = 40}
+					{@const lineStartX = labelSide === 'left' ? maxBarLabel.x - lineLength : maxBarLabel.x}
+					{@const lineEndX = labelSide === 'left' ? maxBarLabel.x : maxBarLabel.x + lineLength}
+					{@const labelX =
+						labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
+					{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
+					{@const labelYOffset = 13}
+					{@const minY = 25} // Minimum Y position to prevent overlap
+					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
+					<line
+						x1={lineStartX}
+						y1={adjustedY}
+						x2={lineEndX}
+						y2={adjustedY}
+						stroke="#9f3e52"
+						stroke-width="1"
+					/>
+					<text
+						x={labelX - 3}
+						y={adjustedY + 3}
+						text-anchor={textAnchor}
+						class="fill-[#9f3e52] font-sans text-xs font-semibold"
+					>
+						{maxBarLabel.value} killed/wounded
+					</text>
+				{/if}
+
 				<!-- Date Labels & Range Lines -->
 				{#if parsedIncidents.length > 0}
 					{@const [startRange, endRange] = timeScale.range()}
@@ -503,53 +506,21 @@
 					{@const lastPeriod = aggregatedData.at(-1)}
 					{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
 
+
+
+					<!-- Dashed lines from axis to date labels -->
+					<line x1={firstX} y1={axisY} x2={firstX} y2={svgHeight + dateLabelsHeight} stroke="gray" stroke-width="1" stroke-dasharray="4,3" />
 					{#if lastX !== null}
-						<line
-							x1={firstX}
-							y1={0}
-							x2={firstX}
-							y2={axisY}
-							stroke="#bbb"
-							stroke-width="1"
-							stroke-dasharray="4,3"
-							opacity="0.5"
-						/>
-						<line
-							x1={lastX}
-							y1={0}
-							x2={lastX}
-							y2={axisY}
-							stroke="#bbb"
-							stroke-width="1"
-							stroke-dasharray="4,3"
-							opacity="0.5"
-						/>
+						<line x1={lastX} y1={axisY} x2={lastX} y2={svgHeight + dateLabelsHeight} stroke="gray" stroke-width="1" stroke-dasharray="4,3" />
 					{/if}
 
-					<line x1={firstX} y1={0} x2={firstX} y2={15} stroke="gray" stroke-width="1" />
-					<text
-						x={startRange}
-						y={10}
-						style="fill: gray"
-						class="font-sans text-xs"
-						text-anchor="start"
-						dx="10"
-					>
-						{formatDate(firstIncidentDate)}
-					</text>
-
+					<!-- Solid lines aligned with date labels -->
+					<line x1={firstX} y1={svgHeight + dateLabelsHeight} x2={firstX} y2={svgHeight + dateLabelsHeight + 8} stroke="gray" stroke-width="1" />
 					{#if lastX !== null}
-						<line x1={lastX} y1={0} x2={lastX} y2={15} stroke="gray" stroke-width="1" />
+						<line x1={lastX} y1={svgHeight + dateLabelsHeight} x2={lastX} y2={svgHeight + dateLabelsHeight + 8} stroke="gray" stroke-width="1" />
 					{/if}
-					<text
-						x={endRange}
-						y={10}
-						class="fill-gray-400 font-sans text-xs"
-						text-anchor="end"
-						dx="-10"
-					>
-						{formatDate(lastIncidentDate)}
-					</text>
+
+
 				{/if}
 
 				<!-- Tooltip -->
@@ -575,9 +546,21 @@
 		{/if}
 	</div>
 
+	<!-- Date Labels - Between chart and toggle -->
+	{#if parsedIncidents.length > 0}
+		<div class="flex w-full items-center justify-between px-0 py-0">
+			<span class="text-xs text-gray-500 font-sans pl-2">
+				{formatDate(new Date(parsedIncidents[0].date))}
+			</span>
+			<span class="text-xs text-gray-500 font-sans pr-2">
+				{formatDate(new Date(parsedIncidents[parsedIncidents.length - 1].date))}
+			</span>
+		</div>
+	{/if}
+
 	<!-- Toggle Switch for Weekly/Monthly - Centered underneath chart -->
 	<div class="flex w-full items-center justify-center h-{toggleHeight}px px-4">
-		<div class="flex items-center gap-2 bg-white/90 px-3 py-2 shadow-sm">
+		<div class="flex items-center gap-2 bg-white/90 px-3">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
 			<button
 				class="rounded-full px-3 py-1 text-sm font-medium transition-colors {groupingMode ===
@@ -600,3 +583,31 @@
 		</div>
 	</div>
 </div>
+
+<style lang="postcss">
+	/* Ensure proper layering for chart elements */
+	.event-symbol--inactive {
+		z-index: 1;
+	}
+
+	.period-bar--inactive {
+		z-index: 2;
+	}
+
+	.period-bar--active {
+		z-index: 3;
+	}
+
+	.event-symbol--active {
+		z-index: 5; /* Higher than active bars to overlay them */
+	}
+
+	/* Ensure SVG elements respect z-index */
+	svg {
+		position: relative;
+	}
+
+	svg g {
+		position: relative;
+	}
+</style>

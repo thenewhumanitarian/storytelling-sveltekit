@@ -1,4 +1,7 @@
 <script>
+	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
+	import moment from 'moment';
+	
 	let {
 		incident,
 		selectedMarkerId,
@@ -7,13 +10,12 @@
 		hasPrev = false,
 		hasNext = false
 	} = $props();
-	import moment from 'moment';
 	
 	let showSources = $state(false);
 </script>
 
 <div
-	class={'${incident.chronoId === selectedMarkerId ? "bg-zinc-200" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 bg-white p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default'}
+	class={'${incident.chronoId === selectedMarkerId ? "bg-zinc-200" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 bg-white p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default relative'}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}
@@ -45,7 +47,7 @@
 			</div>
 		</div>
 		<div class="mb-3">
-			<h3 class="mt-2 line-clamp-1 text-lg font-bold leading-tight sm:text-xl">
+			<h3 class="mt-2 line-clamp-2 text-lg font-bold leading-tight sm:text-xl">
 				{incident.title}
 			</h3>
 			{#if incident.description && incident.description.includes('<')}
@@ -166,34 +168,22 @@
 	{/if}
 	
 	{#if showSources}
-		<div class="absolute inset-0 z-40 flex items-center justify-center bg-white/95 bg-opacity-95 rounded-lg shadow-lg p-4">
-			<div class="relative w-full">
-				<button 
-					class="absolute top-2 right-2 text-2xl text-zinc-400 hover:text-burgundy" 
-					onclick={() => (showSources = false)} 
-					aria-label="Close sources overlay"
-				>×</button>
-				<h4 class="mb-2 text-base font-bold text-burgundy">Sources</h4>
-				{#if incident.sources && incident.sources.includes('<')}
-					<div class="text-sm text-gray-700 overflow-y-auto max-h-48">{@html incident.sources}</div>
-				{:else if incident.sources}
-					<div class="text-sm text-gray-700 overflow-y-auto max-h-48">{incident.sources}</div>
-				{/if}
-			</div>
-		</div>
+		<GazaSourcesOverlay {incident} onClose={() => (showSources = false)} />
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
 	.stack-cards__item {
 		top: 2.5rem;
 		min-height: 50svh; /* Use svh for better viewport handling */
 		transform-origin: center top;
 		transition: transform 0.2s ease;
+		position: relative; /* Ensure the card is a positioning context for the overlay */
 	}
 
 	@media (width <= 640px) {
 		.stack-cards__item {
+			top: 0; /* Remove top offset on mobile */
 			min-height: calc(100% - 32px);
 			margin-bottom: 1rem; /* Add extra bottom margin on mobile */
 		}

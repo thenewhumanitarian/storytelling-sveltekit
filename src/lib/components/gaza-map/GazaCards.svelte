@@ -60,7 +60,7 @@
 			// Desktop: vertical stack
 			const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 			if (el && container) {
-				const TIMELINE_HEIGHT = 160; // px, updated to match the new timeline height (140 + 40)
+				const TIMELINE_HEIGHT = 188; // px, updated to match the new timeline height (140 + 24 + 24)
 				const containerRect = container.getBoundingClientRect();
 				const elRect = el.getBoundingClientRect();
 				const containerScrollTop = container.scrollTop;
