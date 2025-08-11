@@ -1,8 +1,25 @@
 <style type="text/css">
-	/* Remove social share icons on the left hand side */
-	.article__aside-share.visible {
-		display: none;
+	/* DRC Flag Color Variables */
+	:root {
+		/* Primary DRC Flag Colors */
+		--drc-dark-blue: #1a365d;      /* Dark navy blue from flag */
+		--drc-medium-blue: #2d5aa0;    /* Medium teal-blue from flag */
+		--drc-bright-yellow: #ffd700;  /* Bright yellow from star/stripes */
+		--drc-red: #dc2626;            /* Red from diagonal stripe */
+		
+		/* Accessibility-optimized variations */
+		--drc-bg-primary: #0f172a;     /* Darker background for better contrast */
+		--drc-bg-secondary: #1e293b;   /* Secondary background */
+		--drc-text-primary: #ffffff;   /* White text for dark backgrounds */
+		--drc-text-secondary: #e2e8f0; /* Light gray for secondary text */
+		--drc-accent-yellow: #fbbf24;  /* Slightly muted yellow for better readability */
+		--drc-accent-red: #ef4444;     /* Brighter red for better contrast */
 	}
+
+	/* Remove social share icons on the left hand side */
+	/* .article__aside-share.visible {
+		display: none;
+	} */
 	/* Dark mode */
 	.article__bulk {
 		background: #02344F;
@@ -22,6 +39,7 @@
 	.content__bulk li,
 	.article__content li {
 		border-color: white;
+		backdrop-filter: blur(0px);
 	}
 .article__extras { background: transparent; }
 	.content__bulk ul:not(.ss),
@@ -87,38 +105,6 @@
 			margin: 4rem 0;
 			padding: 0 3rem;
 		}
-	}
-	.slideshow--slide.intro-slide .slideshow--text {
-		text-align: center;
-		background: url(https://media.thenewhumanitarian.org/un-greening/un-truck-box.jpg);
-		background-size: cover;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.slideshow--slide.intro-slide .slideshow--slide--title {
-		display: inline;
-		max-width: 390px;
-		margin: 0 auto;
-	}
-	@media screen and (max-width: 500px) {
-		.slideshow--slide.intro-slide .slideshow--slide--title {
-			font-size: 1.8rem;
-		}
-	}
-	.slideshow--slide.intro-slide .slideshow--slide--title span {
-		background: #2c333d;
-		padding: 1rem;
-		line-height: 40px;
-		-webkit-box-decoration-break: clone;
-		box-decoration-break: clone;
-	}
-	.slideshow--text {
-		background: #4e5763;
-		display: flex;
-		background: #4e5763;
-		justify-content: center;
-		flex-direction: column;
 	}
 	.slideshow--slide--title {
 		margin: 0 !important;
@@ -285,6 +271,7 @@
 		color: white;
 	}
 	.article__post-share > span {
+		/* Body content background */
 		color: rgba(255, 255, 255, 0.6);
 	}
 	.ss > .ss__item {
@@ -293,6 +280,9 @@
 		transition: background-color 0.3s ease;
 		width: 4rem;
 		height: 4rem;
+	}
+	.article__content ul li:not(.meta-list__item,.teaser-list__item,.pager__item) {
+		margin-left: 0;
 	}
 	.ss > .ss__item:hover {
 		background-color: rgba(255, 255, 255, 0.6);
@@ -430,6 +420,98 @@
 		}
 	}
 
+	/* ===== VIDEO LANGUAGE TOGGLE STYLES ===== */
+	
+	/* Language toggle container */
+	.video-language-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		padding: 0.75rem;
+		border-radius: 0;
+		z-index: 15;
+		position: relative;
+		margin-top: -2rem;
+		/* background: #02344F; */
+	}
+
+	@media screen and (max-width: 768px) {
+		.video-language-toggle {
+			margin-top: -1rem;
+			margin-bottom: 1rem;
+		}
+	}
+
+
+
+	/* Language toggle buttons */
+	.lang-btn {
+		background: #02344F;
+		border: none;
+		color: white;
+		padding: 0.75rem 1.5rem;
+		font-weight: bold;
+		font-size: 1.3rem;
+		cursor: pointer;
+		border-radius: 0;
+		text-transform: none;
+		letter-spacing: 0.02em;
+		font-family: monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+		transition: background-color 0.2s ease;
+	}
+
+	.lang-btn:hover {
+		background: #1e4a6b;
+		color: white;
+	}
+
+	.lang-btn.active {
+		background: #EEDF24;
+		color: var(--drc-bg-primary);
+	}
+
+	/* Language separator */
+	.lang-separator {
+		color: var(--drc-text-secondary);
+		font-weight: bold;
+		font-size: 1.1rem;
+		opacity: 0.8;
+	}
+
+	/* Responsive adjustments for language toggles */
+	@media screen and (max-width: 768px) {
+		.video-language-toggle {
+			gap: 0.75rem;
+			padding: 0.6rem;
+		}
+		
+		.lang-btn {
+			padding: 0.6rem 1.2rem;
+			font-size: 1.2rem;
+		}
+		
+		.lang-separator {
+			font-size: 1.2rem;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		.video-language-toggle {
+			gap: 0.5rem;
+			padding: 0.5rem;
+		}
+		
+		.lang-btn {
+			padding: 0.5rem 1rem;
+			font-size: 1rem;
+		}
+		
+		.lang-separator {
+			font-size: 1rem;
+		}
+	}
+
 	/* ===== ANIMATED MEDIA ELEMENT CONTAINERS ===== */
 	
 	/* Media element container with animated border */
@@ -454,6 +536,60 @@
 	.article__body .margin-break, .content__bulk-inner .margin-break {
 		z-index: 30;
 	}
+
+	.article__banner--fullscreen {
+		position: relative;
+		border-bottom: none;
+	}
+
+	.article__banner--fullscreen::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 4px;
+		background: linear-gradient(
+			90deg,
+			#EEDF24 0%,
+			#04789D 25%,
+			#E44738 50%,
+			#EEDF24 75%,
+			#04789D 100%
+		);
+		background-size: 400% 100%;
+		animation: drc-gradient-flow 8s ease-in-out infinite;
+		z-index: 10;
+	}
+
+	.article__bulk {
+		/* Colour if used without the image */
+		background-color: #513644;
+		/* Image used to create the gradient */
+
+		/* background-color: #0f3f59;
+    background-image: url(https://english.news.cn/africa/20230514/a433bc41e9c9457a999381cceeabfffb/fe34723f05e84319ab8ba4db0af7702a.jpg);
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+    background-size: cover; */
+
+		/* End of bg image */
+	}
+
+	.field-name-body.flow {
+		/* Body content background */
+
+		/* background-color: rgba(2,52,79, 0.8);
+		padding: 2rem; */
+
+		/* End of body content background */
+	}
+
+	.article__body h2 {
+		font-size: 4rem;
+		margin: 4rem 0 1rem 0;
+	}
+
 
 	/* Media element content styling */
 	.media-element-container img,

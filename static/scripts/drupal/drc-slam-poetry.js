@@ -1,24 +1,70 @@
 document.addEventListener('DOMContentLoaded', function () {
-	// Change republish this article text to republish this investigation
-	// document.querySelector('.article__republish-btn').innerText = 'Republish this investigation'
 	// Add label to top saying "Slam Poetry"
-	// Create a new div
 	let labelDiv = document.createElement('div');
 	labelDiv.style.position = 'relative';
 	labelDiv.style.background = '#EEDF24';
-	// Add the desired class to the new div
 	labelDiv.classList.add('header-label--slam-poetry');
-	// Create a new paragraph and set its styles and content
+	
 	let labelParagraph = document.createElement('p');
 	labelParagraph.innerText = 'Slam Poetry';
-	// Append the paragraph to the new div
 	labelDiv.appendChild(labelParagraph);
-	// Select the .article__overview container
+	
 	let container = document.querySelector('.article__overview');
-	// Insert the new div as the first child of the container
 	if (container.firstChild) {
 		container.insertBefore(labelDiv, container.firstChild);
 	} else {
 		container.appendChild(labelDiv);
 	}
+
+	// Language toggle functionality for videos
+	function initializeVideoToggles() {
+		const videoContainers = document.querySelectorAll('.margin-break[data-video-fr][data-video-en]');
+		
+		videoContainers.forEach(container => {
+			const iframe = container.querySelector('iframe');
+			if (!iframe) return;
+			
+			// Get video IDs from data attributes
+			const videoEn = container.getAttribute('data-video-en');
+			const videoFr = container.getAttribute('data-video-fr');
+			
+			// Find the language toggle buttons for this video
+			const toggleContainer = container.nextElementSibling;
+			if (!toggleContainer || !toggleContainer.classList.contains('video-language-toggle')) {
+				return;
+			}
+			
+			const enButton = toggleContainer.querySelector('.lang-btn-en');
+			const frButton = toggleContainer.querySelector('.lang-btn-fr');
+			
+			if (!enButton || !frButton) return;
+			
+			// Set default to English
+			loadVideo(iframe, videoEn);
+			
+			// Add click event listeners
+			enButton.addEventListener('click', function() {
+				loadVideo(iframe, videoEn);
+				setActiveButton(enButton, frButton);
+			});
+			
+			frButton.addEventListener('click', function() {
+				loadVideo(iframe, videoFr);
+				setActiveButton(frButton, enButton);
+			});
+		});
+	}
+	
+	function loadVideo(iframe, videoId) {
+		const newSrc = `https://www.youtube.com/embed/${videoId}?si=_GH_gvRbaBIs3QAl`;
+		iframe.src = newSrc;
+	}
+	
+	function setActiveButton(activeBtn, inactiveBtn) {
+		activeBtn.classList.add('active');
+		inactiveBtn.classList.remove('active');
+	}
+	
+	// Initialize video toggles
+	initializeVideoToggles();
 });
