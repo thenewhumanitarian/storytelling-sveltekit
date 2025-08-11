@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../tailwind.css';
 	import '../app.css';
-	import '/styles/drupal/darkmode.css';
 	import { onMount } from 'svelte';
 
 	let { children } = $props();
