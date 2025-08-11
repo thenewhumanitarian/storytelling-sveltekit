@@ -309,4 +309,182 @@
 	.article--fullscreen .article__header .article__overview .image img, .article--fullscreen .article__header .article__overview .image picture {
 		object-position: bottom center;
 	}
+
+	/* ===== ANIMATED HR ELEMENTS ===== */
+	
+	/* Base HR styling */
+	hr {
+		height: 2rem;
+		border: none;
+		margin: 2rem 0;
+		background: linear-gradient(
+			90deg,
+			#EEDF24 0%,
+			#04789D 25%,
+			#E44738 50%,
+			#EEDF24 75%,
+			#04789D 100%
+		);
+		background-size: 400% 100%;
+		animation: drc-gradient-flow 8s ease-in-out infinite;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		position: relative;
+		z-index: 10;
+	}
+
+	/* Animation keyframes for the gradient flow - more random movement */
+	@keyframes drc-gradient-flow {
+		0% {
+			background-position: 0% 50%;
+		}
+		20% {
+			background-position: 50% 50%;
+		}
+		40% {
+			background-position: 100% 50%;
+		}
+		60% {
+			background-position: 75% 50%;
+		}
+		80% {
+			background-position: 25% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
+	}
+
+	/* Hover effect for interactive feel */
+	hr:hover {
+		animation-duration: 4s;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		transform: scaleY(1.1);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	/* Responsive adjustments */
+	@media screen and (max-width: 768px) {
+		hr {
+			height: 1.5rem;
+			margin: 1.5rem 0;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		hr {
+			height: 1rem;
+			margin: 1rem 0;
+		}
+	}
+
+	/* ===== ANIMATED VIDEO BORDERS ===== */
+	
+	/* Video container with animated border */
+	.margin-break {
+		position: relative;
+		margin: 2rem 0;
+		padding: 0.5rem;
+		background: linear-gradient(
+			90deg,
+			#EEDF24 0%,
+			#04789D 25%,
+			#E44738 50%,
+			#EEDF24 75%,
+			#04789D 100%
+		);
+		background-size: 400% 100%;
+		animation: drc-gradient-flow 8s ease-in-out infinite;
+		border-radius: 0;
+		z-index: 10;
+	}
+
+	/* Video iframe styling */
+	.margin-break iframe {
+		width: 100%;
+		aspect-ratio: 16/9;
+		border: none;
+		display: block;
+		background: #000;
+	}
+
+	/* Hover effect for video containers */
+	.margin-break:hover {
+		animation-duration: 4s;
+		transform: scale(1.02);
+		transition: transform 0.3s ease;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+	}
+
+	/* Responsive adjustments for videos */
+	@media screen and (max-width: 768px) {
+		.margin-break {
+			margin: 1.5rem 0;
+			padding: 0.4rem;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		.margin-break {
+			margin: 1rem 0;
+			padding: 0.3rem;
+		}
+	}
+
+	/* ===== ANIMATED MEDIA ELEMENT CONTAINERS ===== */
+	
+	/* Media element container with animated border */
+	.media-element-container {
+		position: relative;
+		margin: 2rem 0;
+		padding: 0.5rem;
+		background: linear-gradient(
+			90deg,
+			#EEDF24 0%,
+			#04789D 25%,
+			#E44738 50%,
+			#EEDF24 75%,
+			#04789D 100%
+		);
+		background-size: 400% 100%;
+		animation: drc-gradient-flow 8s ease-in-out infinite;
+		border-radius: 0;
+		z-index: 10;
+	}
+
+	.article__body .margin-break, .content__bulk-inner .margin-break {
+		z-index: 30;
+	}
+
+	/* Media element content styling */
+	.media-element-container img,
+	.media-element-container video,
+	.media-element-container iframe {
+		width: 100%;
+		border: none;
+		display: block;
+		background: #000;
+	}
+
+	/* Hover effect for media element containers */
+	.media-element-container:hover {
+		animation-duration: 4s;
+		transform: scale(1.02);
+		transition: transform 0.3s ease;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+	}
+
+	/* Responsive adjustments for media elements */
+	@media screen and (max-width: 768px) {
+		.media-element-container {
+			margin: 1.5rem 0;
+			padding: 0.4rem;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		.media-element-container {
+			margin: 1rem 0;
+			padding: 0.3rem;
+		}
+	}
 </style>
