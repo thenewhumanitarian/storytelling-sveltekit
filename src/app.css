@@ -1,1 +1,18 @@
 @import url("https://use.typekit.net/hpo6iea.css");
+
+/* DRC Flag Color Variables */
+:root {
+	/* Primary DRC Flag Colors */
+	--drc-dark-blue: #1a365d;      /* Dark navy blue from flag */
+	--drc-medium-blue: #2d5aa0;    /* Medium teal-blue from flag */
+	--drc-bright-yellow: #ffd700;  /* Bright yellow from star/stripes */
+	--drc-red: #dc2626;            /* Red from diagonal stripe */
+	
+	/* Accessibility-optimized variations */
+	--drc-bg-primary: #0f172a;     /* Darker background for better contrast */
+	--drc-bg-secondary: #1e293b;   /* Secondary background */
+	--drc-text-primary: #ffffff;   /* White text for dark backgrounds */
+	--drc-text-secondary: #e2e8f0; /* Light gray for secondary text */
+	--drc-accent-yellow: #fbbf24;  /* Slightly muted yellow for better readability */
+	--drc-accent-red: #ef4444;     /* Brighter red for better contrast */
+}

@@ -1,0 +1,312 @@
+<style type="text/css">
+	/* Remove social share icons on the left hand side */
+	.article__aside-share.visible {
+		display: none;
+	}
+	/* Dark mode */
+	.article__bulk {
+		background: #02344F;
+	}
+	.related-reports {
+		margin: 0 auto;
+	}
+	.article__post-share {
+		/* background: white; */
+		/* border-radius: 30px; */
+		padding: 1rem 1rem 0 1rem;
+	}
+	.article__actions {
+		padding: 3rem 0 4rem 0;
+	}
+	.article__extras,
+	.content__bulk li,
+	.article__content li {
+		border-color: white;
+	}
+.article__extras { background: transparent; }
+	.content__bulk ul:not(.ss),
+	.article__content ul:not(.ss) {
+		margin-bottom: 0;
+	}
+	@media screen and (max-width: 1400px) {
+		.article--fullscreen .article__extras {
+			margin-top: 0;
+		}
+	}
+	@media screen and (max-width: 600px) {
+		.article__post-share {
+			padding: 1rem;
+		}
+	}
+	.flow p:not([class]),
+	[contenteditable] p:not([class]),
+	div.accordion__content {
+		color: white;
+	}
+	.article__body a:not([class]),
+	.chapter a:not([class]),
+	.content__bulk a:not([class]),
+	.typeography a:not([class]),
+	.article__extras .article__republish-btn {
+		color: white;
+		text-decoration: underline;
+	}
+	.article__body a:not([class]):hover,
+	.chapter a:not([class]):hover,
+	.content__bulk a:not([class]):hover,
+	.typeography a:not([class]):hover,
+	.article__extras .article__republish-btn:hover {
+		color: #a03c50;
+	}
+	.article__author-note {
+		background: white;
+		border-radius: 1px;
+	}
+	.article__author-note p a {
+		color: #a03c50 !important;
+		text-decoration: none !important;
+	}
+	.article__author-note p a:hover {
+		text-decoration: underline !important;
+	}
+	.addendum__body p {
+		color: black !important;
+	}
+	.iframe-wrapper {
+		background: white;
+		margin: 4rem -10rem;
+		padding: 0 3rem;
+	}
+	@media screen and (max-width: 970px) {
+		.iframe-wrapper {
+			margin: 4rem -5rem;
+		}
+	}
+	@media screen and (max-width: 830px) {
+		.iframe-wrapper {
+			margin: 4rem 0;
+			padding: 0 3rem;
+		}
+	}
+	.slideshow--slide.intro-slide .slideshow--text {
+		text-align: center;
+		background: url(https://media.thenewhumanitarian.org/un-greening/un-truck-box.jpg);
+		background-size: cover;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.slideshow--slide.intro-slide .slideshow--slide--title {
+		display: inline;
+		max-width: 390px;
+		margin: 0 auto;
+	}
+	@media screen and (max-width: 500px) {
+		.slideshow--slide.intro-slide .slideshow--slide--title {
+			font-size: 1.8rem;
+		}
+	}
+	.slideshow--slide.intro-slide .slideshow--slide--title span {
+		background: #2c333d;
+		padding: 1rem;
+		line-height: 40px;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+	}
+	.slideshow--text {
+		background: #4e5763;
+		display: flex;
+		background: #4e5763;
+		justify-content: center;
+		flex-direction: column;
+	}
+	.slideshow--slide--title {
+		margin: 0 !important;
+	}
+	.slideshow--slide--title {
+		margin-top: 0 !important;
+	}
+	[data-theme='theme-aid'] .article__body h3 a {
+		border: none;
+	}
+	[data-theme='theme-aid'] .article__body h3 {
+		color: white;
+	}
+	/* End dark mode */
+	.big-video {
+		max-width: 700px;
+		width: 100%;
+	}
+	.big-video--caption p {
+		font-size: 1.6rem;
+		line-height: 1.17;
+		font-family: roboto, sans-serif;
+		color: #000 !important;
+		padding: 1rem;
+		background-color: #f2f2f2;
+		height: auto;
+		width: 100%;
+		position: relative;
+		float: none;
+		text-align: left;
+		margin-top: -7px;
+	}
+	.article__body h2,
+	.slideshow--slide ul li {
+		color: white;
+	}
+	.readmore {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #a03c50;
+		text-align: center;
+	}
+	.readmore a {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #a03c50 !important;
+	}
+	.readmore a:hover {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #f2f2f2 !important;
+	}
+	.bullet-box {
+		/* background: #f2f2f2; */
+		background: white !important;
+		/* Dark mode change */
+		padding: 15px;
+		margin: 15px 15px 15px 15px;
+		width: 400px;
+		display: inline-block;
+		text-align: left;
+	}
+	.article__extras .article__republish-btn {
+		text-decoration: none;
+	}
+	.article__extras .article__republish-btn:hover {
+		text-decoration: underline;
+	}
+	.article__author-location {
+		color: white;
+	}
+	.article__content ul.bullet-box {
+		margin: 4rem 1.5rem 2.5rem -12.5rem;
+	}
+	@media screen and (max-width: 980px) {
+		.article__content ul.bullet-box {
+			margin: 2.5rem auto;
+		}
+	}
+	@media screen and (max-width: 768px) {
+		.article__content ul.bullet-box {
+			margin: 3rem auto;
+		}
+	}
+	@media screen and (max-width: 600px) {
+		.article__content ul.bullet-box {
+			margin: 3rem auto;
+		}
+		iframe {
+			margin: 2rem auto;
+		}
+	}
+	.article__body h2 {
+		margin: 2em 0 1em 0;
+	}
+	.readmore {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #a03c50;
+		text-align: center;
+	}
+	.readmore a {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #a03c50 !important;
+	}
+	.readmore a:hover {
+		margin: 3rem 0 3rem 0;
+		font-family: 'GT Sectra Medium';
+		font-size: 1.9rem;
+		color: #f2f2f2 !important;
+	}
+	.callouttext {
+		color: #a03c50;
+	}
+	.callouttext a {
+		color: #a03c50;
+		font-weight: 500;
+	}
+	.callouttext a:hover {
+		color: #fff;
+		background: #a03c50;
+	}
+	div.accordion.accordion {
+		background: #4e5763;
+	}
+	.accordion__content.active {
+		background: transparent;
+	}
+	.accordion__trigger.active {
+		background: transparent;
+	}
+	.article--fullscreen .article__header .article__overview .image {
+		z-index: 0 !important;
+	}
+	/* Header investigation label styles */
+	.header-label--slam-poetry {
+		position: relative;
+		background: rgb(159, 62, 82);
+		z-index: 2;
+		padding: 0.5rem 1rem;
+		margin-bottom: 0.75rem;
+	}
+	@media screen and (max-width: 1000px) {
+		.header-label--slam-poetry {
+			margin-bottom: 0.75rem;
+		}
+	}
+	.header-label--slam-poetry p {
+		text-shadow: none !important;
+		color: #152E32;
+		font-weight: bold;
+	}
+	iframe {
+		border: none;
+		overflow: hidden;
+	}
+	.flow:not(.field--event--body,.tnh-image-grid__column,.tnh-box)>p:first-child:not(:last-of-type,.single-paragraph) {
+		color: white;
+	}
+	.article__post-share > span {
+		color: rgba(255, 255, 255, 0.6);
+	}
+	.ss > .ss__item {
+		background-color: rgba(255, 255, 255, 0.2);
+		border-radius: 50px;
+		transition: background-color 0.3s ease;
+		width: 4rem;
+		height: 4rem;
+	}
+	.ss > .ss__item:hover {
+		background-color: rgba(255, 255, 255, 0.6);
+	}
+	.flow h3 {
+		font-family: monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+		margin-top: 0;
+		padding: 0.5rem 1rem;
+		border-radius: 1px;
+		background-color: #EEDF24;
+		color: #152E32;
+		display: inline-block;
+	}
+	.article--fullscreen .article__header .article__overview .image img, .article--fullscreen .article__header .article__overview .image picture {
+		object-position: bottom center;
+	}
+</style>
