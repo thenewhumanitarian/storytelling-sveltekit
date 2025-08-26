@@ -423,6 +423,7 @@
 
 						<!-- Background Bar (for all periods) -->
 						{#if true}
+							{@const isEven = completeTimeline.indexOf(periodData) % 2 === 0}
 							<rect
 								x={xPos -
 									(groupingMode === 'monthly'
@@ -446,7 +447,7 @@
 										)
 									: barWidth}
 								height={maxBarHeightForPeriod}
-								fill="#f3f4f6"
+								fill={isEven ? '#f3f4f6' : '#e5e7eb'}
 								style:stroke="none"
 								opacity="0.5"
 							>
@@ -510,7 +511,7 @@
 									? 'end'
 									: 'middle'}
 							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-							style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+							style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 						>
 							{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
 								periodData.periodStartDate
@@ -531,8 +532,8 @@
 									: xPos > containerWidth * 0.9
 										? 'end'
 										: 'middle'}
-								class="fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+								class="group-hover:opacity-100 fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 							>
 								{periodData.totalKilledOrWounded}
 							</text>
@@ -577,7 +578,7 @@
 										? 'end'
 										: 'middle'}
 								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 							>
 								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
 									selectedPeriod.periodStartDate
@@ -695,12 +696,13 @@
 						stroke-width="1"
 						rx="2"
 						opacity="0.9"
+						class="pointer-events-none"
 					/>
 					<text
 						x={textX}
 						y={textY}
 						text-anchor="middle"
-						class="fill-[#9f3e52] font-sans text-xs font-semibold"
+						class="pointer-events-none fill-[#9f3e52] font-sans text-xs font-semibold"
 					>
 						{textContent}
 					</text>
@@ -787,7 +789,7 @@
 					{@const centeredTextX = bgX + bgWidth / 2} // Center text within background
 					{@const centeredTextY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
 
-					<g class="tooltip">
+					<g class="tooltip" style="pointer-events: none;">
 						<!-- Background rectangle -->
 						<rect
 							x={bgX}
@@ -799,12 +801,14 @@
 							stroke-width="1"
 							rx="2"
 							opacity="0.9"
+							class="pointer-events-none"
 						/>
 						<text
 							x={centeredTextX}
 							y={centeredTextY}
 							text-anchor="middle"
-							class="fill-black text-xs font-bold"
+							class="fill-black font-sans text-xs font-bold"
+							style="pointer-events: none;"
 						>
 							{textContent}
 						</text>
