@@ -22,7 +22,7 @@ function getISOWeekYearString(date: Date): string {
 }
 
 const sheetUrl =
-	'https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pub?output=csv'
+	'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0'
 
 async function fetchAndParseData(): Promise<IncidentData[]> {
 	const response = await fetch(sheetUrl)
@@ -95,11 +95,11 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 	return sorted
 }
 
-async function loadCachedData(): Promise<{ incidentsData: IncidentData[]; lastUpdated: string; buildTime: string; metadata?: any }> {
+async function loadCachedData(): Promise<{ incidentsData: IncidentData[]; lastUpdated: string; buildTime: string; metadata?: Record<string, unknown> }> {
 	try {
 		const cachedData = await import('$lib/data/gaza-map/cached-incidents.json')
 		return cachedData.default
-	} catch (error) {
+	} catch {
 		console.warn('Cache file not found, fetching live data...')
 		const incidentsData = await fetchAndParseData()
 		return {
@@ -117,8 +117,6 @@ function shouldUseCachedData(): boolean {
 	
 	// Check if we're in production based on PUBLIC_BASE_URL
 	const isProduction = PUBLIC_BASE_URL.includes('interactive.thenewhumanitarian.org')
-	const isPreview = PUBLIC_BASE_URL.includes('storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app')
-	const isLocal = PUBLIC_BASE_URL.includes('localhost')
 	
 	// Use cached data only in production
 	return isProduction
@@ -130,13 +128,18 @@ export const load: PageServerLoad = async () => {
 		console.log('📦 Using cached data for production')
 		return await loadCachedData()
 	} else {
-		// In development/preview, always fetch fresh data
+		// In development/preview, try to fetch fresh data, fallback to cached
 		console.log('🔄 Fetching fresh data for development/preview')
-		const incidentsData = await fetchAndParseData()
-		return {
-			incidentsData,
-			lastUpdated: new Date().toISOString(),
-			buildTime: new Date().toISOString()
+		try {
+			const incidentsData = await fetchAndParseData()
+			return {
+				incidentsData,
+				lastUpdated: new Date().toISOString(),
+				buildTime: new Date().toISOString()
+			}
+		} catch (error) {
+			console.warn('Failed to fetch fresh data, falling back to cached data:', error)
+			return await loadCachedData()
 		}
 	}
 }

@@ -248,7 +248,8 @@
 	/* Header investigation label styles */
 	.header-label--slam-poetry {
 		position: relative;
-		background: rgb(159, 62, 82);
+		/* background: rgb(159, 62, 82); */
+		background: #CD5D58;
 		z-index: 2;
 		padding: 0.5rem 1rem;
 		margin-bottom: 0.75rem;
@@ -292,8 +293,10 @@
 		margin-top: 0;
 		padding: 0.5rem 1rem;
 		border-radius: 1px;
-		background-color: #EEDF24;
-		color: #152E32;
+		/* background-color: #EEDF24; */
+		background-color: #CD5D58;
+		/* color: #152E32; */
+		color: white;
 		display: inline-block;
 	}
 	.article--fullscreen .article__header .article__overview .image img, .article--fullscreen .article__header .article__overview .image picture {
@@ -542,7 +545,7 @@
 		border-bottom: none;
 	}
 
-	.article__banner--fullscreen::after {
+	/* .article__banner--fullscreen::after {
 		content: '';
 		position: absolute;
 		bottom: 0;
@@ -560,11 +563,11 @@
 		background-size: 400% 100%;
 		animation: drc-gradient-flow 8s ease-in-out infinite;
 		z-index: 10;
-	}
+	} */
 
 	.article__bulk {
 		/* Colour if used without the image */
-		background-color: #513644;
+		background-color: #5A2D32;
 		/* Image used to create the gradient */
 
 		/* background-color: #0f3f59;
@@ -622,5 +625,8 @@
 			margin: 1rem 0;
 			padding: 0.3rem;
 		}
+	}
+	.article__title {
+		max-width: 480px;
 	}
 </style>

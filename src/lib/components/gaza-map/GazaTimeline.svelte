@@ -33,11 +33,13 @@
 	let tooltipVisible = $state(false);
 	let tooltipData = $state<{ x: number; y: number; value: number } | null>(null);
 	const svgHeight = 140; // Reduced back to original height
-	const barWidth = 12;
+	const barWidth = 12; // Default bar width
 	const barTopPadding = 16;
 	const axisPaddingBottom = 18;
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
+	
+
 	const toggleHeight = 24; // Height for the toggle switch area (further reduced)
 	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
 
@@ -90,9 +92,19 @@
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
+		
+		// Calculate bar width for this scale
+		let barWidthForScale = barWidth;
+		if (groupingMode === 'monthly') {
+			const totalMonths = timeMonth.count(minDate, maxDate) + 1;
+			const availableWidth = containerWidth - 24;
+			const widthPerMonth = availableWidth / totalMonths;
+			barWidthForScale = Math.min(Math.max(widthPerMonth * 0.8, 20), 60);
+		}
+		
 		return scaleTime()
 			.domain([minDate, maxDate])
-			.range([barWidth / 2, containerWidth - barWidth / 2]);
+			.range([barWidthForScale / 2, containerWidth - barWidthForScale / 2]);
 	});
 
 	const heightScale = $derived.by(() => {
@@ -113,14 +125,53 @@
 
 	const maxBarLabel = $derived.by(() => {
 		if (!maxPeriod || !timeScale || !heightScale) return null;
+		const labelY = axisY - heightScale(maxPeriod.totalKilledOrWounded) - barPaddingBottom - 6;
+		const minLabelY = 25; // Minimum Y position to prevent cutoff
 		return {
 			x: timeScale(maxPeriod.periodStartDate),
-			y: axisY - heightScale(maxPeriod.totalKilledOrWounded) - barPaddingBottom - 6,
+			y: Math.max(labelY, minLabelY),
 			value: maxPeriod.totalKilledOrWounded
 		};
 	});
 
 	const events = $derived(parsedIncidents.filter((d) => d.type === 'event'));
+
+	// Create complete timeline with all periods (including empty ones)
+	const completeTimeline = $derived.by(() => {
+		if (aggregatedData.length === 0) return [];
+		
+		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
+		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
+		
+		// Get the full date range
+		const dateDomain = extent(aggregatedData, (d) => d.periodStartDate) as [Date, Date];
+		const minDate = timeFloor(dateDomain[0]!);
+		const maxDate = timeFloor(dateDomain[1]!);
+		
+		// Generate all periods in the range
+		const allPeriods: Date[] = [];
+		let currentDate = minDate;
+		while (currentDate <= maxDate) {
+			allPeriods.push(currentDate);
+			currentDate = groupingMode === 'weekly' 
+				? timeWeek.offset(currentDate, 1)
+				: timeMonth.offset(currentDate, 1);
+		}
+		
+		// Map each period to data (0 for empty periods)
+		return allPeriods.map(periodStartDate => {
+			const existingData = aggregatedData.find(d => 
+				d.periodStartDate.getTime() === periodStartDate.getTime()
+			);
+			
+			return {
+				periodStartDate,
+				totalKilledOrWounded: existingData?.totalKilledOrWounded || 0,
+				firstChronoId: existingData?.firstChronoId || null,
+				hasData: !!existingData
+			};
+		});
+	});
 
 	// --- Lifecycle ---
 	onMount(() => {
@@ -312,6 +363,66 @@
 					{/if}
 				{/each}
 
+				<!-- Background Bars (render first, behind all other elements) -->
+				{#each completeTimeline as periodData (periodData.periodStartDate.toISOString())}
+					{@const xPos = timeScale(periodData.periodStartDate)}
+					{@const maxBarHeightForPeriod = heightScale(Math.max(...aggregatedData.map(d => d.totalKilledOrWounded), 1))}
+					{@const yPos = axisY - maxBarHeightForPeriod - barPaddingBottom}
+					{@const isSelected = activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
+					{#if !isSelected}
+						<g
+							class="period-bar period-bar--background group cursor-pointer focus:outline-none"
+							onclick={() => handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
+							onkeydown={(e) =>
+								handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId || 0)}
+							onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
+							onmouseleave={handleMouseLeave}
+							onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
+							onfocusout={handleMouseLeave}
+							tabindex="0"
+							aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(
+								periodData.periodStartDate
+							)}: ${periodData.totalKilledOrWounded} killed/wounded`}
+							role="button"
+						>
+							<text
+								x={xPos < containerWidth * 0.1
+									? xPos - 5
+									: xPos > containerWidth * 0.9
+										? xPos + 5
+										: xPos}
+								y={axisY + 14}
+								text-anchor={xPos < containerWidth * 0.1
+									? 'start'
+									: xPos > containerWidth * 0.9
+										? 'end'
+										: 'middle'}
+								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+							>
+								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
+									periodData.periodStartDate
+								).format('D MMMM Y')}
+							</text>
+							<rect
+								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
+								y={yPos}
+								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
+								height={maxBarHeightForPeriod}
+								fill="#f3f4f6"
+								style:stroke="none"
+								opacity="0.5"
+							>
+								<title>
+									{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(
+										periodData.periodStartDate
+									)} - {periodData.totalKilledOrWounded} killed/wounded
+								</title>
+							</rect>
+						</g>
+					{/if}
+				{/each}
+
 				<!-- Inactive Period Bars (render first, behind active elements) -->
 				{#each aggregatedData as periodData (periodData.periodStartDate.toISOString())}
 					{@const xPos = timeScale(periodData.periodStartDate)}
@@ -319,7 +430,7 @@
 					{@const yPos = axisY - barHeight - barPaddingBottom}
 					{@const isSelected =
 						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
-					{#if !isSelected}
+					{#if !isSelected && periodData.totalKilledOrWounded > 0}
 						<g
 							class="period-bar period-bar--inactive group cursor-pointer focus:outline-none"
 							onclick={() => handleBarClick(periodData.periodStartDate, periodData.firstChronoId)}
@@ -355,9 +466,9 @@
 							<rect
 								class:group-hover:fill-[#2db487]={!isSelected}
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-								x={xPos - barWidth / 2}
+								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
 								y={yPos}
-								width={barWidth}
+								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
 								height={barHeight}
 								fill="#9f3e52"
 								style:stroke="none"
@@ -418,9 +529,9 @@
 							<rect
 								class:group-hover:fill-[#2db487]={true}
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-								x={xPos - barWidth / 2}
+								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
 								y={yPos}
-								width={barWidth}
+								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
 								height={barHeight}
 								fill="#2db487"
 								style:stroke="none"
@@ -487,13 +598,36 @@
 						stroke="#9f3e52"
 						stroke-width="1"
 					/>
+					{@const textContent = `${maxBarLabel.value} killed/wounded`}
+					{@const textWidth = textContent.length * 6} // Approximate character width
+					{@const textHeight = 12} // Approximate text height
+					{@const padding = 4}
+					{@const bgWidth = textWidth + padding * 2}
+					{@const bgHeight = textHeight + padding * 2}
+					{@const bgX = textAnchor === 'end' ? labelX - bgWidth : labelX - bgWidth / 2}
+					{@const bgY = adjustedY - bgHeight} // Position background above the adjusted label position
+					{@const textX = bgX + bgWidth / 2} // Center text within background
+					{@const textY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
+					
+					<!-- Background rectangle -->
+					<rect
+						x={bgX}
+						y={bgY}
+						width={bgWidth}
+						height={bgHeight}
+						fill="white"
+						stroke="#9f3e52"
+						stroke-width="1"
+						rx="2"
+						opacity="0.9"
+					/>
 					<text
-						x={labelX - 3}
-						y={adjustedY + 3}
-						text-anchor={textAnchor}
+						x={textX}
+						y={textY}
+						text-anchor="middle"
 						class="fill-[#9f3e52] font-sans text-xs font-semibold"
 					>
-						{maxBarLabel.value} killed/wounded
+						{textContent}
 					</text>
 				{/if}
 
@@ -562,9 +696,32 @@
 					{@const textY = tooltipData.y}
 					{@const textAnchor = isFirst5Percent ? 'start' : isLast5Percent ? 'end' : 'middle'}
 
+					{@const textContent = tooltipData.value.toString()}
+					{@const textWidth = textContent.length * 6} // Approximate character width
+					{@const textHeight = 12} // Approximate text height
+					{@const padding = 3}
+					{@const bgWidth = textWidth + padding * 2}
+					{@const bgHeight = textHeight + padding * 2}
+					{@const bgX = textAnchor === 'start' ? textX - padding : textAnchor === 'end' ? textX - bgWidth + padding : textX - bgWidth / 2}
+					{@const bgY = textY - textHeight - padding}
+					{@const centeredTextX = bgX + bgWidth / 2} // Center text within background
+					{@const centeredTextY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
+
 					<g class="tooltip">
-						<text x={textX} y={textY} text-anchor={textAnchor} class="fill-black text-xs font-bold">
-							{tooltipData.value}
+						<!-- Background rectangle -->
+						<rect
+							x={bgX}
+							y={bgY}
+							width={bgWidth}
+							height={bgHeight}
+							fill="white"
+							stroke="black"
+							stroke-width="1"
+							rx="2"
+							opacity="0.9"
+						/>
+						<text x={centeredTextX} y={centeredTextY} text-anchor="middle" class="fill-black text-xs font-bold">
+							{textContent}
 						</text>
 					</g>
 				{/if}
@@ -612,6 +769,10 @@
 
 <style lang="postcss">
 	/* Ensure proper layering for chart elements */
+	.period-bar--background {
+		z-index: 0; /* Behind all other elements */
+	}
+
 	.event-symbol--inactive {
 		z-index: 1;
 	}

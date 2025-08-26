@@ -1,20 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
 	// Add label to top saying "Slam Poetry"
-	let labelDiv = document.createElement('div');
-	labelDiv.style.position = 'relative';
-	labelDiv.style.background = '#EEDF24';
-	labelDiv.classList.add('header-label--slam-poetry');
+	// let labelDiv = document.createElement('div');
+	// labelDiv.style.position = 'relative';
+	// labelDiv.style.background = '#EEDF24';
+	// labelDiv.classList.add('header-label--slam-poetry');
 	
-	let labelParagraph = document.createElement('p');
-	labelParagraph.innerText = 'Slam Poetry';
-	labelDiv.appendChild(labelParagraph);
+	// let labelParagraph = document.createElement('p');
+	// labelParagraph.innerText = 'Slam Poetry';
+	// labelDiv.appendChild(labelParagraph);
 	
-	let container = document.querySelector('.article__overview');
-	if (container.firstChild) {
-		container.insertBefore(labelDiv, container.firstChild);
-	} else {
-		container.appendChild(labelDiv);
-	}
+	// let container = document.querySelector('.article__overview');
+	// if (container.firstChild) {
+	// 	container.insertBefore(labelDiv, container.firstChild);
+	// } else {
+	// 	container.appendChild(labelDiv);
+	// }
 
 	// Language toggle functionality for videos
 	function initializeVideoToggles() {
