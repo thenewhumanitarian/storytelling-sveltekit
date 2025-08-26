@@ -363,51 +363,66 @@
 					{/if}
 				{/each}
 
-				<!-- Background Bars (render first, behind all other elements) -->
+				<!-- Period Bar Groups (render background and data bars together) -->
 				{#each completeTimeline as periodData (periodData.periodStartDate.toISOString())}
 					{@const xPos = timeScale(periodData.periodStartDate)}
 					{@const maxBarHeightForPeriod = heightScale(
 						Math.max(...aggregatedData.map((d) => d.totalKilledOrWounded), 1)
 					)}
-					{@const yPos = axisY - maxBarHeightForPeriod - barPaddingBottom}
+					{@const barHeight = periodData.hasData ? heightScale(periodData.totalKilledOrWounded) : 0}
+					{@const yPos = axisY - barHeight - barPaddingBottom}
+					{@const backgroundYPos = axisY - maxBarHeightForPeriod - barPaddingBottom}
 					{@const isSelected =
 						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
-					{#if !isSelected}
-						<g
-							class="period-bar period-bar--background group cursor-pointer focus:outline-none"
-							onclick={() =>
-								handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
-							onkeydown={(e) =>
-								handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId || 0)}
-							onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
-							onfocusout={handleMouseLeave}
-							tabindex="0"
-							aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(
-								periodData.periodStartDate
-							)}: ${periodData.totalKilledOrWounded} killed/wounded`}
-							role="button"
-						>
-							<text
-								x={xPos < containerWidth * 0.1
-									? xPos - 5
-									: xPos > containerWidth * 0.9
-										? xPos + 5
-										: xPos}
-								y={axisY + 14}
-								text-anchor={xPos < containerWidth * 0.1
-									? 'start'
-									: xPos > containerWidth * 0.9
-										? 'end'
-										: 'middle'}
-								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
-							>
-								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
-									periodData.periodStartDate
-								).format('D MMMM Y')}
-							</text>
+					{@const hasData = periodData.hasData && periodData.totalKilledOrWounded > 0}
+
+					<g
+						class="period-bar-group group cursor-pointer focus:outline-none"
+						onclick={() =>
+							handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
+						onkeydown={(e) =>
+							handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId || 0)}
+						onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
+						onmouseleave={handleMouseLeave}
+						onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
+						onfocusout={handleMouseLeave}
+						tabindex="0"
+						aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(
+							periodData.periodStartDate
+						)}: ${periodData.totalKilledOrWounded} killed/wounded`}
+						role="button"
+					>
+						<!-- Invisible hover area (covers entire period space) -->
+						<rect
+							x={xPos -
+								(groupingMode === 'monthly'
+									? Math.min(
+											Math.max(
+												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												20
+											),
+											60
+										)
+									: barWidth) /
+									2}
+							y={backgroundYPos}
+							width={groupingMode === 'monthly'
+								? Math.min(
+										Math.max(
+											((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+											20
+										),
+										60
+									)
+								: barWidth}
+							height={maxBarHeightForPeriod}
+							fill="transparent"
+							style:stroke="none"
+							pointer-events="all"
+						/>
+
+						<!-- Background Bar (for all periods) -->
+						{#if true}
 							<rect
 								x={xPos -
 									(groupingMode === 'monthly'
@@ -420,7 +435,7 @@
 											)
 										: barWidth) /
 										2}
-								y={yPos}
+								y={backgroundYPos}
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
@@ -441,52 +456,12 @@
 									)} - {periodData.totalKilledOrWounded} killed/wounded
 								</title>
 							</rect>
-						</g>
-					{/if}
-				{/each}
+						{/if}
 
-				<!-- Inactive Period Bars (render first, behind active elements) -->
-				{#each aggregatedData as periodData (periodData.periodStartDate.toISOString())}
-					{@const xPos = timeScale(periodData.periodStartDate)}
-					{@const barHeight = heightScale(periodData.totalKilledOrWounded)}
-					{@const yPos = axisY - barHeight - barPaddingBottom}
-					{@const isSelected =
-						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
-					{#if !isSelected && periodData.totalKilledOrWounded > 0}
-						<g
-							class="period-bar period-bar--inactive group cursor-pointer focus:outline-none"
-							onclick={() => handleBarClick(periodData.periodStartDate, periodData.firstChronoId)}
-							onkeydown={(e) =>
-								handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId)}
-							onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
-							onfocusout={handleMouseLeave}
-							tabindex="0"
-							aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(periodData.periodStartDate)}: ${periodData.totalKilledOrWounded} killed/wounded`}
-							role="button"
-						>
-							<text
-								x={xPos < containerWidth * 0.1
-									? xPos - 5
-									: xPos > containerWidth * 0.9
-										? xPos + 5
-										: xPos}
-								y={axisY + 14}
-								text-anchor={xPos < containerWidth * 0.1
-									? 'start'
-									: xPos > containerWidth * 0.9
-										? 'end'
-										: 'middle'}
-								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
-							>
-								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
-									periodData.periodStartDate
-								).format('D MMMM Y')}
-							</text>
+						<!-- Data Bar (only for periods with data) -->
+						{#if hasData && !isSelected}
 							<rect
-								class:group-hover:fill-[#2db487]={!isSelected}
+								class:group-hover:fill-[#2db487]={true}
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 								x={xPos -
 									(groupingMode === 'monthly'
@@ -519,8 +494,50 @@
 									)} - {periodData.totalKilledOrWounded} killed/wounded
 								</title>
 							</rect>
-						</g>
-					{/if}
+						{/if}
+
+						<!-- Date Label (for all periods) -->
+						<text
+							x={xPos < containerWidth * 0.1
+								? xPos - 5
+								: xPos > containerWidth * 0.9
+									? xPos + 5
+									: xPos}
+							y={axisY + 14}
+							text-anchor={xPos < containerWidth * 0.1
+								? 'start'
+								: xPos > containerWidth * 0.9
+									? 'end'
+									: 'middle'}
+							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+							style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+						>
+							{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
+								periodData.periodStartDate
+							).format('D MMMM Y')}
+						</text>
+
+						<!-- Killed/Wounded Label (only for periods with data) -->
+						{#if hasData}
+							<text
+								x={xPos < containerWidth * 0.1
+									? xPos - 5
+									: xPos > containerWidth * 0.9
+										? xPos + 5
+										: xPos}
+								y={yPos - 5}
+								text-anchor={xPos < containerWidth * 0.1
+									? 'start'
+									: xPos > containerWidth * 0.9
+										? 'end'
+										: 'middle'}
+								class="fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								style="paint-order: stroke; stroke: white; stroke-width: 3px;"
+							>
+								{periodData.totalKilledOrWounded}
+							</text>
+						{/if}
+					</g>
 				{/each}
 
 				<!-- Active Period Bars (render before active events) -->
