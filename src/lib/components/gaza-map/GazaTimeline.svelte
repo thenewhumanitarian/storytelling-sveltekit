@@ -38,7 +38,6 @@
 	const axisPaddingBottom = 18;
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
-	
 
 	const toggleHeight = 24; // Height for the toggle switch area (further reduced)
 	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
@@ -92,7 +91,7 @@
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
-		
+
 		// Calculate bar width for this scale
 		let barWidthForScale = barWidth;
 		if (groupingMode === 'monthly') {
@@ -101,7 +100,7 @@
 			const widthPerMonth = availableWidth / totalMonths;
 			barWidthForScale = Math.min(Math.max(widthPerMonth * 0.8, 20), 60);
 		}
-		
+
 		return scaleTime()
 			.domain([minDate, maxDate])
 			.range([barWidthForScale / 2, containerWidth - barWidthForScale / 2]);
@@ -139,31 +138,32 @@
 	// Create complete timeline with all periods (including empty ones)
 	const completeTimeline = $derived.by(() => {
 		if (aggregatedData.length === 0) return [];
-		
+
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
-		
+
 		// Get the full date range
 		const dateDomain = extent(aggregatedData, (d) => d.periodStartDate) as [Date, Date];
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
-		
+
 		// Generate all periods in the range
 		const allPeriods: Date[] = [];
 		let currentDate = minDate;
 		while (currentDate <= maxDate) {
 			allPeriods.push(currentDate);
-			currentDate = groupingMode === 'weekly' 
-				? timeWeek.offset(currentDate, 1)
-				: timeMonth.offset(currentDate, 1);
+			currentDate =
+				groupingMode === 'weekly'
+					? timeWeek.offset(currentDate, 1)
+					: timeMonth.offset(currentDate, 1);
 		}
-		
+
 		// Map each period to data (0 for empty periods)
-		return allPeriods.map(periodStartDate => {
-			const existingData = aggregatedData.find(d => 
-				d.periodStartDate.getTime() === periodStartDate.getTime()
+		return allPeriods.map((periodStartDate) => {
+			const existingData = aggregatedData.find(
+				(d) => d.periodStartDate.getTime() === periodStartDate.getTime()
 			);
-			
+
 			return {
 				periodStartDate,
 				totalKilledOrWounded: existingData?.totalKilledOrWounded || 0,
@@ -366,13 +366,17 @@
 				<!-- Background Bars (render first, behind all other elements) -->
 				{#each completeTimeline as periodData (periodData.periodStartDate.toISOString())}
 					{@const xPos = timeScale(periodData.periodStartDate)}
-					{@const maxBarHeightForPeriod = heightScale(Math.max(...aggregatedData.map(d => d.totalKilledOrWounded), 1))}
+					{@const maxBarHeightForPeriod = heightScale(
+						Math.max(...aggregatedData.map((d) => d.totalKilledOrWounded), 1)
+					)}
 					{@const yPos = axisY - maxBarHeightForPeriod - barPaddingBottom}
-					{@const isSelected = activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
+					{@const isSelected =
+						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
 					{#if !isSelected}
 						<g
 							class="period-bar period-bar--background group cursor-pointer focus:outline-none"
-							onclick={() => handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
+							onclick={() =>
+								handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
 							onkeydown={(e) =>
 								handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId || 0)}
 							onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
@@ -405,9 +409,27 @@
 								).format('D MMMM Y')}
 							</text>
 							<rect
-								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
+								x={xPos -
+									(groupingMode === 'monthly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													20
+												),
+												60
+											)
+										: barWidth) /
+										2}
 								y={yPos}
-								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
+								width={groupingMode === 'monthly'
+									? Math.min(
+											Math.max(
+												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												20
+											),
+											60
+										)
+									: barWidth}
 								height={maxBarHeightForPeriod}
 								fill="#f3f4f6"
 								style:stroke="none"
@@ -466,9 +488,27 @@
 							<rect
 								class:group-hover:fill-[#2db487]={!isSelected}
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
+								x={xPos -
+									(groupingMode === 'monthly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													20
+												),
+												60
+											)
+										: barWidth) /
+										2}
 								y={yPos}
-								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
+								width={groupingMode === 'monthly'
+									? Math.min(
+											Math.max(
+												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												20
+											),
+											60
+										)
+									: barWidth}
 								height={barHeight}
 								fill="#9f3e52"
 								style:stroke="none"
@@ -529,9 +569,27 @@
 							<rect
 								class:group-hover:fill-[#2db487]={true}
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-								x={xPos - (groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth) / 2}
+								x={xPos -
+									(groupingMode === 'monthly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													20
+												),
+												60
+											)
+										: barWidth) /
+										2}
 								y={yPos}
-								width={groupingMode === 'monthly' ? Math.min(Math.max((containerWidth - 24) / Math.max(aggregatedData.length, 1) * 0.8, 20), 60) : barWidth}
+								width={groupingMode === 'monthly'
+									? Math.min(
+											Math.max(
+												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												20
+											),
+											60
+										)
+									: barWidth}
 								height={barHeight}
 								fill="#2db487"
 								style:stroke="none"
@@ -587,7 +645,7 @@
 					{@const labelX =
 						labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
 					{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
-					{@const labelYOffset = 13}
+					{@const labelYOffset = 48}
 					{@const minY = 25} // Minimum Y position to prevent overlap
 					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
 					<line
@@ -601,14 +659,14 @@
 					{@const textContent = `${maxBarLabel.value} killed/wounded`}
 					{@const textWidth = textContent.length * 6} // Approximate character width
 					{@const textHeight = 12} // Approximate text height
-					{@const padding = 4}
+					{@const padding = 5}
 					{@const bgWidth = textWidth + padding * 2}
 					{@const bgHeight = textHeight + padding * 2}
-					{@const bgX = textAnchor === 'end' ? labelX - bgWidth : labelX - bgWidth / 2}
-					{@const bgY = adjustedY - bgHeight} // Position background above the adjusted label position
+					{@const bgX = textAnchor === 'end' ? labelX - bgWidth + 8 : labelX - bgWidth / 2 - 8}
+					{@const bgY = adjustedY - bgHeight + 10} // Position background above the adjusted label position
 					{@const textX = bgX + bgWidth / 2} // Center text within background
 					{@const textY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
-					
+
 					<!-- Background rectangle -->
 					<rect
 						x={bgX}
@@ -702,7 +760,12 @@
 					{@const padding = 3}
 					{@const bgWidth = textWidth + padding * 2}
 					{@const bgHeight = textHeight + padding * 2}
-					{@const bgX = textAnchor === 'start' ? textX - padding : textAnchor === 'end' ? textX - bgWidth + padding : textX - bgWidth / 2}
+					{@const bgX =
+						textAnchor === 'start'
+							? textX - padding
+							: textAnchor === 'end'
+								? textX - bgWidth + padding
+								: textX - bgWidth / 2}
 					{@const bgY = textY - textHeight - padding}
 					{@const centeredTextX = bgX + bgWidth / 2} // Center text within background
 					{@const centeredTextY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
@@ -720,7 +783,12 @@
 							rx="2"
 							opacity="0.9"
 						/>
-						<text x={centeredTextX} y={centeredTextY} text-anchor="middle" class="fill-black text-xs font-bold">
+						<text
+							x={centeredTextX}
+							y={centeredTextY}
+							text-anchor="middle"
+							class="fill-black text-xs font-bold"
+						>
 							{textContent}
 						</text>
 					</g>
