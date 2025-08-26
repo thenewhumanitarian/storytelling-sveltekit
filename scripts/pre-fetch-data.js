@@ -65,6 +65,7 @@ const DATA_SOURCES = {
   gaza: {
     name: 'Gaza Map Incidents',
     url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pub?output=csv',
+    fallbackPath: 'src/lib/data/gaza-map/20250721-sample-data-gaza.csv',
     outputPath: 'src/lib/data/gaza-map/cached-incidents.json',
     processor: processGazaData
   }
@@ -72,6 +73,7 @@ const DATA_SOURCES = {
   // example: {
   //   name: 'Example Data',
   //   url: 'https://api.example.com/data',
+  //   fallbackPath: 'src/lib/data/example/fallback-data.csv',
   //   outputPath: 'src/lib/data/example/cached-data.json',
   //   processor: processExampleData
   // }
@@ -171,8 +173,8 @@ async function processGazaData(csvText) {
   }
 }
 
-// Generic data fetcher
-async function fetchData(url, sourceName) {
+// Generic data fetcher with fallback support
+async function fetchData(url, sourceName, fallbackPath = null) {
   console.log(`🔄 Fetching ${sourceName} from ${url}...`)
   
   try {
@@ -191,6 +193,21 @@ async function fetchData(url, sourceName) {
     return data
   } catch (error) {
     console.error(`❌ Failed to fetch ${sourceName}:`, error.message)
+    
+    // Try fallback if available
+    if (fallbackPath) {
+      console.log(`🔄 Trying fallback file: ${fallbackPath}`)
+      try {
+        const fallbackData = await fs.readFile(fallbackPath, 'utf-8')
+        console.log(`✅ Successfully loaded fallback data for ${sourceName} (${fallbackData.length} characters)`)
+        console.log(`⚠️  Using fallback data - this may be outdated`)
+        return fallbackData
+      } catch (fallbackError) {
+        console.error(`❌ Fallback file also failed:`, fallbackError.message)
+        throw new Error(`Both remote and fallback data sources failed: ${error.message}`)
+      }
+    }
+    
     throw error
   }
 }
@@ -220,8 +237,8 @@ async function processDataSource(sourceKey, sourceConfig) {
   try {
     console.log(`\n🚀 Processing ${sourceConfig.name}...`)
     
-    // Fetch the data
-    const rawData = await fetchData(sourceConfig.url, sourceConfig.name)
+    // Fetch the data (with fallback support)
+    const rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath)
     
     // Process the data
     const processedData = await sourceConfig.processor(rawData)
@@ -289,13 +306,16 @@ async function preFetchAllData() {
     })
   }
   
-  // Exit with error code if any source failed
+  // Don't exit with error code if any source failed - just warn
+  // This allows the build to continue with partial data
   if (failed.length > 0) {
     console.log('\n⚠️  Some data sources failed. Build may continue with partial data.')
-    process.exit(1)
+    // Don't exit with error code - let the build continue
+    return false
   }
   
   console.log('\n🎉 All data sources processed successfully!')
+  return true
 }
 
 // Handle command line arguments
@@ -332,13 +352,23 @@ async function main() {
       const originalSources = DATA_SOURCES
       Object.assign(DATA_SOURCES, requestedSources)
       
-      await preFetchAllData()
+      const success = await preFetchAllData()
       
       // Restore original sources
       Object.assign(DATA_SOURCES, originalSources)
+      
+      // Only exit with error if no sources succeeded
+      if (!success) {
+        process.exit(1)
+      }
     } else {
       // Process all sources
-      await preFetchAllData()
+      const success = await preFetchAllData()
+      
+      // Only exit with error if no sources succeeded
+      if (!success) {
+        process.exit(1)
+      }
     }
   } catch (error) {
     console.error('💥 Fatal error during data fetching:', error)

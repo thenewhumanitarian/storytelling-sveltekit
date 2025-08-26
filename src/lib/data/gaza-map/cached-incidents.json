@@ -275,7 +275,7 @@
       "latitude": 31.3667,
       "longitude": 34.3333,
       "date": "2024-05-03",
-      "killedOrWounded": 150,
+      "killedOrWounded": 75,
       "title": "Testing more",
       "description": "Testing some more.",
       "sources": "",
@@ -455,8 +455,8 @@
       "weekYear": "26-2025"
     }
   ],
-  "lastUpdated": "2025-07-28T09:46:14.077Z",
-  "buildTime": "2025-07-28T09:46:14.077Z",
+  "lastUpdated": "2025-08-26T08:30:46.489Z",
+  "buildTime": "2025-08-26T08:30:46.489Z",
   "metadata": {
     "totalRecords": 27,
     "incidents": 24,
