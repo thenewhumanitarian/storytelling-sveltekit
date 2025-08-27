@@ -45,7 +45,11 @@
 	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
 		incidentsData
-			.map((d) => ({ ...d, dateObj: new Date(d.date) }))
+			.map((d) => ({
+				...d,
+				dateObj: new Date(d.date),
+				title: d.title || 'Untitled Event' // Ensure title is never empty
+			}))
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
 
@@ -57,37 +61,176 @@
 		return groupingMode === 'weekly' ? timeWeek.floor(date) : timeMonth.floor(date);
 	});
 
-	const aggregatedData = $derived.by(() => {
+	// Enhanced aggregation with incident count
+	const enhancedAggregatedData = $derived.by(() => {
 		if (parsedIncidents.length === 0) return [];
 
-		// Filter to only include incidents for bar aggregation
 		const incidentsOnly = parsedIncidents.filter((d) => d.type === 'incident');
-
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 
 		const rolledUp = rollup(
 			incidentsOnly,
 			(v) => ({
-				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded),
-				firstChronoId: v[0].chronoId
+				totalKilledOrWounded: sum(v, (d) => d.killedOrWounded || 0),
+				incidentCount: v.length,
+				firstChronoId: v[0].chronoId,
+				// Calculate geographic spread (distance between incidents)
+				geographicSpread: calculateGeographicSpread(v),
+				// Calculate intensity (casualties per incident)
+				intensity: sum(v, (d) => d.killedOrWounded || 0) / v.length
 			}),
 			(d) => timeFloor(d.dateObj)
 		);
 
-		return Array.from(rolledUp, ([periodStartDate, values]) => ({
+		const result = Array.from(rolledUp, ([periodStartDate, values]) => ({
 			periodStartDate: periodStartDate as Date,
 			totalKilledOrWounded: values.totalKilledOrWounded,
-			firstChronoId: values.firstChronoId
+			incidentCount: values.incidentCount,
+			firstChronoId: values.firstChronoId,
+			geographicSpread: values.geographicSpread,
+			intensity: values.intensity
 		})).sort((a, b) => a.periodStartDate.getTime() - b.periodStartDate.getTime());
+
+		return result;
+	});
+
+	// Helper function to calculate geographic spread
+	function calculateGeographicSpread(incidents: any[]): number {
+		if (incidents.length < 2) return 0;
+		
+		const validIncidents = incidents.filter(i => i.latitude && i.longitude);
+		if (validIncidents.length < 2) return 0;
+
+		let maxDistance = 0;
+		for (let i = 0; i < validIncidents.length; i++) {
+			for (let j = i + 1; j < validIncidents.length; j++) {
+				const distance = calculateDistance(
+					validIncidents[i].latitude, validIncidents[i].longitude,
+					validIncidents[j].latitude, validIncidents[j].longitude
+				);
+				maxDistance = Math.max(maxDistance, distance);
+			}
+		}
+		return maxDistance;
+	}
+
+	// Helper function to calculate distance between two points
+	function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+		const R = 6371; // Earth's radius in km
+		const dLat = (lat2 - lat1) * Math.PI / 180;
+		const dLon = (lon2 - lon1) * Math.PI / 180;
+		const a = 
+			Math.sin(dLat/2) * Math.sin(dLat/2) +
+			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+			Math.sin(dLon/2) * Math.sin(dLon/2);
+		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		return R * c;
+	}
+
+	// Enhanced width scale based on incident count
+	const widthScale = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) {
+			return scaleLinear().domain([0, 1]).range([barWidth * 0.5, barWidth * 1.5]);
+		}
+		const incidentCounts: number[] = enhancedAggregatedData.map((d) => d.incidentCount);
+		const maxIncidentCount = Math.max(...incidentCounts, 1);
+		return scaleLinear()
+			.domain([0, maxIncidentCount])
+			.range([barWidth * 0.5, barWidth * 1.5]);
+	});
+
+	// Intensity-based color scale
+	const intensityColorScale = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) {
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+		}
+		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
+		const maxIntensity = Math.max(...intensities, 1);
+		return scaleLinear()
+			.domain([0, maxIntensity])
+			.range(['#fef2f2', '#dc2626']);
+	});
+
+	// Geographic spread color scale
+	const spreadColorScale = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) {
+			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']);
+		}
+		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
+		const maxSpread = Math.max(...spreads, 1);
+		return scaleLinear()
+			.domain([0, maxSpread])
+			.range(['#1e40af', '#dc2626']); // Blue to red
+	});
+
+	// Enhanced color and opacity scales
+	const colorScale = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) {
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+		}
+		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
+		const maxPeriodKilled = Math.max(...killedCounts, 1);
+		return scaleLinear()
+			.domain([0, maxPeriodKilled])
+			.range(['#fef2f2', '#dc2626']); // Light red to dark red
+	});
+
+	const opacityScale = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) {
+			return scaleLinear().domain([0, 1]).range([0.3, 1]);
+		}
+		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
+		const maxPeriodKilled = Math.max(...killedCounts, 1);
+		return scaleLinear()
+			.domain([0, maxPeriodKilled])
+			.range([0.3, 1]); // More transparent for lower values
+	});
+
+	// Enhanced complete timeline with new data
+	const enhancedCompleteTimeline = $derived.by(() => {
+		if (enhancedAggregatedData.length === 0) return [];
+
+		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
+		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
+
+		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
+		const minDate = timeFloor(dateDomain[0]!);
+		const maxDate = timeFloor(dateDomain[1]!);
+
+		const allPeriods: Date[] = [];
+		let currentDate = minDate;
+		while (currentDate <= maxDate) {
+			allPeriods.push(currentDate);
+			currentDate =
+				groupingMode === 'weekly'
+					? timeWeek.offset(currentDate, 1)
+					: timeMonth.offset(currentDate, 1);
+		}
+
+		return allPeriods.map((periodStartDate) => {
+			const existingData = enhancedAggregatedData.find(
+				(d) => d.periodStartDate.getTime() === periodStartDate.getTime()
+			);
+
+			return {
+				periodStartDate,
+				totalKilledOrWounded: existingData?.totalKilledOrWounded || 0,
+				incidentCount: existingData?.incidentCount || 0,
+				firstChronoId: existingData?.firstChronoId || null,
+				geographicSpread: existingData?.geographicSpread || 0,
+				intensity: existingData?.intensity || 0,
+				hasData: !!existingData
+			};
+		});
 	});
 
 	const maxBarHeight = $derived(svgHeight - axisPaddingBottom - barPaddingBottom - barTopPadding);
 
 	const timeScale = $derived.by(() => {
-		if (!containerWidth || aggregatedData.length === 0) {
+		if (!containerWidth || enhancedAggregatedData.length === 0) {
 			return scaleTime().domain([new Date(), new Date()]).range([0, 0]);
 		}
-		const dateDomain = extent(aggregatedData, (d) => d.periodStartDate) as [Date, Date];
+		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
@@ -107,18 +250,18 @@
 	});
 
 	const heightScale = $derived.by(() => {
-		if (aggregatedData.length === 0) {
+		if (enhancedAggregatedData.length === 0) {
 			return scaleLinear().domain([0, 1]).range([0, maxBarHeight]);
 		}
-		const maxPeriodKilled = Math.max(...aggregatedData.map((d) => d.totalKilledOrWounded), 1);
+		const maxPeriodKilled = Math.max(...enhancedAggregatedData.map((d) => d.totalKilledOrWounded), 1);
 		return scaleLinear().domain([0, maxPeriodKilled]).range([5, maxBarHeight]);
 	});
 
 	const maxPeriod = $derived.by(() => {
-		if (aggregatedData.length === 0) return null;
-		return aggregatedData.reduce(
+		if (enhancedAggregatedData.length === 0) return null;
+		return enhancedAggregatedData.reduce(
 			(max, d) => (d.totalKilledOrWounded > max.totalKilledOrWounded ? d : max),
-			aggregatedData[0]
+			enhancedAggregatedData[0]
 		);
 	});
 
@@ -137,13 +280,13 @@
 
 	// Create complete timeline with all periods (including empty ones)
 	const completeTimeline = $derived.by(() => {
-		if (aggregatedData.length === 0) return [];
+		if (enhancedAggregatedData.length === 0) return [];
 
 		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
 		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
 
 		// Get the full date range
-		const dateDomain = extent(aggregatedData, (d) => d.periodStartDate) as [Date, Date];
+		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
 
@@ -160,7 +303,7 @@
 
 		// Map each period to data (0 for empty periods)
 		return allPeriods.map((periodStartDate) => {
-			const existingData = aggregatedData.find(
+			const existingData = enhancedAggregatedData.find(
 				(d) => d.periodStartDate.getTime() === periodStartDate.getTime()
 			);
 
@@ -213,7 +356,7 @@
 	// --- Interaction Handlers ---
 	function handleMouseEnter(periodStartDate: Date) {
 		// Find the corresponding period's data to highlight it.
-		const period = aggregatedData.find(
+		const period = enhancedAggregatedData.find(
 			(p) => p.periodStartDate.getTime() === periodStartDate.getTime()
 		);
 		if (period) {
@@ -245,7 +388,7 @@
 	function handleBarClick(periodStartDate: Date, firstChronoId: number) {
 		// On mobile, show tooltip when clicked
 		if (isMobile) {
-			const period = aggregatedData.find(
+			const period = enhancedAggregatedData.find(
 				(p) => p.periodStartDate.getTime() === periodStartDate.getTime()
 			);
 			if (period) {
@@ -301,7 +444,7 @@
 >
 	<!-- Chart Container -->
 	<div class="flex w-full items-center h-{svgHeight}px">
-		{#if containerWidth > 0 && aggregatedData.length > 0}
+		{#if containerWidth > 0 && enhancedAggregatedData.length > 0}
 			<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
 				<!-- Dotted event axis line -->
 				<line
@@ -313,14 +456,7 @@
 					stroke-width="1"
 					stroke-dasharray="2,3"
 				/>
-				<text
-					x={timeScale.range()[0] + 8}
-					y={35}
-					class="fill-zinc-500 font-sans text-xs"
-					text-anchor="start"
-				>
-					Events
-				</text>
+
 
 				<!-- Main Axis Line -->
 				<line
@@ -332,42 +468,11 @@
 					stroke-width="1"
 				/>
 
-				<!-- Inactive Event Symbols (render first, behind active elements) -->
-				{#each events as event (event.chronoId)}
-					{@const xPos = timeScale(new Date(event.date))}
-					{@const isActive = selectedMarkerId === event.chronoId}
-					{#if !isActive}
-						{@const size = 8}
-						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
-						<g
-							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-none"
-							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
-							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
-							onfocusout={handleMouseLeave}
-							tabindex="0"
-							aria-label={`Event: ${event.title}`}
-							role="button"
-						>
-							<polygon
-								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
-								fill="#4B5563"
-								stroke="#1F2937"
-								stroke-width={0}
-								style:transition="all 0.2s"
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
-							/>
-							<title>{event.title}</title>
-						</g>
-					{/if}
-				{/each}
-
 				<!-- Period Bar Groups (render background and data bars together) -->
-				{#each completeTimeline as periodData (periodData.periodStartDate.toISOString())}
+				{#each enhancedCompleteTimeline as periodData (periodData.periodStartDate.toISOString())}
 					{@const xPos = timeScale(periodData.periodStartDate)}
 					{@const maxBarHeightForPeriod = heightScale(
-						Math.max(...aggregatedData.map((d) => d.totalKilledOrWounded), 1)
+						Math.max(...enhancedAggregatedData.map((d) => d.totalKilledOrWounded), 1)
 					)}
 					{@const barHeight = periodData.hasData ? heightScale(periodData.totalKilledOrWounded) : 0}
 					{@const yPos = axisY - barHeight - barPaddingBottom}
@@ -398,7 +503,7 @@
 								(groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 												20
 											),
 											60
@@ -409,7 +514,7 @@
 							width={groupingMode === 'monthly'
 								? Math.min(
 										Math.max(
-											((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+											((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 											20
 										),
 										60
@@ -423,13 +528,13 @@
 
 						<!-- Background Bar (for all periods) -->
 						{#if true}
-							{@const isEven = completeTimeline.indexOf(periodData) % 2 === 0}
+							{@const isEven = enhancedCompleteTimeline.indexOf(periodData) % 2 === 0}
 							<rect
 								x={xPos -
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 													20
 												),
 												60
@@ -440,7 +545,7 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 												20
 											),
 											60
@@ -468,7 +573,7 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 													20
 												),
 												60
@@ -479,7 +584,7 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 												20
 											),
 											60
@@ -532,7 +637,7 @@
 									: xPos > containerWidth * 0.9
 										? 'end'
 										: 'middle'}
-								class="group-hover:opacity-100 fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300"
+								class="fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 							>
 								{periodData.totalKilledOrWounded}
@@ -545,7 +650,7 @@
 				{#if activePeriodStartDate()}
 					{@const activeDate = activePeriodStartDate()}
 					{@const selectedPeriod = activeDate
-						? aggregatedData.find((p) => p.periodStartDate.getTime() === activeDate.getTime())
+						? enhancedAggregatedData.find((p) => p.periodStartDate.getTime() === activeDate.getTime())
 						: undefined}
 					{#if selectedPeriod}
 						{@const xPos = timeScale(selectedPeriod.periodStartDate)}
@@ -591,7 +696,7 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 													20
 												),
 												60
@@ -602,7 +707,7 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(aggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
 												20
 											),
 											60
@@ -622,12 +727,68 @@
 					{/if}
 				{/if}
 
+				<!-- Inactive Event Symbols (render after bars to be on top) -->
+				{#each events as event (event.chronoId)}
+					{@const xPos = timeScale(new Date(event.date))}
+					{@const isActive = selectedMarkerId === event.chronoId}
+					{#if !isActive}
+						{@const size = 8}
+						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						<g
+							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-none"
+							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+							onmouseleave={handleMouseLeave}
+							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
+							onfocusout={handleMouseLeave}
+							tabindex="0"
+							aria-label={`Event: ${event.title || 'Untitled Event'}`}
+							role="button"
+						>
+							<polygon
+								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								fill="#4B5563"
+								stroke="#1F2937"
+								stroke-width={0}
+								style:transition="all 0.2s"
+								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+							/>
+							<title>{event.title || 'Untitled Event'}</title>
+
+							<!-- Event Tooltip -->
+							<g class="event-tooltip" style="pointer-events: none;">
+								<!-- Background rectangle -->
+								<rect
+									x={xPos - 25}
+									y={40 - size - 25}
+									width={50}
+									height={20}
+									fill="white"
+									stroke="black"
+									stroke-width="1"
+									rx="2"
+									opacity="0"
+									class="transition-opacity duration-300 group-hover:opacity-90"
+								/>
+								<text
+									x={xPos}
+									y={40 - size - 12}
+									text-anchor="middle"
+									class="fill-black font-sans text-xs font-bold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								>
+									Event
+								</text>
+							</g>
+						</g>
+					{/if}
+				{/each}
+
 				<!-- Active Event Symbols (render last, on top) -->
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(new Date(event.date))}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{#if isActive}
-						{@const size = 12}
+						{@const size = 10}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
 							class="event-symbol event-symbol--active group cursor-pointer focus:outline-none"
@@ -637,18 +798,43 @@
 							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
 							onfocusout={handleMouseLeave}
 							tabindex="0"
-							aria-label={`Event: ${event.title}`}
+							aria-label={`Event: ${event.title || 'Untitled Event'}`}
 							role="button"
 						>
 							<polygon
 								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
-								fill="#D1D5DB"
+								fill="#2db487"
 								stroke="#374151"
-								stroke-width={4}
+								stroke-width={3}
 								style:transition="all 0.2s"
 								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 							/>
-							<title>{event.title}</title>
+							<title>{event.title || 'Untitled Event'}</title>
+
+							<!-- Event Tooltip -->
+							<g class="event-tooltip" style="pointer-events: none;">
+								<!-- Background rectangle -->
+								<rect
+									x={xPos - 25}
+									y={40 - size - 25}
+									width={50}
+									height={20}
+									fill="white"
+									stroke="black"
+									stroke-width="1"
+									rx="2"
+									opacity="0"
+									class="transition-opacity duration-300 group-hover:opacity-90"
+								/>
+								<text
+									x={xPos}
+									y={40 - size - 12}
+									text-anchor="middle"
+									class="fill-black font-sans text-xs font-bold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								>
+									Event
+								</text>
+							</g>
 						</g>
 					{/if}
 				{/each}
@@ -709,12 +895,12 @@
 				{/if}
 
 				<!-- Date Labels & Range Lines -->
-				{#if parsedIncidents.length > 0}
+				{#if enhancedAggregatedData.length > 0}
 					{@const [startRange, endRange] = timeScale.range()}
-					{@const firstIncidentDate = new Date(parsedIncidents[0].date)}
-					{@const lastIncidentDate = new Date(parsedIncidents[parsedIncidents.length - 1].date)}
-					{@const firstX = timeScale(aggregatedData[0].periodStartDate) - 0.5}
-					{@const lastPeriod = aggregatedData.at(-1)}
+					{@const firstIncidentDate = new Date(enhancedAggregatedData[0].periodStartDate)}
+					{@const lastIncidentDate = new Date(enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate)}
+					{@const firstX = timeScale(enhancedAggregatedData[0].periodStartDate) - 0.5}
+					{@const lastPeriod = enhancedAggregatedData.at(-1)}
 					{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
 
 					<!-- Dashed lines from axis to date labels -->
@@ -814,18 +1000,28 @@
 						</text>
 					</g>
 				{/if}
+
+				<!-- Events timeline label (rendered last to appear on top) -->
+				<text
+					x={timeScale.range()[0] + 67.5}
+					y={31}
+					class="fill-zinc-500 font-sans text-xs"
+					text-anchor="start"
+				>
+					Events timeline
+				</text>
 			</svg>
 		{/if}
 	</div>
 
 	<!-- Date Labels - Between chart and toggle -->
-	{#if parsedIncidents.length > 0}
+	{#if enhancedAggregatedData.length > 0}
 		<div class="flex w-full items-center justify-between px-0 py-0">
 			<span class="pl-2 font-sans text-xs text-gray-500">
-				{formatDate(new Date(parsedIncidents[0].date))}
+				{formatDate(new Date(enhancedAggregatedData[0].periodStartDate))}
 			</span>
 			<span class="pr-2 font-sans text-xs text-gray-500">
-				{formatDate(new Date(parsedIncidents[parsedIncidents.length - 1].date))}
+				{formatDate(new Date(enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate))}
 			</span>
 		</div>
 	{/if}
@@ -862,20 +1058,21 @@
 		z-index: 0; /* Behind all other elements */
 	}
 
-	.event-symbol--inactive {
+	.period-bar--inactive {
 		z-index: 1;
 	}
 
-	.period-bar--inactive {
+	.period-bar--active {
 		z-index: 2;
 	}
 
-	.period-bar--active {
-		z-index: 3;
+	/* Event diamonds should always be on top */
+	.event-symbol--inactive {
+		z-index: 10; /* Higher than all bars */
 	}
 
 	.event-symbol--active {
-		z-index: 5; /* Higher than active bars to overlay them */
+		z-index: 11; /* Highest z-index for active events */
 	}
 
 	/* Ensure SVG elements respect z-index */

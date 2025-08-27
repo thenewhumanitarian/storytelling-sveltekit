@@ -26,11 +26,11 @@ const sheetUrl =
 
 async function fetchAndParseData(): Promise<IncidentData[]> {
 	const response = await fetch(sheetUrl)
-	
+
 	if (!response.ok) {
 		throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`)
 	}
-	
+
 	const csvText = await response.text()
 
 	const records: IncidentData[] = parse(csvText, {
@@ -39,7 +39,7 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 		skip_empty_lines: true,
 		on_record: (record: Record<string, string>) => {
 			if (record.type === 'incident') {
-				const requiredFields = ['id', 'title', 'date', 'latitude', 'longitude', 'killedOrWounded']
+				const requiredFields = ['id', 'date', 'latitude', 'longitude', 'killedOrWounded']
 				const hasMissingRequired = requiredFields.some((field) => {
 					const value = record[field]
 					if (value === undefined || value === null) return true
@@ -69,6 +69,8 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 				case 'longitude':
 					return value === '' ? undefined : parseFloat(value)
 				case 'title':
+					// Provide fallback for empty titles
+					return value === '' ? 'Untitled' : value
 				case 'date':
 				case 'description':
 				case 'type':
@@ -114,10 +116,10 @@ async function loadCachedData(): Promise<{ incidentsData: IncidentData[]; lastUp
 function shouldUseCachedData(): boolean {
 	// Always fetch fresh data in development
 	if (dev) return false
-	
+
 	// Check if we're in production based on PUBLIC_BASE_URL
 	const isProduction = PUBLIC_BASE_URL.includes('interactive.thenewhumanitarian.org')
-	
+
 	// Use cached data only in production
 	return isProduction
 }

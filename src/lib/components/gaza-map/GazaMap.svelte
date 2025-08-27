@@ -8,7 +8,6 @@
 
 	const MAPBOX_TOKEN =
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
-
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
 	const MAPBOX_STYLE = 'mapbox://styles/tnh-storytelling/cm90vsdlu007x01s6ewpw0ha5';
@@ -178,7 +177,7 @@
 					.map((incident) => ({
 						type: 'Feature',
 						properties: {
-							intensity: Math.pow(incident.killedOrWounded || 1, 1.3)
+							intensity: Math.pow(incident.killedOrWounded || 1, 0.8)
 						},
 						geometry: {
 							type: 'Point',
@@ -198,26 +197,28 @@
 				type: 'heatmap',
 				source: 'incidents-heatmap',
 				paint: {
-					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0.5, 4, 3],
-					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 5, 15, 10, 40, 15, 60],
+					'heatmap-weight': ['interpolate', ['linear'], ['get', 'intensity'], 0, 0.2, 10, 1, 50, 2],
+					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 5, 20, 10, 50, 15, 80],
 					'heatmap-color': [
 						'interpolate',
 						['linear'],
 						['heatmap-density'],
 						0,
-						'rgba(160, 60, 80, 0)',
-						0.2,
-						'rgba(255,217,188,0.3)',
-						0.6,
-						'rgba(255,179,122,0.8)',
+						'rgba(255, 255, 255, 0)',
+						0.1,
+						'rgba(255, 237, 213, 0.3)',
+						0.3,
+						'rgba(254, 215, 170, 0.6)',
+						0.5,
+						'rgba(251, 146, 60, 0.8)',
 						0.7,
-						'rgba(214,121,139,0.9)',
-						0.8,
-						'rgba(166,89,104,0.8)',
+						'rgba(220, 38, 38, 0.9)',
+						0.9,
+						'rgba(153, 27, 27, 1)',
 						1,
-						'#A03C50'
+						'rgba(127, 29, 29, 1)'
 					],
-					'heatmap-opacity': 0.75
+					'heatmap-opacity': 0.8
 				}
 			});
 		});
