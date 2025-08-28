@@ -105,17 +105,33 @@ async function processGazaData(csvText) {
     trim: true,
     skip_empty_lines: true,
     on_record: (record) => {
+      // Auto-detect type if missing - assume 'incident' if not specified
+      if (!record.type || record.type.trim() === '') {
+        // If we have latitude/longitude, it's likely an incident
+        if (record.latitude && record.longitude) {
+          record.type = 'incident'
+        } else if (record.title && record.date) {
+          record.type = 'event'
+        }
+      }
+      
       if (record.type === 'incident') {
-        const requiredFields = ['id', 'title', 'date', 'latitude', 'longitude', 'killedOrWounded']
-        const hasMissingRequired = requiredFields.some((field) => {
+        // More lenient required fields - only id and date are truly required
+        const criticalFields = ['id', 'date']
+        const hasMissingCritical = criticalFields.some((field) => {
           const value = record[field]
           if (value === undefined || value === null) return true
           if (typeof value === 'string') return value.trim() === ''
           return false
         })
-        return hasMissingRequired ? undefined : record
+        
+        if (hasMissingCritical) {
+          return undefined
+        }
+        
+        return record
       } else if (record.type === 'event') {
-        const requiredFields = ['id', 'type', 'title', 'date']
+        const requiredFields = ['id', 'date']
         const hasMissingRequired = requiredFields.some((field) => {
           const value = record[field]
           if (value === undefined || value === null) return true

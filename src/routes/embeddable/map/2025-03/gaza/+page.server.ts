@@ -86,28 +86,59 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 				console.log(`📝 Available columns:`, Object.keys(record))
 			}
 			
+			// Auto-detect type if missing - assume 'incident' if not specified
+			if (!record.type || record.type.trim() === '') {
+				// If we have latitude/longitude, it's likely an incident
+				if (record.latitude && record.longitude) {
+					record.type = 'incident'
+					console.log(`🔧 Auto-detected type 'incident' for record ${context.lines}`)
+				} else if (record.title && record.date) {
+					record.type = 'event'
+					console.log(`🔧 Auto-detected type 'event' for record ${context.lines}`)
+				}
+			}
+			
 			if (record.type === 'incident') {
-				const requiredFields = ['id', 'date', 'latitude', 'longitude', 'killedOrWounded']
-				const hasMissingRequired = requiredFields.some((field) => {
+				// More lenient required fields - only id and date are truly required
+				const criticalFields = ['id', 'date']
+				const hasMissingCritical = criticalFields.some((field) => {
 					const value = record[field]
 					if (value === undefined || value === null) return true
 					if (typeof value === 'string') return value.trim() === ''
 					return false
 				})
 				
-				if (hasMissingRequired && context.lines < 10) {
-					console.log(`⚠️ Incident record ${context.lines} missing required fields:`, {
-						record,
-						missingFields: requiredFields.filter(field => {
-							const value = record[field]
-							return value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
+				if (hasMissingCritical) {
+					if (context.lines < 10) {
+						console.log(`⚠️ Incident record ${context.lines} missing critical fields:`, {
+							record,
+							missingFields: criticalFields.filter(field => {
+								const value = record[field]
+								return value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
+							})
 						})
+					}
+					return undefined
+				}
+				
+				// Log warnings for missing optional fields but still process the record
+				const optionalFields = ['latitude', 'longitude', 'killedOrWounded']
+				const missingOptional = optionalFields.filter(field => {
+					const value = record[field]
+					return value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
+				})
+				
+				if (missingOptional.length > 0 && context.lines < 20) {
+					console.log(`⚠️ Incident record ${context.lines} missing optional fields (will still process):`, {
+						id: record.id,
+						date: record.date,
+						missingOptional
 					})
 				}
 				
-				return hasMissingRequired ? undefined : record
+				return record
 			} else if (record.type === 'event') {
-				const requiredFields = ['id', 'type', 'title', 'date']
+				const requiredFields = ['id', 'date']
 				const hasMissingRequired = requiredFields.some((field) => {
 					const value = record[field]
 					if (value === undefined || value === null) return true
@@ -115,21 +146,24 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 					return false
 				})
 				
-				if (hasMissingRequired && context.lines < 10) {
-					console.log(`⚠️ Event record ${context.lines} missing required fields:`, {
-						record,
-						missingFields: requiredFields.filter(field => {
-							const value = record[field]
-							return value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
+				if (hasMissingRequired) {
+					if (context.lines < 10) {
+						console.log(`⚠️ Event record ${context.lines} missing required fields:`, {
+							record,
+							missingFields: requiredFields.filter(field => {
+								const value = record[field]
+								return value === undefined || value === null || (typeof value === 'string' && value.trim() === '')
+							})
 						})
-					})
+					}
+					return undefined
 				}
 				
-				return hasMissingRequired ? undefined : record
+				return record
 			}
 			
 			if (context.lines < 10) {
-				console.log(`⚠️ Unknown record type ${context.lines}:`, record)
+				console.log(`⚠️ Unknown record type ${context.lines}:`, record.type, 'for record:', record)
 			}
 			return undefined
 		},
