@@ -64,7 +64,7 @@ const __dirname = path.dirname(__filename)
 const DATA_SOURCES = {
   gaza: {
     name: 'Gaza Map Incidents',
-    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pub?output=csv',
+    url: 'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0',
     fallbackPath: 'src/lib/data/gaza-map/20250721-sample-data-gaza.csv',
     outputPath: 'src/lib/data/gaza-map/cached-incidents.json',
     processor: processGazaData
