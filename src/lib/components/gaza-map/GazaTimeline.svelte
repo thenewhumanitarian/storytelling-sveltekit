@@ -9,6 +9,7 @@
 	// --- Component Properties ---
 	let {
 		setHighlightedMarkerId,
+		highlightedMarkerId,
 		incidentsData,
 		gazaMapRef,
 		selectedWeekStartDate,
@@ -17,6 +18,7 @@
 		scrollToCard = undefined
 	}: {
 		setHighlightedMarkerId: (id: number | null) => void;
+		highlightedMarkerId: number | null;
 		incidentsData: IncidentData[];
 		gazaMapRef: { setSelectionOriginToClick: () => void } | null;
 		selectedWeekStartDate: Date | null;
@@ -142,37 +144,37 @@
 	// Intensity-based color scale
 	const intensityColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']) as any;
 		}
 		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
 		const maxIntensity = Math.max(...intensities, 1);
 		return scaleLinear()
 			.domain([0, maxIntensity])
-			.range(['#fef2f2', '#dc2626']);
+			.range(['#fef2f2', '#dc2626']) as any;
 	});
 
 	// Geographic spread color scale
 	const spreadColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']) as any;
 		}
 		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
 		const maxSpread = Math.max(...spreads, 1);
 		return scaleLinear()
 			.domain([0, maxSpread])
-			.range(['#1e40af', '#dc2626']); // Blue to red
+			.range(['#1e40af', '#dc2626']) as any; // Blue to red
 	});
 
 	// Enhanced color and opacity scales
 	const colorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']) as any;
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
 		return scaleLinear()
 			.domain([0, maxPeriodKilled])
-			.range(['#fef2f2', '#dc2626']); // Light red to dark red
+			.range(['#fef2f2', '#dc2626']) as any; // Light red to dark red
 	});
 
 	const opacityScale = $derived.by(() => {
@@ -731,7 +733,8 @@
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(new Date(event.date))}
 					{@const isActive = selectedMarkerId === event.chronoId}
-					{#if !isActive}
+					{@const isHighlighted = highlightedMarkerId === event.chronoId}
+					{#if !isActive && !isHighlighted}
 						{@const size = 8}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
@@ -759,9 +762,9 @@
 							<g class="event-tooltip" style="pointer-events: none;">
 								<!-- Background rectangle -->
 								<rect
-									x={xPos - 25}
-									y={40 - size - 25}
-									width={50}
+									x={xPos - 20}
+									y={40 - size - 20}
+									width={42}
 									height={20}
 									fill="white"
 									stroke="black"
@@ -771,10 +774,67 @@
 									class="transition-opacity duration-300 group-hover:opacity-90"
 								/>
 								<text
-									x={xPos}
-									y={40 - size - 12}
+									x={xPos + 1}
+									y={40 - size - 5.5}
 									text-anchor="middle"
 									class="fill-black font-sans text-xs font-bold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+								>
+									Event
+								</text>
+							</g>
+						</g>
+					{/if}
+				{/each}
+
+				<!-- Highlighted Event Symbols (render before active to be on top of inactive but below active) -->
+				{#each events as event (event.chronoId)}
+					{@const xPos = timeScale(new Date(event.date))}
+					{@const isActive = selectedMarkerId === event.chronoId}
+					{@const isHighlighted = highlightedMarkerId === event.chronoId}
+					{#if !isActive && isHighlighted}
+						{@const size = 8}
+						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						<g
+							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-none"
+							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
+							onmouseleave={handleMouseLeave}
+							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
+							onfocusout={handleMouseLeave}
+							tabindex="0"
+							aria-label={`Event: ${event.title || 'Untitled Event'}`}
+							role="button"
+						>
+							<polygon
+								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								fill="#2db487"
+								stroke="#1F2937"
+								stroke-width={0}
+								style:transition="all 0.2s"
+								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+							/>
+							<title>{event.title || 'Untitled Event'}</title>
+
+							<!-- Event Tooltip -->
+							<g class="event-tooltip" style="pointer-events: none;">
+								<!-- Background rectangle -->
+								<rect
+									x={xPos - 20}
+									y={40 - size - 20}
+									width={42}
+									height={20}
+									fill="white"
+									stroke="black"
+									stroke-width="1"
+									rx="2"
+									opacity="90"
+									class="transition-opacity duration-300"
+								/>
+								<text
+									x={xPos + 1}
+									y={40 - size - 5.5}
+									text-anchor="middle"
+									class="fill-black font-sans text-xs font-bold opacity-100 transition-opacity duration-300"
 								>
 									Event
 								</text>
@@ -1068,11 +1128,15 @@
 
 	/* Event diamonds should always be on top */
 	.event-symbol--inactive {
-		z-index: 10; /* Higher than all bars */
+		/* Layering handled by DOM order */
+	}
+
+	.event-symbol--highlighted {
+		/* Layering handled by DOM order */
 	}
 
 	.event-symbol--active {
-		z-index: 11; /* Highest z-index for active events */
+		/* Layering handled by DOM order */
 	}
 
 	/* Ensure SVG elements respect z-index */

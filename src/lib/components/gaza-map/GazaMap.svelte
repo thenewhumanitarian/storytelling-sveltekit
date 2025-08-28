@@ -10,7 +10,7 @@
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
-	const MAPBOX_STYLE = 'mapbox://styles/tnh-storytelling/cm90vsdlu007x01s6ewpw0ha5';
+	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
 
 	let {
 		selectedMarkerId,
@@ -33,6 +33,7 @@
 	let clickedCoordinates: mapboxgl.LngLat | null = $state(null);
 	let cardsComponent: GazaCards | null = null;
 	let selectionOrigin: 'click' | 'scroll' | null = null;
+	let lastMapCenter: { lng: number; lat: number } | null = $state(null);
 
 	export function setSelectionOriginToClick() {
 		selectionOrigin = 'click';
@@ -74,7 +75,38 @@
 			!isNaN(incident.longitude) &&
 			map
 		) {
-			map.flyTo({ center: [incident.longitude, incident.latitude], zoom: ZOOM_ZOOM });
+			const newCenter = { lng: incident.longitude, lat: incident.latitude };
+			
+			// Check if we're going to the same location as before
+			const isSameLocation = lastMapCenter && 
+				Math.abs(lastMapCenter.lng - newCenter.lng) < 0.0001 && 
+				Math.abs(lastMapCenter.lat - newCenter.lat) < 0.0001;
+			
+			if (isSameLocation) {
+				// Same location - do a brief zoom out and back in for visual feedback
+				map.flyTo({ 
+					center: [newCenter.lng, newCenter.lat], 
+					zoom: ZOOM_ZOOM - 0.5,
+					duration: 500
+				});
+				
+				// Zoom back in after a short delay
+				setTimeout(() => {
+					if (map) {
+						map.flyTo({ 
+							center: [newCenter.lng, newCenter.lat], 
+							zoom: ZOOM_ZOOM,
+							duration: 400
+						});
+					}
+				}, 350);
+			} else {
+				// Different location - normal flyTo
+				map.flyTo({ center: [newCenter.lng, newCenter.lat], zoom: ZOOM_ZOOM });
+			}
+			
+			// Update the last center position
+			lastMapCenter = newCenter;
 		}
 	}
 
@@ -278,7 +310,8 @@
 	});
 </script>
 
-<div bind:this={mapContainer} class="map-container relative w-full sm:w-1/2">
+<div class="map-container relative w-full sm:w-1/2">
+	<div bind:this={mapContainer} class="w-full h-full map-background"></div>
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
 	{/if}
@@ -413,5 +446,27 @@
 
 	:global(.mapbox-popup-custom .mapboxgl-popup-tip) {
 		display: none;
+	}
+
+	/* Modern gradient background for map container */
+	.map-background {
+		background: linear-gradient(135deg, 
+			#c4677a 0%, 
+			#d47284 25%, 
+			#b85d70 50%, 
+			#cc6b7e 75%, 
+			#a55468 100%
+		);
+		background-size: 200% 200%;
+		animation: gradientShift 12s ease-in-out infinite;
+	}
+
+	@keyframes gradientShift {
+		0%, 100% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
 	}
 </style>

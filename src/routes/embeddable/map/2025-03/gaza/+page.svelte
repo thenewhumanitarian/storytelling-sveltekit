@@ -97,6 +97,7 @@
 		<div class="z-30 w-full">
 			<Timeline
 				{setHighlightedMarkerId}
+				{highlightedMarkerId}
 				{incidentsData}
 				{gazaMapRef}
 				{selectedWeekStartDate}

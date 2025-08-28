@@ -17,7 +17,7 @@
 		>
 
 		<!-- Incident Info Header - Match card structure exactly -->
-		<div class="flex-grow">
+		<div>
 			<div class="flex items-center justify-between gap-2 sm:gap-2">
 				<div class="flex items-center gap-2">
 					<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">
@@ -42,9 +42,9 @@
 
 		<!-- Sources Section - Match card bottom area exactly -->
 		{#if incident.sources && incident.sources.trim() !== ''}
-			<div class="mt-3 border-t border-dashed border-zinc-300">
+			<div class="mt-3 border-t border-dashed border-zinc-500">
 				<div class="sm:mt-4 sm:flex sm:justify-start">
-					<h4 class="mb-1 mt-2 font-serif text-lg font-bold text-black">Sources</h4>
+					<h4 class="mb-1 mt-0 font-serif text-lg font-bold text-black">Sources</h4>
 				</div>
 				<div class="overflow-y-auto">
 					{#if incident.sources && incident.sources.includes('<')}

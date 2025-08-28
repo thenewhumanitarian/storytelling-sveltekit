@@ -100,7 +100,7 @@
 						{incident.killedOrWounded} killed/wounded
 					</h5>
 				</div>
-				{#if incident.videoUrl}
+				{#if incident.videoUrl && incident.videoUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
 						<video
 							class="aspect-video video relative mt-2 w-full rounded-lg"
@@ -116,7 +116,7 @@
 							</p>
 						{/if}
 					</div>
-				{:else if incident.imageUrl}
+				{:else if incident.imageUrl && incident.imageUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
 						<img
 							class="aspect-video video relative mt-2 w-full rounded-lg"
@@ -209,4 +209,6 @@
 		outline: 2px solid #9f3e52;
 		outline-offset: 2px;
 	}
+
+
 </style>

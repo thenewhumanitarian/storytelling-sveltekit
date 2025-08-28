@@ -34,8 +34,9 @@
 					alt={event.imageCaption || event.title}
 				/>
 			{:else}
-				<div class="flex h-full w-full items-center justify-center bg-gray-300">
-					<span class="w-full p-8 text-center font-title text-2xl sm:text-5xl font-bold text-gray-800"
+				<div class="flex h-full w-full items-center justify-center overlay-gradient">
+					<div class="absolute inset-0 bg-black/30"></div>
+					<span class="relative w-full p-8 text-center font-title text-2xl sm:text-5xl font-bold text-white drop-shadow-lg"
 						>{event.title}</span
 					>
 				</div>
@@ -43,3 +44,27 @@
 		</div>
 	</div>
 {/if}
+
+<style>
+	/* Modern gradient background for overlay */
+	.overlay-gradient {
+		background: linear-gradient(135deg, 
+			#c4677a 0%, 
+			#d47284 25%, 
+			#b85d70 50%, 
+			#cc6b7e 75%, 
+			#a55468 100%
+		);
+		background-size: 200% 200%;
+		animation: gradientShift 10s ease-in-out infinite;
+	}
+
+	@keyframes gradientShift {
+		0%, 100% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+	}
+</style>
