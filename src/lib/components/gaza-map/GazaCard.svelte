@@ -15,11 +15,11 @@
 </script>
 
 <div
-	class={'${incident.chronoId === selectedMarkerId ? "bg-zinc-200" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 bg-white p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default relative'}
+	class={`${incident.chronoId === selectedMarkerId && incident.type !== 'event' ? "bg-zinc-50" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 ${incident.type === 'event' ? 'bg-burgundy/20' : 'bg-white'} p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default relative`}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}
-		<div class="flex items-center justify-between gap-2 sm:gap-2">
+		<div class="flex items-center justify-between gap-2 sm:gap-2 ">
 			<div class="flex items-center gap-2">
 				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">Event</span>
 				<span class="text-sm text-zinc-700">
@@ -153,7 +153,7 @@
 					<!-- Desktop Show sources button -->
 					<div class="sm:mt-4 sm:flex sm:justify-start">
 						<button
-							class="bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-700 hover:text-zinc-50"
+							class="bg-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-700 hover:text-zinc-50"
 							onclick={() => (showSources = true)}
 						>
 							Show sources

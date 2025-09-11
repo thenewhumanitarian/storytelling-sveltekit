@@ -33,7 +33,13 @@
 	let groupingMode = $state<'weekly' | 'monthly'>('weekly'); // Toggle between weekly and monthly
 	let isMobile = $state(false); // Track mobile state for SSR-safe default
 	let tooltipVisible = $state(false);
-	let tooltipData = $state<{ x: number; y: number; value: number } | null>(null);
+	let tooltipData = $state<{
+		x: number;
+		y: number;
+		value: number;
+		incidentCount: number;
+		periodStartDate: Date;
+	} | null>(null);
 	const svgHeight = 140; // Reduced back to original height
 	const barWidth = 12; // Default bar width
 	const barTopPadding = 16;
@@ -99,16 +105,18 @@
 	// Helper function to calculate geographic spread
 	function calculateGeographicSpread(incidents: any[]): number {
 		if (incidents.length < 2) return 0;
-		
-		const validIncidents = incidents.filter(i => i.latitude && i.longitude);
+
+		const validIncidents = incidents.filter((i) => i.latitude && i.longitude);
 		if (validIncidents.length < 2) return 0;
 
 		let maxDistance = 0;
 		for (let i = 0; i < validIncidents.length; i++) {
 			for (let j = i + 1; j < validIncidents.length; j++) {
 				const distance = calculateDistance(
-					validIncidents[i].latitude, validIncidents[i].longitude,
-					validIncidents[j].latitude, validIncidents[j].longitude
+					validIncidents[i].latitude,
+					validIncidents[i].longitude,
+					validIncidents[j].latitude,
+					validIncidents[j].longitude
 				);
 				maxDistance = Math.max(maxDistance, distance);
 			}
@@ -119,20 +127,24 @@
 	// Helper function to calculate distance between two points
 	function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
 		const R = 6371; // Earth's radius in km
-		const dLat = (lat2 - lat1) * Math.PI / 180;
-		const dLon = (lon2 - lon1) * Math.PI / 180;
-		const a = 
-			Math.sin(dLat/2) * Math.sin(dLat/2) +
-			Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-			Math.sin(dLon/2) * Math.sin(dLon/2);
-		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		const dLat = ((lat2 - lat1) * Math.PI) / 180;
+		const dLon = ((lon2 - lon1) * Math.PI) / 180;
+		const a =
+			Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+			Math.cos((lat1 * Math.PI) / 180) *
+				Math.cos((lat2 * Math.PI) / 180) *
+				Math.sin(dLon / 2) *
+				Math.sin(dLon / 2);
+		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}
 
 	// Enhanced width scale based on incident count
 	const widthScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range([barWidth * 0.5, barWidth * 1.5]);
+			return scaleLinear()
+				.domain([0, 1])
+				.range([barWidth * 0.5, barWidth * 1.5]);
 		}
 		const incidentCounts: number[] = enhancedAggregatedData.map((d) => d.incidentCount);
 		const maxIncidentCount = Math.max(...incidentCounts, 1);
@@ -144,37 +156,31 @@
 	// Intensity-based color scale
 	const intensityColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']) as any;
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
 		}
 		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
 		const maxIntensity = Math.max(...intensities, 1);
-		return scaleLinear()
-			.domain([0, maxIntensity])
-			.range(['#fef2f2', '#dc2626']) as any;
+		return scaleLinear().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626']);
 	});
 
 	// Geographic spread color scale
 	const spreadColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']) as any;
+			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']);
 		}
 		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
 		const maxSpread = Math.max(...spreads, 1);
-		return scaleLinear()
-			.domain([0, maxSpread])
-			.range(['#1e40af', '#dc2626']) as any; // Blue to red
+		return scaleLinear().domain([0, maxSpread]).range(['#1e40af', '#dc2626']); // Blue to red
 	});
 
 	// Enhanced color and opacity scales
 	const colorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']) as any;
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear()
-			.domain([0, maxPeriodKilled])
-			.range(['#fef2f2', '#dc2626']) as any; // Light red to dark red
+		return scaleLinear().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626']); // Light red to dark red
 	});
 
 	const opacityScale = $derived.by(() => {
@@ -183,9 +189,7 @@
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear()
-			.domain([0, maxPeriodKilled])
-			.range([0.3, 1]); // More transparent for lower values
+		return scaleLinear().domain([0, maxPeriodKilled]).range([0.3, 1]); // More transparent for lower values
 	});
 
 	// Enhanced complete timeline with new data
@@ -255,7 +259,10 @@
 		if (enhancedAggregatedData.length === 0) {
 			return scaleLinear().domain([0, 1]).range([0, maxBarHeight]);
 		}
-		const maxPeriodKilled = Math.max(...enhancedAggregatedData.map((d) => d.totalKilledOrWounded), 1);
+		const maxPeriodKilled = Math.max(
+			...enhancedAggregatedData.map((d) => d.totalKilledOrWounded),
+			1
+		);
 		return scaleLinear().domain([0, maxPeriodKilled]).range([5, maxBarHeight]);
 	});
 
@@ -373,7 +380,9 @@
 				tooltipData = {
 					x: xPos,
 					y: yPos - 5,
-					value: period.totalKilledOrWounded
+					value: period.totalKilledOrWounded,
+					incidentCount: period.incidentCount,
+					periodStartDate: period.periodStartDate
 				};
 				tooltipVisible = true;
 			}
@@ -400,7 +409,9 @@
 				tooltipData = {
 					x: xPos,
 					y: yPos - 5,
-					value: period.totalKilledOrWounded
+					value: period.totalKilledOrWounded,
+					incidentCount: period.incidentCount,
+					periodStartDate: period.periodStartDate
 				};
 				tooltipVisible = true;
 
@@ -459,7 +470,6 @@
 					stroke-dasharray="2,3"
 				/>
 
-
 				<!-- Main Axis Line -->
 				<line
 					x1={timeScale.range()[0]}
@@ -494,9 +504,6 @@
 						onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
 						onfocusout={handleMouseLeave}
 						tabindex="0"
-						aria-label={`{groupingMode === 'weekly' ? 'Week' : 'Month'} starting ${formatDate(
-							periodData.periodStartDate
-						)}: ${periodData.totalKilledOrWounded} killed/wounded`}
 						role="button"
 					>
 						<!-- Invisible hover area (covers entire period space) -->
@@ -536,7 +543,8 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+														0.8,
 													20
 												),
 												60
@@ -558,11 +566,11 @@
 								style:stroke="none"
 								opacity="0.5"
 							>
-								<title>
+								<!-- <title>
 									{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(
 										periodData.periodStartDate
 									)} - {periodData.totalKilledOrWounded} killed/wounded
-								</title>
+								</title> -->
 							</rect>
 						{/if}
 
@@ -575,7 +583,8 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+														0.8,
 													20
 												),
 												60
@@ -625,26 +634,6 @@
 							).format('D MMMM Y')}
 						</text>
 
-						<!-- Killed/Wounded Label (only for periods with data) -->
-						{#if hasData}
-							<text
-								x={xPos < containerWidth * 0.1
-									? xPos - 5
-									: xPos > containerWidth * 0.9
-										? xPos + 5
-										: xPos}
-								y={yPos - 5}
-								text-anchor={xPos < containerWidth * 0.1
-									? 'start'
-									: xPos > containerWidth * 0.9
-										? 'end'
-										: 'middle'}
-								class="fill-gray-700 font-sans text-[10px] font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
-							>
-								{periodData.totalKilledOrWounded}
-							</text>
-						{/if}
 					</g>
 				{/each}
 
@@ -652,7 +641,9 @@
 				{#if activePeriodStartDate()}
 					{@const activeDate = activePeriodStartDate()}
 					{@const selectedPeriod = activeDate
-						? enhancedAggregatedData.find((p) => p.periodStartDate.getTime() === activeDate.getTime())
+						? enhancedAggregatedData.find(
+								(p) => p.periodStartDate.getTime() === activeDate.getTime()
+							)
 						: undefined}
 					{#if selectedPeriod}
 						{@const xPos = timeScale(selectedPeriod.periodStartDate)}
@@ -698,7 +689,8 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+														0.8,
 													20
 												),
 												60
@@ -958,7 +950,9 @@
 				{#if enhancedAggregatedData.length > 0}
 					{@const [startRange, endRange] = timeScale.range()}
 					{@const firstIncidentDate = new Date(enhancedAggregatedData[0].periodStartDate)}
-					{@const lastIncidentDate = new Date(enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate)}
+					{@const lastIncidentDate = new Date(
+						enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate
+					)}
 					{@const firstX = timeScale(enhancedAggregatedData[0].periodStartDate) - 0.5}
 					{@const lastPeriod = enhancedAggregatedData.at(-1)}
 					{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
@@ -1006,62 +1000,7 @@
 					{/if}
 				{/if}
 
-				<!-- Tooltip -->
-				{#if tooltipVisible && tooltipData}
-					{@const isFirst5Percent = tooltipData.x < containerWidth * 0.05}
-					{@const isLast5Percent = tooltipData.x > containerWidth * 0.95}
-
-					{@const textX = isFirst5Percent
-						? tooltipData.x + 2
-						: isLast5Percent
-							? tooltipData.x - 2
-							: tooltipData.x}
-					{@const textY = tooltipData.y}
-					{@const textAnchor = isFirst5Percent ? 'start' : isLast5Percent ? 'end' : 'middle'}
-
-					{@const textContent = tooltipData.value.toString()}
-					{@const textWidth = textContent.length * 6} // Approximate character width
-					{@const textHeight = 12} // Approximate text height
-					{@const padding = 3}
-					{@const bgWidth = textWidth + padding * 2}
-					{@const bgHeight = textHeight + padding * 2}
-					{@const bgX =
-						textAnchor === 'start'
-							? textX - padding
-							: textAnchor === 'end'
-								? textX - bgWidth + padding
-								: textX - bgWidth / 2}
-					{@const bgY = textY - textHeight - padding}
-					{@const centeredTextX = bgX + bgWidth / 2} // Center text within background
-					{@const centeredTextY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
-
-					<g class="tooltip" style="pointer-events: none;">
-						<!-- Background rectangle -->
-						<rect
-							x={bgX}
-							y={bgY}
-							width={bgWidth}
-							height={bgHeight}
-							fill="white"
-							stroke="black"
-							stroke-width="1"
-							rx="2"
-							opacity="0.9"
-							class="pointer-events-none"
-						/>
-						<text
-							x={centeredTextX}
-							y={centeredTextY}
-							text-anchor="middle"
-							class="fill-black font-sans text-xs font-bold"
-							style="pointer-events: none;"
-						>
-							{textContent}
-						</text>
-					</g>
-				{/if}
-
-				<!-- Events timeline label (rendered last to appear on top) -->
+				<!-- Events timeline label (rendered before tooltip to appear behind it) -->
 				<text
 					x={timeScale.range()[0] + 67.5}
 					y={31}
@@ -1070,6 +1009,120 @@
 				>
 					Events timeline
 				</text>
+
+				<!-- Tooltip -->
+				{#if tooltipVisible && tooltipData}
+					{@const periodType = groupingMode === 'weekly' ? 'Week' : 'Month'}
+					{@const periodDate = moment(tooltipData.periodStartDate).format('D MMM YYYY')}
+					{@const casualtiesNumber = `${tooltipData.value} people`}
+					{@const casualtiesType = `killed or wounded`}
+					{@const incidentsText = `${tooltipData.incidentCount} incident${tooltipData.incidentCount !== 1 ? 's' : ''}`}
+
+					{@const maxTextWidth = Math.max(
+						`${periodType} of ${periodDate}`.length * 6,
+						casualtiesNumber.length * 6,
+						casualtiesType.length * 6,
+						incidentsText.length * 6
+					)}
+					{@const textHeight = 12}
+					{@const lineHeight = 8}
+					{@const padding = 8}
+					{@const bgWidth = maxTextWidth + padding * 2}
+					{@const bgHeight = (textHeight * 4) + (lineHeight * 3) + padding * 2}
+
+					// Calculate tooltip position with edge case handling
+					{@const tooltipMargin = 8} // Minimum margin from container edges
+					{@const halfWidth = bgWidth / 2}
+
+					// Determine horizontal positioning
+					{@const wouldOverflowLeft = tooltipData.x - halfWidth < tooltipMargin}
+					{@const wouldOverflowRight = tooltipData.x + halfWidth > containerWidth - tooltipMargin}
+
+					{@const bgX = wouldOverflowLeft
+						? tooltipMargin
+						: wouldOverflowRight
+							? containerWidth - bgWidth - tooltipMargin
+							: tooltipData.x - halfWidth}
+
+					// Always position tooltips at a consistent Y position above the bottom line
+					{@const consistentTooltipY = axisY - bgHeight - padding - 10} // 10px above the axis line
+					{@const bgY = consistentTooltipY}
+
+					{@const centeredTextX = bgX + bgWidth / 2}
+
+					<g class="tooltip" style="pointer-events: none;">
+						<!-- Drop shadow -->
+						<rect
+							x={bgX + 1}
+							y={bgY + 1}
+							width={bgWidth}
+							height={bgHeight}
+							fill="rgba(0,0,0,0.1)"
+							rx="4"
+							class="pointer-events-none"
+						/>
+
+						<!-- Background rectangle -->
+						<rect
+							x={bgX}
+							y={bgY}
+							width={bgWidth}
+							height={bgHeight}
+							fill="white"
+							stroke="#9f3e52"
+							stroke-width="1"
+							rx="4"
+							opacity="0.95"
+							class="pointer-events-none bg-white z-50"
+						/>
+
+
+						<!-- Period date -->
+						<text
+							x={centeredTextX}
+							y={bgY + textHeight + padding}
+							text-anchor="middle"
+							class="fill-gray-600 font-sans text-xs font-medium"
+							style="pointer-events: none;"
+						>
+							{periodType} of {periodDate}
+						</text>
+
+						<!-- Casualties number -->
+						<text
+							x={centeredTextX}
+							y={bgY + (textHeight * 2) + (lineHeight * 1) + padding}
+							text-anchor="middle"
+							class="fill-burgundy font-sans text-sm font-bold"
+							style="pointer-events: none;"
+						>
+							{casualtiesNumber}
+						</text>
+
+						<!-- Casualties type -->
+						<text
+							x={centeredTextX}
+							y={bgY + (textHeight * 2) + (lineHeight * 2.5) + padding + 5}
+							text-anchor="middle"
+							class="fill-burgundy font-sans text-xs font-medium"
+							style="pointer-events: none;"
+						>
+							{casualtiesType}
+						</text>
+
+						<!-- Incidents count -->
+						<text
+							x={centeredTextX}
+							y={bgY + (textHeight * 3) + (lineHeight * 3) + padding * 2}
+							text-anchor="middle"
+							class="fill-gray-700 font-sans text-xs"
+							style="pointer-events: none;"
+						>
+							{incidentsText}
+						</text>
+					</g>
+				{/if}
+
 			</svg>
 		{/if}
 	</div>
@@ -1081,7 +1134,9 @@
 				{formatDate(new Date(enhancedAggregatedData[0].periodStartDate))}
 			</span>
 			<span class="pr-2 font-sans text-xs text-gray-500">
-				{formatDate(new Date(enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate))}
+				{formatDate(
+					new Date(enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate)
+				)}
 			</span>
 		</div>
 	{/if}

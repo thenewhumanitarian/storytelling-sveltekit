@@ -11,12 +11,15 @@
 		transition:fade={{ duration: 250 }}
 	>
 		{#if event.imageUrl}
-			<img
-				src={event.imageUrl}
-				alt=""
-				class="pointer-events-none absolute inset-0 z-0 h-full w-full scale-125 select-none object-cover blur-lg"
-				aria-hidden="true"
-			/>
+			<div class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+				<img
+					src={event.imageUrl}
+					alt=""
+					class="h-full w-full select-none object-cover blur-lg"
+					style="transform: scale(1.1);"
+					aria-hidden="true"
+				/>
+			</div>
 		{/if}
 		<div class="relative z-10 flex h-full w-full items-center justify-center">
 			{#if event.videoUrl}
