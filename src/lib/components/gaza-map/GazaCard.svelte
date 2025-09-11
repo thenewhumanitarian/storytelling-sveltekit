@@ -51,11 +51,11 @@
 				{incident.title}
 			</h3>
 			{#if incident.description && incident.description.includes('<')}
-				<div class="hidden text-sm text-zinc-700 sm:block sm:text-base lg:text-lg">
+				<div class="hidden text-xs text-zinc-700 sm:block sm:text-base lg:text-lg">
 					{@html incident.description}
 				</div>
 			{:else}
-				<p class="hidden text-sm text-zinc-700 sm:block sm:text-base lg:text-lg">
+				<p class="hidden text-xs text-zinc-700 sm:block sm:text-base lg:text-lg">
 					{incident.description}
 				</p>
 			{/if}
@@ -136,13 +136,13 @@
 				{/if}
 				{#if incident.description && incident.description.includes('<')}
 					<div
-						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
+						class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
 					>
 						{@html incident.description}
 					</div>
 				{:else}
 					<p
-						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
+						class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
 					>
 						{incident.description}
 					</p>

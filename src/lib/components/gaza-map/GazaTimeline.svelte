@@ -40,14 +40,14 @@
 		incidentCount: number;
 		periodStartDate: Date;
 	} | null>(null);
-	const svgHeight = 140; // Reduced back to original height
+	const svgHeight = 160; // Increased height for better spacing
 	const barWidth = 12; // Default bar width
 	const barTopPadding = 16;
 	const axisPaddingBottom = 18;
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
-	const toggleHeight = 24; // Height for the toggle switch area (further reduced)
+	const toggleHeight = 40; // Height for the toggle switch area (increased for iframe)
 	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
 
 	// --- Derived State (Svelte 5 Runes) ---
@@ -462,7 +462,7 @@
 
 <div
 	bind:this={timelineContainer}
-	class="box-border flex w-full flex-col overflow-hidden bg-white/80 backdrop-blur sm:border-t sm:border-gray-200"
+	class="box-border flex w-full flex-col overflow-hidden bg-gradient-to-t from-white via-white to-white/60 backdrop-blur sm:border-t sm:border-gray-200"
 	style="height: {svgHeight + dateLabelsHeight + toggleHeight}px;"
 >
 	<!-- Chart Container -->
@@ -532,7 +532,8 @@
 								(groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+													(isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
@@ -540,7 +541,8 @@
 									: groupingMode === 'weekly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+														(isMobile ? 0.6 : 0.8),
 													8
 												),
 												20
@@ -551,7 +553,8 @@
 							width={groupingMode === 'monthly'
 								? Math.min(
 										Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+											((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+												(isMobile ? 0.6 : 0.8),
 											20
 										),
 										60
@@ -559,7 +562,8 @@
 								: groupingMode === 'weekly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+													(isMobile ? 0.6 : 0.8),
 												8
 											),
 											20
@@ -567,7 +571,8 @@
 									: groupingMode === 'weekly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+														(isMobile ? 0.6 : 0.8),
 													8
 												),
 												20
@@ -599,7 +604,8 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+													(isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
@@ -607,7 +613,8 @@
 									: groupingMode === 'weekly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+														(isMobile ? 0.6 : 0.8),
 													8
 												),
 												20
@@ -647,7 +654,8 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+													(isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
@@ -655,7 +663,8 @@
 									: groupingMode === 'weekly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+														(isMobile ? 0.6 : 0.8),
 													8
 												),
 												20
@@ -693,7 +702,6 @@
 								periodData.periodStartDate
 							).format('D MMMM Y')}
 						</text>
-
 					</g>
 				{/each}
 
@@ -761,7 +769,8 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+													(isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
@@ -769,7 +778,8 @@
 									: groupingMode === 'weekly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
+														(isMobile ? 0.6 : 0.8),
 													8
 												),
 												20
@@ -1086,7 +1096,7 @@
 					{@const lineHeight = 8}
 					{@const padding = 8}
 					{@const bgWidth = maxTextWidth + padding * 2}
-					{@const bgHeight = (textHeight * 4) + (lineHeight * 3) + padding * 2}
+					{@const bgHeight = textHeight * 4 + lineHeight * 3 + padding * 2}
 
 					// Calculate tooltip position with edge case handling
 					{@const tooltipMargin = 8} // Minimum margin from container edges
@@ -1131,9 +1141,8 @@
 							stroke-width="1"
 							rx="4"
 							opacity="0.95"
-							class="pointer-events-none bg-white z-50"
+							class="pointer-events-none z-50 bg-white"
 						/>
-
 
 						<!-- Period date -->
 						<text
@@ -1149,7 +1158,7 @@
 						<!-- Casualties number -->
 						<text
 							x={centeredTextX}
-							y={bgY + (textHeight * 2) + (lineHeight * 1) + padding}
+							y={bgY + textHeight * 2 + lineHeight * 1 + padding}
 							text-anchor="middle"
 							class="fill-burgundy font-sans text-sm font-bold"
 							style="pointer-events: none;"
@@ -1160,7 +1169,7 @@
 						<!-- Casualties type -->
 						<text
 							x={centeredTextX}
-							y={bgY + (textHeight * 2) + (lineHeight * 2.5) + padding + 5}
+							y={bgY + textHeight * 2 + lineHeight * 2.5 + padding + 5}
 							text-anchor="middle"
 							class="fill-burgundy font-sans text-xs font-medium"
 							style="pointer-events: none;"
@@ -1171,7 +1180,7 @@
 						<!-- Incidents count -->
 						<text
 							x={centeredTextX}
-							y={bgY + (textHeight * 3) + (lineHeight * 3) + padding * 2}
+							y={bgY + textHeight * 3 + lineHeight * 3 + padding * 2}
 							text-anchor="middle"
 							class="fill-gray-700 font-sans text-xs"
 							style="pointer-events: none;"
@@ -1180,7 +1189,6 @@
 						</text>
 					</g>
 				{/if}
-
 			</svg>
 		{/if}
 	</div>
@@ -1199,9 +1207,9 @@
 		</div>
 	{/if}
 
-	<!-- Toggle Switch for Weekly/Monthly - Centered underneath chart -->
-	<div class="flex w-full items-center justify-center h-{toggleHeight}px px-4">
-		<div class="flex items-center gap-2 bg-transparent px-3">
+	<!-- Bottom Controls -->
+	<div class="flex w-full items-center justify-between sm:justify-between justify-center h-{toggleHeight}px px-2 pt-3 pb-2">
+		<div class="flex items-center gap-2">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
 			<button
 				class="rounded-full px-3 py-1 text-sm font-medium transition-colors {groupingMode ===
@@ -1221,6 +1229,26 @@
 			>
 				Monthly
 			</button>
+		</div>
+
+		<!-- Dataset Link - hidden on mobile -->
+		<div class="hidden sm:block">
+			<a
+				href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pubhtml"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800"
+			>
+				<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+					></path>
+				</svg>
+				View Dataset
+			</a>
 		</div>
 	</div>
 </div>

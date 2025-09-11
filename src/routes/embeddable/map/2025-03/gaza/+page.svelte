@@ -42,21 +42,22 @@
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
 			event.preventDefault();
-			
-			const currentIndex = incidentsData.findIndex(item => item.chronoId === selectedMarkerId);
+
+			const currentIndex = incidentsData.findIndex((item) => item.chronoId === selectedMarkerId);
 			let newIndex: number;
-			
+
 			if (event.key === 'ArrowLeft') {
 				// Go to previous
 				newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
 			} else {
 				// Go to next
-				newIndex = currentIndex < incidentsData.length - 1 ? currentIndex + 1 : incidentsData.length - 1;
+				newIndex =
+					currentIndex < incidentsData.length - 1 ? currentIndex + 1 : incidentsData.length - 1;
 			}
-			
+
 			const newId = incidentsData[newIndex].chronoId;
 			handleCardInView(newId);
-			
+
 			// Scroll to the card
 			if (gazaCardsRef && gazaCardsRef.scrollToCard) {
 				gazaCardsRef.scrollToCard(newId);
@@ -66,7 +67,7 @@
 
 	onMount(() => {
 		window.addEventListener('keydown', handleKeydown);
-		
+
 		return () => {
 			window.removeEventListener('keydown', handleKeydown);
 		};
@@ -74,9 +75,9 @@
 </script>
 
 <main class="h-screen bg-white">
-	<section class="flex flex-col w-full h-full min-h-0">
-		<div class="flex-grow flex flex-col">
-			<div class="flex-grow min-h-[120px]">
+	<section class="flex h-full min-h-0 w-full flex-col">
+		<div class="flex flex-grow flex-col">
+			<div class="min-h-[120px] flex-grow">
 				<GazaMap
 					bind:this={gazaMapRef}
 					{selectedMarkerId}
