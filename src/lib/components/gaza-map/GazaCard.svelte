@@ -183,8 +183,9 @@
 	@media (width <= 640px) {
 		.stack-cards__item {
 			top: 0; /* Remove top offset on mobile */
-			min-height: calc(100% - 32px);
-			margin-bottom: 1rem; /* Add extra bottom margin on mobile */
+			min-height: 180px; /* Fixed height for iframe consistency */
+			height: auto; /* Allow content to determine height */
+			margin-bottom: 0.5rem; /* Reduced bottom margin on mobile */
 		}
 	}
 

@@ -75,7 +75,7 @@
 
 <main class="h-screen bg-white">
 	<section class="flex flex-col w-full h-full min-h-0">
-		<div class="max-h-[100svh] min-h-[120px] flex-grow">
+		<div class="max-h-[40vh] min-h-[120px] flex-grow">
 			<GazaMap
 				bind:this={gazaMapRef}
 				{selectedMarkerId}
@@ -86,7 +86,7 @@
 				{selectedWeekStartDate}
 			/>
 		</div>
-		<div class="w-full">
+		<div class="w-full flex-shrink-0">
 			<GazaCards
 				bind:this={gazaCardsRef}
 				{incidentsData}
@@ -126,7 +126,7 @@
 		@media (max-width: 640px) {
 			.map-container {
 				min-height: 120px;
-				max-height: 100svh;
+				max-height: 40vh;
 				height: 100%;
 			}
 		}

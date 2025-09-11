@@ -247,7 +247,17 @@
 			const totalMonths = timeMonth.count(minDate, maxDate) + 1;
 			const availableWidth = containerWidth - 24;
 			const widthPerMonth = availableWidth / totalMonths;
-			barWidthForScale = Math.min(Math.max(widthPerMonth * 0.8, 20), 60);
+			// On mobile, use smaller multiplier to prevent overlapping
+			const multiplier = isMobile ? 0.6 : 0.8;
+			barWidthForScale = Math.min(Math.max(widthPerMonth * multiplier, 20), 60);
+		} else if (groupingMode === 'weekly') {
+			// For weekly mode, also adjust bar width on mobile
+			const totalWeeks = timeWeek.count(minDate, maxDate) + 1;
+			const availableWidth = containerWidth - 24;
+			const widthPerWeek = availableWidth / totalWeeks;
+			// On mobile, use smaller multiplier to prevent overlapping
+			const multiplier = isMobile ? 0.6 : 0.8;
+			barWidthForScale = Math.min(Math.max(widthPerWeek * multiplier, 8), 20);
 		}
 
 		return scaleTime()
@@ -459,6 +469,16 @@
 	<div class="flex w-full items-center h-{svgHeight}px">
 		{#if containerWidth > 0 && enhancedAggregatedData.length > 0}
 			<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
+				<!-- Events timeline label (rendered first to appear behind everything) -->
+				<text
+					x={timeScale.range()[0] + 67.5}
+					y={31}
+					class="fill-zinc-500 font-sans text-xs"
+					text-anchor="start"
+				>
+					Events timeline
+				</text>
+
 				<!-- Dotted event axis line -->
 				<line
 					x1={timeScale.range()[0]}
@@ -512,23 +532,47 @@
 								(groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
 										)
-									: barWidth) /
+									: groupingMode === 'weekly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													8
+												),
+												20
+											)
+										: barWidth) /
 									2}
 							y={backgroundYPos}
 							width={groupingMode === 'monthly'
 								? Math.min(
 										Math.max(
-											((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
 											20
 										),
 										60
 									)
-								: barWidth}
+								: groupingMode === 'weekly'
+									? Math.min(
+											Math.max(
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+												8
+											),
+											20
+										)
+									: groupingMode === 'weekly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													8
+												),
+												20
+											)
+										: barWidth}
 							height={maxBarHeightForPeriod}
 							fill="transparent"
 							style:stroke="none"
@@ -543,7 +587,7 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
 														0.8,
 													20
 												),
@@ -555,12 +599,20 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
 										)
-									: barWidth}
+									: groupingMode === 'weekly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													8
+												),
+												20
+											)
+										: barWidth}
 								height={maxBarHeightForPeriod}
 								fill={isEven ? '#f3f4f6' : '#e5e7eb'}
 								style:stroke="none"
@@ -583,7 +635,7 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
 														0.8,
 													20
 												),
@@ -595,12 +647,20 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
 										)
-									: barWidth}
+									: groupingMode === 'weekly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													8
+												),
+												20
+											)
+										: barWidth}
 								height={barHeight}
 								fill="#9f3e52"
 								style:stroke="none"
@@ -689,7 +749,7 @@
 									(groupingMode === 'monthly'
 										? Math.min(
 												Math.max(
-													((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) *
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) *
 														0.8,
 													20
 												),
@@ -701,12 +761,20 @@
 								width={groupingMode === 'monthly'
 									? Math.min(
 											Math.max(
-												((containerWidth - 24) / Math.max(enhancedAggregatedData.length, 1)) * 0.8,
+												((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
 												20
 											),
 											60
 										)
-									: barWidth}
+									: groupingMode === 'weekly'
+										? Math.min(
+												Math.max(
+													((containerWidth - 24) / Math.max(enhancedCompleteTimeline.length, 1)) * (isMobile ? 0.6 : 0.8),
+													8
+												),
+												20
+											)
+										: barWidth}
 								height={barHeight}
 								fill="#2db487"
 								style:stroke="none"
@@ -999,16 +1067,6 @@
 						/>
 					{/if}
 				{/if}
-
-				<!-- Events timeline label (rendered before tooltip to appear behind it) -->
-				<text
-					x={timeScale.range()[0] + 67.5}
-					y={31}
-					class="fill-zinc-500 font-sans text-xs"
-					text-anchor="start"
-				>
-					Events timeline
-				</text>
 
 				<!-- Tooltip -->
 				{#if tooltipVisible && tooltipData}
