@@ -1143,7 +1143,7 @@
 
 	<!-- Toggle Switch for Weekly/Monthly - Centered underneath chart -->
 	<div class="flex w-full items-center justify-center h-{toggleHeight}px px-4">
-		<div class="flex items-center gap-2 bg-white/90 px-3">
+		<div class="flex items-center gap-2 bg-transparent px-3">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
 			<button
 				class="rounded-full px-3 py-1 text-sm font-medium transition-colors {groupingMode ===
