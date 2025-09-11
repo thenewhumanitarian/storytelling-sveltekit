@@ -1,7 +1,7 @@
 <script>
 	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
 	import moment from 'moment';
-	
+
 	let {
 		incident,
 		selectedMarkerId,
@@ -10,16 +10,16 @@
 		hasPrev = false,
 		hasNext = false
 	} = $props();
-	
+
 	let showSources = $state(false);
 </script>
 
 <div
-	class={`${incident.chronoId === selectedMarkerId && incident.type !== 'event' ? "bg-zinc-50" : ""} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 ${incident.type === 'event' ? 'bg-burgundy/20' : 'bg-white'} p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default relative`}
+	class={`${incident.chronoId === selectedMarkerId && incident.type !== 'event' ? 'bg-zinc-50' : ''} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 ${incident.type === 'event' ? 'bg-burgundy/20' : 'bg-white'} relative p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default`}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}
-		<div class="flex items-center justify-between gap-2 sm:gap-2 ">
+		<div class="flex items-center justify-between gap-2 sm:gap-2">
 			<div class="flex items-center gap-2">
 				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">Event</span>
 				<span class="text-sm text-zinc-700">
@@ -51,11 +51,13 @@
 				{incident.title}
 			</h3>
 			{#if incident.description && incident.description.includes('<')}
-				<div class="hidden text-sm text-zinc-700 sm:block sm:text-lg">
+				<div class="hidden text-sm text-zinc-700 sm:block sm:text-base lg:text-lg">
 					{@html incident.description}
 				</div>
 			{:else}
-				<p class="hidden text-sm text-zinc-700 sm:block sm:text-lg">{incident.description}</p>
+				<p class="hidden text-sm text-zinc-700 sm:block sm:text-base lg:text-lg">
+					{incident.description}
+				</p>
 			{/if}
 		</div>
 		<slot name="readmore"></slot>
@@ -93,10 +95,10 @@
 					</div>
 				</div>
 				<div class="mb-3">
-					<h3 class="mt-2 line-clamp-1 text-lg font-bold leading-tight sm:text-xl">
+					<h3 class="mt-2 line-clamp-1 text-base font-bold leading-tight sm:text-xl lg:text-xl">
 						{incident.title}
 					</h3>
-					<h5 class="mb-2 text-sm italic text-zinc-600 sm:text-base">
+					<h5 class="mb-2 text-sm italic text-zinc-600 sm:text-sm">
 						{incident.killedOrWounded} killed/wounded
 					</h5>
 				</div>
@@ -134,13 +136,13 @@
 				{/if}
 				{#if incident.description && incident.description.includes('<')}
 					<div
-						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-lg"
+						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
 					>
 						{@html incident.description}
 					</div>
 				{:else}
 					<p
-						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-lg"
+						class="hidden text-sm leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
 					>
 						{incident.description}
 					</p>
@@ -166,7 +168,7 @@
 			<slot name="readmore"></slot>
 		</div>
 	{/if}
-	
+
 	{#if showSources}
 		<GazaSourcesOverlay {incident} onClose={() => (showSources = false)} />
 	{/if}
@@ -210,6 +212,4 @@
 		outline: 2px solid #9f3e52;
 		outline-offset: 2px;
 	}
-
-
 </style>
