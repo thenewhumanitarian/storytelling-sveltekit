@@ -45,7 +45,7 @@
 </script>
 
 <div
-	class="fixed inset-0 z-50 flex items-center justify-center modal bg-white/80"
+	class="modal fixed inset-0 z-50 flex items-center justify-center bg-white/80"
 	tabindex="-1"
 	aria-modal="true"
 	role="dialog"
@@ -57,8 +57,8 @@
 		class="modal-content relative mx-2 max-h-[90vh] w-full max-w-md overflow-y-auto bg-white p-4 shadow-xl"
 		onclick={(e) => e.stopPropagation()}
 	>
-		<div class="flex items-center gap-2 mb-2">
-			<span class="px-2 py-1 text-sm font-bold text-white bg-burgundy"
+		<div class="mb-2 flex items-center gap-2">
+			<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white"
 				>{incident.type === 'event' ? 'Event' : 'Incident'}</span
 			>
 			<span class="text-sm text-gray-700">{moment(incident.date).format('DD MMMM YYYY')}</span>
@@ -71,14 +71,14 @@
 		{/if}
 		{#if incident.videoUrl}
 			<video
-				class="w-full mb-2 rounded-lg aspect-video"
+				class="aspect-video mb-2 w-full rounded-lg"
 				src={incident.videoUrl}
 				controls
 				aria-label={incident.videoCaption || incident.title}
 			></video>
 		{:else if incident.imageUrl}
 			<img
-				class="w-full mb-2 rounded-lg aspect-video"
+				class="aspect-video mb-2 w-full rounded-lg"
 				src={incident.imageUrl}
 				alt={incident.imageCaption || incident.title}
 			/>
@@ -96,7 +96,7 @@
 			onclick={onClose}
 			aria-label="Close">×</button
 		>
-		<div class="flex items-center justify-between mt-3">
+		<div class="mt-3 flex items-center justify-between">
 			<button
 				class="text-2xl font-bold text-zinc-500 hover:text-burgundy"
 				onclick={onPrev}
@@ -104,8 +104,7 @@
 				aria-label="Previous"
 				tabindex="0"
 				class:opacity-50={!hasPrev}
-				class:pointer-events-none={!hasPrev}
-			>←</button
+				class:pointer-events-none={!hasPrev}>←</button
 			>
 			<button
 				class="text-2xl font-bold text-zinc-500 hover:text-burgundy"
@@ -114,8 +113,7 @@
 				aria-label="Next"
 				tabindex="0"
 				class:opacity-50={!hasNext}
-				class:pointer-events-none={!hasNext}
-			>→</button
+				class:pointer-events-none={!hasNext}>→</button
 			>
 		</div>
 	</div>

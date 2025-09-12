@@ -1208,7 +1208,9 @@
 	{/if}
 
 	<!-- Bottom Controls -->
-	<div class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pt-3 pb-2">
+	<div
+		class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-2 pt-3"
+	>
 		<div class="flex items-center gap-2">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
 			<button

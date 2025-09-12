@@ -20,10 +20,16 @@
 	function setSelectedWeek(date: Date | null, firstIncidentId: number | null) {
 		selectedWeekStartDate = date;
 		if (date !== null) {
-			selectedMarkerId = null; // Clear marker selection if week is selected
-			highlightedMarkerId = null; // Also clear highlight
+			// Clear previous selections first
+			selectedMarkerId = null;
+			highlightedMarkerId = null;
+			// Then set the new selection
+			selectedMarkerId = firstIncidentId;
+		} else {
+			// If clearing the week selection, also clear marker
+			selectedMarkerId = null;
+			highlightedMarkerId = null;
 		}
-		selectedMarkerId = firstIncidentId;
 	}
 
 	let gazaMapRef = $state<{

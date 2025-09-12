@@ -76,35 +76,45 @@
 			map
 		) {
 			const newCenter = { lng: incident.longitude, lat: incident.latitude };
-			
+
 			// Check if we're going to the same location as before
-			const isSameLocation = lastMapCenter && 
-				Math.abs(lastMapCenter.lng - newCenter.lng) < 0.0001 && 
+			const isSameLocation =
+				lastMapCenter &&
+				Math.abs(lastMapCenter.lng - newCenter.lng) < 0.0001 &&
 				Math.abs(lastMapCenter.lat - newCenter.lat) < 0.0001;
-			
+
 			if (isSameLocation) {
 				// Same location - do a brief zoom out and back in for visual feedback
-				map.flyTo({ 
-					center: [newCenter.lng, newCenter.lat], 
+				map.flyTo({
+					center: [newCenter.lng, newCenter.lat],
 					zoom: ZOOM_ZOOM - 0.5,
+					pitch: 45,
+					bearing: -17.6,
 					duration: 500
 				});
-				
+
 				// Zoom back in after a short delay
 				setTimeout(() => {
 					if (map) {
-						map.flyTo({ 
-							center: [newCenter.lng, newCenter.lat], 
+						map.flyTo({
+							center: [newCenter.lng, newCenter.lat],
 							zoom: ZOOM_ZOOM,
+							pitch: 45,
+							bearing: -17.6,
 							duration: 400
 						});
 					}
 				}, 350);
 			} else {
 				// Different location - normal flyTo
-				map.flyTo({ center: [newCenter.lng, newCenter.lat], zoom: ZOOM_ZOOM });
+				map.flyTo({
+					center: [newCenter.lng, newCenter.lat],
+					zoom: ZOOM_ZOOM,
+					pitch: 45,
+					bearing: -17.6
+				});
 			}
-			
+
 			// Update the last center position
 			lastMapCenter = newCenter;
 		}
@@ -117,6 +127,8 @@
 			style: MAPBOX_STYLE,
 			center: [34.3, 31.5],
 			zoom: DEFAULT_MAP_ZOOM,
+			pitch: 45, // Tilt the map for 3D effect (0-85 degrees)
+			bearing: -17.6, // Rotate the map slightly for better perspective
 			attributionControl: false
 		});
 		map = mapInstance;
@@ -161,6 +173,37 @@
 				paint: { 'fill-color': '#000', 'fill-opacity': 0.5 }
 			});
 
+			// Add Gaza border using local GeoJSON file
+			map?.addSource('gaza-boundaries', {
+				type: 'geojson',
+				data: '/src/lib/data/gaza-map/gaza-boundaries.geojson'
+			});
+
+			// Add prominent Gaza border
+			map?.addLayer({
+				id: 'gaza-border',
+				type: 'line',
+				source: 'gaza-boundaries',
+				paint: {
+					'line-color': '#9f3e52', // Burgundy color to match theme
+					'line-width': 4,
+					'line-opacity': 0.8,
+					'line-dasharray': [1, 1]
+				}
+			});
+
+			// Add white outline for better visibility
+			// map?.addLayer({
+			// 	id: 'gaza-border-white',
+			// 	type: 'line',
+			// 	source: 'gaza-boundaries',
+			// 	paint: {
+			// 		'line-color': '#FFFFFF',
+			// 		'line-width': 6,
+			// 		'line-opacity': 1.0
+			// 	}
+			// });
+
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			incidentsData.forEach((incident, idx) => {
 				// Only render markers for incidents with valid coordinates
@@ -187,7 +230,12 @@
 					selectionOrigin = 'click';
 					setSelectedMarkerId(chronoId);
 					scrollToIncidentCard(chronoId);
-					map?.flyTo({ center: [lng, lat], zoom: ZOOM_ZOOM });
+					map?.flyTo({
+						center: [lng, lat],
+						zoom: ZOOM_ZOOM,
+						pitch: 45,
+						bearing: -17.6
+					});
 				});
 
 				newMarkers.push({ id: chronoId, markerInstance: marker });
@@ -268,7 +316,11 @@
 
 			if (!isMarkerClick) {
 				clickedCoordinates = event.lngLat;
-				map?.flyTo({ zoom: DEFAULT_MAP_ZOOM });
+				map?.flyTo({
+					zoom: DEFAULT_MAP_ZOOM,
+					pitch: 45,
+					bearing: -17.6
+				});
 				setSelectedMarkerId(null);
 			}
 		});
@@ -311,7 +363,7 @@
 </script>
 
 <div class="map-container relative w-full sm:w-1/2">
-	<div bind:this={mapContainer} class="w-full h-full map-background"></div>
+	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
 	{/if}
@@ -450,11 +502,12 @@
 
 	/* Modern gradient background for map container */
 	.map-background {
-		background: linear-gradient(135deg, 
-			#c4677a 0%, 
-			#d47284 25%, 
-			#b85d70 50%, 
-			#cc6b7e 75%, 
+		background: linear-gradient(
+			135deg,
+			#c4677a 0%,
+			#d47284 25%,
+			#b85d70 50%,
+			#cc6b7e 75%,
 			#a55468 100%
 		);
 		background-size: 200% 200%;
@@ -462,7 +515,8 @@
 	}
 
 	@keyframes gradientShift {
-		0%, 100% {
+		0%,
+		100% {
 			background-position: 0% 50%;
 		}
 		50% {
