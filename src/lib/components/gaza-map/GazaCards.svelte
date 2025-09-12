@@ -273,7 +273,7 @@
 		>
 	</div>
 	{#each incidentsData as incident (incident.chronoId)}
-		<GazaCard {incident} {selectedMarkerId} />
+		<GazaCard {incident} {selectedMarkerId} {incidentsData} />
 	{/each}
 </div>
 
@@ -288,6 +288,7 @@
 			<GazaCard
 				{incident}
 				{selectedMarkerId}
+				{incidentsData}
 				goToPrevCard={() => (i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null)}
 				goToNextCard={() =>
 					i < incidentsData.length - 1 ? scrollToCard(incidentsData[i + 1].chronoId) : null}

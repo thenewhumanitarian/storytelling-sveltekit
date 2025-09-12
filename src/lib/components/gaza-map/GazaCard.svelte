@@ -5,6 +5,7 @@
 	let {
 		incident,
 		selectedMarkerId,
+		incidentsData,
 		goToPrevCard = null,
 		goToNextCard = null,
 		hasPrev = false,
@@ -12,6 +13,17 @@
 	} = $props();
 
 	let showSources = $state(false);
+
+	// Calculate cumulative killed/wounded count up to this date
+	const cumulativeKilledWounded = $derived(() => {
+		const currentDate = new Date(incident.date);
+		return incidentsData
+			.filter(
+				(otherIncident) =>
+					otherIncident.type === 'incident' && new Date(otherIncident.date) <= currentDate
+			)
+			.reduce((sum, otherIncident) => sum + (otherIncident.killedOrWounded || 0), 0);
+	});
 </script>
 
 <div
@@ -98,9 +110,21 @@
 					<h3 class="mt-2 line-clamp-1 text-base font-bold leading-tight sm:text-xl lg:text-xl">
 						{incident.title}
 					</h3>
-					<h5 class="mb-2 text-sm italic text-zinc-600 sm:text-sm">
-						{incident.killedOrWounded} killed/wounded
-					</h5>
+					<div class="mb-2">
+						<span
+							class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700"
+						>
+							<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+								></path>
+							</svg>
+							{incident.killedOrWounded} killed/wounded, {cumulativeKilledWounded().toLocaleString('en-GB')} total
+						</span>
+					</div>
 				</div>
 				{#if incident.videoUrl && incident.videoUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
