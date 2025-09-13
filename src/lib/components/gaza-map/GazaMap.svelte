@@ -192,18 +192,6 @@
 				}
 			});
 
-			// Add white outline for better visibility
-			// map?.addLayer({
-			// 	id: 'gaza-border-white',
-			// 	type: 'line',
-			// 	source: 'gaza-boundaries',
-			// 	paint: {
-			// 		'line-color': '#FFFFFF',
-			// 		'line-width': 6,
-			// 		'line-opacity': 1.0
-			// 	}
-			// });
-
 			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
 			incidentsData.forEach((incident, idx) => {
 				// Only render markers for incidents with valid coordinates
