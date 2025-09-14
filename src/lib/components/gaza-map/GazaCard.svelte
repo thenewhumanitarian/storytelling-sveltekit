@@ -1,6 +1,7 @@
 <script>
 	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
 	import moment from 'moment';
+	import GazaVideo from './GazaVideo.svelte';
 
 	let {
 		incident,
@@ -128,12 +129,15 @@
 				</div>
 				{#if incident.videoUrl && incident.videoUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
-						<video
-							class="aspect-video video relative mt-2 w-full rounded-lg"
-							src={incident.videoUrl}
-							controls
-							aria-label={incident.videoCaption || incident.title}
-						></video>
+						<GazaVideo
+							videoUrl={incident.videoUrl}
+							imageUrl={incident.imageUrl}
+							title={incident.title}
+							videoCaption={incident.videoCaption}
+							rounded={true}
+							autoplay={false}
+							mediaClass="aspect-video video relative mt-2 w-full"
+						/>
 						{#if incident.videoCaption}
 							<p
 								class="hidden px-2 pt-1 text-sm text-zinc-400 sm:line-clamp-none sm:block sm:text-base"
@@ -145,7 +149,7 @@
 				{:else if incident.imageUrl && incident.imageUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
 						<img
-							class="aspect-video video relative mt-2 w-full rounded-lg"
+							class="aspect-video video relative mt-2 w-full"
 							src={incident.imageUrl}
 							alt={incident.imageCaption || incident.title}
 						/>

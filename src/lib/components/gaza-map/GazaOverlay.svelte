@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { IncidentData } from './types';
 	import { fade } from 'svelte/transition';
+	import GazaVideo from './GazaVideo.svelte';
 
 	export let event: IncidentData | null = null;
 </script>
@@ -23,13 +24,12 @@
 		{/if}
 		<div class="relative z-10 flex h-full w-full items-center justify-center">
 			{#if event.videoUrl}
-				<video
-					class="max-h-full max-w-full shadow-lg"
-					src={event.videoUrl}
-					controls
-					autoplay
-					aria-label={event.videoCaption || event.title}
-				></video>
+				<GazaVideo
+					videoUrl={event.videoUrl}
+					imageUrl={event.imageUrl}
+					title={event.title}
+					videoCaption={event.videoCaption}
+				/>
 			{:else if event.imageUrl}
 				<img
 					class="max-h-full max-w-full shadow-lg"
