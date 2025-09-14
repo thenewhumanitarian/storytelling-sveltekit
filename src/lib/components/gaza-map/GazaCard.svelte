@@ -134,9 +134,10 @@
 							imageUrl={incident.imageUrl}
 							title={incident.title}
 							videoCaption={incident.videoCaption}
-							rounded={true}
+							rounded={false}
 							autoplay={false}
 							mediaClass="aspect-video video relative mt-2 w-full"
+							ctaCompact={true}
 						/>
 						{#if incident.videoCaption}
 							<p

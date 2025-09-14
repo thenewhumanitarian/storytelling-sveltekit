@@ -30,16 +30,31 @@
 					title={event.title}
 					videoCaption={event.videoCaption}
 				/>
+				{#if event.videoCaption}
+					<p
+						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow sm:text-sm"
+					>
+						{event.videoCaption}
+					</p>
+				{/if}
 			{:else if event.imageUrl}
 				<img
 					class="max-h-full max-w-full shadow-lg"
 					src={event.imageUrl}
 					alt={event.imageCaption || event.title}
 				/>
+				{#if event.imageCaption}
+					<p
+						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow sm:text-sm"
+					>
+						{event.imageCaption}
+					</p>
+				{/if}
 			{:else}
-				<div class="flex h-full w-full items-center justify-center overlay-gradient">
+				<div class="overlay-gradient flex h-full w-full items-center justify-center">
 					<div class="absolute inset-0 bg-black/30"></div>
-					<span class="relative w-full p-8 text-center font-title text-2xl sm:text-5xl font-bold text-white drop-shadow-lg"
+					<span
+						class="relative w-full p-8 text-center font-title text-2xl font-bold text-white drop-shadow-lg sm:text-5xl"
 						>{event.title}</span
 					>
 				</div>
@@ -51,11 +66,12 @@
 <style>
 	/* Modern gradient background for overlay */
 	.overlay-gradient {
-		background: linear-gradient(135deg, 
-			#c4677a 0%, 
-			#d47284 25%, 
-			#b85d70 50%, 
-			#cc6b7e 75%, 
+		background: linear-gradient(
+			135deg,
+			#c4677a 0%,
+			#d47284 25%,
+			#b85d70 50%,
+			#cc6b7e 75%,
 			#a55468 100%
 		);
 		background-size: 200% 200%;
@@ -63,7 +79,8 @@
 	}
 
 	@keyframes gradientShift {
-		0%, 100% {
+		0%,
+		100% {
 			background-position: 0% 50%;
 		}
 		50% {

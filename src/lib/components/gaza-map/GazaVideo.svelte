@@ -8,6 +8,8 @@
 	export let autoplay: boolean = true;
 	// Optional extra classes to apply to the media element (video or img)
 	export let mediaClass: string = '';
+	// Use a compact CTA style (no white background) for host-page links without images
+	export let ctaCompact: boolean = false;
 
 	function isDirectVideoUrl(url: string | null | undefined): boolean {
 		if (!url) return false;
@@ -69,7 +71,9 @@
 			href={videoUrl}
 			target="_blank"
 			rel="noopener noreferrer"
-			class="flex items-center gap-2 bg-white/95 px-4 py-3 font-semibold text-burgundy shadow-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+			class={ctaCompact
+				? 'inline-flex items-center gap-2 font-semibold text-burgundy underline hover:text-burgundy/80 focus:outline-none focus:ring-2 focus:ring-burgundy'
+				: 'flex items-center gap-2 bg-white/95 px-4 py-3 font-semibold text-burgundy shadow-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy'}
 			aria-label="Open media in new window"
 		>
 			<svg
