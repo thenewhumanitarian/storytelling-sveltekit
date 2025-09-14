@@ -38,11 +38,19 @@
 					</p>
 				{/if}
 			{:else if event.imageUrl}
-				<img
-					class="max-h-full max-w-full shadow-lg"
-					src={event.imageUrl}
-					alt={event.imageCaption || event.title}
-				/>
+				<a
+					href={event.imageUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="block"
+					aria-label="Open image in new window"
+				>
+					<img
+						class="max-h-full max-w-full shadow-lg"
+						src={event.imageUrl}
+						alt={event.imageCaption || event.title}
+					/>
+				</a>
 				{#if event.imageCaption}
 					<p
 						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow sm:text-sm"

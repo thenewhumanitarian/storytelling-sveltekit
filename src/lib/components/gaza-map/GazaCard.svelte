@@ -149,11 +149,19 @@
 					</div>
 				{:else if incident.imageUrl && incident.imageUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
-						<img
-							class="aspect-video video relative mt-2 w-full"
-							src={incident.imageUrl}
-							alt={incident.imageCaption || incident.title}
-						/>
+						<a
+							href={incident.imageUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="block"
+							aria-label="Open image in new window"
+						>
+							<img
+								class="aspect-video video relative mt-2 w-full"
+								src={incident.imageUrl}
+								alt={incident.imageCaption || incident.title}
+							/>
+						</a>
 						{#if incident.imageCaption}
 							<p
 								class="hidden px-2 pt-1 text-sm text-zinc-400 sm:line-clamp-none sm:block sm:text-base"
