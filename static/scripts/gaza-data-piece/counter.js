@@ -15,8 +15,8 @@
 	// ---- Minimal styles (scoped) ----
 	const css = `
   #counter{position:relative;overflow:hidden;display:grid;place-items:center;font-family:inherit;transition:background-color 0.8s ease-in-out;}
-  #counter.completed{background-color:#AB3850;}
-  #counter .ghf-wrap{display:grid;grid-auto-flow:column;gap:clamp(12px,3vw,32px);align-items:center;justify-content:space-around;inline-size:100%;block-size:100%;padding-bottom:1rem;}
+  #counter.completed{background-color:#282828;}
+  #counter .ghf-wrap{display:grid;grid-auto-flow:column;gap:clamp(12px,3vw,32px);align-items:center;justify-content:space-between;inline-size:100%;block-size:100%;padding:0 2rem 1.5rem 2rem;}
   #counter .ghf-item{display:grid;place-items:center;text-align:center;line-height:1.1;min-width:min(40ch,46%);}
   #counter .ghf-num{font-size:clamp(32px,8vw,84px);font-weight:700;width:100%;display:flex;justify-content:center;align-items:center;font-family:GT Sectra Bold, serif;min-width:5ch;color:#AB3850;transition:color 0.8s ease-in-out;}
   #counter.completed .ghf-num{color:#fff;}

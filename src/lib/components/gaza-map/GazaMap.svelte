@@ -42,6 +42,50 @@
 		selectionOrigin = 'click';
 	}
 
+	async function enterFullscreen() {
+		const el: any = document.documentElement as any;
+		const request =
+			el.requestFullscreen ||
+			el.webkitRequestFullscreen ||
+			el.webkitRequestFullScreen ||
+			el.msRequestFullscreen;
+		if (request) {
+			await request.call(el);
+			return;
+		}
+		throw new Error('Fullscreen API not available');
+	}
+
+	async function exitFullscreen() {
+		const doc: any = document as any;
+		const exit =
+			doc.exitFullscreen || doc.webkitExitFullscreen || doc.webkitCancelFullScreen || doc.msExitFullscreen;
+		if (exit) {
+			await exit.call(doc);
+			return;
+		}
+		throw new Error('Fullscreen exit API not available');
+	}
+
+	async function toggleFullscreen() {
+		try {
+			if (!isFullscreen) {
+				await enterFullscreen();
+			} else {
+				await exitFullscreen();
+			}
+		} catch (err) {
+			// Fallback: ask parent to toggle fullscreen for the iframe (useful on iOS Safari)
+			try {
+				window.parent?.postMessage(
+					{ type: 'tnh:request-fullscreen', action: isFullscreen ? 'exit' : 'enter' },
+					'*'
+				);
+			} catch (e) {}
+			console.error('Fullscreen toggle failed', err);
+		}
+	}
+
 	function closeAllPopups(exceptId: number | null = null) {
 		markers.forEach(({ id, markerInstance }) => {
 			const popup = markerInstance.getPopup();
@@ -372,27 +416,7 @@
 <div bind:this={hostContainer} class="map-container relative w-full sm:w-1/2">
 	<button
 		class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
-			onclick={async () => {
-				try {
-					if (!isFullscreen) {
-						const docEl: any = document.documentElement as any;
-						if (docEl.requestFullscreen) {
-							await docEl.requestFullscreen();
-						} else if (docEl.webkitRequestFullscreen) {
-							await docEl.webkitRequestFullscreen();
-						}
-					} else {
-						const doc: any = document as any;
-						if (doc.exitFullscreen) {
-							await doc.exitFullscreen();
-						} else if (doc.webkitExitFullscreen) {
-							await doc.webkitExitFullscreen();
-						}
-					}
-				} catch (err) {
-					console.error('Fullscreen toggle failed', err);
-				}
-			}}
+			onclick={toggleFullscreen}
 			aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
 		>
 			{#if !isFullscreen}
