@@ -24,7 +24,7 @@
   #counter.completed .ghf-label{color:#fff;}
   #counter .ghf-date{font-size:12px;opacity:.7;margin-top:.35rem;transition:color 0.8s ease-in-out;}
   #counter.completed .ghf-date{color:#eee;}
-  @media (max-width: 680px){ #counter .ghf-wrap{grid-auto-flow:row} }
+  @media (max-width: 680px){ #counter .ghf-wrap{grid-auto-flow:row;justify-content:center;} }
   `;
 	const style = document.createElement('style');
 	style.textContent = css;
