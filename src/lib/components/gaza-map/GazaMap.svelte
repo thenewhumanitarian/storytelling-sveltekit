@@ -37,6 +37,8 @@
 	let lastMapCenter: { lng: number; lat: number } | null = $state(null);
 
 	let isFullscreen = $state(false);
+	let isMobile = $state(false);
+	let mounted = $state(false);
 
 	export function setSelectionOriginToClick() {
 		selectionOrigin = 'click';
@@ -75,7 +77,6 @@
 				await exitFullscreen();
 			}
 		} catch (err) {
-			// Fallback: ask parent to toggle fullscreen for the iframe (useful on iOS Safari)
 			try {
 				window.parent?.postMessage(
 					{ type: 'tnh:request-fullscreen', action: isFullscreen ? 'exit' : 'enter' },
@@ -168,6 +169,12 @@
 	}
 
 	onMount(() => {
+		const updateIsMobile = () => {
+			isMobile = window.innerWidth <= 640;
+		};
+		updateIsMobile();
+		window.addEventListener('resize', updateIsMobile);
+		mounted = true;
 
 		const updateFullscreenState = () => {
 			// @ts-ignore - webkit fallback for Safari
@@ -373,6 +380,7 @@
 		});
 
 		return () => {
+			window.removeEventListener('resize', updateIsMobile);
 			document.removeEventListener('fullscreenchange', updateFullscreenState);
 			// @ts-ignore - Safari
 			document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
@@ -414,44 +422,56 @@
 
 
 <div bind:this={hostContainer} class="map-container relative w-full sm:w-1/2">
-	<button
-		class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
-			onclick={toggleFullscreen}
-			aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-		>
-			{#if !isFullscreen}
-				<!-- Enter fullscreen icon -->
+	{#if mounted}
+		{#if isMobile}
+			<a
+				class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+				href="https://interactive.thenewhumanitarian.org/embeddable/map/2025-09/gaza"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Open in new window"
+			>
+				<!-- Icon only on mobile -->
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 					<path d="M9 3H5a2 2 0 0 0-2 2v4" />
 					<path d="M15 3h4a2 2 0 0 1 2 2v4" />
 					<path d="M9 21H5a2 2 0 0 1-2-2v-4" />
 					<path d="M15 21h4a2 2 0 0 0 2-2v-4" />
 				</svg>
-				<span>Fullscreen</span>
-			{:else}
-				<!-- Exit fullscreen icon -->
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-					<path d="M15 9V5h4" />
-					<path d="M9 9H5V5" />
-					<path d="M15 15h4v4" />
-					<path d="M9 15H5v4" />
-				</svg>
-				<span>Exit</span>
-			{/if}
-		</button>
+			</a>
+		{:else}
+			<button
+				class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+				onclick={toggleFullscreen}
+				aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+			>
+				{#if !isFullscreen}
+					<!-- Enter fullscreen icon -->
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M9 3H5a2 2 0 0 0-2 2v4" />
+						<path d="M15 3h4a2 2 0 0 1 2 2v4" />
+						<path d="M9 21H5a2 2 0 0 1-2-2v-4" />
+						<path d="M15 21h4a2 2 0 0 0 2-2v-4" />
+					</svg>
+					<span>Fullscreen</span>
+				{:else}
+					<!-- Exit fullscreen icon -->
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M15 9V5h4" />
+						<path d="M9 9H5V5" />
+						<path d="M15 15h4v4" />
+						<path d="M9 15H5v4" />
+					</svg>
+					<span>Exit</span>
+				{/if}
+			</button>
+		{/if}
+	{/if}
 	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
 	{/if}
 </div>
-
-{#if clickedCoordinates}
-	<div class="absolute left-0 top-0 z-10 ml-4 mt-4 rounded border bg-gray-100/90 p-2 text-sm">
-		<strong>Clicked:</strong>
-		<span class="ml-1">Lng: {clickedCoordinates.lng.toFixed(4)},</span>
-		<span class="ml-1">Lat: {clickedCoordinates.lat.toFixed(4)}</span>
-	</div>
-{/if}
 
 <style>
 	.map-container {
