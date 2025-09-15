@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
 	import moment from 'moment';
 	import GazaVideo from './GazaVideo.svelte';
+    import type { IncidentData } from './types';
 
 	let {
 		incident,
@@ -11,19 +12,43 @@
 		goToNextCard = null,
 		hasPrev = false,
 		hasNext = false
-	} = $props();
+	} = $props<{
+		incident: IncidentData;
+		selectedMarkerId: number;
+		incidentsData: IncidentData[];
+		goToPrevCard?: (() => void) | null;
+		goToNextCard?: (() => void) | null;
+		hasPrev?: boolean;
+		hasNext?: boolean;
+	}>();
 
 	let showSources = $state(false);
+	let hasAutoOpened = $state(false);
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		const debug = new URLSearchParams(window.location.search).get('debug');
+		const shouldAutoOpen =
+			debug === 'sources' &&
+			incident?.type === 'incident' &&
+			incident?.sources && incident.sources.trim() !== '' &&
+			incident?.chronoId === selectedMarkerId;
+
+		if (!hasAutoOpened && shouldAutoOpen) {
+			showSources = true;
+			hasAutoOpened = true;
+		}
+	});
 
 	// Calculate cumulative killed/wounded count up to this date
 	const cumulativeKilledWounded = $derived(() => {
 		const currentDate = new Date(incident.date);
 		return incidentsData
 			.filter(
-				(otherIncident) =>
+				(otherIncident: IncidentData) =>
 					otherIncident.type === 'incident' && new Date(otherIncident.date) <= currentDate
 			)
-			.reduce((sum, otherIncident) => sum + (otherIncident.killedOrWounded || 0), 0);
+			.reduce((sum: number, otherIncident: IncidentData) => sum + (otherIncident.killedOrWounded || 0), 0);
 	});
 </script>
 
