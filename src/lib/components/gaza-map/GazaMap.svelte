@@ -28,12 +28,15 @@
 	} = $props();
 
 	let mapContainer: HTMLElement | undefined = $state();
+	let hostContainer: HTMLElement | undefined = $state();
 	let map: mapboxgl.Map | null = $state(null);
 	let markers = $state<{ id: number; markerInstance: mapboxgl.Marker }[]>([]);
 	let clickedCoordinates: mapboxgl.LngLat | null = $state(null);
 	let cardsComponent: GazaCards | null = null;
 	let selectionOrigin: 'click' | 'scroll' | null = null;
 	let lastMapCenter: { lng: number; lat: number } | null = $state(null);
+
+	let isFullscreen = $state(false);
 
 	export function setSelectionOriginToClick() {
 		selectionOrigin = 'click';
@@ -121,6 +124,18 @@
 	}
 
 	onMount(() => {
+
+		const updateFullscreenState = () => {
+			// @ts-ignore - webkit fallback for Safari
+			isFullscreen = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+			setTimeout(() => {
+				map?.resize();
+			}, 0);
+		};
+		document.addEventListener('fullscreenchange', updateFullscreenState);
+		// @ts-ignore - Safari
+		document.addEventListener('webkitfullscreenchange', updateFullscreenState);
+
 		mapboxgl.accessToken = MAPBOX_TOKEN;
 		const mapInstance = new mapboxgl.Map({
 			container: mapContainer!,
@@ -314,6 +329,9 @@
 		});
 
 		return () => {
+			document.removeEventListener('fullscreenchange', updateFullscreenState);
+			// @ts-ignore - Safari
+			document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
 			map?.remove();
 			map = null;
 			markers = [];
@@ -350,7 +368,53 @@
 	});
 </script>
 
-<div class="map-container relative w-full sm:w-1/2">
+
+<div bind:this={hostContainer} class="map-container relative w-full sm:w-1/2">
+	<button
+		class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+			onclick={async () => {
+				try {
+					if (!isFullscreen) {
+						const docEl: any = document.documentElement as any;
+						if (docEl.requestFullscreen) {
+							await docEl.requestFullscreen();
+						} else if (docEl.webkitRequestFullscreen) {
+							await docEl.webkitRequestFullscreen();
+						}
+					} else {
+						const doc: any = document as any;
+						if (doc.exitFullscreen) {
+							await doc.exitFullscreen();
+						} else if (doc.webkitExitFullscreen) {
+							await doc.webkitExitFullscreen();
+						}
+					}
+				} catch (err) {
+					console.error('Fullscreen toggle failed', err);
+				}
+			}}
+			aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+		>
+			{#if !isFullscreen}
+				<!-- Enter fullscreen icon -->
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M9 3H5a2 2 0 0 0-2 2v4" />
+					<path d="M15 3h4a2 2 0 0 1 2 2v4" />
+					<path d="M9 21H5a2 2 0 0 1-2-2v-4" />
+					<path d="M15 21h4a2 2 0 0 0 2-2v-4" />
+				</svg>
+				<span>Fullscreen</span>
+			{:else}
+				<!-- Exit fullscreen icon -->
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M15 9V5h4" />
+					<path d="M9 9H5V5" />
+					<path d="M15 15h4v4" />
+					<path d="M9 15H5v4" />
+				</svg>
+				<span>Exit</span>
+			{/if}
+		</button>
 	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
