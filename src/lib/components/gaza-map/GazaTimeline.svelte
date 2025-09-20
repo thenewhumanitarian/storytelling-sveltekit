@@ -5,6 +5,7 @@
 	import type { IncidentData } from './types';
 	import moment from 'moment';
 	import { onMount } from 'svelte';
+	import GazaEmbedModal from '$lib/components/gaza-map/GazaEmbedModal.svelte';
 
 	// --- Component Properties ---
 	let {
@@ -40,6 +41,44 @@
 		incidentCount: number;
 		periodStartDate: Date;
 	} | null>(null);
+
+	// Embed modal
+	let showEmbed = $state(false);
+	function openEmbed() {
+		showEmbed = true;
+	}
+	function closeEmbed() {
+		showEmbed = false;
+	}
+
+	// Copy to clipboard
+	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-embed.js" defer><\/script>`;
+	let copied = $state(false);
+	async function copyEmbed() {
+		if (typeof window === 'undefined') return;
+		try {
+			if (navigator && 'clipboard' in navigator) {
+				await navigator.clipboard.writeText(embedSnippet);
+				copied = true;
+				setTimeout(() => (copied = false), 1500);
+				return;
+			}
+		} catch {}
+		// Fallback: select text in the pre element
+		try {
+			const el = document.getElementById('tnh-embed-code');
+			if (!el) return;
+			const range = document.createRange();
+			range.selectNodeContents(el);
+			const sel = window.getSelection();
+			sel?.removeAllRanges();
+			sel?.addRange(range);
+			document.execCommand('copy');
+			sel?.removeAllRanges();
+			copied = true;
+			setTimeout(() => (copied = false), 1500);
+		} catch {}
+	}
 	const svgHeight = 160; // Increased height for better spacing
 	const barWidth = 12; // Default bar width
 	const barTopPadding = 16;
@@ -1251,9 +1290,37 @@
 				</svg>
 				View Dataset
 			</a>
+			<button
+				type="button"
+				class="ml-2 inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800"
+				onclick={openEmbed}
+			>
+				<svg
+					class="h-3 w-3 fill-current"
+					viewBox="0 0 229 229"
+					fill="currentColor"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M57.079 161.287L6.89809 112.346L57.079 63.2038L70.0318 77.1057L33.1855 112.559L70.0318 147.589L57.079 161.287Z"
+						fill="currentColor"
+					/>
+					<path d="M98.0159 203H81.3057L125.667 26H142.185L98.0159 203Z" fill="black" />
+					<path
+						d="M170.221 161.481L156.841 147.377L194.351 112.135L156.841 76.8937L170.221 63.3977L221.102 112.346L170.221 161.481Z"
+						fill="currentColor"
+					/>
+				</svg>
+
+				Embed
+			</button>
 		</div>
 	</div>
 </div>
+
+{#if showEmbed}
+	<GazaEmbedModal onClose={closeEmbed} />
+{/if}
 
 <style lang="postcss">
 	/* Ensure proper layering for chart elements */
