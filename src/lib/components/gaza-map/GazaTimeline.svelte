@@ -1300,7 +1300,7 @@
 		</div>
 
 		<!-- Dataset Link - hidden on mobile -->
-		<div class="hidden sm:block">
+		<div class="hidden sm:flex">
 			<a
 				href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pubhtml"
 				target="_blank"
