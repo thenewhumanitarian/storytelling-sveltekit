@@ -1,7 +1,21 @@
 <script lang="ts">
+	import { PUBLIC_BASE_URL } from '$env/static/public';
 	let { onClose } = $props<{ onClose: () => void }>();
 	let copied = $state(false);
-	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer><\/script>`;
+	// Build base URL from env and ensure no trailing slash
+	const BASE = (PUBLIC_BASE_URL || '').replace(/\/$/, '');
+	// Script-based embed (served by endpoint)
+	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="${BASE}/embeddable/map/2025-09/gaza/embed" defer><\/script>`;
+
+	function escapeHtml(s: string): string {
+		return s
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+	const displaySnippet = $derived(escapeHtml(embedSnippet));
 
 	async function copyEmbed() {
 		if (typeof window === 'undefined') return;
@@ -71,12 +85,7 @@
 						>
 						{copied ? 'Copied' : 'Copy'}
 					</button>
-					<pre
-						id="tnh-embed-code"
-						class="overflow-auto rounded bg-gray-100 p-2 text-[12px] text-gray-900"><code
-							>&lt;div id="gaza-aid-killings"&gt;&lt;/div&gt;
-&lt;script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer&gt;&lt;/script&gt;</code
-						></pre>
+					<pre id="tnh-embed-code" class="overflow-auto rounded bg-gray-100 p-2 text-[12px] text-gray-900"><code>{@html displaySnippet}</code></pre>
 				</div>
 			</li>
 			<li>
@@ -84,9 +93,9 @@
 				aspect ratio for different screen sizes.
 			</li>
 			<li>
-				<strong>Optional:</strong> You can change the target container id by adding
-				<code>data-target="your-id"</code>
-				to the script tag, then using <code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
+				<strong>Optional:</strong> You can change the target container id by adding <code>data-target="your-id"</code>
+				and the source via <code>data-src="..."</code> to the script tag; then use
+				<code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
 			</li>
 		</ol>
 	</div>
