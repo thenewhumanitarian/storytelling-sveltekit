@@ -1,6 +1,7 @@
 <script lang="ts">
 	let { onClose } = $props<{ onClose: () => void }>();
 	let copied = $state(false);
+	// Script-based embed (served from static/ as /scripts/... on Vercel)
 	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer><\/script>`;
 
 	async function copyEmbed() {
@@ -84,9 +85,9 @@
 				aspect ratio for different screen sizes.
 			</li>
 			<li>
-				<strong>Optional:</strong> You can change the target container id by adding
-				<code>data-target="your-id"</code>
-				to the script tag, then using <code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
+				<strong>Optional:</strong> You can change the target container id by adding <code>data-target="your-id"</code>
+				and the source via <code>data-src="..."</code> to the script tag; then use
+				<code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
 			</li>
 		</ol>
 	</div>

@@ -12,6 +12,16 @@
 			document.body.appendChild(target);
 		}
 
+		// Detect host for logo policy
+		var hostContainsTNH = false;
+		try {
+			var topHref = window.top && window.top.location && window.top.location.href;
+			hostContainsTNH = /thenewhumanitarian\.org/i.test(topHref || '');
+		} catch (e) {
+			// Cross-origin, assume not TNH to be safe
+			hostContainsTNH = false;
+		}
+
 		// Inject styles (scoped by class)
 		var css =
 			'' +
@@ -21,7 +31,11 @@
 			'@media screen and (max-width: 640px) { .tnh-gaza-dashboard { aspect-ratio: 1 / 1.6; } }\n' +
 			/* Loading shimmer */
 			'.tnh-gaza-dashboard { --light-grey:#eee; --dark-grey:#ddd; background: repeating-linear-gradient(to right, var(--light-grey) 0%, var(--dark-grey) 50%, var(--light-grey) 100%); background-size: 200% auto; background-position: 0 100%; animation: tnh-gaza-loading 2s infinite linear; }\n' +
-			'@keyframes tnh-gaza-loading { 0% { background-position: 0 0; } 100% { background-position: -200% 0; } }';
+			'@keyframes tnh-gaza-loading { 0% { background-position: 0 0; } 100% { background-position: -200% 0; } }\n' +
+			/* Logo */
+			'.tnh-badge { position:absolute; right:8px; bottom:8px; z-index:2; display:inline-flex; align-items:center; gap:6px; background:rgba(17,17,17,.7); color:#fff; padding:6px 10px; border-radius:4px; text-decoration:none; font: 600 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial; }\n' +
+			'.tnh-badge:hover { background: rgba(17,17,17,.85); }\n' +
+			'.tnh-badge img { height:14px; width:auto; display:block; }';
 
 		var style = document.createElement('style');
 		style.type = 'text/css';
@@ -47,6 +61,26 @@
 		});
 
 		wrapper.appendChild(iframe);
+
+		// Add TNH badge if standalone OR embedding site is not TNH
+		var alwaysShowBadge = true; // show on standalone
+		if (alwaysShowBadge || !hostContainsTNH) {
+			var badge = document.createElement('a');
+			badge.className = 'tnh-badge';
+			badge.href = 'https://www.thenewhumanitarian.org';
+			badge.target = '_blank';
+			badge.rel = 'noopener noreferrer';
+			badge.setAttribute('aria-label', 'The New Humanitarian');
+			var logo = document.createElement('img');
+			logo.src = 'https://interactive.thenewhumanitarian.org/static/logos/tnh-logo-invert.svg';
+			logo.alt = 'The New Humanitarian';
+			badge.appendChild(logo);
+			var text = document.createElement('span');
+			text.textContent = 'The New Humanitarian';
+			badge.appendChild(text);
+			wrapper.appendChild(badge);
+		}
+
 		target.innerHTML = '';
 		target.appendChild(wrapper);
 	} catch (e) {

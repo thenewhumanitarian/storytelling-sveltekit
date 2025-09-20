@@ -7,12 +7,12 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 
-	compilerOptions: {
-
-	},
+	compilerOptions: {},
 
 	kit: {
 		adapter: vercel(),
+		files: { assets: 'static' } // default; optional
+
 		// prerender: {
 		// 	entries: ['*']
 		// }
