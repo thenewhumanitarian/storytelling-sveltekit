@@ -1384,6 +1384,7 @@
 	/* Ensure SVG elements respect z-index */
 	svg {
 		position: relative;
+		max-height: 28px;
 	}
 
 	svg g {
@@ -1391,11 +1392,11 @@
 	}
 
 	:global(.tnh-controls-logo .logo) {
-		width: 100px;
+		width: 95px;
 	}
 	@media (min-width: 1024px) {
 		:global(.tnh-controls-logo .logo) {
-			width: 120px;
+			width: 95px;
 		}
 	}
 
