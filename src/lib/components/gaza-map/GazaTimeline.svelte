@@ -1342,7 +1342,7 @@
 				Embed
 			</button>
 			{#if showBrandLogo}
-				<span class="ml-3 inline-flex items-center tnh-controls-logo">
+				<span style="max-height: 28px;" class="ml-3 inline-flex items-center tnh-controls-logo">
 					<Logo />
 				</span>
 			{/if}
