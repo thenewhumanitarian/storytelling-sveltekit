@@ -1,20 +1,9 @@
 import type { RequestHandler } from './$types';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import scriptSource from '$lib/components/gaza-map/embed-script.js?raw';
 import { env } from '$env/dynamic/private';
 
 export const GET: RequestHandler = async ({ request, url }) => {
-    // Load the script content from src/lib/components/gaza-map/embed-script.js
-    let body = '';
-    try {
-        const filePath = join(process.cwd(), 'src', 'lib', 'components', 'gaza-map', 'embed-script.js');
-        body = await readFile(filePath, 'utf8');
-    } catch {
-        return new Response('// embed script not found', {
-            status: 404,
-            headers: { 'content-type': 'application/javascript; charset=utf-8' }
-        });
-    }
+    const body = scriptSource || '// embed script not found';
 
 	// Fire-and-forget GA tracking if configured
 	try {
