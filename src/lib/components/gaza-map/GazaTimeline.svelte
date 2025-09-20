@@ -88,7 +88,7 @@
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
-	const toggleHeight = 40; // Height for the toggle switch area (increased for iframe)
+    const toggleHeight = 56; // Taller to accommodate logo + buttons without cropping
 	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
 
 	// --- Derived State (Svelte 5 Runes) ---
@@ -197,40 +197,40 @@
 	// Intensity-based color scale
 	const intensityColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626'] as any) as any;
 		}
 		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
 		const maxIntensity = Math.max(...intensities, 1);
-		return scaleLinear().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626']);
+		return scaleLinear().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626'] as any) as any;
 	});
 
 	// Geographic spread color scale
 	const spreadColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626'] as any) as any;
 		}
 		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
 		const maxSpread = Math.max(...spreads, 1);
-		return scaleLinear().domain([0, maxSpread]).range(['#1e40af', '#dc2626']); // Blue to red
+		return scaleLinear().domain([0, maxSpread]).range(['#1e40af', '#dc2626'] as any) as any; // Blue to red
 	});
 
 	// Enhanced color and opacity scales
 	const colorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626'] as any) as any;
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626']); // Light red to dark red
+		return scaleLinear().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626'] as any) as any; // Light red to dark red
 	});
 
 	const opacityScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range([0.3, 1]);
+			return scaleLinear().domain([0, 1]).range([0.3, 1] as any) as any;
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalKilledOrWounded);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear().domain([0, maxPeriodKilled]).range([0.3, 1]); // More transparent for lower values
+		return scaleLinear().domain([0, maxPeriodKilled]).range([0.3, 1] as any) as any; // More transparent for lower values
 	});
 
 	// Enhanced complete timeline with new data
@@ -1274,9 +1274,9 @@
 	{/if}
 
 	<!-- Bottom Controls -->
-	<div
-		class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-3 pt-3"
-	>
+    <div
+        class="tnh-controls-row flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-0 pt-6"
+    >
 		<div class="flex items-center gap-2">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
 			<button
@@ -1300,7 +1300,7 @@
 		</div>
 
 		<!-- Dataset Link - hidden on mobile -->
-		<div class="hidden sm:block">
+        <div class="hidden sm:flex items-center">
 			<a
 				href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYgKblF52DLu-hmfA1xHL94GAJrzQQLQsNTchOv4aIVL1TnFAT8WEAw4DwFox9pCqiuzJhEfn4mp9s/pubhtml"
 				target="_blank"
@@ -1341,11 +1341,11 @@
 
 				Embed
 			</button>
-			{#if showBrandLogo}
-				<span class="ml-3 inline-flex items-center tnh-controls-logo">
-					<Logo />
-				</span>
-			{/if}
+            {#if showBrandLogo}
+                <span class="ml-3 inline-flex items-center tnh-controls-logo">
+                    <Logo />
+                </span>
+            {/if}
 		</div>
 	</div>
 </div>
@@ -1397,5 +1397,13 @@
 		:global(.tnh-controls-logo .logo) {
 			width: 120px;
 		}
+	}
+
+	/* Ensure the bottom controls never crop inside embeds */
+	:global(.tnh-controls-logo) {
+		max-height: 36px;
+	}
+	:global(.tnh-controls-row) {
+		padding-bottom: 12px; /* room for shadows inside iframes */
 	}
 </style>
