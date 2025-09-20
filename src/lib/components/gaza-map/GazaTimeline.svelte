@@ -52,7 +52,7 @@
 	}
 
 	// Copy to clipboard
-	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-embed.js" defer><\/script>`;
+	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer><\/script>`;
 	let copied = $state(false);
 	async function copyEmbed() {
 		if (typeof window === 'undefined') return;

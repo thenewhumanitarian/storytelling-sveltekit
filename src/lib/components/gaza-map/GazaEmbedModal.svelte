@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { onClose } = $props<{ onClose: () => void }>();
 	let copied = $state(false);
-	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-embed.js" defer><\/script>`;
+	const embedSnippet = `<div id="gaza-aid-killings"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer><\/script>`;
 
 	async function copyEmbed() {
 		if (typeof window === 'undefined') return;
@@ -75,7 +75,7 @@
 						id="tnh-embed-code"
 						class="overflow-auto rounded bg-gray-100 p-2 text-[12px] text-gray-900"><code
 							>&lt;div id="gaza-aid-killings"&gt;&lt;/div&gt;
-&lt;script src="https://interactive.thenewhumanitarian.org/scripts/gaza-embed.js" defer&gt;&lt;/script&gt;</code
+&lt;script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer&gt;&lt;/script&gt;</code
 						></pre>
 				</div>
 			</li>
