@@ -6,6 +6,7 @@
 	import moment from 'moment';
 	import { onMount } from 'svelte';
 	import GazaEmbedModal from '$lib/components/gaza-map/GazaEmbedModal.svelte';
+	import Logo from '$lib/components/icons/Logo.svelte';
 
 	// --- Component Properties ---
 	let {
@@ -44,6 +45,7 @@
 
 	// Embed modal
 	let showEmbed = $state(false);
+	let showBrandLogo = $state(false); // Show TNH logo by Embed when standalone or non-TNH embedding
 	function openEmbed() {
 		showEmbed = true;
 	}
@@ -391,6 +393,31 @@
 
 		// Initial check
 		checkMobile();
+
+		// Determine whether to show brand logo next to Embed button
+		try {
+			const isTop = window.self === window.top;
+			if (isTop) {
+				showBrandLogo = true;
+			} else {
+				const ref = document.referrer || '';
+				if (!ref) {
+					// Unknown referrer: prefer showing the brand
+					showBrandLogo = true;
+				} else {
+					let refHost = '';
+					try {
+						refHost = new URL(ref).hostname;
+					} catch {
+						refHost = '';
+					}
+					const isTNH = /(^|\.)thenewhumanitarian\.org$/i.test(refHost);
+					showBrandLogo = !isTNH;
+				}
+			}
+		} catch {
+			showBrandLogo = true;
+		}
 
 		// Listen for resize events
 		window.addEventListener('resize', checkMobile);
@@ -1248,7 +1275,7 @@
 
 	<!-- Bottom Controls -->
 	<div
-		class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-2 pt-3"
+		class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-3 pt-3"
 	>
 		<div class="flex items-center gap-2">
 			<span class="text-sm font-medium text-gray-600">Group by:</span>
@@ -1314,6 +1341,11 @@
 
 				Embed
 			</button>
+			{#if showBrandLogo}
+				<span class="ml-3 inline-flex items-center tnh-controls-logo">
+					<Logo />
+				</span>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -1356,5 +1388,14 @@
 
 	svg g {
 		position: relative;
+	}
+
+	:global(.tnh-controls-logo .logo) {
+		width: 100px;
+	}
+	@media (min-width: 1024px) {
+		:global(.tnh-controls-logo .logo) {
+			width: 120px;
+		}
 	}
 </style>

@@ -4,17 +4,17 @@ import { join } from 'path';
 import { env } from '$env/dynamic/private';
 
 export const GET: RequestHandler = async ({ request, url }) => {
-	// Load the script content from /static/scripts/gaza-embed.js
-	let body = '';
-	try {
-		const filePath = join(process.cwd(), 'static', 'scripts', 'gaza-embed.js');
-		body = await readFile(filePath, 'utf8');
-	} catch (e) {
-		return new Response('// embed script not found', {
-			status: 404,
-			headers: { 'content-type': 'application/javascript; charset=utf-8' }
-		});
-	}
+    // Load the script content from src/lib/components/gaza-map/embed-script.js
+    let body = '';
+    try {
+        const filePath = join(process.cwd(), 'src', 'lib', 'components', 'gaza-map', 'embed-script.js');
+        body = await readFile(filePath, 'utf8');
+    } catch {
+        return new Response('// embed script not found', {
+            status: 404,
+            headers: { 'content-type': 'application/javascript; charset=utf-8' }
+        });
+    }
 
 	// Fire-and-forget GA tracking if configured
 	try {
@@ -24,9 +24,9 @@ export const GET: RequestHandler = async ({ request, url }) => {
 			const endpoint = `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`;
 			const ref = request.headers.get('referer') || '';
 			const ua = request.headers.get('user-agent') || '';
-			const clientId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-				? (globalThis.crypto as any).randomUUID()
-				: Math.random().toString(36).slice(2);
+            const clientId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+                ? (globalThis.crypto as unknown as { randomUUID: () => string }).randomUUID()
+                : Math.random().toString(36).slice(2);
 			const payload = {
 				client_id: clientId,
 				events: [
@@ -41,13 +41,17 @@ export const GET: RequestHandler = async ({ request, url }) => {
 				]
 			};
 			// Do not block response
-			fetch(endpoint, {
+            fetch(endpoint, {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				body: JSON.stringify(payload)
-			}).catch(() => {});
+            }).catch(() => {
+                /* ignore analytics errors */
+            });
 		}
-	} catch {}
+    } catch {
+        /* ignore analytics errors */
+    }
 
 	return new Response(body, {
 		headers: {
