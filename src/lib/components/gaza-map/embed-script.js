@@ -46,6 +46,27 @@
 			iframe.style.animation = 'none';
 		});
 
+
+		// Send tracking ping (non-blocking). Use navigator.sendBeacon when available.
+		try {
+			var trackUrl = (scriptEl && scriptEl.getAttribute('data-track')) || (src.replace(/\/gaza$/, '') + '/gaza/track');
+			var payload = {
+				v: 1,
+				t: 'embed',
+				referrer: (document.referrer || ''),
+				location: (window.location && window.location.href) || ''
+			};
+			var json = JSON.stringify(payload);
+			if (navigator && typeof navigator.sendBeacon === 'function') {
+				navigator.sendBeacon(trackUrl, new Blob([json], { type: 'application/json' }));
+			} else {
+				var img = new Image();
+				img.src = trackUrl + '?v=1&referrer=' + encodeURIComponent(payload.referrer);
+			}
+		} catch (e) {
+			/* ignore tracking errors */
+		}
+
 		wrapper.appendChild(iframe);
 		target.innerHTML = '';
 		target.appendChild(wrapper);

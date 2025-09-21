@@ -13,7 +13,7 @@ export const config = {
 async function trackEmbedRequest(request: Request, url: URL) {
 	const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
 	const apiSecret = privateEnv.GA4_API_SECRET
-	
+
 	if (!measurementId || !apiSecret) {
 		console.log('[embed] GA4 tracking disabled - missing env vars', {
 			hasMeasurementId: Boolean(measurementId),
@@ -25,15 +25,15 @@ async function trackEmbedRequest(request: Request, url: URL) {
 	try {
 		const base = privateEnv.GA_ENDPOINT || privateEnv.GA4_ENDPOINT || 'https://www.google-analytics.com'
 		const endpoint = `${base}/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`
-		
+
 		const ref = request.headers.get('referer') || ''
 		const ua = request.headers.get('user-agent') || ''
 		const cfCountry = request.headers.get('cf-ipcountry') || ''
 		const cfRay = request.headers.get('cf-ray') || ''
-		
+
 		// Generate client ID
 		const clientId = crypto.randomUUID()
-		
+
 		const payload = {
 			client_id: clientId,
 			events: [
@@ -68,7 +68,7 @@ async function trackEmbedRequest(request: Request, url: URL) {
 		}).catch((e) => {
 			console.error('[embed] GA4 tracking error:', e)
 		})
-		
+
 	} catch (e) {
 		console.error('[embed] tracking setup error:', e)
 	}
@@ -82,7 +82,7 @@ export const GET: RequestHandler = async ({ request, url }) => {
 
 	// Determine cache strategy
 	const isDev = process.env.NODE_ENV === 'development'
-	
+
 	return new Response(body, {
 		headers: {
 			'content-type': 'application/javascript; charset=utf-8',
