@@ -6,6 +6,25 @@ import { env as publicEnv } from '$env/dynamic/public'
 export const GET: RequestHandler = async ({ request, url }) => {
 	const body = scriptSource || '// embed script not found'
 
+	// Always log that the endpoint was hit (shows in dev terminal / Vercel logs)
+	const timestamp = new Date().toISOString()
+	
+	// Multiple logging approaches to ensure visibility
+	console.log(`🚀 [EMBED] REQUEST HIT at ${timestamp}`)
+	console.error(`🚨 [EMBED] ERROR LEVEL LOG at ${timestamp}`)
+	console.warn(`⚠️ [EMBED] WARNING LEVEL LOG at ${timestamp}`)
+	
+	try {
+		console.log(`[embed] request at ${timestamp}`, {
+			path: url.pathname,
+			referrer: request.headers.get('referer') || '',
+			ua: request.headers.get('user-agent') || '',
+			timestamp
+		})
+	} catch (error) {
+		console.error('[embed] Error logging request', error)
+	}
+
 	// Fire-and-forget GA4 tracking if configured
 	try {
 		const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
@@ -51,12 +70,12 @@ export const GET: RequestHandler = async ({ request, url }) => {
 				console.error('Error sending GA4 event', e)
 			})
 		}
-        else {
-            console.log('[embed] GA disabled or missing env', {
-                hasMeasurementId: Boolean(measurementId),
-                hasApiSecret: Boolean(apiSecret)
-            })
-        }
+		else {
+			console.log('[embed] GA disabled or missing env', {
+				hasMeasurementId: Boolean(measurementId),
+				hasApiSecret: Boolean(apiSecret)
+			})
+		}
 	} catch (e) {
 		/* ignore analytics errors */
 		console.error('Error sending GA4 event', e)
@@ -64,11 +83,11 @@ export const GET: RequestHandler = async ({ request, url }) => {
 
 	// In development, disable caching to see logs on every request
 	const isDev = process.env.NODE_ENV === 'development'
-	
+
 	return new Response(body, {
 		headers: {
 			'content-type': 'application/javascript; charset=utf-8',
-			'cache-control': isDev 
+			'cache-control': isDev
 				? 'no-cache, no-store, must-revalidate'
 				: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60'
 		}
