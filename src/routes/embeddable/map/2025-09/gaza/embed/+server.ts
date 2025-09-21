@@ -3,7 +3,13 @@ import scriptSource from '$lib/components/gaza-map/embed-script.js?raw'
 import { env as privateEnv } from '$env/dynamic/private'
 import { env as publicEnv } from '$env/dynamic/public'
 
-// Edge function for tracking embed requests
+// Configure to run on every request (no caching at function level)
+export const config = {
+	runtime: 'nodejs',
+	dynamic: 'force-dynamic'
+}
+
+// Function for tracking embed requests
 async function trackEmbedRequest(request: Request, url: URL) {
 	const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
 	const apiSecret = privateEnv.GA4_API_SECRET
@@ -25,7 +31,7 @@ async function trackEmbedRequest(request: Request, url: URL) {
 		const cfCountry = request.headers.get('cf-ipcountry') || ''
 		const cfRay = request.headers.get('cf-ray') || ''
 		
-		// Generate client ID (edge-compatible)
+		// Generate client ID
 		const clientId = crypto.randomUUID()
 		
 		const payload = {
@@ -40,7 +46,7 @@ async function trackEmbedRequest(request: Request, url: URL) {
 						page_location: `${url.origin}${url.pathname}`,
 						cf_country: cfCountry,
 						cf_ray: cfRay,
-						edge_function: true
+						function_type: 'nodejs'
 					}
 				}
 			]
@@ -71,7 +77,7 @@ async function trackEmbedRequest(request: Request, url: URL) {
 export const GET: RequestHandler = async ({ request, url }) => {
 	const body = scriptSource || '// embed script not found'
 
-	// Track every request (even cached ones in edge function)
+	// Track every request (force-dynamic ensures function runs on every request)
 	await trackEmbedRequest(request, url)
 
 	// Determine cache strategy
@@ -83,8 +89,8 @@ export const GET: RequestHandler = async ({ request, url }) => {
 			'cache-control': isDev
 				? 'no-cache, no-store, must-revalidate'
 				: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60',
-			// Add edge-specific headers
-			'x-edge-function': 'true',
+			// Add function-specific headers
+			'x-function-type': 'nodejs',
 			'x-tracked': 'true'
 		}
 	})
