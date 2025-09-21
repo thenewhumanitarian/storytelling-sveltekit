@@ -61,7 +61,8 @@
 				navigator.sendBeacon(trackUrl, new Blob([json], { type: 'application/json' }));
 			} else {
 				var img = new Image();
-				img.src = trackUrl + '?v=1&referrer=' + encodeURIComponent(payload.referrer);
+				var ts = Date.now();
+				img.src = trackUrl + '?v=1&ts=' + ts + '&referrer=' + encodeURIComponent(payload.referrer);
 			}
 		} catch (e) {
 			/* ignore tracking errors */

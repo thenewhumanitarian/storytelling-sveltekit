@@ -56,8 +56,13 @@ export const POST: RequestHandler = async ({ request, url }) => {
 	return new Response(null, {
 		status: 204,
 		headers: {
-			'cache-control': 'no-store, no-cache, must-revalidate',
-			'access-control-allow-origin': '*'
+			'cache-control': 'no-store, no-cache, must-revalidate, max-age=0',
+			'pragma': 'no-cache',
+			'expires': '0',
+			'access-control-allow-origin': '*',
+			'access-control-allow-methods': 'POST,GET,OPTIONS',
+			'access-control-allow-headers': 'content-type',
+			'x-no-cache': '1'
 		}
 	})
 }
@@ -65,6 +70,21 @@ export const POST: RequestHandler = async ({ request, url }) => {
 export const GET: RequestHandler = async (ctx) => {
 	// Allow GET pings too
 	return POST(ctx)
+}
+
+export const OPTIONS: RequestHandler = async () => {
+	return new Response(null, {
+		status: 204,
+		headers: {
+			'cache-control': 'no-store, no-cache, must-revalidate, max-age=0',
+			'pragma': 'no-cache',
+			'expires': '0',
+			'access-control-allow-origin': '*',
+			'access-control-allow-methods': 'POST,GET,OPTIONS',
+			'access-control-allow-headers': 'content-type',
+			'x-no-cache': '1'
+		}
+	})
 }
 
 
