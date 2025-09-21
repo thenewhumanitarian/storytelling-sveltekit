@@ -6,14 +6,8 @@ import { env as publicEnv } from '$env/dynamic/public'
 export const GET: RequestHandler = async ({ request, url }) => {
 	const body = scriptSource || '// embed script not found'
 
-	// Always log that the endpoint was hit (shows in dev terminal / Vercel logs)
+	// Log embed script requests for monitoring
 	const timestamp = new Date().toISOString()
-	
-	// Multiple logging approaches to ensure visibility
-	console.log(`🚀 [EMBED] REQUEST HIT at ${timestamp}`)
-	console.error(`🚨 [EMBED] ERROR LEVEL LOG at ${timestamp}`)
-	console.warn(`⚠️ [EMBED] WARNING LEVEL LOG at ${timestamp}`)
-	
 	try {
 		console.log(`[embed] request at ${timestamp}`, {
 			path: url.pathname,
