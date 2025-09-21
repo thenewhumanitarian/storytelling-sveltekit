@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "src/routes/embeddable/map/2025-09/gaza/embed/+server.ts": {
+      "runtime": "edge"
+    }
+  }
+}

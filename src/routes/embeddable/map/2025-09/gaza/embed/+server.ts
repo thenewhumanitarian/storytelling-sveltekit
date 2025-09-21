@@ -3,87 +3,89 @@ import scriptSource from '$lib/components/gaza-map/embed-script.js?raw'
 import { env as privateEnv } from '$env/dynamic/private'
 import { env as publicEnv } from '$env/dynamic/public'
 
+// Edge function for tracking embed requests
+async function trackEmbedRequest(request: Request, url: URL) {
+	const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
+	const apiSecret = privateEnv.GA4_API_SECRET
+	
+	if (!measurementId || !apiSecret) {
+		console.log('[embed] GA4 tracking disabled - missing env vars', {
+			hasMeasurementId: Boolean(measurementId),
+			hasApiSecret: Boolean(apiSecret)
+		})
+		return
+	}
+
+	try {
+		const base = privateEnv.GA_ENDPOINT || privateEnv.GA4_ENDPOINT || 'https://www.google-analytics.com'
+		const endpoint = `${base}/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`
+		
+		const ref = request.headers.get('referer') || ''
+		const ua = request.headers.get('user-agent') || ''
+		const cfCountry = request.headers.get('cf-ipcountry') || ''
+		const cfRay = request.headers.get('cf-ray') || ''
+		
+		// Generate client ID (edge-compatible)
+		const clientId = crypto.randomUUID()
+		
+		const payload = {
+			client_id: clientId,
+			events: [
+				{
+					name: 'embed_script_requested',
+					params: {
+						path: url.pathname,
+						referrer: ref,
+						user_agent: ua,
+						page_location: `${url.origin}${url.pathname}`,
+						cf_country: cfCountry,
+						cf_ray: cfRay,
+						edge_function: true
+					}
+				}
+			]
+		}
+
+		console.log('[embed] tracking request', {
+			path: url.pathname,
+			referrer: ref,
+			country: cfCountry,
+			measurementId,
+			clientId
+		})
+
+		// Fire-and-forget tracking (don't await to avoid blocking response)
+		fetch(endpoint, {
+			method: 'POST',
+			headers: { 'content-type': 'application/json' },
+			body: JSON.stringify(payload)
+		}).catch((e) => {
+			console.error('[embed] GA4 tracking error:', e)
+		})
+		
+	} catch (e) {
+		console.error('[embed] tracking setup error:', e)
+	}
+}
+
 export const GET: RequestHandler = async ({ request, url }) => {
 	const body = scriptSource || '// embed script not found'
 
-	// Log embed script requests for monitoring
-	// const timestamp = new Date().toISOString()
-	// try {
-	// 	console.log(`[embed] request at ${timestamp}`, {
-	// 		path: url.pathname,
-	// 		referrer: request.headers.get('referer') || '',
-	// 		ua: request.headers.get('user-agent') || '',
-	// 		timestamp
-	// 	})
-	// } catch (error) {
-	// 	console.error('[embed] Error logging request', error)
-	// }
+	// Track every request (even cached ones in edge function)
+	await trackEmbedRequest(request, url)
 
-	// Fire-and-forget GA4 tracking if configured
-	try {
-		const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
-		const apiSecret = privateEnv.GA4_API_SECRET
-		if (measurementId && apiSecret) {
-			const base = privateEnv.GA_ENDPOINT || privateEnv.GA4_ENDPOINT || 'https://www.google-analytics.com'
-			const endpoint = `${base}/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`
-			const ref = request.headers.get('referer') || ''
-			const ua = request.headers.get('user-agent') || ''
-			const clientId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-				? (globalThis.crypto as unknown as { randomUUID: () => string }).randomUUID()
-				: Math.random().toString(36).slice(2)
-			const payload = {
-				client_id: clientId,
-				events: [
-					{
-						name: 'embed_script_requested',
-						params: {
-							path: url.pathname,
-							referrer: ref,
-							user_agent: ua,
-							page_location: `${url.origin}${url.pathname}`
-						}
-					}
-				]
-			}
-			// Log payload for verification in server logs
-			console.log('[embed] script served', {
-				path: url.pathname,
-				referrer: ref,
-				measurementId,
-				gaEndpoint: base,
-				payload
-			})
-
-			// Do not block response
-			fetch(endpoint, {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify(payload)
-			}).catch((e) => {
-				/* ignore analytics errors */
-				console.error('Error sending GA4 event', e)
-			})
-		}
-		else {
-			console.log('[embed] GA disabled or missing env', {
-				hasMeasurementId: Boolean(measurementId),
-				hasApiSecret: Boolean(apiSecret)
-			})
-		}
-	} catch (e) {
-		/* ignore analytics errors */
-		console.error('Error sending GA4 event', e)
-	}
-
-	// In development, disable caching to see logs on every request
+	// Determine cache strategy
 	const isDev = process.env.NODE_ENV === 'development'
-
+	
 	return new Response(body, {
 		headers: {
 			'content-type': 'application/javascript; charset=utf-8',
 			'cache-control': isDev
 				? 'no-cache, no-store, must-revalidate'
-				: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60'
+				: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60',
+			// Add edge-specific headers
+			'x-edge-function': 'true',
+			'x-tracked': 'true'
 		}
 	})
 }
