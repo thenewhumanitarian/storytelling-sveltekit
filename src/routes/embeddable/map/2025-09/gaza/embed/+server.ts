@@ -7,17 +7,17 @@ export const GET: RequestHandler = async ({ request, url }) => {
 	const body = scriptSource || '// embed script not found'
 
 	// Log embed script requests for monitoring
-	const timestamp = new Date().toISOString()
-	try {
-		console.log(`[embed] request at ${timestamp}`, {
-			path: url.pathname,
-			referrer: request.headers.get('referer') || '',
-			ua: request.headers.get('user-agent') || '',
-			timestamp
-		})
-	} catch (error) {
-		console.error('[embed] Error logging request', error)
-	}
+	// const timestamp = new Date().toISOString()
+	// try {
+	// 	console.log(`[embed] request at ${timestamp}`, {
+	// 		path: url.pathname,
+	// 		referrer: request.headers.get('referer') || '',
+	// 		ua: request.headers.get('user-agent') || '',
+	// 		timestamp
+	// 	})
+	// } catch (error) {
+	// 	console.error('[embed] Error logging request', error)
+	// }
 
 	// Fire-and-forget GA4 tracking if configured
 	try {
