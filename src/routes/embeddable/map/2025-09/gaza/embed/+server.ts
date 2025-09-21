@@ -5,7 +5,7 @@ import { env as publicEnv } from '$env/dynamic/public'
 
 // Configure to run on every request (no caching at function level)
 export const config = {
-	runtime: 'nodejs',
+	runtime: 'nodejs22.x',
 	dynamic: 'force-dynamic'
 }
 
