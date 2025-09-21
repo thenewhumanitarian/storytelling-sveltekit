@@ -5,6 +5,7 @@
 	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 	import type { IncidentData } from './types';
 	import GazaOverlay from './GazaOverlay.svelte';
+import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 
 	const MAPBOX_TOKEN =
 		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
@@ -249,7 +250,7 @@
 			// Add Gaza border using local GeoJSON file
 			map?.addSource('gaza-boundaries', {
 				type: 'geojson',
-				data: '/src/lib/data/gaza-map/gaza-boundaries.geojson'
+				data: gazaBoundariesUrl
 			});
 
 			// Add prominent Gaza border

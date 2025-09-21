@@ -1,21 +1,23 @@
-import type { RequestHandler } from './$types';
-import scriptSource from '$lib/components/gaza-map/embed-script.js?raw';
-import { env } from '$env/dynamic/private';
+import type { RequestHandler } from './$types'
+import scriptSource from '$lib/components/gaza-map/embed-script.js?raw'
+import { env as privateEnv } from '$env/dynamic/private'
+import { env as publicEnv } from '$env/dynamic/public'
 
 export const GET: RequestHandler = async ({ request, url }) => {
-    const body = scriptSource || '// embed script not found';
+	const body = scriptSource || '// embed script not found'
 
-	// Fire-and-forget GA tracking if configured
+	// Fire-and-forget GA4 tracking if configured
 	try {
-		const measurementId = env.GA_MEASUREMENT_ID;
-		const apiSecret = env.GA_API_SECRET;
+		const measurementId = publicEnv.PUBLIC_GA4_ID || privateEnv.PUBLIC_GA4_ID
+		const apiSecret = privateEnv.GA4_API_SECRET
 		if (measurementId && apiSecret) {
-			const endpoint = `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`;
-			const ref = request.headers.get('referer') || '';
-			const ua = request.headers.get('user-agent') || '';
-            const clientId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-                ? (globalThis.crypto as unknown as { randomUUID: () => string }).randomUUID()
-                : Math.random().toString(36).slice(2);
+			const base = privateEnv.GA_ENDPOINT || privateEnv.GA4_ENDPOINT || 'https://www.google-analytics.com'
+			const endpoint = `${base}/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`
+			const ref = request.headers.get('referer') || ''
+			const ua = request.headers.get('user-agent') || ''
+			const clientId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+				? (globalThis.crypto as unknown as { randomUUID: () => string }).randomUUID()
+				: Math.random().toString(36).slice(2)
 			const payload = {
 				client_id: clientId,
 				events: [
@@ -24,28 +26,51 @@ export const GET: RequestHandler = async ({ request, url }) => {
 						params: {
 							path: url.pathname,
 							referrer: ref,
-							user_agent: ua
+							user_agent: ua,
+							page_location: `${url.origin}${url.pathname}`
 						}
 					}
 				]
-			};
+			}
+			// Log payload for verification in server logs
+			console.log('[embed] script served', {
+				path: url.pathname,
+				referrer: ref,
+				measurementId,
+				gaEndpoint: base,
+				payload
+			})
+
 			// Do not block response
-            fetch(endpoint, {
+			fetch(endpoint, {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				body: JSON.stringify(payload)
-            }).catch(() => {
-                /* ignore analytics errors */
-            });
+			}).catch((e) => {
+				/* ignore analytics errors */
+				console.error('Error sending GA4 event', e)
+			})
 		}
-    } catch {
-        /* ignore analytics errors */
-    }
+        else {
+            console.log('[embed] GA disabled or missing env', {
+                hasMeasurementId: Boolean(measurementId),
+                hasApiSecret: Boolean(apiSecret)
+            })
+        }
+	} catch (e) {
+		/* ignore analytics errors */
+		console.error('Error sending GA4 event', e)
+	}
 
+	// In development, disable caching to see logs on every request
+	const isDev = process.env.NODE_ENV === 'development'
+	
 	return new Response(body, {
 		headers: {
 			'content-type': 'application/javascript; charset=utf-8',
-			'cache-control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60'
+			'cache-control': isDev 
+				? 'no-cache, no-store, must-revalidate'
+				: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60'
 		}
-	});
-};
+	})
+}
