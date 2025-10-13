@@ -1,0 +1,550 @@
+.article__header {
+  display: none;
+}
+.region-breadcrumb {
+  display: none;
+}
+.award-message {
+margin-left: auto;
+  margin-right: auto;
+  width: auto;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  background: transparent;
+  font-style: italic;
+  border-radius: 2px;
+  color: #282828;
+  line-height: 95%;
+  padding: 0.75rem 0;
+  margin-top: 2rem;
+  border: 1px solid #9f3e52;
+  text-decoration: none;
+}
+.award-message:hover {
+background: #9f3e52;
+color: white;
+}
+.first-par {
+  font-family: gt sectra regular, serif;
+  font-size: 2.3rem;
+  line-height: 1.25;
+  margin: 1em 0 1em;
+  text-align: left;
+}
+.soundcite-loaded {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+.soundcite-paragraph {
+  margin: 1rem auto;
+  pointer-events: auto;
+}
+.highlight {
+  background: rgb(160, 60, 80, .2);
+}
+/* New classes for better portrait images on small screens */
+.height-sensitive img {
+  width: auto !important;
+  margin: 0 auto;
+}
+@media screen and (max-height: 1380px) and (min-width: 750px) and (orientation : landscape) {
+  .height-sensitive img {
+      max-height: 55vh;
+      object-fit: contain;
+  }
+  .height-sensitive blockquote p {
+      font-size: 2rem;
+  }
+}
+@media screen and (max-height: 1200px) and (min-width: 750px) and (orientation : landscape) {
+  .height-sensitive img {
+      max-height: 60vh;
+  }
+  .height-sensitive {
+  padding: 0.5rem 0;
+}
+  .height-sensitive blockquote p {
+      font-size: 1.8rem;
+  }
+}
+@media screen and (max-height: 850px) and (min-width: 750px) and (orientation : landscape) {
+.height-sensitive {
+  padding: 0.5rem 0;
+}
+  .very.height-sensitive img {
+      max-height: 30vh;
+  }
+  .height-sensitive img {
+      max-height: 60vh;
+      object-fit: contain;
+  }
+  .height-sensitive blockquote {
+      margin: 0 auto 2rem auto;
+  }
+  .height-sensitive blockquote p {
+      font-size: 2rem;
+  }
+  .very.height-sensitive blockquote p {
+      font-size: 1.5rem;
+  }
+  .height-sensitive blockquote.yazzy {
+      padding: 3rem;
+  }
+}
+/* New classes to add borders. Add to &amp;amp;amp;amp;amp;amp;amp;amp;lt;div&amp;amp;amp;amp;amp;amp;amp;amp;gt; and wrap image with it */
+.with-border img {
+  padding: .5rem;
+  border: 2px solid #ddd;
+}
+.with-border.red img {
+  border-color: #9f3e52;
+}
+.with-border.white img {
+  border-color: #fff;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  overflow: visible !important;
+}
+/* *[id]:not('.wisepops-wisepop-scrollable') { padding-top: 8rem; margin-top: -8rem; } */
+/* Use modern CSS scroll margin to offset sticky headers for anchor jumps */
+.scroll-anchor { scroll-margin-top: 6rem; height: 0 !important; }
+@media screen and (max-width: 750px) {
+  .scroll-anchor { scroll-margin-top: 10rem; }
+}
+@media screen and (max-width: 500px) {
+  .scroll-anchor { scroll-margin-top: 4rem; }
+}
+/* No parenting element is allowed having overflow: auto; or hidden; or scroll; for sticky! */
+.wrapper {
+  overflow-x: hidden;
+  overflow: visible !important;
+}
+@media screen and (min-width: 701px) {
+  .article__bulk {
+      max-width: calc(100% - 1.5rem);
+  }
+  .first-title {
+    margin-top: 5rem;
+  }
+}
+@media screen and (max-width: 750px) {
+  .article__bulk {
+      max-width: 100%;
+      padding-top: 2rem;
+  }
+}
+.first-line {
+  font-size: 1.8rem;
+  font-family: gt sectra bold, serif;
+}
+.diary-entry {
+  background: #fff;
+  padding: 2rem;
+  margin: 2rem 1rem;
+}
+.bgd {
+  background: url(https://assets.irinnews.org/s3fs-public/styles/responsive_large/public/yemen-illustration-paper.jpg?WANBZW3gTO7n5f7jVjWfnahA.MEJTRdI);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: right;
+  padding: 0 0 3rem 0;
+  /* height: 60rem; */
+}
+.bgddinner {
+  background: url(https://assets.irinnews.org/s3fs-public/styles/responsive_large/public/dinner-very-reduced.png?oax2utAJsMWhYi3kOnrvyEh1Ofe1VOXH);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /*  background-attachment: fixed; */
+  /*  background-position: right; */
+  padding: 3rem 0 2rem 0;
+  height: 66vh;
+}
+.faint-divide {
+  border-top: 2px solid #cac6c6ad;
+}
+.diaryscroll {
+  overscroll-behavior: auto;
+  overflow: overlay;
+  height: 90vh;
+}
+@media screen and (prefers-reduced-motion: reduce) {
+  html {
+      scroll-behavior: auto;
+  }
+}
+.button1 a {
+  display: inline-block;
+  pointer-events: auto;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+}
+.button1 {
+  display: inline-block;
+  pointer-events: auto;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "GT Sectra Bold", serif;
+  font-weight: 300;
+  color: #a03c50;
+  text-align: center;
+  transition: all 0.2s;
+  flex: 1;
+}
+.button1:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+.button2 a {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #eaeaea;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  transition: all 0.2s;
+}
+.button2 {
+  display: inline-block;
+  pointer-events: auto;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #eaeaea;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "GT Sectra Bold", serif;
+  font-weight: 300;
+  color: #a03c50;
+  transition: all 0.2s;
+}
+.button2:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+@media all and (max-width:30em) {
+  .button2 {
+      display: block;
+      margin: 0.4em auto;
+  }
+}
+.intro-paragraph {
+  color: #6b6a6a;
+  margin-bottom: 6rem;
+  font-size: 1.7rem;
+  line-height: 1.7;
+}
+.article__body .media-element-container {
+  width: 100%;
+  max-width: 100rem;
+  position: relative;
+  padding: 0;
+  margin-bottom: -2rem;
+  margin-top: -2.6rem;
+}
+.article__body,
+.content__bulk-inner {
+  padding-top: 1.5rem !important;
+  margin: -2rem auto;
+  padding-bottom: 0;
+}
+@media screen and (max-width: 750px) {
+  .article__body { padding-top: 0 !important; }
+}
+/* Hide share icons */
+.article__aside-share.visible {
+  z-index: 999;
+  display: none;
+}
+/* Hide normal advanced report items */
+alt-reports,
+.related-reports {
+  display: none;
+}
+.blockquote,
+.yazzy {
+  border-top: .5rem solid #fff;
+  border-left: none;
+  padding: 5.5rem;
+  border-bottom: .5rem solid #fff;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-family: gt sectra medium, serif;
+  font-size: 2.3rem;
+  line-height: 1.25;
+}
+/* Column styles for mobile */
+@media screen and (max-width: 750px) {
+  .col-5 {
+      padding: 0 3rem;
+  }
+}
+/* Using Flexbox Grid */
+.flow blockquote {
+margin-top: 1rem;
+margin-bottom: 1rem;
+}
+.flexbox-grid {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+@media screen and (max-width: 750px) {
+  .flexbox-grid {
+      display: block;
+  }
+}
+.column {
+  padding: 3rem;
+}
+@media screen and (min-width: 751px) and (max-width: 1024px) {
+  .column {
+    padding: 1.5rem;
+  }
+}
+@media screen and (max-width: 750px) {
+  .column {
+    padding: 0;
+  }
+  .sticky-content-element {
+    padding: 1rem !important;
+  }
+  .diary-entry {
+    padding: 1rem;
+  }
+}
+.content {
+  /* width: calc(100vw - 8px) !important; */
+  width: 100vw !important;
+}
+.next-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+.sticky-content-element {
+  padding: 2rem 0 1rem 0;
+}
+.row.sticky:first-child {
+  /* margin: 0 auto 2rem auto; */
+  margin: 0 auto;
+}
+@media screen and (min-width: 701px) {
+  .column.sticky {
+      /* Safari attribute */
+      position: -webkit-sticky;
+      position: sticky;
+      /* Set where it should start being sticky */
+      top: 8rem;
+      /* Important when using display: flex; and position: sticky; */
+      align-self: flex-start;
+  }
+  .desktop-hidden {
+      display: none;
+  }
+}
+@media screen and (max-height: 800px) and (min-width: 500px) {
+.column.sticky {
+  top: 5rem;
+}
+}
+@media screen and (max-width: 750px) {
+  .bgd {
+      /* padding: 0; */
+  }
+  .faint-divide {
+      border: none !important;
+  }
+  .flex-break {
+      display: none !important;
+  }
+  .mobile-hidden {
+      display: none !important;
+  }
+  .desktop-hidden {
+      display: none !important;
+  }
+  /* Hide problematic obstructive elements on mobile */
+  .column.col-5.mobile.sticky.center-aligned.desktop-hidden {
+      display: none !important;
+  }
+  .mobile.sticky {
+      background: white;
+      /* Safari attribute */
+      position: -webkit-sticky;
+      position: sticky;
+      /* Set where it should start being sticky */
+      top: 5rem;
+      /* Important when using display: flex; and position: sticky; */
+      align-self: flex-start;
+  }
+  .column,
+  .column:first-child {
+      width: 100%;
+      margin-top: 0;
+  }
+  .column.sticky {
+      display: flex;
+      /* Fallback background colour */
+      background: white;
+      top: 7rem;
+      /* margin-top: -2rem; */
+      padding: 0 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+  }
+  .column.sticky:first-child {
+      /* margin-top: 2.8rem; */
+      padding-bottom: 1rem;
+  }
+  .column.sticky:last-child {
+      padding-bottom: 1rem;
+  }
+  .next-button {
+      flex-basis: 100%;
+      pointer-events: auto;
+      -webkit-box-shadow: 0px -10px 39px -19px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px -10px 39px -19px rgba(0,0,0,0.75);
+      box-shadow: 0px -10px 39px -19px rgba(0,0,0,0.75);
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      background: white !important;
+      padding: 0.75rem 1rem !important;
+      z-index: 1000 !important;
+      margin: 0 !important;
+  }
+  .next-button:first-of-type {
+      display: flex !important;
+  }
+  .flex-break {
+      flex-basis: 100%;
+      height: 0;
+  }
+  .sticky-content-element {
+      /* width: 50%; */
+      padding: 2rem 0 1rem 0;
+      flex: auto;
+  }
+  /* .sticky-content-element:first-of-type {
+    /* width: 50%; */
+    padding: 0 0 1rem 0;
+} */
+  blockquote p:not([class]) {
+      font-size: 1.5rem !important;
+      line-height: 1.25 !important;
+  }
+  .yazzy {
+      margin: 2rem auto;
+      padding: 1rem;
+  }
+}
+.firstline {
+  font-size: 1.8rem;
+  font-family: gt sectra bold, serif;
+}
+
+/* Second block of styles */
+.article__header {
+  display: none;
+}
+.bgdhead {
+  background: url("https://assets.irinnews.org/s3fs-public/styles/responsive_large/public/yemen-aden-coronavirus-doctor-diary-1920.jpg?VHUPFqF59X6J55hg695TKWiL1cMVORc3&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;itok=KjZ-ZlWs");
+  /*height: 110rem;*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: top;
+}
+.topbuffer {
+  margin-top: 10rem;
+}
+.textblock {
+  background: #fff;
+  padding: 3rem;
+  text-align: left;
+}
+article__title {
+  margin-top: 0rem;
+}
+.button2 {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "GT Sectra Bold", serif;
+  font-weight: 300;
+  color: #a03c50;
+  text-align: center;
+  transition: all 0.2s;
+  background-color: #FFFFFF;
+}
+.button2:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+@media all and (max-width:30em) {
+  .button2 {
+      display: block;
+      margin: 0.4em auto;
+  }
+}
+.intro-paragraph {
+  color: #6b6a6a;
+  margin-bottom: 2rem;
+  font-size: 1.7rem;
+  line-height: 1.7;
+}
+.bg-fixed {
+  background-attachment: fixed;
+}
+@media screen and (max-width: 750px) {
+  .bg-fixed {
+      background-attachment: scroll;
+  }
+}
+.bg-fixed {
+  background-attachment: fixed;
+}
+@media screen and (max-width: 750px) {
+  .bg-fixed {
+      background-attachment: scroll;
+  }
+}
+.desktop-only {
+  display: none;
+}
+@media screen and (max-width: 750px) {
+  .desktop-only {
+      display: none;
+  }
+}
+
+/* Add styles here for the Sticky Article Layout */

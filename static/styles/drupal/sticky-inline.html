@@ -1,0 +1,91 @@
+<!-- Inline version for testing - paste at the END of your Drupal body field -->
+
+<script>
+// Dynamic section navigation for sticky diary layout
+(function () {
+  function initNavigation() {
+    console.log('[Sticky Navigation] Initializing...');
+    
+    // Find all scroll anchors in order
+    const anchors = Array.from(document.querySelectorAll('.scroll-anchor[id]'));
+    console.log('[Sticky Navigation] Found', anchors.length, 'scroll anchors:', anchors.map(a => a.id));
+    
+    if (anchors.length === 0) {
+      console.warn('[Sticky Navigation] No scroll anchors found. Make sure elements have class="scroll-anchor" and an id attribute.');
+      return;
+    }
+    
+    // Get all navigation button containers
+    const navContainers = document.querySelectorAll('.next-button');
+    console.log('[Sticky Navigation] Found', navContainers.length, 'navigation containers');
+    
+    let buttonsCreated = 0;
+    
+    navContainers.forEach((container, idx) => {
+      // Find the closest scroll-anchor to determine current section
+      let currentAnchor = container.closest('.column')?.querySelector('.scroll-anchor[id]');
+      
+      // If not found in column, search in the parent row's flow column
+      if (!currentAnchor) {
+        const row = container.closest('.row');
+        if (row) {
+          currentAnchor = row.querySelector('.scroll-anchor[id]');
+        }
+      }
+      
+      if (!currentAnchor) {
+        console.warn('[Sticky Navigation] Container', idx, 'could not find associated scroll-anchor');
+        return;
+      }
+      
+      const currentIndex = anchors.indexOf(currentAnchor);
+      if (currentIndex === -1) {
+        console.warn('[Sticky Navigation] Anchor not in list:', currentAnchor.id);
+        return;
+      }
+      
+      console.log('[Sticky Navigation] Creating buttons for section', currentAnchor.id, '(index', currentIndex + ')');
+      
+      // Clear existing content
+      container.innerHTML = '';
+      
+      // Add Back button (if not first section)
+      if (currentIndex > 0) {
+        const backLink = document.createElement('a');
+        backLink.className = 'button1';
+        backLink.href = '#' + anchors[currentIndex - 1].id;
+        backLink.textContent = 'Back';
+        container.appendChild(backLink);
+        buttonsCreated++;
+        
+        // Add space between buttons
+        if (currentIndex < anchors.length - 1) {
+          container.appendChild(document.createTextNode(' '));
+        }
+      }
+      
+      // Add Next button (if not last section)
+      if (currentIndex < anchors.length - 1) {
+        const nextLink = document.createElement('a');
+        nextLink.className = 'button1';
+        nextLink.href = '#' + anchors[currentIndex + 1].id;
+        nextLink.textContent = 'Next';
+        container.appendChild(nextLink);
+        buttonsCreated++;
+      }
+    });
+    
+    console.log('[Sticky Navigation] Complete! Created', buttonsCreated, 'navigation buttons');
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    console.log('[Sticky Navigation] Waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', initNavigation);
+  } else {
+    console.log('[Sticky Navigation] DOM already loaded, initializing immediately');
+    initNavigation();
+  }
+})();
+</script>
+
