@@ -141,12 +141,13 @@ body {
 }
 /* *[id]:not('.wisepops-wisepop-scrollable') { padding-top: 8rem; margin-top: -8rem; } */
 /* Use modern CSS scroll margin to offset sticky headers for anchor jumps */
-.scroll-anchor { scroll-margin-top: 6rem; height: 0 !important; }
-@media screen and (max-width: 750px) {
-  .scroll-anchor { scroll-margin-top: 10rem; }
+.scroll-anchor { 
+  scroll-margin-top: 2.5rem; height: 0 !important; 
 }
 @media screen and (max-width: 500px) {
-  .scroll-anchor { scroll-margin-top: 4rem; }
+  .scroll-anchor { 
+    scroll-margin-top: 4.5rem;
+  }
 }
 /* No parenting element is allowed having overflow: auto; or hidden; or scroll; for sticky! */
 .wrapper {
@@ -333,8 +334,8 @@ alt-reports,
 }
 /* Using Flexbox Grid */
 .flow blockquote {
-margin-top: 1rem;
-margin-bottom: 1rem;
+margin-top: 3rem;
+margin-bottom: 3rem;
 }
 .flexbox-grid {
   display: flex;
@@ -362,7 +363,7 @@ margin-bottom: 1rem;
     padding: 1rem !important;
   }
   .diary-entry {
-    padding: 1rem;
+    padding: 2rem;
   }
 
   .flow blockquote {
@@ -443,11 +444,11 @@ margin-bottom: 1rem;
   align-items: center;
   gap: 0.5rem;
   pointer-events: auto;
-  margin-top: 2rem;
-  padding-top: 1rem;
+  /* margin-top: 2rem; */
+  padding: 1rem 0 3rem 0;
 }
 .sticky-content-element {
-  padding: 2rem 0 4rem 0;
+  padding: 1rem 0;
 }
 .row.sticky:first-child {
   /* margin: 0 auto 2rem auto; */
@@ -519,7 +520,7 @@ margin-bottom: 1rem;
   }
   .column.sticky:first-child {
       /* margin-top: 2.8rem; */
-      padding-bottom: 1rem;
+      padding-bottom: 2rem 0;
   }
   .column.sticky:last-child {
       padding-bottom: 1rem;
