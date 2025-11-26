@@ -3,8 +3,6 @@ import type { PageServerLoad } from './$types'
 import type { IncidentData } from '$lib/components/gaza-map/types'
 import { dev } from '$app/environment'
 import { PUBLIC_BASE_URL } from '$env/static/public'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
 // Helper to calculate ISO week number + year
 function getISOWeekYearString(date: Date): string {
@@ -30,8 +28,17 @@ const sheetUrl =
 	// 'https://docs.google.com/spreadsheets/d/1XHLFPW_9km6STO6rRYe_MqguEJJWSIa5febc8MIiWA0/export?format=csv&gid=0'
 	'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0'
 
-// CSV file path (used as source of truth when Google Sheet fetch is disabled)
-const csvFilePath = join(process.cwd(), 'src/lib/data/gaza-map/gaza-incidents-fallback.csv')
+// Helper function to get CSV file path (using dynamic import to avoid build issues)
+async function getCsvFilePath(): Promise<string> {
+	const { join } = await import('path')
+	return join(process.cwd(), 'src/lib/data/gaza-map/gaza-incidents-fallback.csv')
+}
+
+// Helper function to read CSV file (using dynamic import to avoid build issues)
+async function readCsvFile(filePath: string): Promise<string> {
+	const { readFileSync } = await import('fs')
+	return readFileSync(filePath, 'utf-8')
+}
 
 // Debug function to test sheet accessibility
 async function debugSheetAccess() {
@@ -74,8 +81,9 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 		} catch (fetchError) {
 			console.error('❌ Fetch failed, trying fallback CSV file:', fetchError)
 			try {
+				const csvFilePath = await getCsvFilePath()
 				console.log('📦 Attempting to load fallback CSV from:', csvFilePath)
-				csvText = readFileSync(csvFilePath, 'utf-8')
+				csvText = await readCsvFile(csvFilePath)
 				console.log('✅ Successfully loaded fallback CSV file')
 			} catch (fileError) {
 				console.error('❌ Fallback CSV file also failed:', fileError)
@@ -85,9 +93,10 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 	} else {
 		// Google Sheet fetch disabled - use CSV file as source of truth
 		console.log('📦 Google Sheet fetch disabled - using CSV file as source of truth')
-		console.log('📂 Loading CSV from:', csvFilePath)
 		try {
-			csvText = readFileSync(csvFilePath, 'utf-8')
+			const csvFilePath = await getCsvFilePath()
+			console.log('📂 Loading CSV from:', csvFilePath)
+			csvText = await readCsvFile(csvFilePath)
 			console.log('✅ Successfully loaded CSV file (', csvText.length, 'characters)')
 		} catch (fileError) {
 			console.error('❌ Failed to load CSV file:', fileError)
