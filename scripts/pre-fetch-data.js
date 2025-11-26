@@ -259,6 +259,19 @@ async function processDataSource(sourceKey, sourceConfig) {
     // Process the data
     const processedData = await sourceConfig.processor(rawData)
     
+    // Validate processed data before saving
+    const recordCount = processedData.incidentsData?.length || processedData.metadata?.totalRecords || 0
+    if (recordCount === 0) {
+      throw new Error(`Processed data is empty - no records found. This may indicate a problem with the data source or processing logic.`)
+    }
+    
+    // Ensure required fields are present
+    if (!processedData.lastUpdated || !processedData.buildTime) {
+      throw new Error(`Processed data is missing required metadata (lastUpdated, buildTime)`)
+    }
+    
+    console.log(`✅ Validated ${sourceConfig.name}: ${recordCount} records`)
+    
     // Save the processed data
     await saveData(processedData, sourceConfig.outputPath, sourceConfig.name)
     
@@ -269,7 +282,7 @@ async function processDataSource(sourceKey, sourceConfig) {
       success: true,
       source: sourceKey,
       duration,
-      recordCount: processedData.metadata?.totalRecords || 0
+      recordCount
     }
   } catch (error) {
     const duration = Date.now() - startTime

@@ -235,14 +235,30 @@ async function loadCachedData(): Promise<{ incidentsData: IncidentData[]; lastUp
 		})
 		return cachedData.default
 	} catch (error) {
-		console.warn('⚠️ Cache file not found, fetching live data...', error)
-		const incidentsData = await fetchAndParseData()
-		return {
-			incidentsData,
-			lastUpdated: new Date().toISOString(),
-			buildTime: new Date().toISOString()
+		console.warn('⚠️ Cache file not found:', error)
+		throw error
+	}
+}
+
+// Validate if cached data is fresh and valid
+function isCacheValid(cachedData: { incidentsData: IncidentData[]; lastUpdated: string; buildTime: string }): boolean {
+	// Check if cache has data
+	if (!cachedData.incidentsData || cachedData.incidentsData.length === 0) {
+		console.warn('⚠️ Cached data is empty')
+		return false
+	}
+
+	// Check if cache is too old (more than 7 days)
+	if (cachedData.lastUpdated) {
+		const cacheAge = Date.now() - new Date(cachedData.lastUpdated).getTime()
+		const daysOld = cacheAge / (1000 * 60 * 60 * 24)
+		if (daysOld > 7) {
+			console.warn(`⚠️ Cached data is ${Math.round(daysOld)} days old`)
+			return false
 		}
 	}
+
+	return true
 }
 
 // Determine if we should use cached data based on environment
@@ -272,16 +288,50 @@ export const load: PageServerLoad = async () => {
 	await debugSheetAccess()
 	
 	if (shouldUseCachedData()) {
-		// In production, use cached data with fallback
+		// In production, use cached data (pre-loaded during build)
 		console.log('📦 Using cached data for production')
-		const result = await loadCachedData()
-		console.log('📦 Cached data result:', {
-			recordCount: result.incidentsData?.length || 0,
-			lastUpdated: result.lastUpdated
-		})
-		return result
+		try {
+			const cachedResult = await loadCachedData()
+			
+			// Validate cache freshness
+			if (isCacheValid(cachedResult)) {
+				console.log('✅ Using valid cached data:', {
+					recordCount: cachedResult.incidentsData?.length || 0,
+					lastUpdated: cachedResult.lastUpdated
+				})
+				return cachedResult
+			} else {
+				// Cache is stale or empty, fetch fresh data
+				console.warn('⚠️ Cached data is invalid, fetching fresh data...')
+				const incidentsData = await fetchAndParseData()
+				const result = {
+					incidentsData,
+					lastUpdated: new Date().toISOString(),
+					buildTime: new Date().toISOString()
+				}
+				console.log('✅ Fresh data fetch successful:', {
+					recordCount: result.incidentsData?.length || 0,
+					lastUpdated: result.lastUpdated
+				})
+				return result
+			}
+		} catch (error) {
+			// Cache file not found or invalid, fetch fresh data
+			console.error('❌ Failed to load cached data, fetching fresh data:', error)
+			const incidentsData = await fetchAndParseData()
+			const result = {
+				incidentsData,
+				lastUpdated: new Date().toISOString(),
+				buildTime: new Date().toISOString()
+			}
+			console.log('✅ Fresh data fetch successful:', {
+				recordCount: result.incidentsData?.length || 0,
+				lastUpdated: result.lastUpdated
+			})
+			return result
+		}
 	} else {
-		// In development/preview, try to fetch fresh data, fallback to cached
+		// In development/preview, always fetch fresh data
 		console.log('🔄 Fetching fresh data for development/preview')
 		try {
 			const incidentsData = await fetchAndParseData()
