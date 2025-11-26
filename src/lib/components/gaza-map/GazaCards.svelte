@@ -272,8 +272,8 @@
 			onclick={goToNextCard}>Down ↓</button
 		>
 	</div>
-	{#each incidentsData as incident (incident.chronoId)}
-		<GazaCard {incident} {selectedMarkerId} {incidentsData} />
+	{#each incidentsData as incident, index (incident.chronoId)}
+		<GazaCard {incident} {selectedMarkerId} {incidentsData} isLast={index === incidentsData.length - 1} />
 	{/each}
 </div>
 
@@ -289,6 +289,7 @@
 				{incident}
 				{selectedMarkerId}
 				{incidentsData}
+				isLast={i === incidentsData.length - 1}
 				goToPrevCard={() => (i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null)}
 				goToNextCard={() =>
 					i < incidentsData.length - 1 ? scrollToCard(incidentsData[i + 1].chronoId) : null}

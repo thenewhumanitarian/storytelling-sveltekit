@@ -8,6 +8,7 @@
 		incident,
 		selectedMarkerId,
 		incidentsData,
+		isLast = false,
 		goToPrevCard = null,
 		goToNextCard = null,
 		hasPrev = false,
@@ -16,6 +17,7 @@
 		incident: IncidentData;
 		selectedMarkerId: number;
 		incidentsData: IncidentData[];
+		isLast?: boolean;
 		goToPrevCard?: (() => void) | null;
 		goToNextCard?: (() => void) | null;
 		hasPrev?: boolean;
@@ -53,7 +55,7 @@
 </script>
 
 <div
-	class={`${incident.chronoId === selectedMarkerId && incident.type !== 'event' ? 'bg-zinc-50' : ''} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 ${incident.type === 'event' ? 'bg-burgundy/20' : 'bg-white'} relative p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default`}
+	class={`${incident.chronoId === selectedMarkerId && incident.type !== 'event' ? 'bg-zinc-50' : ''} stack-cards__item js-stack-cards__item my-4 overflow-hidden border border-zinc-400 ${incident.type === 'event' ? 'bg-burgundy/20' : 'bg-white'} relative p-3 transition-colors duration-200 sm:mx-4 sm:cursor-default ${isLast ? 'mb-14 sm:mb-14' : ''}`}
 	data-id={incident.chronoId}
 >
 	{#if incident.type === 'event'}

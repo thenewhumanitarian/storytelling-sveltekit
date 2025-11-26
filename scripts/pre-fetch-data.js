@@ -60,12 +60,15 @@ function fetch(url) {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Configuration flag: Set to false to use CSV file as source of truth instead of Google Sheet
+const ENABLE_GOOGLE_SHEET_FETCH = false
+
 // Configuration for different data sources
 const DATA_SOURCES = {
   gaza: {
     name: 'Gaza Map Incidents',
     url: 'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0',
-    fallbackPath: 'src/lib/data/gaza-map/20250721-sample-data-gaza.csv',
+    fallbackPath: 'src/lib/data/gaza-map/gaza-incidents-fallback.csv',
     outputPath: 'src/lib/data/gaza-map/cached-incidents.json',
     processor: processGazaData
   }
@@ -253,8 +256,36 @@ async function processDataSource(sourceKey, sourceConfig) {
   try {
     console.log(`\n🚀 Processing ${sourceConfig.name}...`)
     
-    // Fetch the data (with fallback support)
-    const rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath)
+    let rawData
+    
+    // Check if Google Sheet fetching is enabled
+    if (ENABLE_GOOGLE_SHEET_FETCH) {
+      console.log('📡 Google Sheet fetch enabled - fetching from remote source...')
+      // Fetch the data (with fallback support)
+      rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath)
+      
+      // Save raw CSV to fallback file if fallbackPath is specified and we successfully fetched fresh data
+      // This ensures the fallback CSV is always up-to-date during build
+      if (sourceConfig.fallbackPath && rawData && !rawData.includes('<HTML>') && !rawData.includes('<!DOCTYPE')) {
+        try {
+          const fallbackDir = path.dirname(sourceConfig.fallbackPath)
+          await fs.mkdir(fallbackDir, { recursive: true })
+          await fs.writeFile(sourceConfig.fallbackPath, rawData, 'utf-8')
+          console.log(`💾 Updated fallback CSV file: ${sourceConfig.fallbackPath}`)
+        } catch (fallbackSaveError) {
+          console.warn(`⚠️  Failed to save fallback CSV file: ${fallbackSaveError.message}`)
+          // Don't fail the build if fallback save fails, just warn
+        }
+      }
+    } else {
+      console.log('📦 Google Sheet fetch disabled - using CSV file as source of truth...')
+      // Read directly from the CSV file
+      if (!sourceConfig.fallbackPath) {
+        throw new Error('No fallback path specified and Google Sheet fetch is disabled')
+      }
+      rawData = await fs.readFile(sourceConfig.fallbackPath, 'utf-8')
+      console.log(`✅ Loaded data from CSV file: ${sourceConfig.fallbackPath} (${rawData.length} characters)`)
+    }
     
     // Process the data
     const processedData = await sourceConfig.processor(rawData)
