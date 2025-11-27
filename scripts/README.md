@@ -4,7 +4,12 @@ This directory contains the build-time data fetching system for the TNH Storytel
 
 ## Overview
 
-The `pre-fetch-data.js` script fetches data from external sources during the build process and caches it as JSON files. This ensures fast production deployments and reduces runtime API calls.
+The `pre-fetch-data.js` script is the main orchestrator that coordinates multiple project-specific data fetch scripts. Each project (like Gaza Map) has its own dedicated fetch script that can run independently or through the orchestrator.
+
+**Architecture:**
+- **`pre-fetch-data.js`**: Main orchestrator that runs all project fetch scripts in parallel
+- **`pre-fetch-gaza-data.js`**: Gaza Map project-specific fetch script
+- **Future projects**: Add new scripts following the same pattern
 
 ## How It Works
 
@@ -16,7 +21,7 @@ The `pre-fetch-data.js` script fetches data from external sources during the bui
 
 ### Build Process
 
-1. **Vercel Production Build**: Runs `node scripts/pre-fetch-data.js && vite build`
+1. **Vercel Production Build**: Runs `node scripts/pre-fetch-gaza-data.js && vite build`
    - Fetches data from configured sources
    - Saves to `src/lib/data/` directory
    - Builds the app with cached data embedded
@@ -30,30 +35,63 @@ The `pre-fetch-data.js` script fetches data from external sources during the bui
 ### Available Scripts
 
 ```bash
-# Fetch all data sources
+# Fetch all projects (orchestrator)
 npm run pre-fetch-data
 
-# Fetch only Gaza data
+# Fetch only Gaza data (direct)
 npm run pre-fetch-gaza
 
-# Build with data fetching
+# Build with data fetching (runs orchestrator)
 npm run build
 ```
 
 ### Command Line Options
 
 ```bash
-# Fetch specific data sources
-node scripts/pre-fetch-data.js gaza
-node scripts/pre-fetch-data.js gaza example
-
-# Fetch all sources
+# Run orchestrator for all projects
 node scripts/pre-fetch-data.js
+
+# Run orchestrator for specific projects (by name match)
+node scripts/pre-fetch-data.js gaza
+
+# Run a project script directly
+node scripts/pre-fetch-gaza-data.js
 ```
 
-## Adding New Data Sources
+## Adding New Projects
 
-To add a new data source, edit `scripts/pre-fetch-data.js` and add a new entry to the `DATA_SOURCES` object:
+To add a new project to the orchestrator:
+
+1. **Create a new project script**: `scripts/pre-fetch-[project-name]-data.js`
+   - Copy the structure from `pre-fetch-gaza-data.js`
+   - Export a function: `export async function fetch[ProjectName]Data()`
+   - This function should return `true` on success, `false` on failure
+
+2. **Add to orchestrator**: Edit `scripts/pre-fetch-data.js`
+   ```javascript
+   const PROJECTS = [
+     {
+       name: 'Gaza Map',
+       script: './pre-fetch-gaza-data.js',
+       fetchFunction: 'fetchGazaData'
+     },
+     {
+       name: 'Your Project',
+       script: './pre-fetch-your-project-data.js',
+       fetchFunction: 'fetchYourProjectData'
+     }
+   ]
+   ```
+
+3. **Optional**: Add a direct npm script in `package.json`:
+   ```json
+   "pre-fetch-your-project": "node scripts/pre-fetch-your-project-data.js"
+   ```
+
+The orchestrator will automatically:
+- Run all projects in parallel using `Promise.all`
+- Handle errors gracefully (one failure won't stop others)
+- Provide a summary of all results
 
 ```javascript
 const DATA_SOURCES = {
@@ -98,7 +136,8 @@ async function processYourData(rawData) {
 
 ```
 scripts/
-├── pre-fetch-data.js          # Main data fetching script
+├── pre-fetch-data.js          # Main orchestrator (runs all projects)
+├── pre-fetch-gaza-data.js     # Gaza map data fetching script
 └── README.md                  # This documentation
 
 src/lib/data/
@@ -147,6 +186,6 @@ Check the build logs for specific error messages. Common issues:
 - File system permissions
 
 ### Data Not Updating
-- Clear the cache files in `src/lib/data/`
-- Run `npm run pre-fetch-data` manually
+- Clear the cache files in `src/lib/data/gaza-map/`
+- Run `npm run pre-fetch-gaza` manually
 - Check the source URLs are accessible 

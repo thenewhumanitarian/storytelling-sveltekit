@@ -1,445 +1,201 @@
 #!/usr/bin/env node
 
-import { parse } from 'csv-parse/sync'
-import fs from 'fs/promises'
-import path from 'path'
+/**
+ * Main data fetching orchestrator
+ * 
+ * This script coordinates multiple project-specific data fetch scripts.
+ * Each project has its own fetch script (e.g., pre-fetch-gaza-data.js)
+ * that can be run independently or through this orchestrator.
+ * 
+ * To add a new project:
+ * 1. Create a script: scripts/pre-fetch-[project-name]-data.js
+ * 2. Export a function: export async function fetch[ProjectName]Data()
+ * 3. Import and add it to the PROJECTS array below
+ */
+
 import { fileURLToPath } from 'url'
-
-// Polyfill fetch for Node.js (using built-in https module)
-import https from 'https'
-import http from 'http'
-
-function fetch(url) {
-  return new Promise((resolve, reject) => {
-    const urlObj = new URL(url)
-    const client = urlObj.protocol === 'https:' ? https : http
-    
-    const req = client.get(url, (res) => {
-      let data = ''
-      
-      res.on('data', (chunk) => {
-        data += chunk
-      })
-      
-      res.on('end', () => {
-        // Handle redirects manually
-        if (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) {
-          const location = res.headers.location
-          if (location) {
-            console.log(`🔄 Following redirect to: ${location}`)
-            // Recursively follow the redirect
-            fetch(location).then(resolve).catch(reject)
-            return
-          }
-        }
-        
-        if (res.statusCode >= 200 && res.statusCode < 400) {
-          resolve({
-            ok: true,
-            status: res.statusCode,
-            statusText: res.statusMessage,
-            text: () => Promise.resolve(data)
-          })
-        } else {
-          reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`))
-        }
-      })
-    })
-    
-    req.on('error', (error) => {
-      reject(error)
-    })
-    
-    req.setTimeout(10000, () => {
-      req.destroy()
-      reject(new Error('Request timeout'))
-    })
-  })
-}
+import { dirname, join } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = dirname(__filename)
 
-// Configuration flag: Set to false to use CSV file as source of truth instead of Google Sheet
-const ENABLE_GOOGLE_SHEET_FETCH = false
-
-// Configuration for different data sources
-const DATA_SOURCES = {
-  gaza: {
-    name: 'Gaza Map Incidents',
-    url: 'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0',
-    fallbackPath: 'src/lib/data/gaza-map/gaza-incidents-fallback.csv',
-    outputPath: 'src/lib/data/gaza-map/cached-incidents.json',
-    processor: processGazaData
+// Configuration: List of projects to fetch data for
+const PROJECTS = [
+  {
+    name: 'Gaza Map',
+    script: './pre-fetch-gaza-data.js',
+    fetchFunction: 'fetchGazaData'
   }
-  // Add more data sources here as needed:
-  // example: {
-  //   name: 'Example Data',
-  //   url: 'https://api.example.com/data',
-  //   fallbackPath: 'src/lib/data/example/fallback-data.csv',
-  //   outputPath: 'src/lib/data/example/cached-data.json',
-  //   processor: processExampleData
+  // Add more projects here:
+  // {
+  //   name: 'Project Name',
+  //   script: './pre-fetch-project-name-data.js',
+  //   fetchFunction: 'fetchProjectNameData'
   // }
-}
+]
 
-// Helper function to calculate ISO week number + year
-function getISOWeekYearString(date) {
-  const target = new Date(date.valueOf())
-  const dayNr = (date.getDay() + 6) % 7
-  target.setDate(target.getDate() - dayNr + 3)
-  const firstThursday = new Date(target.getFullYear(), 0, 4)
-  const weekNumber = 1 + Math.round(
-    ((target.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getDay() + 6) % 7)) / 7
-  )
-  return `${String(weekNumber).padStart(2, '0')}-${target.getFullYear()}`
-}
-
-// Gaza data processor
-async function processGazaData(csvText) {
-  console.log('📊 Processing Gaza incidents and events data...')
-  
-  // Check if we got HTML instead of CSV
-  if (csvText.includes('<HTML>') || csvText.includes('<html>')) {
-    throw new Error('Received HTML instead of CSV. The Google Sheet may not be properly published or the URL is incorrect.')
-  }
-  
-  const records = parse(csvText, {
-    columns: true,
-    trim: true,
-    skip_empty_lines: true,
-    on_record: (record) => {
-      // Auto-detect type if missing - assume 'incident' if not specified
-      if (!record.type || record.type.trim() === '') {
-        // If we have latitude/longitude, it's likely an incident
-        if (record.latitude && record.longitude) {
-          record.type = 'incident'
-        } else if (record.title && record.date) {
-          record.type = 'event'
-        }
-      }
-      
-      if (record.type === 'incident') {
-        // More lenient required fields - only id and date are truly required
-        const criticalFields = ['id', 'date']
-        const hasMissingCritical = criticalFields.some((field) => {
-          const value = record[field]
-          if (value === undefined || value === null) return true
-          if (typeof value === 'string') return value.trim() === ''
-          return false
-        })
-        
-        if (hasMissingCritical) {
-          return undefined
-        }
-        
-        return record
-      } else if (record.type === 'event') {
-        const requiredFields = ['id', 'date']
-        const hasMissingRequired = requiredFields.some((field) => {
-          const value = record[field]
-          if (value === undefined || value === null) return true
-          if (typeof value === 'string') return value.trim() === ''
-          return false
-        })
-        return hasMissingRequired ? undefined : record
-      }
-      return undefined
-    },
-    cast: (value, context) => {
-      switch (context.column) {
-        case 'id':
-          return parseInt(value)
-        case 'killedOrWounded':
-          return value === '' ? undefined : parseInt(value)
-        case 'latitude':
-        case 'longitude':
-          return value === '' ? undefined : parseFloat(value)
-        case 'title':
-        case 'date':
-        case 'description':
-        case 'type':
-        case 'imageUrl':
-        case 'imageCaption':
-        case 'videoUrl':
-        case 'videoCaption':
-        case 'sources':
-        default:
-          return value
-      }
-    }
-  })
-
-  const sorted = [...records].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-  
-  sorted.forEach((item, index) => {
-    item.chronoId = index
-    item.weekYear = getISOWeekYearString(new Date(item.date))
-  })
-
-  return {
-    incidentsData: sorted,
-    lastUpdated: new Date().toISOString(),
-    buildTime: new Date().toISOString(),
-    metadata: {
-      totalRecords: sorted.length,
-      incidents: sorted.filter(r => r.type === 'incident').length,
-      events: sorted.filter(r => r.type === 'event').length,
-      dateRange: {
-        start: sorted[0]?.date,
-        end: sorted[sorted.length - 1]?.date
-      }
-    }
-  }
-}
-
-// Generic data fetcher with fallback support
-async function fetchData(url, sourceName, fallbackPath = null) {
-  console.log(`🔄 Fetching ${sourceName} from ${url}...`)
-  
-  try {
-    const response = await fetch(url)
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-    }
-    
-    const data = await response.text()
-    console.log(`✅ Successfully fetched ${sourceName} (${data.length} characters)`)
-    
-    // Debug: Show first 200 characters to help diagnose issues
-    console.log(`🔍 First 200 characters: ${data.substring(0, 200)}...`)
-    
-    return data
-  } catch (error) {
-    console.error(`❌ Failed to fetch ${sourceName}:`, error.message)
-    
-    // Try fallback if available
-    if (fallbackPath) {
-      console.log(`🔄 Trying fallback file: ${fallbackPath}`)
-      try {
-        const fallbackData = await fs.readFile(fallbackPath, 'utf-8')
-        console.log(`✅ Successfully loaded fallback data for ${sourceName} (${fallbackData.length} characters)`)
-        console.log(`⚠️  Using fallback data - this may be outdated`)
-        return fallbackData
-      } catch (fallbackError) {
-        console.error(`❌ Fallback file also failed:`, fallbackError.message)
-        throw new Error(`Both remote and fallback data sources failed: ${error.message}`)
-      }
-    }
-    
-    throw error
-  }
-}
-
-// Save data to file
-async function saveData(data, outputPath, sourceName) {
-  try {
-    // Ensure directory exists
-    const dir = path.dirname(outputPath)
-    await fs.mkdir(dir, { recursive: true })
-    
-    // Write the data
-    await fs.writeFile(outputPath, JSON.stringify(data, null, 2))
-    
-    console.log(`💾 Saved ${sourceName} to ${outputPath}`)
-    return true
-  } catch (error) {
-    console.error(`❌ Failed to save ${sourceName}:`, error.message)
-    throw error
-  }
-}
-
-// Process a single data source
-async function processDataSource(sourceKey, sourceConfig) {
+/**
+ * Fetch data for a single project
+ */
+async function fetchProjectData(project) {
   const startTime = Date.now()
   
   try {
-    console.log(`\n🚀 Processing ${sourceConfig.name}...`)
+    console.log(`\n🚀 Starting ${project.name} data fetch...`)
     
-    let rawData
+    // Dynamically import the project's fetch script
+    const projectModule = await import(join(__dirname, project.script))
     
-    // Check if Google Sheet fetching is enabled
-    if (ENABLE_GOOGLE_SHEET_FETCH) {
-      console.log('📡 Google Sheet fetch enabled - fetching from remote source...')
-      // Fetch the data (with fallback support)
-      rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath)
-      
-      // Save raw CSV to fallback file if fallbackPath is specified and we successfully fetched fresh data
-      // This ensures the fallback CSV is always up-to-date during build
-      if (sourceConfig.fallbackPath && rawData && !rawData.includes('<HTML>') && !rawData.includes('<!DOCTYPE')) {
-        try {
-          const fallbackDir = path.dirname(sourceConfig.fallbackPath)
-          await fs.mkdir(fallbackDir, { recursive: true })
-          await fs.writeFile(sourceConfig.fallbackPath, rawData, 'utf-8')
-          console.log(`💾 Updated fallback CSV file: ${sourceConfig.fallbackPath}`)
-        } catch (fallbackSaveError) {
-          console.warn(`⚠️  Failed to save fallback CSV file: ${fallbackSaveError.message}`)
-          // Don't fail the build if fallback save fails, just warn
-        }
-      }
-    } else {
-      console.log('📦 Google Sheet fetch disabled - using CSV file as source of truth...')
-      // Read directly from the CSV file
-      if (!sourceConfig.fallbackPath) {
-        throw new Error('No fallback path specified and Google Sheet fetch is disabled')
-      }
-      rawData = await fs.readFile(sourceConfig.fallbackPath, 'utf-8')
-      console.log(`✅ Loaded data from CSV file: ${sourceConfig.fallbackPath} (${rawData.length} characters)`)
+    // Get the fetch function
+    const fetchFunction = projectModule[project.fetchFunction]
+    
+    if (!fetchFunction || typeof fetchFunction !== 'function') {
+      throw new Error(`Fetch function "${project.fetchFunction}" not found in ${project.script}`)
     }
     
-    // Process the data
-    const processedData = await sourceConfig.processor(rawData)
-    
-    // Validate processed data before saving
-    const recordCount = processedData.incidentsData?.length || processedData.metadata?.totalRecords || 0
-    if (recordCount === 0) {
-      throw new Error(`Processed data is empty - no records found. This may indicate a problem with the data source or processing logic.`)
-    }
-    
-    // Ensure required fields are present
-    if (!processedData.lastUpdated || !processedData.buildTime) {
-      throw new Error(`Processed data is missing required metadata (lastUpdated, buildTime)`)
-    }
-    
-    console.log(`✅ Validated ${sourceConfig.name}: ${recordCount} records`)
-    
-    // Save the processed data
-    await saveData(processedData, sourceConfig.outputPath, sourceConfig.name)
+    // Execute the fetch function
+    const success = await fetchFunction()
     
     const duration = Date.now() - startTime
-    console.log(`✅ ${sourceConfig.name} completed in ${duration}ms`)
     
-    return {
-      success: true,
-      source: sourceKey,
-      duration,
-      recordCount
+    if (success) {
+      console.log(`✅ ${project.name} completed successfully in ${duration}ms`)
+      return {
+        success: true,
+        project: project.name,
+        duration
+      }
+    } else {
+      console.error(`❌ ${project.name} completed with errors in ${duration}ms`)
+      return {
+        success: false,
+        project: project.name,
+        duration,
+        error: 'Fetch function returned false'
+      }
     }
   } catch (error) {
     const duration = Date.now() - startTime
-    console.error(`❌ ${sourceConfig.name} failed after ${duration}ms:`, error.message)
+    console.error(`❌ ${project.name} failed after ${duration}ms:`, error.message)
     
     return {
       success: false,
-      source: sourceKey,
+      project: project.name,
       duration,
       error: error.message
     }
   }
 }
 
-// Main function to process all data sources
-async function preFetchAllData() {
-  const startTime = Date.now()
-  console.log('🏗️  Starting build-time data fetching...')
+/**
+ * Main orchestrator function
+ * Fetches data for all projects in parallel using Promise.all
+ */
+async function fetchAllProjects() {
+  const overallStartTime = Date.now()
+  
+  console.log('🏗️  Starting data fetching orchestrator...')
   console.log(`📅 Build time: ${new Date().toISOString()}`)
+  console.log(`📦 Projects to fetch: ${PROJECTS.length}`)
+  console.log(`📋 Projects: ${PROJECTS.map(p => p.name).join(', ')}`)
   
-  const results = []
-  const sourceKeys = Object.keys(DATA_SOURCES)
+  // Fetch all projects in parallel
+  const results = await Promise.all(
+    PROJECTS.map(project => fetchProjectData(project))
+  )
   
-  for (const sourceKey of sourceKeys) {
-    const sourceConfig = DATA_SOURCES[sourceKey]
-    const result = await processDataSource(sourceKey, sourceConfig)
-    results.push(result)
-  }
-  
-  const totalDuration = Date.now() - startTime
+  const totalDuration = Date.now() - overallStartTime
   const successful = results.filter(r => r.success)
   const failed = results.filter(r => !r.success)
   
-  console.log('\n📊 Build-time data fetching summary:')
+  // Print summary
+  console.log('\n' + '='.repeat(60))
+  console.log('📊 Data Fetching Summary')
+  console.log('='.repeat(60))
   console.log(`⏱️  Total duration: ${totalDuration}ms`)
-  console.log(`✅ Successful: ${successful.length}/${sourceKeys.length}`)
-  console.log(`❌ Failed: ${failed.length}/${sourceKeys.length}`)
+  console.log(`✅ Successful: ${successful.length}/${PROJECTS.length}`)
+  console.log(`❌ Failed: ${failed.length}/${PROJECTS.length}`)
   
   if (successful.length > 0) {
-    console.log('\n✅ Successful sources:')
+    console.log('\n✅ Successful projects:')
     successful.forEach(result => {
-      console.log(`  • ${DATA_SOURCES[result.source].name}: ${result.recordCount} records (${result.duration}ms)`)
+      console.log(`  • ${result.project}: ${result.duration}ms`)
     })
   }
   
   if (failed.length > 0) {
-    console.log('\n❌ Failed sources:')
+    console.log('\n❌ Failed projects:')
     failed.forEach(result => {
-      console.log(`  • ${DATA_SOURCES[result.source].name}: ${result.error}`)
+      console.log(`  • ${result.project}: ${result.error}`)
     })
   }
   
-  // Don't exit with error code if any source failed - just warn
-  // This allows the build to continue with partial data
-  if (failed.length > 0) {
-    console.log('\n⚠️  Some data sources failed. Build may continue with partial data.')
-    // Don't exit with error code - let the build continue
-    return false
-  }
+  console.log('='.repeat(60) + '\n')
   
-  console.log('\n🎉 All data sources processed successfully!')
-  return true
+  // Return true if all projects succeeded, false otherwise
+  // This allows the build to continue even if some projects fail
+  return failed.length === 0
 }
 
-// Handle command line arguments
+/**
+ * Handle command line arguments
+ * Allows running specific projects: node pre-fetch-data.js gaza
+ */
 function parseArguments() {
   const args = process.argv.slice(2)
-  const sources = args.filter(arg => !arg.startsWith('--'))
-  const options = args.filter(arg => arg.startsWith('--'))
-  
-  return { sources, options }
+  return args.filter(arg => !arg.startsWith('--'))
 }
 
-// Main execution
+/**
+ * Main execution
+ */
 async function main() {
   try {
-    const { sources, options } = parseArguments()
+    const requestedProjects = parseArguments()
     
-    // If specific sources are requested, filter them
-    if (sources.length > 0) {
-      const requestedSources = {}
-      for (const source of sources) {
-        if (DATA_SOURCES[source]) {
-          requestedSources[source] = DATA_SOURCES[source]
-        } else {
-          console.warn(`⚠️  Unknown data source: ${source}`)
-        }
-      }
+    if (requestedProjects.length > 0) {
+      // Filter to only requested projects
+      const filteredProjects = PROJECTS.filter(project =>
+        requestedProjects.some(requested =>
+          project.name.toLowerCase().includes(requested.toLowerCase()) ||
+          project.script.toLowerCase().includes(requested.toLowerCase())
+        )
+      )
       
-      if (Object.keys(requestedSources).length === 0) {
-        console.error('❌ No valid data sources specified')
+      if (filteredProjects.length === 0) {
+        console.error('❌ No matching projects found for:', requestedProjects.join(', '))
+        console.log('Available projects:', PROJECTS.map(p => p.name).join(', '))
         process.exit(1)
       }
       
-      // Temporarily replace DATA_SOURCES with filtered version
-      const originalSources = DATA_SOURCES
-      Object.assign(DATA_SOURCES, requestedSources)
+      console.log(`🎯 Running filtered projects: ${filteredProjects.map(p => p.name).join(', ')}`)
       
-      const success = await preFetchAllData()
+      // Run filtered projects
+      const results = await Promise.all(
+        filteredProjects.map(project => fetchProjectData(project))
+      )
       
-      // Restore original sources
-      Object.assign(DATA_SOURCES, originalSources)
-      
-      // Only exit with error if no sources succeeded
-      if (!success) {
-        process.exit(1)
-      }
+      const allSucceeded = results.every(r => r.success)
+      process.exit(allSucceeded ? 0 : 1)
     } else {
-      // Process all sources
-      const success = await preFetchAllData()
-      
-      // Only exit with error if no sources succeeded
-      if (!success) {
-        process.exit(1)
-      }
+      // Run all projects
+      const success = await fetchAllProjects()
+      process.exit(success ? 0 : 1)
     }
   } catch (error) {
-    console.error('💥 Fatal error during data fetching:', error)
+    console.error('💥 Fatal error in orchestrator:', error)
     process.exit(1)
   }
 }
 
-// Export for potential programmatic use
-export { preFetchAllData, processDataSource, DATA_SOURCES }
+// Export for programmatic use
+export { fetchAllProjects, fetchProjectData, PROJECTS }
 
-// Run if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run if this file is executed directly (not imported)
+const isMainModule = import.meta.url === `file://${process.argv[1]}` || 
+                     process.argv[1]?.includes('pre-fetch-data.js')
+
+if (isMainModule) {
   main()
-} 
+}
+

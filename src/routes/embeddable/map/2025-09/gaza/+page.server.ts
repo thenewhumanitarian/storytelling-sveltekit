@@ -21,23 +21,21 @@ function getISOWeekYearString(date: Date): string {
 	return `${String(weekNumber).padStart(2, '0')}-${target.getFullYear()}`
 }
 
-// Configuration flag: Set to true to enable Google Sheet fetching, false to use CSV file as source of truth
-const ENABLE_GOOGLE_SHEET_FETCH = false
-
 const sheetUrl =
 	// 'https://docs.google.com/spreadsheets/d/1XHLFPW_9km6STO6rRYe_MqguEJJWSIa5febc8MIiWA0/export?format=csv&gid=0'
 	'https://docs.google.com/spreadsheets/d/1xhB61d1cry1iPZLxpN_N4G0FXd86z7b5_xNF5lh2g3o/export?format=csv&gid=0'
 
-// Helper function to get CSV file path (using dynamic import to avoid build issues)
-async function getCsvFilePath(): Promise<string> {
+// Helper to get fallback CSV path (using dynamic import to avoid build issues)
+async function getFallbackCsvPath(): Promise<string> {
 	const { join } = await import('path')
 	return join(process.cwd(), 'src/lib/data/gaza-map/gaza-incidents-fallback.csv')
 }
 
-// Helper function to read CSV file (using dynamic import to avoid build issues)
-async function readCsvFile(filePath: string): Promise<string> {
+// Helper to read CSV file (using dynamic import to avoid build issues)
+async function readFallbackCsv(): Promise<string> {
 	const { readFileSync } = await import('fs')
-	return readFileSync(filePath, 'utf-8')
+	const path = await getFallbackCsvPath()
+	return readFileSync(path, 'utf-8')
 }
 
 // Debug function to test sheet accessibility
@@ -57,50 +55,35 @@ async function debugSheetAccess() {
 }
 
 async function fetchAndParseData(): Promise<IncidentData[]> {
+	console.log('🔍 Starting data fetch from:', sheetUrl)
+	
 	let csvText: string
 	
-	// Check if Google Sheet fetching is enabled
-	if (ENABLE_GOOGLE_SHEET_FETCH) {
-		console.log('🔍 Google Sheet fetch enabled - fetching from:', sheetUrl)
-		
-		try {
-			const response = await fetch(sheetUrl)
-			console.log('📡 Fetch response status:', response.status, response.statusText)
-			console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()))
+	try {
+		const response = await fetch(sheetUrl)
+		console.log('📡 Fetch response status:', response.status, response.statusText)
+		console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()))
 
-			if (!response.ok) {
-				throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`)
-			}
-
-			csvText = await response.text()
-			
-			// Check if we got HTML instead of CSV (redirect or error page)
-			if (csvText.trim().startsWith('<HTML>') || csvText.trim().startsWith('<!DOCTYPE')) {
-				throw new Error('Received HTML instead of CSV - likely a redirect or error page')
-			}
-		} catch (fetchError) {
-			console.error('❌ Fetch failed, trying fallback CSV file:', fetchError)
-			try {
-				const csvFilePath = await getCsvFilePath()
-				console.log('📦 Attempting to load fallback CSV from:', csvFilePath)
-				csvText = await readCsvFile(csvFilePath)
-				console.log('✅ Successfully loaded fallback CSV file')
-			} catch (fileError) {
-				console.error('❌ Fallback CSV file also failed:', fileError)
-				throw new Error(`Both remote fetch and fallback file failed. Fetch error: ${fetchError}, File error: ${fileError}`)
-			}
+		if (!response.ok) {
+			throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`)
 		}
-	} else {
-		// Google Sheet fetch disabled - use CSV file as source of truth
-		console.log('📦 Google Sheet fetch disabled - using CSV file as source of truth')
+
+		csvText = await response.text()
+		
+		// Check if we got HTML instead of CSV (redirect or error page)
+		if (csvText.trim().startsWith('<HTML>') || csvText.trim().startsWith('<!DOCTYPE')) {
+			throw new Error('Received HTML instead of CSV - likely a redirect or error page')
+		}
+	} catch (fetchError) {
+		console.error('❌ Fetch failed, trying fallback CSV file:', fetchError)
 		try {
-			const csvFilePath = await getCsvFilePath()
-			console.log('📂 Loading CSV from:', csvFilePath)
-			csvText = await readCsvFile(csvFilePath)
-			console.log('✅ Successfully loaded CSV file (', csvText.length, 'characters)')
+			const fallbackPath = await getFallbackCsvPath()
+			console.log('📦 Attempting to load fallback CSV from:', fallbackPath)
+			csvText = await readFallbackCsv()
+			console.log('✅ Successfully loaded fallback CSV file')
 		} catch (fileError) {
-			console.error('❌ Failed to load CSV file:', fileError)
-			throw new Error(`Failed to load CSV file: ${fileError}`)
+			console.error('❌ Fallback CSV file also failed:', fileError)
+			throw new Error(`Both remote fetch and fallback file failed. Fetch error: ${fetchError}, File error: ${fileError}`)
 		}
 	}
 	console.log('📄 CSV text length:', csvText.length)

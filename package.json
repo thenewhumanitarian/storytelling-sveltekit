@@ -7,7 +7,7 @@
     "build": "node scripts/pre-fetch-data.js && vite build",
     "preview": "vite preview",
     "pre-fetch-data": "node scripts/pre-fetch-data.js",
-    "pre-fetch-gaza": "node scripts/pre-fetch-data.js gaza",
+    "pre-fetch-gaza": "node scripts/pre-fetch-gaza-data.js",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",

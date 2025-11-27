@@ -10,5 +10,23 @@ export default defineConfig({
 			cert: fs.readFileSync('./cert/localhost.pem')
 		}
 	},
-	plugins: [sveltekit(), enhancedImages()]
+	plugins: [sveltekit(), enhancedImages()],
+	ssr: {
+		noExternal: [],
+		// Exclude Node.js built-in modules from client bundling
+		resolve: {
+			conditions: ['node']
+		}
+	},
+	optimizeDeps: {
+		exclude: ['fs', 'path']
+	},
+	build: {
+		rollupOptions: {
+			external: (id) => {
+				// Exclude Node.js built-in modules from bundling
+				return id === 'fs' || id === 'path' || id.startsWith('node:');
+			}
+		}
+	}
 });
