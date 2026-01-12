@@ -2,7 +2,8 @@
 
 Interactive storytelling platform for **The New Humanitarian (TNH)**. This codebase powers data-driven visualizations, embeddable dashboards, and immersive editorial projects.
 
-🌐 **Production**: [interactive.thenewhumanitarian.org](https://interactive.thenewhumanitarian.org)
+🌐 **Production**: [interactive.thenewhumanitarian.org](https://interactive.thenewhumanitarian.org)  
+🧪 **Preview/Staging**: [preview.thenewhumanitarian.org](https://preview.thenewhumanitarian.org)
 
 ---
 
