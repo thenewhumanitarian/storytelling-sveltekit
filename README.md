@@ -179,7 +179,8 @@ tnh-storytelling-sveltekit/
 
 ### Gaza Aid Seekers Dashboard
 
-**Route**: `/embeddable/map/2025-09/gaza`
+**Route**: `/embeddable/map/2025-09/gaza`  
+**Live**: [interactive.thenewhumanitarian.org/embeddable/map/2025-09/gaza](https://interactive.thenewhumanitarian.org/embeddable/map/2025-09/gaza)
 
 Interactive map and timeline showing incidents involving aid seekers in Gaza. Features:
 
@@ -191,7 +192,8 @@ Interactive map and timeline showing incidents involving aid seekers in Gaza. Fe
 
 ### Lebanon Displacement Diaries
 
-**Route**: `/stories/2025/05/22/lebanon-displacement-diaries`
+**Route**: `/stories/2025/05/22/lebanon-displacement-diaries`  
+**Live**: [interactive.thenewhumanitarian.org/stories/2025/05/22/lebanon-displacement-diaries](https://interactive.thenewhumanitarian.org/stories/2025/05/22/lebanon-displacement-diaries)
 
 Immersive long-form narrative with:
 
@@ -203,7 +205,8 @@ Immersive long-form narrative with:
 
 ### Syria Map
 
-**Route**: `/embeddable/map/2024-11/syria`
+**Route**: `/embeddable/map/2024-11/syria`  
+**Live**: [interactive.thenewhumanitarian.org/embeddable/map/2024-11/syria](https://interactive.thenewhumanitarian.org/embeddable/map/2024-11/syria)
 
 Interactive map of Syria with populated places data.
 
@@ -230,8 +233,8 @@ The project is hosted on **Vercel** with automatic deployments:
 | Branch | Environment | URL |
 |--------|-------------|-----|
 | `main` | Production | [interactive.thenewhumanitarian.org](https://interactive.thenewhumanitarian.org) |
-| `preview` | Preview | `storytelling-sveltekit-git-preview-thenewhumanitarian.vercel.app` |
-| Feature branches | Preview | Auto-generated preview URLs |
+| `preview` | Staging | [preview.thenewhumanitarian.org](https://preview.thenewhumanitarian.org) |
+| Feature branches | Preview | Auto-generated Vercel preview URLs |
 
 ### Deployment Flow
 
