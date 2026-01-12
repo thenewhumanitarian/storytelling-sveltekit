@@ -2,8 +2,8 @@
 	import type { IncidentData } from './types';
 	import moment from 'moment';
 
-	export let incident: IncidentData;
-	export let onClose: () => void;
+	// Props (Svelte 5 runes)
+	let { incident, onClose }: { incident: IncidentData; onClose: () => void } = $props();
 </script>
 
 <div

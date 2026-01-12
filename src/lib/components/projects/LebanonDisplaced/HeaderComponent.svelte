@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 
 	import Logo from '$lib/components/icons/Logo.svelte';

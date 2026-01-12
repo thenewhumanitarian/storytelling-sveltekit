@@ -1,3 +1,32 @@
+/**
+ * Storyblok CMS Integration Utilities
+ *
+ * This module handles Storyblok initialization and provides helper functions for
+ * loading content from the Storyblok CDN. It supports both SSR and client-side rendering.
+ *
+ * ## Initialization Strategy
+ *
+ * Storyblok requires different initialization approaches for:
+ * 1. **SSR (Server-Side Rendering)**: Uses static imports, bridge disabled
+ * 2. **Client-Side**: Uses dynamic imports, bridge enabled only in Visual Editor context
+ *
+ * The module uses two initialization functions:
+ * - `initStoryblok()`: Simple init with static imports (for SSR/prerendering)
+ * - `useStoryblok()`: Advanced init with dynamic imports and editor detection
+ *
+ * ## Visual Editor
+ *
+ * The Storyblok bridge (live preview) is only enabled when:
+ * - Running in the browser
+ * - URL contains `_storyblok` or `editor=true` query params
+ *
+ * ## Environment Variables
+ *
+ * - `PUBLIC_ACCESS_TOKEN`: Storyblok space access token
+ * - `PUBLIC_REGION`: Storyblok region (default: 'eu')
+ * - `PUBLIC_ENABLE_VISUAL_EDITOR`: Enable draft content ('true'/'false')
+ */
+
 declare global {
   interface Window {
     __storyblokInitialized?: boolean;

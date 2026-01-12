@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
 
-	export let blok;
+	// Props (Svelte 5 runes)
+	let { blok }: { blok: any } = $props();
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {

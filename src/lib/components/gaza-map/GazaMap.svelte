@@ -46,8 +46,22 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 		selectionOrigin = 'click';
 	}
 
+	// Extended types for cross-browser fullscreen API support
+	interface FullscreenElement extends HTMLElement {
+		webkitRequestFullscreen?: () => Promise<void>;
+		webkitRequestFullScreen?: () => Promise<void>;
+		msRequestFullscreen?: () => Promise<void>;
+	}
+
+	interface FullscreenDocument extends Document {
+		webkitExitFullscreen?: () => Promise<void>;
+		webkitCancelFullScreen?: () => Promise<void>;
+		msExitFullscreen?: () => Promise<void>;
+		webkitFullscreenElement?: Element | null;
+	}
+
 	async function enterFullscreen() {
-		const el: any = document.documentElement as any;
+		const el = document.documentElement as FullscreenElement;
 		const request =
 			el.requestFullscreen ||
 			el.webkitRequestFullscreen ||
@@ -61,7 +75,7 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 	}
 
 	async function exitFullscreen() {
-		const doc: any = document as any;
+		const doc = document as FullscreenDocument;
 		const exit =
 			doc.exitFullscreen || doc.webkitExitFullscreen || doc.webkitCancelFullScreen || doc.msExitFullscreen;
 		if (exit) {
@@ -185,14 +199,13 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 		}
 
 		const updateFullscreenState = () => {
-			// @ts-ignore - webkit fallback for Safari
-			isFullscreen = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+			const doc = document as FullscreenDocument;
+			isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
 			setTimeout(() => {
 				map?.resize();
 			}, 0);
 		};
 		document.addEventListener('fullscreenchange', updateFullscreenState);
-		// @ts-ignore - Safari
 		document.addEventListener('webkitfullscreenchange', updateFullscreenState);
 
 		mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -330,8 +343,7 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 
 			map?.addSource('incidents-heatmap', {
 				type: 'geojson',
-				// @ts-ignore
-				data: heatmapGeoJSON
+				data: heatmapGeoJSON as GeoJSON.FeatureCollection
 			});
 
 			map?.addLayer({
@@ -390,7 +402,6 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 		return () => {
 			window.removeEventListener('resize', updateIsMobile);
 			document.removeEventListener('fullscreenchange', updateFullscreenState);
-			// @ts-ignore - Safari
 			document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
 			map?.remove();
 			map = null;

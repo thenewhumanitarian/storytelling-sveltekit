@@ -3,7 +3,8 @@
 	import { fade } from 'svelte/transition';
 	import GazaVideo from './GazaVideo.svelte';
 
-	export let event: IncidentData | null = null;
+	// Props (Svelte 5 runes)
+	let { event = null }: { event: IncidentData | null } = $props();
 </script>
 
 {#if event}
