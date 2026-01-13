@@ -1,0 +1,1110 @@
+<script lang="ts">
+	/**
+	 * Cleared - Investigation into Assam's mass eviction campaign
+	 *
+	 * This article uses a unified ScrollySection pattern for all scrolly
+	 * sections to ensure consistent behavior, dark background throughout,
+	 * and no horizontal overflow issues.
+	 */
+	import ScrollySection from '$lib/components/scrolly/ScrollySection.svelte';
+	import HeroVisualization from '$lib/components/cleared/HeroVisualization.svelte';
+	import EvictionScrolly from '$lib/components/evictions/EvictionScrolly.svelte';
+	import MapScrolly from '$lib/components/cleared/MapScrolly.svelte';
+	import NoticeMosaic from '$lib/components/scrolly/NoticeMosaic.svelte';
+	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
+	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
+
+	// === SECTION STEP DATA ===
+
+	// Hero section steps (3 steps for the header with fading images)
+	const heroSteps = [
+		{
+			raw: true,
+			text: `<div class="hero-header">
+				<h1 class="hero-title">Cleared</h1>
+				<p class="hero-desc">How Assam demolished the homes of 20,000 families</p>
+				<div class="hero-byline">
+					<p class="byline-label">By</p>
+					<p class="byline-authors">Ahmer Khan and Tom Vaillant</p>
+					<p class="byline-date">January 2026</p>
+				</div>
+				<div class="scroll-indicator">
+					<div class="scroll-indicator-track">
+						<div class="scroll-indicator-dot"></div>
+					</div>
+				</div>
+			</div>`
+		},
+		{
+			title: 'September 23, 2021',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. A government photographer was filmed stomping repeatedly on Haque\'s body as he lay dying.',
+			source: {
+				text: 'Al Jazeera',
+				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
+			},
+			imageCredit: 'Moinul Haque\'s family'
+		},
+		{
+			title: 'A Campaign',
+			text: 'This was not an isolated event. It was one operation in a campaign that has demolished more than 22,000 homes across Assam since 2021—the vast majority belonging to Bengali-speaking Muslims.',
+			source: {
+				text: 'Reuters',
+				url: 'https://www.reuters.com/world/asia-pacific/evictions-expulsions-muslims-bangladesh-precede-indian-state-polls-2025-07-28/'
+			}
+		}
+	];
+
+	// Eviction data visualization steps (12 steps)
+	const evictionSteps = [
+		{
+			text: 'Between 2021 and 2026, <strong>33 documented eviction events</strong> displaced over <strong>100,000 people</strong> across Assam. Each bubble represents one operation — the larger the bubble, the more people displaced.'
+		},
+		{
+			text: 'The government cited various legal grounds for these evictions. We\'ve grouped them into <strong>four categories</strong>.'
+		},
+		{
+			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> — forest clearances, wildlife sanctuaries, elephant corridors. 12 events affecting over 60,000 people.'
+		},
+		{
+			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the Rs 48,000 crore Adani thermal power plant in Dhubri.'
+		},
+		{
+			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
+		},
+		{
+			text: '<span class="highlight-satra">Religious Land (Satra)</span> evictions cleared land claimed by Hindu monasteries in Barpeta and Nagaon districts.'
+		},
+		{
+			text: 'The pace of evictions has <strong>accelerated dramatically</strong> since 2021. Here\'s when each operation occurred.'
+		},
+		{
+			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: Dhalpur, where police shot two people dead.'
+		},
+		{
+			text: '<strong>2025:</strong> The busiest year — 11 documented eviction operations across Assam.'
+		},
+		{
+			text: 'But it\'s not just the frequency. The <strong>scale</strong> of each operation has grown dramatically.'
+		},
+		{
+			text: '<strong>2021:</strong> Around 14,000 people evicted across all operations.'
+		},
+		{
+			text: '<strong>2025:</strong> Over 40,000 people evicted — nearly <strong>three times</strong> the 2021 total.'
+		}
+	];
+
+	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
+	const mapSteps = [
+		{
+			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">34 documented eviction operations</span> across the state.'
+		},
+		{
+			text: 'We traveled to <span class="highlight-env">20 demolished villages</span> to document what remains after the bulldozers left.'
+		},
+		{
+			title: 'Charuabakhra, Dhubri',
+			text: '1,000 homes demolished. 5,000 people displaced.',
+			image: '/images/cleared/villages/charuabakhra.jpg'
+		},
+		{
+			title: 'Doloni Pathar, Golaghat',
+			text: '700 homes demolished. 8,900 people displaced—the largest single eviction we documented.',
+			image: '/images/cleared/villages/doloni-pathar.jpg'
+		},
+		{
+			title: 'Kandapara Bosti, Nagaon',
+			text: '700 homes razed. 2,550 people lost everything.',
+			image: '/images/cleared/villages/kandapara.jpg'
+		},
+		{
+			title: 'Ashudubi, Goalpara',
+			text: '900 homes demolished. 1,500 people displaced.',
+			image: '/images/cleared/villages/ashudubi.jpg'
+		},
+		{
+			text: 'Each dot represents families who lost their homes, their livelihoods, their communities.'
+		}
+	];
+
+	// Notice mosaic steps (4 steps for 4 notices)
+	const noticeSteps = [
+		{ text: '' },
+		{ text: '' },
+		{ text: '' },
+		{ text: '' }
+	];
+
+	// Notice data for the eviction documents mosaic
+	const notices = [
+		{
+			image: '/images/cleared/notices/notice_1.jpg',
+			alt: 'Eviction notice document in Assamese',
+			title: 'Gorakhor Unarni',
+			subtitle: 'Olamghuri Village, Nagaon District',
+			excerpt: '"15 days to vacate. No compensation will be entertained."'
+		},
+		{
+			image: '/images/cleared/notices/notice_2.jpg',
+			alt: 'Eviction notice document in Assamese',
+			title: 'Anara Opni',
+			subtitle: 'Alamgudi Village, Nagaon District',
+			excerpt: '"Forced eviction within 30 days. All structures removed."'
+		},
+		{
+			image: '/images/cleared/notices/notice_3.jpg',
+			alt: 'Eviction notice document in Assamese',
+			title: 'Minara Takim',
+			subtitle: 'Olaguri Village, Nagaon District',
+			excerpt: '"Recipient will bear all costs of eviction proceedings."'
+		},
+		{
+			image: '/images/cleared/notices/notice_4.jpg',
+			alt: 'Eviction notice document in Assamese',
+			title: 'Fairas Haresho',
+			subtitle: 'Olamghuri Village, Nagaon District',
+			excerpt: '"Illegal occupation. Trees cut. Houses built. Land cleared."'
+		}
+	];
+
+	// Headlines data for media coverage section
+	const headlines = [
+		{
+			id: '1',
+			source: 'VICE NEWS',
+			date: 'September 24, 2021',
+			title: 'Shocking Video Shows Police Firing and Killing Protestors in India',
+			author: 'Shamani Joshi',
+			url: 'https://www.vice.com/en/article/shocking-video-shows-police-firing-and-killing-protestors-in-india/'
+		},
+		{
+			id: '2',
+			source: 'THE INDIAN EXPRESS',
+			date: 'September 25, 2024',
+			title: 'At village that saw deadly eviction drive in Assam, bulldozers are back',
+			description: 'Over the next three days, 151 families were evicted and 237 structures demolished.',
+			author: 'Sukrita Baruah',
+			url: 'https://indianexpress.com/article/india/at-village-that-saw-deadly-eviction-drive-in-assam-bulldozers-are-back-9586329/'
+		},
+		{
+			id: '3',
+			source: 'THE INDIAN EXPRESS',
+			date: 'July 8, 2025',
+			title: 'Mega eviction drive across 3 Assam villages sees stone pelting and lathi charge; 1,400 families displaced',
+			description: '3,500 bighas of government khas land in Dhubri district primarily occupied by Bengali-speaking Muslims.',
+			author: 'Sukrita Baruah',
+			url: 'https://indianexpress.com/article/india/mega-eviction-drive-3-assam-villages-stone-pelting-lathi-charge-1400-families-10114482/'
+		},
+		{
+			id: '4',
+			source: 'THE WIRE',
+			date: 'August 23, 2025',
+			title: "Supreme Court Halts Eviction Drive in Assam's Golaghat District",
+			description: 'The petition challenged concurrent orders of the high court refusing relief to petitioners.',
+			author: 'The Wire Staff',
+			url: 'https://thewire.in/law/supreme-court-halts-eviction-drive-in-assams-golaghat-district'
+		}
+	];
+
+	// === ACTIVE STEP STATE ===
+	let heroStep = $state(0);
+	let heroScrollProgress = $state(0);
+
+	// === HERO IMAGE CONTROL ===
+	// Each step maps directly to an image via $derived
+	const heroImages = [
+		'/images/assam-evictions/image1.jpg', // Step 0: header
+		'/images/assam-evictions/image2.jpg', // Step 1: first textbox
+		'/images/cleared/villages/charuabakhra.jpg' // Step 2: last textbox
+	];
+	let currentHeroImage = $derived(heroImages[heroStep] ?? heroImages[0]);
+
+	// Fade to black on last step: map the last ~25% of scroll progress to 0-1 fade
+	let heroFadeProgress = $derived(() => {
+		if (heroStep !== 2) return 0; // Only fade on last image
+		// Start fading at 75% scroll progress, fully black at 100%
+		const fadeStart = 0.75;
+		const fadeEnd = 1.0;
+		if (heroScrollProgress < fadeStart) return 0;
+		return Math.min(1, (heroScrollProgress - fadeStart) / (fadeEnd - fadeStart));
+	});
+
+	let evictionStep = $state(0);
+	let mapStep = $state(0);
+	let mapScrollProgress = $state(0);
+	let noticeStep = $state(0);
+
+	// Map fade-in: starts black (1) and fades to visible (0) as we scroll into the section
+	let mapFadeProgress = $derived(() => {
+		// Fade from black to visible over the first 25% of scroll
+		const fadeEnd = 0.25;
+		if (mapScrollProgress >= fadeEnd) return 0;
+		return 1 - (mapScrollProgress / fadeEnd);
+	});
+
+	// Map fade-out: fades to black over the last 25% of scroll
+	let mapFadeOutProgress = $derived(() => {
+		const fadeStart = 0.75;
+		if (mapScrollProgress < fadeStart) return 0;
+		return (mapScrollProgress - fadeStart) / (1 - fadeStart);
+	});
+</script>
+
+<svelte:head>
+	<title>Cleared | TNH Storytelling</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap"
+		rel="stylesheet"
+	/>
+</svelte:head>
+
+<div class="article-container">
+	<!-- Hero Section with fading background images -->
+	<ScrollySection
+		bind:activeStep={heroStep}
+		steps={heroSteps}
+		backgroundColor="#000000"
+		showTextBoxes={true}
+		textBoxVariant="light"
+		onScrollProgress={(p) => (heroScrollProgress = p)}
+	>
+		{#snippet children({ activeStep })}
+			<HeroVisualization currentImage={currentHeroImage} fadeProgress={heroFadeProgress()} />
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Eviction Data Visualization -->
+	<ScrollySection
+		bind:activeStep={evictionStep}
+		steps={evictionSteps}
+		backgroundColor="#0a0a0a"
+	>
+		{#snippet children({ activeStep })}
+			<EvictionScrolly {activeStep} />
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Eviction Notices Mosaic -->
+	<ScrollySection
+		bind:activeStep={noticeStep}
+		steps={noticeSteps}
+		backgroundColor="#0a0a0a"
+		showTextBoxes={false}
+	>
+		{#snippet children({ activeStep })}
+			<NoticeMosaic {activeStep} {notices} backgroundColor="#0a0a0a" />
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Map Scrolly Section -->
+	<div class="map-section">
+		<ScrollySection
+			bind:activeStep={mapStep}
+			steps={mapSteps}
+			backgroundColor="#0d0d0d"
+			textBoxPosition="left"
+			firstStepOffset={0.5}
+			onScrollProgress={(p) => (mapScrollProgress = p)}
+		>
+			{#snippet children({ activeStep })}
+				<MapScrolly {activeStep} fadeProgress={mapFadeProgress()} fadeOutProgress={mapFadeOutProgress()} />
+			{/snippet}
+		</ScrollySection>
+	</div>
+
+	<!-- Transition Gallery - Demolition Images -->
+	<DemolitionGallery />
+
+	<!-- Content Section: The Violence -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Violence</h2>
+
+			<div class="prose-content">
+				<p>Four eviction operations have resulted in deaths:</p>
+
+				<div class="timeline-events">
+					<div class="event">
+						<p class="event-date">September 23, 2021 — Dhalpur, Darrang</p>
+						<p>Moinul Haque (28) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">April 1, 2022 — Purana Bazar, Hojai</p>
+						<p>One death during eviction for flyover construction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">September 12, 2024 — Kachutali, Kamrup Metropolitan</p>
+						<p>Two killed, 33 injured during "tribal belt protection" eviction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">July 12, 2025 — Paikan Reserve Forest, Goalpara</p>
+						<p>One killed, 15 injured during forest clearance.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="visual-placeholder">
+				<p>
+					[VISUAL: SATELLITE IMAGERY, BEFORE AND AFTER]<br/>
+					<span>Slider comparison showing eviction sites before and after demolition.</span>
+				</p>
+			</div>
+
+			<h2 class="content-heading">Where the Land Goes</h2>
+
+			<div class="prose-content">
+				<p>
+					On July 8, 2025, 1,400 families were evicted from villages in Dhubri district. Three people were injured.
+				</p>
+
+				<p>
+					The government's stated purpose: clearing land for an <strong>Adani Power Ltd thermal plant</strong>—a 3,200 megawatt facility representing a Rs 48,000 crore investment.
+				</p>
+
+				<p>
+					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
+				</p>
+			</div>
+
+			<div class="visual-placeholder">
+				<p>
+					[VISUAL: SPATIAL ANALYSIS OF LAND DEALS]<br/>
+					<span>Map overlay showing eviction locations against subsequent land allocations for corporate projects.</span>
+				</p>
+			</div>
+
+			<h2 class="content-heading">The Displaced</h2>
+
+			<div class="prose-content">
+				<p>Where do 20,000 families go?</p>
+
+				<p>
+					Field reports describe families living in makeshift shelters, dependent on NGO assistance. Many received no government rehabilitation despite Assam's stated policy of providing support to the landless.
+				</p>
+
+				<p>
+					Some of the evicted have nowhere legal to go. The National Register of Citizens process—concluded in 2019—excluded over 1.9 million people who could not prove their families entered India before March 24, 1971.
+				</p>
+			</div>
+
+			<div class="visual-placeholder">
+				<p>
+					[VISUAL: EVICTION AREAS AND MIGRATORY FLOWS]<br/>
+					<span>Map showing displacement patterns—where evicted families have moved.</span>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Media Headlines Section -->
+	<HeadlineStack {headlines} />
+
+	<!-- Content Section: The Pattern -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Pattern</h2>
+
+			<div class="prose-content">
+				<p>
+					Amnesty International. Human Rights Watch. UN Special Rapporteurs. The organizations that document human rights globally have all examined what is happening in Assam.
+				</p>
+
+				<blockquote>
+					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law. The organization found violations of the right to adequate housing, fair trial, and non-discrimination.
+				</blockquote>
+
+				<p>
+					In June 2025, UN experts called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
+				</p>
+			</div>
+
+			<h2 class="content-heading">The Chief Minister's Words</h2>
+
+			<div class="prose-content">
+				<p>
+					Throughout this period, Chief Minister Himanta Biswa Sarma has characterized the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers." He has spoken of stopping "demographic invasion by people of one religion." He has used the phrase "land jihad."
+				</p>
+			</div>
+
+			<div class="cm-video-container">
+				<video
+					class="cm-video"
+					autoplay
+					muted
+					loop
+					playsinline
+					preload="auto"
+				>
+					<source src="/videos/assam-evictions/1952348361748594720_00001.mp4" type="video/mp4" />
+				</video>
+				<div class="cm-video-overlay"></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Continue to Part II -->
+	<section class="continue-section">
+		<a href="https://preview.thenewhumanitarian.org/the-eighteen-acres/" class="continue-link">
+			<div class="continue-content">
+				<span class="continue-label">Continue to Part II</span>
+				<span class="continue-title">The Eighteen Acres</span>
+				<span class="continue-subtitle">The land deal behind Assam's most powerful family</span>
+			</div>
+			<span class="continue-arrow">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M5 12h14M12 5l7 7-7 7"/>
+				</svg>
+			</span>
+		</a>
+	</section>
+
+	<!-- Footer -->
+	<footer class="article-footer">
+		<div class="footer-inner">
+			<!-- Top rule with document marker -->
+			<div class="footer-rule">
+				<span class="rule-line"></span>
+				<span class="rule-marker">End of Document</span>
+				<span class="rule-line"></span>
+			</div>
+
+			<!-- Credits Grid -->
+			<div class="footer-grid">
+				<div class="footer-column">
+					<h3 class="footer-heading">
+						<span class="heading-marker"></span>
+						Credits
+					</h3>
+					<div class="credit-items">
+						<div class="credit-item">
+							<span class="credit-role">Reporting</span>
+							<span class="credit-name">Ahmer Khan and Tom Vaillant</span>
+						</div>
+						<div class="credit-item">
+							<span class="credit-role">Visuals</span>
+							<span class="credit-name">Tom Vaillant</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="footer-column">
+					<h3 class="footer-heading">
+						<span class="heading-marker"></span>
+						Sources
+					</h3>
+					<ul class="source-list">
+						<li>Reuters</li>
+						<li>Al Jazeera</li>
+						<li>Article 14</li>
+						<li>Human Rights Watch</li>
+						<li>Amnesty International</li>
+					</ul>
+				</div>
+
+				<div class="footer-column">
+					<h3 class="footer-heading">
+						<span class="heading-marker"></span>
+						Share
+					</h3>
+					<div class="share-buttons">
+						<button type="button" class="share-btn" aria-label="Share on Twitter">
+							<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+								<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+							</svg>
+							<span>Twitter</span>
+						</button>
+						<button type="button" class="share-btn" aria-label="Share on Facebook">
+							<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+								<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+							</svg>
+							<span>Facebook</span>
+						</button>
+						<button type="button" class="share-btn" aria-label="Share on LinkedIn">
+							<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+								<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+							</svg>
+							<span>LinkedIn</span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Bottom bar -->
+			<div class="footer-bottom">
+				<div class="brand">
+					<span class="brand-name">The New Humanitarian</span>
+				</div>
+				<div class="meta">
+					<span class="publish-date">Published January 2026</span>
+					<span class="separator">·</span>
+					<span class="rights">All rights reserved</span>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
+
+<style>
+	/* Article container - dark background throughout */
+	.article-container {
+		background: #0a0a0a;
+		min-height: 100vh;
+	}
+
+	/* Override global overflow-x: hidden which breaks position: sticky */
+	:global(html), :global(body) {
+		overflow-x: clip;
+	}
+
+	/* Hero header styles (rendered via step 0) */
+	:global(.hero-header) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding: 1rem;
+	}
+
+	:global(.hero-title) {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(2.5rem, 8vw, 5rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		color: #fff;
+		margin: 0 0 1.5rem 0;
+	}
+
+	:global(.hero-desc) {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+		font-weight: 300;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.9);
+		max-width: 42ch;
+		margin: 0 0 2rem 0;
+	}
+
+	:global(.hero-byline) {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+	}
+
+	:global(.byline-label) {
+		color: rgba(255, 255, 255, 0.7);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		margin: 0 0 0.5rem 0;
+	}
+
+	:global(.byline-authors) {
+		color: #fff;
+		font-weight: 500;
+		font-size: 1.125rem;
+		margin: 0;
+	}
+
+	:global(.byline-date) {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.875rem;
+		margin: 0.5rem 0 0 0;
+	}
+
+	:global(.scroll-indicator) {
+		margin-top: 3rem;
+	}
+
+	:global(.scroll-indicator-track) {
+		width: 1.5rem;
+		height: 2.5rem;
+		border: 2px solid rgba(255, 255, 255, 0.4);
+		border-radius: 9999px;
+		display: flex;
+		justify-content: center;
+		padding-top: 0.5rem;
+	}
+
+	:global(.scroll-indicator-dot) {
+		width: 0.25rem;
+		height: 0.5rem;
+		background: rgba(255, 255, 255, 0.6);
+		border-radius: 9999px;
+		animation: bounce 1.5s ease-in-out infinite;
+	}
+
+	@keyframes bounce {
+		0%, 100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(6px);
+		}
+	}
+
+	/* Content sections - dark theme */
+	.content-section {
+		position: relative;
+		background: #0a0a0a;
+		padding: 5rem 1.5rem;
+	}
+
+	.content-container {
+		max-width: 42rem;
+		margin: 0 auto;
+	}
+
+	.content-heading {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		font-weight: 600;
+		line-height: 1.2;
+		color: #ffffff;
+		margin: 0 0 2rem 0;
+	}
+
+	.content-heading + .content-heading {
+		margin-top: 4rem;
+	}
+
+	.prose-content {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 1.125rem;
+		line-height: 1.85;
+		color: rgba(255, 255, 255, 0.85);
+	}
+
+	.prose-content p {
+		margin: 0 0 1.5rem 0;
+	}
+
+	.prose-content strong {
+		font-weight: 600;
+		color: #ffffff;
+	}
+
+	.prose-content blockquote {
+		border-left: 4px solid rgba(255, 255, 255, 0.2);
+		padding-left: 1.5rem;
+		margin: 2rem 0;
+		font-style: italic;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	/* Timeline events */
+	.timeline-events {
+		margin: 2rem 0;
+	}
+
+	.event {
+		padding-left: 1.5rem;
+		border-left: 4px solid #dc2626;
+		margin-bottom: 1.5rem;
+	}
+
+	.event-date {
+		font-weight: 600;
+		color: #ffffff;
+		margin: 0 0 0.25rem 0;
+	}
+
+	.event p:last-child {
+		margin: 0;
+	}
+
+	/* Visual placeholder */
+	.visual-placeholder {
+		margin: 3rem 0;
+		padding: 2rem;
+		background: rgba(255, 255, 255, 0.05);
+		border: 2px dashed rgba(255, 255, 255, 0.15);
+		border-radius: 0.5rem;
+		text-align: center;
+	}
+
+	.visual-placeholder p {
+		font-style: italic;
+		color: rgba(255, 255, 255, 0.5);
+		margin: 0;
+	}
+
+	.visual-placeholder span {
+		font-size: 0.875rem;
+		display: block;
+		margin-top: 0.5rem;
+	}
+
+	/* Continue to Part II */
+	.continue-section {
+		background: #0a0a0a;
+		padding: 6rem 1.5rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.continue-link {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		max-width: 560px;
+		width: 100%;
+		padding: 2rem 2.5rem;
+		background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+		border: 1px solid rgba(159, 62, 82, 0.3);
+		border-left: 3px solid #9F3E52;
+		border-radius: 4px;
+		text-decoration: none;
+		position: relative;
+		overflow: hidden;
+		transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		box-shadow:
+			0 4px 20px rgba(0, 0, 0, 0.3),
+			0 0 0 0 rgba(159, 62, 82, 0);
+	}
+
+	.continue-link::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(135deg, rgba(159, 62, 82, 0.08) 0%, transparent 50%);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+
+	.continue-link:hover {
+		border-color: rgba(159, 62, 82, 0.6);
+		transform: translateY(-2px);
+		box-shadow:
+			0 8px 32px rgba(0, 0, 0, 0.4),
+			0 0 40px rgba(159, 62, 82, 0.15);
+	}
+
+	.continue-link:hover::before {
+		opacity: 1;
+	}
+
+	.continue-link:active {
+		transform: translateY(0) scale(0.98);
+		transition: all 0.1s ease;
+	}
+
+	.continue-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.continue-label {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: #9F3E52;
+	}
+
+	.continue-title {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: 1.75rem;
+		font-weight: 600;
+		color: #ffffff;
+		line-height: 1.2;
+	}
+
+	.continue-subtitle {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 1rem;
+		color: rgba(255, 255, 255, 0.6);
+		line-height: 1.5;
+	}
+
+	.continue-arrow {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background: rgba(159, 62, 82, 0.15);
+		color: #9F3E52;
+		flex-shrink: 0;
+		position: relative;
+		z-index: 1;
+		transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.continue-arrow svg {
+		transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.continue-link:hover .continue-arrow {
+		background: rgba(159, 62, 82, 0.25);
+		transform: scale(1.1);
+	}
+
+	.continue-link:hover .continue-arrow svg {
+		transform: translateX(4px);
+	}
+
+	.continue-link:active .continue-arrow {
+		transform: scale(0.95);
+	}
+
+	@media (max-width: 640px) {
+		.continue-section {
+			padding: 4rem 1rem;
+		}
+
+		.continue-link {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1.5rem;
+			padding: 1.5rem;
+		}
+
+		.continue-title {
+			font-size: 1.5rem;
+		}
+
+		.continue-arrow {
+			align-self: flex-end;
+		}
+	}
+
+	/* Footer Styles */
+	.article-footer {
+		position: relative;
+		z-index: 10;
+		background: #0a0a0a;
+		padding: 0 1.5rem 3rem;
+	}
+
+	.footer-inner {
+		max-width: 42rem;
+		margin: 0 auto;
+	}
+
+	/* Document end marker */
+	.footer-rule {
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+		padding: 2.5rem 0;
+	}
+
+	.rule-line {
+		flex: 1;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.1),
+			transparent
+		);
+	}
+
+	.rule-marker {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.6rem;
+		letter-spacing: 0.25em;
+		color: rgba(255, 255, 255, 0.4);
+		text-transform: uppercase;
+	}
+
+	/* Footer Grid */
+	.footer-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+		padding-bottom: 2.5rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.footer-column {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.footer-heading {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.65rem;
+		font-weight: 500;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: #d4a574;
+		margin: 0;
+	}
+
+	.heading-marker {
+		width: 1rem;
+		height: 1px;
+		background: #d4a574;
+	}
+
+	/* Credits */
+	.credit-items {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.credit-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+	}
+
+	.credit-role {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.65rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.credit-name {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.875rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	/* Sources */
+	.source-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.source-list li {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.8rem;
+		color: rgba(255, 255, 255, 0.4);
+		line-height: 1.4;
+	}
+
+	/* Share buttons */
+	.share-buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.share-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: rgba(255, 255, 255, 0.4);
+		transition: color 0.2s ease;
+	}
+
+	.share-btn:hover {
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.share-btn svg {
+		flex-shrink: 0;
+	}
+
+	.share-btn span {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.8rem;
+	}
+
+	/* Footer bottom bar */
+	.footer-bottom {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-top: 2rem;
+		gap: 1rem;
+	}
+
+	.brand-name {
+		font-family: 'Playfair Display', serif;
+		font-size: 0.9rem;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.65rem;
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.separator {
+		color: rgba(255, 255, 255, 0.2);
+	}
+
+	/* Footer responsive */
+	@media (max-width: 640px) {
+		.footer-grid {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.footer-bottom {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.75rem;
+		}
+
+		.share-buttons {
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+	}
+
+	/* Map section - wider text boxes on desktop */
+	@media (min-width: 900px) {
+		.map-section :global(.scrolly-text-box) {
+			max-width: 440px;
+		}
+	}
+
+	/* Chief Minister video - inline with editorial content */
+	.cm-video-container {
+		position: relative;
+		border-radius: 4px;
+		overflow: hidden;
+		margin-top: 2rem;
+	}
+
+	.cm-video {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.cm-video-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0.05) 0%,
+			transparent 15%,
+			transparent 85%,
+			rgba(0, 0, 0, 0.1) 100%
+		);
+		pointer-events: none;
+	}
+</style>

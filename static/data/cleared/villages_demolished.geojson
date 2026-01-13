@@ -1,0 +1,243 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.7017520, 26.1180150]
+      },
+      "properties": {
+        "name": "Sonapur",
+        "district": "Goalpara",
+        "houses_demolished": null,
+        "population_displaced": null,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.7090580, 26.1160955]
+      },
+      "properties": {
+        "name": "Hasina Bill",
+        "district": "Goalpara",
+        "houses_demolished": null,
+        "population_displaced": null,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.7090580, 26.1160955]
+      },
+      "properties": {
+        "name": "Bhatipara, Matia",
+        "district": "Goalpara",
+        "houses_demolished": 16,
+        "population_displaced": 80,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.7121811, 26.1202408]
+      },
+      "properties": {
+        "name": "Dubapara, Luptachar",
+        "district": "Goalpara",
+        "houses_demolished": 70,
+        "population_displaced": 150,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.696725, 26.1195367]
+      },
+      "properties": {
+        "name": "Dubapara Luptachar, Lisubagan",
+        "district": "Goalpara",
+        "houses_demolished": 522,
+        "population_displaced": 2600,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.6645042, 26.0275076]
+      },
+      "properties": {
+        "name": "Krishnai Bidyapara",
+        "district": "Goalpara",
+        "houses_demolished": 98,
+        "population_displaced": 235,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.6543274, 26.0133698]
+      },
+      "properties": {
+        "name": "Ashudubi, Betbari",
+        "district": "Goalpara",
+        "houses_demolished": 900,
+        "population_displaced": 1500,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.6234469, 26.2333994]
+      },
+      "properties": {
+        "name": "Pachania, Mohonpur part 1 & 2",
+        "district": "Bongaigaon",
+        "houses_demolished": 166,
+        "population_displaced": 680,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.3004366, 26.2344826]
+      },
+      "properties": {
+        "name": "Charuabakhra",
+        "district": "Dhubri",
+        "houses_demolished": 1000,
+        "population_displaced": 5000,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.3087997, 26.2203757]
+      },
+      "properties": {
+        "name": "Sontoshpur",
+        "district": "Dhubri",
+        "houses_demolished": 440,
+        "population_displaced": 3500,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [90.3072906, 26.2385901]
+      },
+      "properties": {
+        "name": "Charuabakhra, part 2",
+        "district": "Dhubri",
+        "houses_demolished": 650,
+        "population_displaced": 2300,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [91.3329375, 26.3156875]
+      },
+      "properties": {
+        "name": "Bakarikuchi",
+        "district": "Nalbari",
+        "houses_demolished": 105,
+        "population_displaced": 870,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.6536697, 26.0634476]
+      },
+      "properties": {
+        "name": "Kandapara Bosti",
+        "district": "Nagaon",
+        "houses_demolished": 700,
+        "population_displaced": 2550,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.644281, 26.0572764]
+      },
+      "properties": {
+        "name": "Jurirpar",
+        "district": "Nagaon",
+        "houses_demolished": 200,
+        "population_displaced": 500,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.6585344, 26.0461186]
+      },
+      "properties": {
+        "name": "Longjap",
+        "district": "Nagaon",
+        "houses_demolished": 150,
+        "population_displaced": 450,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.6788138, 26.0461621]
+      },
+      "properties": {
+        "name": "Kheroni",
+        "district": "Nagaon",
+        "houses_demolished": 100,
+        "population_displaced": 342,
+        "date": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [93.963, 26.507]
+      },
+      "properties": {
+        "name": "Doloni Pathar",
+        "district": "Golaghat",
+        "houses_demolished": 700,
+        "population_displaced": 8900,
+        "date": null
+      }
+    }
+  ]
+}

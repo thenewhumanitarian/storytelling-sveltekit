@@ -94,6 +94,11 @@
     @apply text-burgundy;
   }
 
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   body {
     @apply font-body text-base;
   }

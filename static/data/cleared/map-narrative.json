@@ -1,0 +1,88 @@
+{
+  "steps": [
+    {
+      "id": "evictions-overview",
+      "coordinates": [92.9376, 26.2006],
+      "zoom": 7,
+      "pitch": 0,
+      "bearing": 0,
+      "duration": 2000,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.8 },
+        "villages": { "visible": false }
+      }
+    },
+    {
+      "id": "our-investigation",
+      "coordinates": [92.9376, 26.2006],
+      "zoom": 7,
+      "pitch": 0,
+      "bearing": 0,
+      "duration": 1500,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.3 },
+        "villages": { "visible": true, "opacity": 1.0 }
+      }
+    },
+    {
+      "id": "charuabakhra",
+      "coordinates": [90.3004366, 26.2344826],
+      "zoom": 12,
+      "pitch": 45,
+      "bearing": -15,
+      "duration": 3000,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.3 },
+        "villages": { "visible": true, "opacity": 1.0 }
+      }
+    },
+    {
+      "id": "doloni-pathar",
+      "coordinates": [93.963, 26.507],
+      "zoom": 12,
+      "pitch": 45,
+      "bearing": 10,
+      "duration": 3000,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.3 },
+        "villages": { "visible": true, "opacity": 1.0 }
+      }
+    },
+    {
+      "id": "kandapara",
+      "coordinates": [92.6536697, 26.0634476],
+      "zoom": 12,
+      "pitch": 45,
+      "bearing": -10,
+      "duration": 3000,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.3 },
+        "villages": { "visible": true, "opacity": 1.0 }
+      }
+    },
+    {
+      "id": "ashudubi",
+      "coordinates": [90.6543274, 26.0133698],
+      "zoom": 12,
+      "pitch": 45,
+      "bearing": 5,
+      "duration": 3000,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.3 },
+        "villages": { "visible": true, "opacity": 1.0 }
+      }
+    },
+    {
+      "id": "full-picture",
+      "coordinates": [92.9376, 26.2006],
+      "zoom": 7,
+      "pitch": 0,
+      "bearing": 0,
+      "duration": 2500,
+      "layers": {
+        "evictions": { "visible": true, "opacity": 0.5 },
+        "villages": { "visible": true, "opacity": 1.0, "highlight": true }
+      }
+    }
+  ]
+}

@@ -1,0 +1,797 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.900157,
+          26.295471
+        ]
+      },
+      "properties": {
+        "date": "2021-06-07",
+        "village": "Dhalpur No. 1",
+        "district": "Darrang",
+        "families_evicted": 49,
+        "people_evicted": 245,
+        "structures_demolished": 49,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Clearing Dholpur Shiva Mandir land",
+        "category": "Religious Land (Satra)",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/article/1015946/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.899315,
+          26.290016
+        ]
+      },
+      "properties": {
+        "date": "2021-09-20",
+        "village": "Dhalpur No. 1 & 3",
+        "district": "Darrang",
+        "families_evicted": 800,
+        "people_evicted": 4000,
+        "structures_demolished": 800,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Garukhuti Agricultural Project",
+        "category": "Development Projects",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/article/1015946/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.898473,
+          26.286562
+        ]
+      },
+      "properties": {
+        "date": "2021-09-23",
+        "village": "Dhalpur No. 3",
+        "district": "Darrang",
+        "families_evicted": 500,
+        "people_evicted": 2500,
+        "structures_demolished": 500,
+        "deaths": 2,
+        "injuries": 20,
+        "government_reason": "Garukhuti Agricultural Project",
+        "category": "Development Projects",
+        "court_intervention": "Judicial probe ordered (Justice B.D. Agarwal)",
+        "source_url": "https://thewire.in/rights/assam-police-firing-darrang-eviction-drive"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.951092,
+          26.34687
+        ]
+      },
+      "properties": {
+        "date": "2021-11-08",
+        "village": "Lumding Reserve Forest",
+        "district": "Hojai",
+        "families_evicted": 1500,
+        "people_evicted": 7500,
+        "structures_demolished": 1500,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Forest encroachment clearance",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.95,
+          26.3
+        ]
+      },
+      "properties": {
+        "date": "2022-02-06",
+        "village": "Bardalani, Mandia",
+        "district": "Barpeta",
+        "families_evicted": 37,
+        "people_evicted": 185,
+        "structures_demolished": 37,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Barpeta Satra land clearance",
+        "category": "Religious Land (Satra)",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.856389,
+          26.404167
+        ]
+      },
+      "properties": {
+        "date": "2022-04-01",
+        "village": "Purana Bazar",
+        "district": "Hojai",
+        "families_evicted": 60,
+        "people_evicted": 300,
+        "structures_demolished": 60,
+        "deaths": 1,
+        "injuries": 0,
+        "government_reason": "Flyover construction",
+        "category": "Development Projects",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.629765,
+          26.518793
+        ]
+      },
+      "properties": {
+        "date": "2022-09-03",
+        "village": "Chitalmari Char",
+        "district": "Sonitpur",
+        "families_evicted": 550,
+        "people_evicted": 2750,
+        "structures_demolished": 550,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Clearing illegal encroachment",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.05,
+          26.666667
+        ]
+      },
+      "properties": {
+        "date": "2022-12-19",
+        "village": "Batadrava Mouza",
+        "district": "Nagaon",
+        "families_evicted": 1000,
+        "people_evicted": 5000,
+        "structures_demolished": 1000,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Satra land & government land clearance",
+        "category": "Religious Land (Satra)",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/article/1086811/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.0,
+          26.4
+        ]
+      },
+      "properties": {
+        "date": "2022-12-26",
+        "village": "Baghbar Satra Kanara",
+        "district": "Barpeta",
+        "families_evicted": 45,
+        "people_evicted": 225,
+        "structures_demolished": 45,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Satra land clearance",
+        "category": "Religious Land (Satra)",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.2,
+          26.5
+        ]
+      },
+      "properties": {
+        "date": "2023-02-14",
+        "village": "Burachapori Wildlife Sanctuary",
+        "district": "Sonitpur",
+        "families_evicted": 2513,
+        "people_evicted": 12565,
+        "structures_demolished": 2513,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Wildlife sanctuary protection",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/article/1086811/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.967778,
+          26.318889
+        ]
+      },
+      "properties": {
+        "date": "2023-02-15",
+        "village": "Bhabanipur",
+        "district": "Barpeta",
+        "families_evicted": 100,
+        "people_evicted": 500,
+        "structures_demolished": 100,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Gopal Dev Aata Satra land",
+        "category": "Religious Land (Satra)",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.791219,
+          26.63232
+        ]
+      },
+      "properties": {
+        "date": "2023-10-31",
+        "village": "Porua area, Tezpur",
+        "district": "Sonitpur",
+        "families_evicted": 11,
+        "people_evicted": 55,
+        "structures_demolished": 11,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Clearing encroachment on government land (66 families total, 55 relocated voluntarily)",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://theprint.in/india/assam-houses-of-11-families-demolished-to-clear-encroachment-on-govt-land/1826203/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.225061,
+          25.959071
+        ]
+      },
+      "properties": {
+        "date": "2023-11-15",
+        "village": "Nalbari Reserve Forest",
+        "district": "Goalpara",
+        "families_evicted": 246,
+        "people_evicted": 1230,
+        "structures_demolished": 246,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Anti-encroachment drive in reserve forest",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://indianexpress.com/article/north-east-india/assam/246-families-evicted-in-anti-encroachment-drive-at-forest-in-goalpara-9017673/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.0,
+          26.0
+        ]
+      },
+      "properties": {
+        "date": "2024-03-04",
+        "village": "Hojai-Karbi Anglong border",
+        "district": "Hojai",
+        "families_evicted": 500,
+        "people_evicted": 2500,
+        "structures_demolished": 500,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Reserved forest clearance",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.899315,
+          26.290016
+        ]
+      },
+      "properties": {
+        "date": "2024-05-20",
+        "village": "Dhalpur Char",
+        "district": "Darrang",
+        "families_evicted": 400,
+        "people_evicted": 2000,
+        "structures_demolished": 400,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Garukhuti Project expansion",
+        "category": "Development Projects",
+        "court_intervention": null,
+        "source_url": "https://twocircles.net/2024jun04/449829.html"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.166667,
+          26.166667
+        ]
+      },
+      "properties": {
+        "date": "2024-06-24",
+        "village": "Silbhanga, Jagiroad",
+        "district": "Morigaon",
+        "families_evicted": 1500,
+        "people_evicted": 7500,
+        "structures_demolished": 1500,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Forest and railway land clearance",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.983333,
+          26.116667
+        ]
+      },
+      "properties": {
+        "date": "2024-09-09",
+        "village": "Kachutali, Sonapur",
+        "district": "Kamrup Metropolitan",
+        "families_evicted": 150,
+        "people_evicted": 750,
+        "structures_demolished": 150,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Tribal belt protection",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://landconflictwatch.org/conflicts/violent-eviction-kachutali"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.983333,
+          26.116667
+        ]
+      },
+      "properties": {
+        "date": "2024-09-12",
+        "village": "Kachutali",
+        "district": "Kamrup Metropolitan",
+        "families_evicted": 500,
+        "people_evicted": 2500,
+        "structures_demolished": 500,
+        "deaths": 2,
+        "injuries": 33,
+        "government_reason": "Tribal belt protection",
+        "category": "Administrative Enforcement",
+        "court_intervention": "SC status quo order (Sep 30, 2024)",
+        "source_url": "https://landconflictwatch.org/conflicts/violent-eviction-kachutali"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.250332,
+          26.005698
+        ]
+      },
+      "properties": {
+        "date": "2024-09-24",
+        "village": "Bandarmatha Reserve Forest",
+        "district": "Goalpara",
+        "families_evicted": 450,
+        "people_evicted": 2250,
+        "structures_demolished": 450,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Human-elephant conflict reduction",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.898473,
+          26.286562
+        ]
+      },
+      "properties": {
+        "date": "2024-10-15",
+        "village": "No. 3 Dhalpur",
+        "district": "Darrang",
+        "families_evicted": 167,
+        "people_evicted": 835,
+        "structures_demolished": 167,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Garukhuti Project expansion",
+        "category": "Development Projects",
+        "court_intervention": null,
+        "source_url": "https://assamtribune.com/assam/fresh-eviction-drive-in-darrang-1594482"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.566353,
+          26.195584
+        ]
+      },
+      "properties": {
+        "date": "2024-12-13",
+        "village": "Pancharatna",
+        "district": "Goalpara",
+        "families_evicted": 44,
+        "people_evicted": 220,
+        "structures_demolished": 44,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Anti-encroachment drive",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://www.landconflictwatch.org/conflicts/anti-encroachment-drive-in-assam-s-goalpara-renders-44-families-homeless"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.983333,
+          26.116667
+        ]
+      },
+      "properties": {
+        "date": "2025-04-04",
+        "village": "Kachutali",
+        "district": "Kamrup Metropolitan",
+        "families_evicted": 30,
+        "people_evicted": 150,
+        "structures_demolished": 30,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Government land clearance",
+        "category": "Administrative Enforcement",
+        "court_intervention": "Pending SC order",
+        "source_url": "https://maktoobmedia.com/tag/eviction-drive/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.95,
+          26.5
+        ]
+      },
+      "properties": {
+        "date": "2025-06-01",
+        "village": "Rengma Reserve Forest",
+        "district": "Golaghat",
+        "families_evicted": 2700,
+        "people_evicted": 13500,
+        "structures_demolished": 2700,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Forest conservation",
+        "category": "Environmental Protection",
+        "court_intervention": "SC status quo order (Aug 22, 2025)",
+        "source_url": "https://maktoobmedia.com/india/sc-halts-eviction-golaghat/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.604373,
+          26.16732
+        ]
+      },
+      "properties": {
+        "date": "2025-06-16",
+        "village": "Hasila Beel wetland",
+        "district": "Goalpara",
+        "families_evicted": 667,
+        "people_evicted": 3335,
+        "structures_demolished": 667,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Wetland conservation",
+        "category": "Environmental Protection",
+        "court_intervention": "SC seeks reply citing guideline violation",
+        "source_url": "https://maktoobmedia.com/features/assam-houses-of-660-families/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.45,
+          26.4
+        ]
+      },
+      "properties": {
+        "date": "2025-06-30",
+        "village": "Bakrikuchi, Mukalmua (Barkhetri Revenue Circle)",
+        "district": "Nalbari",
+        "families_evicted": 93,
+        "people_evicted": 465,
+        "structures_demolished": 100,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Clearing encroachment on government land (452 bighas, Dag No. 106). Largest eviction in Nalbari history. Included Eidgah, school, Anganwadi.",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://www.krctimes.com/news/massive-eviction-drive-in-nalbaris-bakrikuchi-93-families-displaced-as-bulldozers-roll-in/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.0,
+          26.0
+        ]
+      },
+      "properties": {
+        "date": "2025-07-08",
+        "village": "Chirakuta, Charuabakhra, Santoshpur",
+        "district": "Dhubri",
+        "families_evicted": 1400,
+        "people_evicted": 7000,
+        "structures_demolished": 1400,
+        "deaths": 0,
+        "injuries": 3,
+        "government_reason": "Land clearance for Adani 3200 MW thermal plant",
+        "category": "Development Projects",
+        "court_intervention": "Gauhati HC contempt notice issued",
+        "source_url": "https://scroll.in/latest/1084333/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.652677,
+          26.043984
+        ]
+      },
+      "properties": {
+        "date": "2025-07-12",
+        "village": "Paikan Reserve Forest",
+        "district": "Goalpara",
+        "families_evicted": 1080,
+        "people_evicted": 5400,
+        "structures_demolished": 2700,
+        "deaths": 1,
+        "injuries": 15,
+        "government_reason": "Forest conservation, elephant corridors",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/latest/1084452/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.716535,
+          26.078519
+        ]
+      },
+      "properties": {
+        "date": "2025-11-09",
+        "village": "Dahikata Reserve Forest",
+        "district": "Goalpara",
+        "families_evicted": 580,
+        "people_evicted": 2900,
+        "structures_demolished": 580,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Elephant corridor restoration",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://nenews.in/assam/eviction-drive-clears-over-1100-bighas/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.7,
+          26.4
+        ]
+      },
+      "properties": {
+        "date": "2025-11-29",
+        "village": "Lutimari Reserve Forest",
+        "district": "Nagaon",
+        "families_evicted": 1500,
+        "people_evicted": 7500,
+        "structures_demolished": 2262,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Reserved forest protection",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://outlookindia.com/national/assam-evicts-over-1100-families-nagaon"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.68,
+          26.35
+        ]
+      },
+      "properties": {
+        "date": "2025-12-19",
+        "village": "Nagaon (declared foreigners pushed via Sribhumi border)",
+        "district": "Nagaon",
+        "families_evicted": 7,
+        "people_evicted": 35,
+        "structures_demolished": 0,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "24-hour expulsion orders under Immigrants (Expulsion from Assam) Act, 1950 - forced pushback to Bangladesh",
+        "category": "Administrative Enforcement",
+        "court_intervention": "None - bypassed legal process",
+        "source_url": "https://scroll.in/article/1089947/assams-nowhere-people-given-24-hours-to-leave-india-tossed-back-and-forth-across-bangladesh-order"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.52,
+          20.08
+        ]
+      },
+      "properties": {
+        "date": "2025-12-26",
+        "village": "Ambika village, Ersama (14 Bengali Muslims pushed via Gede border, West Bengal)",
+        "district": "Jagatsinghpur (Odisha)",
+        "families_evicted": 1,
+        "people_evicted": 5,
+        "structures_demolished": 0,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "BSF illegal pushback - family had valid Indian documents (Aadhaar, Voter ID). 14 people including 4 children (ages 2-12), elderly (90 yrs)",
+        "category": "Administrative Enforcement",
+        "court_intervention": "None - BGB confirmed pushback was illegal",
+        "source_url": "https://maktoobmedia.com/india/bsf-illegally-pushed-14-bengali-speaking-muslims-from-odisha-into-bangladesh-families-allege/"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.68,
+          26.35
+        ]
+      },
+      "properties": {
+        "date": "2025-12-28",
+        "village": "Nagaon (re-pushback via South Salmara-Dhubri border after re-entry)",
+        "district": "Nagaon",
+        "families_evicted": 7,
+        "people_evicted": 35,
+        "structures_demolished": 0,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Third forced pushback - individuals caught re-entering India after Dec 19 pushback, pushed again to Bangladesh",
+        "category": "Administrative Enforcement",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/article/1089947/assams-nowhere-people-given-24-hours-to-leave-india-tossed-back-and-forth-across-bangladesh-order"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          92.2,
+          26.5
+        ]
+      },
+      "properties": {
+        "date": "2026-01-05",
+        "village": "Burhachapori Wildlife Sanctuary (Jamuktol, Arimari, Siyalichar, Baghetapu, Galatidubi, Lathimari, Kundulichar, Purba Dubramari, Batulichar)",
+        "district": "Sonitpur",
+        "families_evicted": 1200,
+        "people_evicted": 6000,
+        "structures_demolished": 1200,
+        "deaths": 0,
+        "injuries": 0,
+        "government_reason": "Clearing encroachments from wildlife sanctuary (650 hectares)",
+        "category": "Environmental Protection",
+        "court_intervention": null,
+        "source_url": "https://scroll.in/latest/1089853/assam-over-1200-bengali-muslim-homes-demolished-as-state-continues-eviction-drive"
+      }
+    }
+  ]
+}

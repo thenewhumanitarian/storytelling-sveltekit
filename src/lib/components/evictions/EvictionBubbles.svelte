@@ -1,55 +1,69 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { forceSimulation, forceX, forceY, forceCollide } from 'd3-force';
+	import { onMount, onDestroy } from 'svelte';
+	import { forceSimulation, forceX, forceY, forceCollide, type Simulation } from 'd3-force';
 	import { scaleLinear, scaleBand, scaleTime } from 'd3-scale';
-	import { extent, groups } from 'd3-array';
+	import { extent } from 'd3-array';
 	import { fade } from 'svelte/transition';
 
-	// Props
-	export let data: any[] = [];
-	export let mode: 'clustered' | 'timeline' = 'clustered';
-	export let highlightCategory: string | null = null;
-	export let highlightYear: number | null = null;
-	export let revealedCategories: string[] = [];
-	export let width = 800;
-	export let height = 600;
-
-	// State
-	let nodes: any[] = [];
-	let simulation: any;
-	let mounted = false;
-
-	// Color mapping for categories - TNH branding inspired
-	// Primary: #9F3E52 (burgundy), Accent: #35B58B (teal)
-	const colorMapping: Record<string, string> = {
-		'Environmental Protection': '#35B58B',    // TNH teal
-		'Development Projects': '#9F3E52',        // TNH burgundy
-		'Administrative Enforcement': '#E8A84C', // warm gold
-		'Religious Land (Satra)': '#6B7FD7'       // muted indigo
-	};
-
-	// Desaturated versions for unrevealed categories
-	const desaturatedMapping: Record<string, string> = {
-		'Environmental Protection': '#4a5a55',
-		'Development Projects': '#5a4a4d',
-		'Administrative Enforcement': '#5a5548',
-		'Religious Land (Satra)': '#4a4d5a'
-	};
-
-	// Get color based on whether category has been revealed
-	function getCategoryColor(category: string): string {
-		// In timeline mode, all categories should be revealed
-		if (mode === 'timeline') {
-			return colorMapping[category] || '#666';
-		}
-		// In clustered mode, show saturated only if revealed
-		if (revealedCategories.includes(category)) {
-			return colorMapping[category] || '#666';
-		}
-		return desaturatedMapping[category] || '#444';
+	interface EvictionData {
+		Date: string;
+		Village: string;
+		Category: string;
+		People_Evicted: number;
+		parsedYear?: number; // Pre-parsed year for performance
 	}
 
-	// Category order for clustering
+	interface NodeData extends EvictionData {
+		x: number;
+		y: number;
+		radius: number;
+	}
+
+	interface Props {
+		data: EvictionData[];
+		mode?: 'clustered' | 'timeline';
+		highlightCategory?: string | null;
+		highlightYear?: number | null;
+		revealedCategories?: string[];
+		showCategoryLabels?: boolean;
+		width?: number;
+		height?: number;
+	}
+
+	let {
+		data,
+		mode = 'clustered',
+		highlightCategory = null,
+		highlightYear = null,
+		revealedCategories = [],
+		showCategoryLabels = true,
+		width = 800,
+		height = 600
+	}: Props = $props();
+
+	// State
+	let nodes = $state<NodeData[]>([]);
+	let simulation: Simulation<NodeData, undefined> | null = null;
+	let mounted = $state(false);
+	let hoveredNode = $state<NodeData | null>(null);
+	let tooltipX = $state(0);
+	let tooltipY = $state(0);
+
+	// Color mapping for categories - TNH branding inspired
+	const colorMapping: Record<string, string> = {
+		'Environmental Protection': '#35B58B',
+		'Development Projects': '#9F3E52',
+		'Administrative Enforcement': '#E8A84C',
+		'Religious Land (Satra)': '#6B7FD7'
+	};
+
+	const desaturatedMapping: Record<string, string> = {
+		'Environmental Protection': '#5a7a72',
+		'Development Projects': '#7a5a60',
+		'Administrative Enforcement': '#7a7058',
+		'Religious Land (Satra)': '#5a607a'
+	};
+
 	const categoryOrder = [
 		'Environmental Protection',
 		'Development Projects',
@@ -57,120 +71,171 @@
 		'Religious Land (Satra)'
 	];
 
-	// Scales
-	$: radiusScale = scaleLinear()
-		.domain(extent(data, (d) => d.People_Evicted) as [number, number])
-		.range([8, 45])
-		.clamp(true);
+	// Convert revealedCategories array to Set for O(1) lookup
+	let revealedCategoriesSet = $derived(new Set(revealedCategories));
 
-	$: xScaleClustered = scaleBand()
-		.domain(categoryOrder)
-		.range([100, width - 100])
-		.paddingInner(0.3);
+	// Derived values for responsive layout
+	let isMobile = $derived(width < 600);
+	let axisX = $derived(
+		isMobile
+			? Math.max(width * 0.08, 35)
+			: Math.min(Math.max(width * 0.08, 50), 80)
+	);
+	let yearFontSize = $derived(isMobile ? 14 : 18);
+	let labelFontSize = $derived(isMobile ? 10 : 12);
 
-	$: yScaleTimeline = scaleTime()
-		.domain([new Date('2021-01-01'), new Date('2026-12-31')])
-		.range([80, height - 80]);
+	// Scales - derived from data and dimensions
+	let radiusScale = $derived(
+		scaleLinear()
+			.domain(extent(data, (d) => d.People_Evicted) as [number, number])
+			.range(isMobile ? [6, 35] : [8, 45])
+			.clamp(true)
+	);
 
-	// Year tick marks for timeline
+	let xScaleClustered = $derived(
+		scaleBand()
+			.domain(categoryOrder)
+			.range([100, width - 100])
+			.paddingInner(0.3)
+	);
+
+	let yScaleClusteredMobile = $derived(
+		scaleBand()
+			.domain(categoryOrder)
+			.range([80, height - 80])
+			.paddingInner(0.2)
+	);
+
+	let yScaleTimeline = $derived(
+		scaleTime()
+			.domain([new Date('2021-01-01'), new Date('2026-12-31')])
+			.range([80, height - 80])
+	);
+
 	const timelineYears = [2021, 2022, 2023, 2024, 2025, 2026];
 
-	// Get positions based on mode
-	function getTargetX(d: any): number {
+	// Get color based on whether category has been revealed
+	function getCategoryColor(category: string): string {
+		const isRevealed = mode === 'timeline' || revealedCategoriesSet.has(category);
+		return isRevealed ? (colorMapping[category] || '#666') : (desaturatedMapping[category] || '#444');
+	}
+
+	// Get opacity based on highlight state
+	function getOpacity(d: NodeData): number {
+		if (!highlightCategory && !highlightYear) return 1;
+		if (highlightCategory && d.Category === highlightCategory) return 1;
+		if (highlightYear && d.parsedYear === highlightYear) return 1;
+		return 0.2;
+	}
+
+	// Position functions
+	function getTargetX(d: EvictionData): number {
 		if (mode === 'timeline') {
-			// Center bubbles to the right of the year axis
-			return (width + 80) / 2 + 40;
+			const availableWidth = width - axisX;
+			return axisX + availableWidth * 0.45;
+		}
+		if (isMobile) {
+			return width / 2;
 		}
 		return (xScaleClustered(d.Category) || 0) + (xScaleClustered.bandwidth() / 2);
 	}
 
-	function getTargetY(d: any): number {
+	function getTargetY(d: EvictionData): number {
 		if (mode === 'timeline') {
 			return yScaleTimeline(new Date(d.Date));
+		}
+		if (isMobile) {
+			return (yScaleClusteredMobile(d.Category) || 0) + (yScaleClusteredMobile.bandwidth() / 2);
 		}
 		return height / 2;
 	}
 
-	// Run simulation when data or mode changes
-	$: if (mounted && data.length > 0) {
-		runSimulation();
-	}
-
-	function runSimulation() {
-		// Initialize nodes with positions if not set
-		const simulationData = data.map((d, i) => ({
+	// Create and run the simulation
+	function createSimulation() {
+		// Pre-parse dates and create simulation data with pre-computed year
+		const simulationData: NodeData[] = data.map((d, i) => ({
 			...d,
+			parsedYear: new Date(d.Date).getFullYear(),
 			x: nodes[i]?.x ?? getTargetX(d),
 			y: nodes[i]?.y ?? getTargetY(d),
 			radius: radiusScale(d.People_Evicted)
 		}));
 
+		// Stop any existing simulation
 		if (simulation) {
 			simulation.stop();
+			simulation.on('tick', null);
 		}
 
 		simulation = forceSimulation(simulationData)
 			.force(
 				'x',
-				forceX<any>()
+				forceX<NodeData>()
 					.x((d) => getTargetX(d))
-					.strength(mode === 'timeline' ? 0.3 : 0.15)
+					.strength(mode === 'timeline' ? 0.3 : 0.4)
 			)
 			.force(
 				'y',
-				forceY<any>()
+				forceY<NodeData>()
 					.y((d) => getTargetY(d))
-					.strength(mode === 'timeline' ? 0.8 : 0.15)
+					.strength(mode === 'timeline' ? 0.8 : 0.2)
 			)
 			.force(
 				'collide',
-				forceCollide<any>()
+				forceCollide<NodeData>()
 					.radius((d) => d.radius + 2)
-					.strength(0.8)
+					.strength(0.7)
 			)
 			.alpha(0.8)
 			.alphaDecay(0.02)
 			.on('tick', () => {
-				nodes = simulation.nodes();
+				if (simulation) {
+					nodes = [...simulation.nodes()];
+				}
 			});
 	}
 
-	// Handle mode change - update forces
-	$: if (simulation && mounted) {
+	// Update simulation forces when mode changes (without recreating simulation)
+	function updateSimulationForces() {
+		if (!simulation) return;
+
 		simulation
 			.force(
 				'x',
-				forceX<any>()
+				forceX<NodeData>()
 					.x((d) => getTargetX(d))
-					.strength(mode === 'timeline' ? 0.3 : 0.15)
+					.strength(mode === 'timeline' ? 0.3 : 0.4)
 			)
 			.force(
 				'y',
-				forceY<any>()
+				forceY<NodeData>()
 					.y((d) => getTargetY(d))
-					.strength(mode === 'timeline' ? 0.8 : 0.15)
+					.strength(mode === 'timeline' ? 0.8 : 0.2)
 			)
 			.alpha(0.6)
 			.restart();
 	}
 
-	// Get opacity based on highlight state
-	function getOpacity(d: any): number {
-		if (!highlightCategory && !highlightYear) return 1;
-		if (highlightCategory && d.Category === highlightCategory) return 1;
-		if (highlightYear) {
-			const year = new Date(d.Date).getFullYear();
-			if (year === highlightYear) return 1;
+	// Track previous mode to detect changes
+	let prevMode = $state(mode);
+
+	// Effect to handle data changes - recreate simulation
+	$effect(() => {
+		if (mounted && data.length > 0) {
+			createSimulation();
 		}
-		return 0.2;
-	}
+	});
 
-	// Tooltip state
-	let hoveredNode: any = null;
-	let tooltipX = 0;
-	let tooltipY = 0;
+	// Effect to handle mode changes - just update forces
+	$effect(() => {
+		if (mounted && simulation && mode !== prevMode) {
+			prevMode = mode;
+			updateSimulationForces();
+		}
+	});
 
-	function handleMouseOver(event: MouseEvent, node: any) {
+	// Tooltip handlers
+	function handleMouseOver(event: MouseEvent, node: NodeData) {
 		hoveredNode = node;
 		tooltipX = node.x;
 		tooltipY = node.y - node.radius - 10;
@@ -183,32 +248,37 @@
 	onMount(() => {
 		mounted = true;
 	});
+
+	onDestroy(() => {
+		if (simulation) {
+			simulation.stop();
+			simulation.on('tick', null);
+			simulation = null;
+		}
+	});
 </script>
 
-<div class="eviction-bubbles" style="width: {width}px; height: {height}px;">
+<div class="eviction-bubbles" style:width="{width}px" style:height="{height}px">
 	<svg {width} {height}>
 		<!-- Timeline axis (only in timeline mode) -->
 		{#if mode === 'timeline'}
 			<g class="timeline-axis" transition:fade={{ duration: 300 }}>
-				<!-- Vertical axis line on left side -->
 				<line
-					x1={80}
-					y1={60}
-					x2={80}
-					y2={height - 60}
+					x1={axisX}
+					y1={height * 0.1}
+					x2={axisX}
+					y2={height - height * 0.1}
 					stroke="rgba(255,255,255,0.2)"
 					stroke-width="1"
 				/>
 				{#each timelineYears as year}
-					<g transform="translate(80, {yScaleTimeline(new Date(`${year}-06-01`))})">
-						<!-- Tick mark -->
+					<g transform="translate({axisX}, {yScaleTimeline(new Date(`${year}-06-01`))})">
 						<line x1="-8" x2="0" stroke="rgba(255,255,255,0.4)" stroke-width="1" />
-						<!-- Year label - positioned left of axis -->
 						<text
-							x="-16"
+							x="-12"
 							y="5"
 							fill="rgba(255,255,255,0.85)"
-							font-size="15"
+							font-size={yearFontSize}
 							font-weight="600"
 							font-family="Source Sans 3"
 							text-anchor="end"
@@ -220,10 +290,10 @@
 			</g>
 		{/if}
 
-		<!-- Category dividers (only in clustered mode) -->
-		{#if mode === 'clustered'}
+		<!-- Category dividers (clustered mode, desktop) -->
+		{#if mode === 'clustered' && !isMobile}
 			<g class="category-dividers" transition:fade={{ duration: 300 }}>
-				{#each categoryOrder.slice(0, -1) as category, i}
+				{#each categoryOrder.slice(0, -1) as category}
 					{@const x = (xScaleClustered(category) || 0) + xScaleClustered.bandwidth() + (xScaleClustered.step() * xScaleClustered.paddingInner()) / 2}
 					<line
 						x1={x}
@@ -238,10 +308,28 @@
 			</g>
 		{/if}
 
-		<!-- Cluster labels (only in clustered mode) -->
-		{#if mode === 'clustered'}
-			<g class="cluster-labels" transition:fade={{ duration: 300 }}>
-				{#each categoryOrder as category}
+		<!-- Category dividers (clustered mode, mobile) -->
+		{#if mode === 'clustered' && isMobile}
+			<g class="category-dividers-mobile" transition:fade={{ duration: 300 }}>
+				{#each categoryOrder.slice(0, -1) as category}
+					{@const y = (yScaleClusteredMobile(category) || 0) + yScaleClusteredMobile.bandwidth() + (yScaleClusteredMobile.step() * yScaleClusteredMobile.paddingInner()) / 2}
+					<line
+						x1={60}
+						y1={y}
+						x2={width - 60}
+						y2={y}
+						stroke="rgba(255,255,255,0.15)"
+						stroke-width="1"
+						stroke-dasharray="4,4"
+					/>
+				{/each}
+			</g>
+		{/if}
+
+		<!-- Cluster labels (clustered mode, desktop) -->
+		{#if mode === 'clustered' && showCategoryLabels && !isMobile}
+			<g class="cluster-labels">
+				{#each categoryOrder as category, i}
 					<text
 						x={(xScaleClustered(category) || 0) + xScaleClustered.bandwidth() / 2}
 						y={height - 30}
@@ -251,6 +339,31 @@
 						font-weight="600"
 						text-anchor="middle"
 						opacity={highlightCategory && highlightCategory !== category ? 0.3 : 1}
+						class="category-label"
+						style:animation-delay="{i * 100}ms"
+					>
+						{category.split(' ')[0]}
+					</text>
+				{/each}
+			</g>
+		{/if}
+
+		<!-- Cluster labels (clustered mode, mobile) -->
+		{#if mode === 'clustered' && showCategoryLabels && isMobile}
+			<g class="cluster-labels-mobile">
+				{#each categoryOrder as category, i}
+					<text
+						x={width * 0.04}
+						y={(yScaleClusteredMobile(category) || 0) + yScaleClusteredMobile.bandwidth() / 2}
+						fill={colorMapping[category]}
+						font-size={labelFontSize}
+						font-family="Source Sans 3"
+						font-weight="600"
+						text-anchor="start"
+						dominant-baseline="middle"
+						opacity={highlightCategory && highlightCategory !== category ? 0.3 : 1}
+						class="category-label"
+						style:animation-delay="{i * 100}ms"
 					>
 						{category.split(' ')[0]}
 					</text>
@@ -260,7 +373,7 @@
 
 		<!-- Bubbles -->
 		<g class="bubbles">
-			{#each nodes as node, i (node.Date + node.Village)}
+			{#each nodes as node (node.Date + node.Village)}
 				<circle
 					cx={node.x}
 					cy={node.y}
@@ -269,13 +382,13 @@
 					opacity={getOpacity(node)}
 					stroke={hoveredNode === node ? '#fff' : 'transparent'}
 					stroke-width="2"
-					on:mouseover={(e) => handleMouseOver(e, node)}
-					on:mouseout={handleMouseOut}
-					on:focus={(e) => handleMouseOver(e, node)}
-					on:blur={handleMouseOut}
+					onmouseover={(e) => handleMouseOver(e, node)}
+					onmouseout={handleMouseOut}
+					onfocus={(e) => handleMouseOver(e as unknown as MouseEvent, node)}
+					onblur={handleMouseOut}
 					role="button"
 					tabindex="0"
-					aria-label={`${node.Village}, ${node.People_Evicted} people evicted`}
+					aria-label="{node.Village}, {node.People_Evicted} people evicted"
 				/>
 			{/each}
 		</g>
@@ -285,11 +398,14 @@
 	{#if hoveredNode}
 		<div
 			class="tooltip"
-			style="left: {tooltipX}px; top: {tooltipY}px;"
+			style:left="{tooltipX}px"
+			style:top="{tooltipY}px"
 			transition:fade={{ duration: 150 }}
 		>
-			<div class="tooltip-location">{hoveredNode.Village || hoveredNode['Village/Location']}</div>
-			<div class="tooltip-date">{new Date(hoveredNode.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</div>
+			<div class="tooltip-location">{hoveredNode.Village || (hoveredNode as any)['Village/Location']}</div>
+			<div class="tooltip-date">
+				{new Date(hoveredNode.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+			</div>
 			<div class="tooltip-stat">{hoveredNode.People_Evicted?.toLocaleString()} people evicted</div>
 		</div>
 	{/if}
@@ -299,10 +415,11 @@
 	.eviction-bubbles {
 		position: relative;
 		background: transparent;
+		overflow-x: hidden;
 	}
 
 	svg {
-		overflow: visible;
+		overflow: hidden;
 	}
 
 	circle {
@@ -348,5 +465,21 @@
 
 	text {
 		user-select: none;
+	}
+
+	.category-label {
+		animation: labelFadeIn 0.5s ease-out forwards;
+		opacity: 0;
+	}
+
+	@keyframes labelFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 </style>

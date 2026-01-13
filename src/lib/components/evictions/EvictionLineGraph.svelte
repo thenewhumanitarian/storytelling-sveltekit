@@ -10,12 +10,29 @@
 	export let width = 800;
 	export let height = 500;
 	export let highlightYear: number | null = null;
-	export let animate = false;
 
-	// Margins
-	const margin = { top: 60, right: 40, bottom: 80, left: 100 };
-	const innerWidth = width - margin.left - margin.right;
-	const innerHeight = height - margin.top - margin.bottom;
+	// Y-axis tick values (used for grid lines and labels)
+	const Y_AXIS_TICKS = [0, 10000, 20000, 30000, 40000];
+
+	// Clamped margins - scale with container but with min AND max bounds
+	$: margin = {
+		top: Math.min(Math.max(height * 0.08, 35), 60),    // 35-60px
+		right: Math.min(Math.max(width * 0.04, 15), 50),   // 15-50px
+		bottom: Math.min(Math.max(height * 0.1, 45), 80),  // 45-80px
+		left: Math.min(Math.max(width * 0.1, 40), 100)     // 40-100px
+	};
+	$: innerWidth = width - margin.left - margin.right;
+	$: innerHeight = height - margin.top - margin.bottom;
+
+	// Fixed font sizes with mobile/desktop breakpoint
+	$: isMobile = width < 600;
+	$: titleFontSize = isMobile ? 18 : 24;
+	$: axisFontSize = isMobile ? 11 : 13;
+	$: labelFontSize = isMobile ? 12 : 14;
+	$: valueFontSize = isMobile ? 14 : 16;
+
+	// Show Y-axis title only on wider screens
+	$: showYAxisTitle = width > 500;
 
 	// Scales
 	$: xScale = scaleTime()
@@ -69,7 +86,7 @@
 
 		<g transform="translate({margin.left}, {margin.top})">
 			<!-- Grid lines -->
-			{#each [0, 10000, 20000, 30000, 40000] as tick}
+			{#each Y_AXIS_TICKS as tick}
 				<line
 					x1="0"
 					x2={innerWidth}
@@ -91,12 +108,12 @@
 			/>
 
 			<!-- Y-axis labels -->
-			{#each [0, 10000, 20000, 30000, 40000] as tick}
+			{#each Y_AXIS_TICKS as tick}
 				<text
-					x="-12"
+					x="-8"
 					y={yScale(tick)}
 					fill="rgba(255,255,255,0.6)"
-					font-size="13"
+					font-size={axisFontSize}
 					font-family="Source Sans 3"
 					text-anchor="end"
 					dominant-baseline="middle"
@@ -105,18 +122,20 @@
 				</text>
 			{/each}
 
-			<!-- Y-axis title -->
-			<text
-				x="-60"
-				y={innerHeight / 2}
-				fill="rgba(255,255,255,0.5)"
-				font-size="12"
-				font-family="Source Sans 3"
-				text-anchor="middle"
-				transform="rotate(-90, -60, {innerHeight / 2})"
-			>
-				People Evicted
-			</text>
+			<!-- Y-axis title (only on wider screens) -->
+			{#if showYAxisTitle}
+				<text
+					x={-margin.left * 0.6}
+					y={innerHeight / 2}
+					fill="rgba(255,255,255,0.5)"
+					font-size={axisFontSize}
+					font-family="Source Sans 3"
+					text-anchor="middle"
+					transform="rotate(-90, {-margin.left * 0.6}, {innerHeight / 2})"
+				>
+					People Evicted
+				</text>
+			{/if}
 
 			<!-- X-axis -->
 			<line
@@ -132,9 +151,9 @@
 			{#each data as d}
 				<text
 					x={xScale(new Date(`${d.Year}-06-01`))}
-					y={innerHeight + 28}
+					y={innerHeight + margin.bottom * 0.35}
 					fill={highlightYear === d.Year ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.6)'}
-					font-size={highlightYear === d.Year ? '16' : '14'}
+					font-size={highlightYear === d.Year ? labelFontSize * 1.2 : labelFontSize}
 					font-weight={highlightYear === d.Year ? '700' : '400'}
 					font-family="Source Sans 3"
 					text-anchor="middle"
@@ -188,9 +207,9 @@
 					<!-- Value label above point -->
 					<text
 						x={cx}
-						y={cy - (isHighlighted ? 20 : 16)}
+						y={cy - (isHighlighted ? valueFontSize * 1.5 : valueFontSize * 1.2)}
 						fill={isHighlighted ? '#fff' : 'rgba(255,255,255,0.8)'}
-						font-size={isHighlighted ? '16' : '13'}
+						font-size={isHighlighted ? valueFontSize * 1.2 : valueFontSize}
 						font-weight={isHighlighted ? '700' : '500'}
 						font-family="Source Sans 3"
 						text-anchor="middle"
@@ -203,9 +222,9 @@
 					{#if isHighlighted}
 						<text
 							x={cx}
-							y={innerHeight + 50}
+							y={innerHeight + margin.bottom * 0.65}
 							fill="rgba(255,255,255,0.7)"
-							font-size="12"
+							font-size={axisFontSize}
 							font-family="Source Sans 3"
 							text-anchor="middle"
 							transition:fade={{ duration: 200 }}
@@ -219,9 +238,9 @@
 			<!-- Title -->
 			<text
 				x={innerWidth / 2}
-				y="-30"
+				y={-margin.top * 0.45}
 				fill="rgba(255,255,255,0.9)"
-				font-size="18"
+				font-size={titleFontSize}
 				font-weight="600"
 				font-family="Playfair Display"
 				text-anchor="middle"
@@ -236,10 +255,11 @@
 	.line-graph {
 		position: relative;
 		background: transparent;
+		overflow-x: hidden;
 	}
 
 	svg {
-		overflow: visible;
+		overflow: hidden;
 	}
 
 	circle {

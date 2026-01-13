@@ -139,3 +139,26 @@ Stories are fetched from Storyblok CMS. See `/src/lib/utils/storyblok.ts` for:
 
 RTL (Arabic) is supported. Check `isRtl` prop in components for layout adjustments.
 Arabic routes typically live under `/ar/` subdirectory.
+
+## Current Articles
+
+### Cleared (`/src/routes/cleared/`)
+Investigation into Assam's mass eviction campaign displacing 20,000+ families since 2021. Features:
+- Scrollytelling with fixed background images
+- EvictionScrolly data visualization (bubble chart + line graph)
+- NoticeMosaic: scroll-triggered mosaic of eviction notice documents with scattered "evidence board" layout and animated text placard showing recipient names and excerpts
+
+**Components:**
+- `src/lib/components/evictions/` - EvictionScrolly, EvictionBubbles
+- `src/lib/components/scrolly/` - NoticeMosaic, ScrollyHelper (reusable scroll-triggered components)
+
+**Assets:** `/static/images/cleared/notices/` (notice_1-4.jpg eviction documents)
+
+### The Eighteen Acres (`/src/routes/the-eighteen-acres/`)
+Investigation into government land acquisition by the family of Assam CM Himanta Biswa Sarma. Features:
+- Video header with scroll-triggered content
+- XNotificationStack for social media posts
+- Video scrolly with quote overlays
+- Data tables for wealth analysis
+
+**Data:** `/data/` (hiswanta-tweets.csv, article markdown files)
