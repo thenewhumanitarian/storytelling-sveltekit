@@ -215,7 +215,7 @@
 </div>
 
 <!-- Intro Section -->
-<section class="intro-section relative z-10 bg-[#0a0a0a] py-16 px-6">
+<section class="intro-section relative bg-[#0a0a0a] py-16 px-6">
 	<div class="max-w-2xl mx-auto">
 		<div class="prose-content text-[rgba(255,255,255,0.8)] space-y-6">
 			<p class="text-xl leading-relaxed text-[rgba(255,255,255,0.9)]">
@@ -237,7 +237,7 @@
 	</div>
 </section>
 
-<!-- Video Scrolly Section - TEMPORARILY DISABLED
+<!-- Video Scrolly Section -->
 <ScrollySection
 	bind:activeStep={videoStep}
 	steps={videoScrollySteps}
@@ -248,11 +248,9 @@
 		<VideoScrollyVisualization {activeStep} videoSteps={videoData} />
 	{/snippet}
 </ScrollySection>
--->
-
 
 <!-- Article Content Section -->
-<section class="article-content relative z-10 bg-[#0a0a0a] py-16 px-6">
+<section class="article-content relative bg-[#0a0a0a] py-16 px-6">
 	<div class="max-w-2xl mx-auto">
 		<div class="prose-content text-[rgba(255,255,255,0.8)] space-y-8">
 
@@ -1104,9 +1102,9 @@
 		overflow: visible;
 	}
 
-	/* Fade to black overlay */
+	/* Fade to black overlay - scoped to header container only */
 	.header-fade-overlay {
-		position: fixed;
+		position: absolute;
 		inset: 0;
 		background: #0a0a0a;
 		pointer-events: none;
