@@ -6,6 +6,7 @@
 	 * sections to ensure consistent behavior, dark background throughout,
 	 * and no horizontal overflow issues.
 	 */
+	import { onMount } from 'svelte';
 	import ScrollySection from '$lib/components/scrolly/ScrollySection.svelte';
 	import HeroVisualization from '$lib/components/cleared/HeroVisualization.svelte';
 	import EvictionScrolly from '$lib/components/evictions/EvictionScrolly.svelte';
@@ -224,19 +225,27 @@
 		'/images/assam-evictions/image1.jpg', // Step 0: header
 		'/images/assam-evictions/image2.jpg', // Step 1: Sept 23
 		'/images/cleared/villages/charuabakhra.jpg', // Step 2: campaign
-		'/images/assam-evictions/image3.png', // Step 3: stadium full
-		'/images/assam-evictions/image4.png' // Step 4: stadium empty
+		'/images/assam-evictions/image3.jpg', // Step 3: stadium full
+		'/images/assam-evictions/image4.jpg' // Step 4: stadium empty
 	];
 	let currentHeroImage = $derived(heroImages[heroStep] ?? heroImages[0]);
 
 	// Whether to use contain mode (for stadium images)
 	let useContainMode = $derived(heroStep >= 3);
 
-	// Fade to black on last step: map the last ~25% of scroll progress to 0-1 fade
+	// Preload all hero images on mount
+	onMount(() => {
+		heroImages.forEach((src) => {
+			const img = new Image();
+			img.src = src;
+		});
+	});
+
+	// Fade to black on last step: map the last ~15% of scroll progress to 0-1 fade
 	let heroFadeProgress = $derived(() => {
 		if (heroStep !== 4) return 0; // Only fade on last image
-		// Start fading at 75% scroll progress, fully black at 100%
-		const fadeStart = 0.75;
+		// Start fading at 85% scroll progress, fully black at 100%
+		const fadeStart = 0.85;
 		const fadeEnd = 1.0;
 		if (heroScrollProgress < fadeStart) return 0;
 		return Math.min(1, (heroScrollProgress - fadeStart) / (fadeEnd - fadeStart));
@@ -265,6 +274,9 @@
 
 <svelte:head>
 	<title>Cleared | TNH Storytelling</title>
+	<!-- Preload stadium images (larger files that need early fetching) -->
+	<link rel="preload" as="image" href="/images/assam-evictions/image3.jpg" />
+	<link rel="preload" as="image" href="/images/assam-evictions/image4.jpg" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
