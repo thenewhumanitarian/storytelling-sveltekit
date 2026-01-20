@@ -13,6 +13,7 @@
 	import NoticeMosaic from '$lib/components/scrolly/NoticeMosaic.svelte';
 	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
 	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
+	import SatelliteComparison from '$lib/components/cleared/SatelliteComparison.svelte';
 
 	// === SECTION STEP DATA ===
 
@@ -51,6 +52,13 @@
 				text: 'Reuters',
 				url: 'https://www.reuters.com/world/asia-pacific/evictions-expulsions-muslims-bangladesh-precede-indian-state-polls-2025-07-28/'
 			}
+		},
+		{
+			text: 'That\'s 165,000 people — or twice Wembley Stadium.'
+		},
+		{
+			text: 'One eviction every 3 minutes, 24 hours a day, for an entire year.',
+			imageCredit: 'Disclaimer: image generated with Nano Banana Pro and GPT Image 1.5'
 		}
 	];
 
@@ -214,14 +222,19 @@
 	// Each step maps directly to an image via $derived
 	const heroImages = [
 		'/images/assam-evictions/image1.jpg', // Step 0: header
-		'/images/assam-evictions/image2.jpg', // Step 1: first textbox
-		'/images/cleared/villages/charuabakhra.jpg' // Step 2: last textbox
+		'/images/assam-evictions/image2.jpg', // Step 1: Sept 23
+		'/images/cleared/villages/charuabakhra.jpg', // Step 2: campaign
+		'/images/assam-evictions/image3.png', // Step 3: stadium full
+		'/images/assam-evictions/image4.png' // Step 4: stadium empty
 	];
 	let currentHeroImage = $derived(heroImages[heroStep] ?? heroImages[0]);
 
+	// Whether to use contain mode (for stadium images)
+	let useContainMode = $derived(heroStep >= 3);
+
 	// Fade to black on last step: map the last ~25% of scroll progress to 0-1 fade
 	let heroFadeProgress = $derived(() => {
-		if (heroStep !== 2) return 0; // Only fade on last image
+		if (heroStep !== 4) return 0; // Only fade on last image
 		// Start fading at 75% scroll progress, fully black at 100%
 		const fadeStart = 0.75;
 		const fadeEnd = 1.0;
@@ -271,7 +284,7 @@
 		onScrollProgress={(p) => (heroScrollProgress = p)}
 	>
 		{#snippet children({ activeStep })}
-			<HeroVisualization currentImage={currentHeroImage} fadeProgress={heroFadeProgress()} />
+			<HeroVisualization currentImage={currentHeroImage} fadeProgress={heroFadeProgress()} useContain={useContainMode} />
 		{/snippet}
 	</ScrollySection>
 
@@ -345,12 +358,7 @@
 				</div>
 			</div>
 
-			<div class="visual-placeholder">
-				<p>
-					[VISUAL: SATELLITE IMAGERY, BEFORE AND AFTER]<br/>
-					<span>Slider comparison showing eviction sites before and after demolition.</span>
-				</p>
-			</div>
+	<SatelliteComparison />
 
 			<h2 class="content-heading">Where the Land Goes</h2>
 
@@ -365,13 +373,6 @@
 
 				<p>
 					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
-				</p>
-			</div>
-
-			<div class="visual-placeholder">
-				<p>
-					[VISUAL: SPATIAL ANALYSIS OF LAND DEALS]<br/>
-					<span>Map overlay showing eviction locations against subsequent land allocations for corporate projects.</span>
 				</p>
 			</div>
 

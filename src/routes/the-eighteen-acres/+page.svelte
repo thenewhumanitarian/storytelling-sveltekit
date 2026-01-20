@@ -576,6 +576,13 @@
 				credit="The New Humanitarian"
 			/>
 
+			<ArticleImage
+				src="/images/cleared/sarma/sarma_2.png"
+				alt="Closeup satellite view of land near the airport"
+				caption="A closeup view of the land holdings near the airport."
+				credit="The New Humanitarian"
+			/>
+
 			<div class="alert-card">
 				<div class="alert-icon">
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">

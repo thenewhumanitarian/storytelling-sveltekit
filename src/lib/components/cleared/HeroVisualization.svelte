@@ -7,13 +7,14 @@
 	interface Props {
 		currentImage: string;
 		fadeProgress?: number; // 0-1, controls fade-to-black overlay
+		useContain?: boolean; // For stadium images - use object-fit: contain on desktop
 	}
 
-	let { currentImage, fadeProgress = 0 }: Props = $props();
+	let { currentImage, fadeProgress = 0, useContain = false }: Props = $props();
 </script>
 
 <div class="hero-visualization">
-	<img src={currentImage} alt="Assam eviction scene" class="hero-image" />
+	<img src={currentImage} alt="Assam eviction scene" class="hero-image" class:contain-mode={useContain} />
 	<div class="hero-overlay"></div>
 	{#if fadeProgress > 0}
 		<div class="fade-overlay" style:opacity={fadeProgress}></div>
@@ -35,6 +36,20 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	/* Contain mode for stadium images - show full width with dark background */
+	.hero-image.contain-mode {
+		object-fit: contain;
+		background: #0a0a0a;
+	}
+
+	/* On mobile, crop from left with cover behavior */
+	@media (max-width: 768px) {
+		.hero-image.contain-mode {
+			object-fit: cover;
+			object-position: left center;
+		}
 	}
 
 	.hero-overlay {
