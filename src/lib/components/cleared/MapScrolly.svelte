@@ -13,8 +13,8 @@
 
 	interface Props {
 		activeStep: number;
-		fadeProgress?: number; // 0-1, controls fade-in overlay (1 = black, 0 = visible)
-		fadeOutProgress?: number; // 0-1, controls fade-out overlay at end (0 = visible, 1 = black)
+		fadeProgress?: number; // 0-1, controls fade-in overlay (1 = opaque, 0 = visible)
+		fadeOutProgress?: number; // 0-1, controls fade-out overlay at end (0 = visible, 1 = opaque)
 	}
 
 	let { activeStep, fadeProgress = 0, fadeOutProgress = 0 }: Props = $props();
@@ -70,7 +70,7 @@
 
 			map = new window.maptilersdk.Map({
 				container: mapContainer,
-				style: `https://api.maptiler.com/maps/019bb7f2-4716-7d50-a72b-f38b90548534/style.json?key=${MAPTILER_API_KEY}`,
+				style: `https://api.maptiler.com/maps/streets-v2-light/style.json?key=${MAPTILER_API_KEY}`,
 				center: initialStep.coordinates,
 				zoom: initialStep.zoom,
 				pitch: initialStep.pitch,
@@ -126,8 +126,8 @@
 				'circle-color': '#9F3E52',
 				'circle-opacity': 0.6,
 				'circle-stroke-width': 1,
-				'circle-stroke-color': '#ffffff',
-				'circle-stroke-opacity': 0.3
+				'circle-stroke-color': '#1a1a1a',
+				'circle-stroke-opacity': 0.2
 			}
 		});
 
@@ -153,7 +153,7 @@
 				'circle-color': '#35B58B',
 				'circle-opacity': 0,
 				'circle-stroke-width': 2,
-				'circle-stroke-color': '#ffffff',
+				'circle-stroke-color': '#1a1a1a',
 				'circle-stroke-opacity': 0
 			}
 		});
@@ -170,8 +170,8 @@
 				'text-anchor': 'top'
 			},
 			paint: {
-				'text-color': '#ffffff',
-				'text-halo-color': '#000000',
+				'text-color': '#1a1a1a',
+				'text-halo-color': '#f5f0eb',
 				'text-halo-width': 1,
 				'text-opacity': 0
 			}
@@ -307,7 +307,7 @@
 		inset: 0;
 		width: 100%;
 		height: 100%;
-		background: #0d0d0d;
+		background: #f5f0eb;
 	}
 
 	.map {
@@ -322,24 +322,24 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(13, 13, 13, 0.9);
+		background: rgba(245, 240, 235, 0.9);
 	}
 
 	.map-loading p,
 	.map-error p {
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 1rem;
-		color: rgba(255, 255, 255, 0.6);
+		color: rgba(0, 0, 0, 0.4);
 	}
 
 	.map-error p {
-		color: #e57373;
+		color: #9f3e52;
 	}
 
 	.fade-overlay {
 		position: absolute;
 		inset: 0;
-		background: #0a0a0a;
+		background: #f5f0eb;
 		pointer-events: none;
 		z-index: 10;
 	}
