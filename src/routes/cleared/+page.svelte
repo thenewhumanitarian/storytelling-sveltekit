@@ -469,6 +469,9 @@
 	<!-- Bulldozer Justice Section -->
 	<section class="content-section">
 		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: JCB bulldozer at demolition site</span>
+			</div>
 			<h2 class="content-heading">"Bulldozer justice"</h2>
 
 			<div class="prose-content">
@@ -479,7 +482,14 @@
 				<p>
 					The practice has acquired its own name: "<a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">bulldozer justice</a>", a term used for demolitions that are openly celebrated by BJP leaders and their supporters. Amnesty International had described JCB as the "<a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">brand of choice in a hate campaign against the minority community</a>". Over time, the yellow excavator itself has become a potent political symbol for the use of demolitions as a show of state power against marginalized communities.
 				</p>
+			</div>
 
+			<div class="pull-quote">
+				<p>"The brand of choice in a hate campaign against the minority community."</p>
+				<span class="pull-quote-source">Amnesty International, February 2024</span>
+			</div>
+
+			<div class="prose-content">
 				<p>
 					<a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">Rights groups</a> and <a href="https://www.codastory.com/authoritarian-tech/india-bulldozers-muslim-neighborhoods/" target="_blank" rel="noopener">legal scholars</a> often draw parallels between India's "bulldozer justice" and Israel's long-standing practice of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home demolitions as a central tool of displacement against Palestinians, demolishing more than <a href="https://www.palestineportal.org/learn-teach/key-issues/home-demolitions/" target="_blank" rel="noopener">26,000 homes since 1967</a> alone. The justification is almost always the same: illegal construction, encroachment, or a bureaucratic infraction.
 				</p>
@@ -502,6 +512,11 @@
 				<p>
 					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minority rights.
 				</p>
+			</div>
+
+			<div class="pull-quote">
+				<p>"Point blank shot"</p>
+				<span class="pull-quote-source">Caption on AI-generated video of CM Sarma, deleted after outrage</span>
 			</div>
 
 			<!-- CM Tweets -->
