@@ -32,7 +32,7 @@
 		steps: Step[];
 		backgroundColor?: string;
 		showTextBoxes?: boolean;
-		textBoxVariant?: 'light' | 'dark';
+		textBoxVariant?: 'light' | 'dark' | 'editorial';
 		textBoxPosition?: 'center' | 'left' | 'right';
 		firstStepOffset?: number; // Extra viewport fraction to push first step down (0 = default, 0.5 = 50vh lower)
 		onStepEnter?: (stepIndex: number, direction: 'up' | 'down') => void;
