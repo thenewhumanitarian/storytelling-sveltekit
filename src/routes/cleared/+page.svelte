@@ -61,16 +61,16 @@
 	// Eviction data visualization steps (12 steps)
 	const evictionSteps = [
 		{
-			text: 'Between 2021 and 2026, <strong>33 documented eviction events</strong> displaced over <strong>100,000 people</strong> across Assam. Each bubble represents one operation — the larger the bubble, the more people displaced.'
+			text: 'More than 100,000 people were displaced across Assam between 2021 and 2026 in 33 documented eviction drives. Each bubble represents one operation \u2014 the larger the bubble, the more people displaced.'
 		},
 		{
 			text: 'The government cited various legal grounds for these evictions. We\'ve grouped them into <strong>four categories</strong>.'
 		},
 		{
-			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> — forest clearances, wildlife sanctuaries, elephant corridors. 12 events affecting over 60,000 people.'
+			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
 		},
 		{
-			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the Rs 48,000 crore Adani thermal power plant in Dhubri.'
+			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the USD 4.75 billion allegedly allocated to Adani thermal power plant in Dhubri.'
 		},
 		{
 			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
@@ -79,13 +79,13 @@
 			text: '<span class="highlight-satra">Religious Land (Satra)</span> evictions cleared land claimed by Hindu monasteries in Barpeta and Nagaon districts.'
 		},
 		{
-			text: 'The pace of evictions has <strong>accelerated dramatically</strong> since 2021. Here\'s when each operation occurred.'
+			text: 'What is unfolding in Assam is not a series of sporadic clearances but an increasingly institutionalised campaign of dispossession. Since 2021, both the frequency and the scale of eviction operations have expanded markedly. Here\'s when each operation occurred.'
 		},
 		{
-			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: Dhalpur, where police shot two people dead.'
+			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: <a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur</a>, where police shot two people dead.'
 		},
 		{
-			text: '<strong>2025:</strong> The busiest year — 11 documented eviction operations across Assam.'
+			text: '<strong>2025:</strong> The busiest year \u2014 11 documented eviction operations across Assam.'
 		},
 		{
 			text: 'But it\'s not just the frequency. The <strong>scale</strong> of each operation has grown dramatically.'
@@ -94,7 +94,7 @@
 			text: '<strong>2021:</strong> Around 14,000 people evicted across all operations.'
 		},
 		{
-			text: '<strong>2025:</strong> Over 40,000 people evicted — nearly <strong>three times</strong> the 2021 total.'
+			text: '<strong>2025:</strong> More than 40,000 people evicted \u2014 nearly <strong>three times</strong> the 2021 total.'
 		}
 	];
 
