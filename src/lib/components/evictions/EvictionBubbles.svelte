@@ -58,10 +58,10 @@
 	};
 
 	const desaturatedMapping: Record<string, string> = {
-		'Environmental Protection': '#5a7a72',
-		'Development Projects': '#7a5a60',
-		'Administrative Enforcement': '#7a7058',
-		'Religious Land (Satra)': '#5a607a'
+		'Environmental Protection': '#a8c4bc',
+		'Development Projects': '#b8a0a5',
+		'Administrative Enforcement': '#c4b8a0',
+		'Religious Land (Satra)': '#a0a8c4'
 	};
 
 	const categoryOrder = [
@@ -268,16 +268,16 @@
 					y1={height * 0.1}
 					x2={axisX}
 					y2={height - height * 0.1}
-					stroke="rgba(255,255,255,0.2)"
+					stroke="rgba(0,0,0,0.15)"
 					stroke-width="1"
 				/>
 				{#each timelineYears as year}
 					<g transform="translate({axisX}, {yScaleTimeline(new Date(`${year}-06-01`))})">
-						<line x1="-8" x2="0" stroke="rgba(255,255,255,0.4)" stroke-width="1" />
+						<line x1="-8" x2="0" stroke="rgba(0,0,0,0.25)" stroke-width="1" />
 						<text
 							x="-12"
 							y="5"
-							fill="rgba(255,255,255,0.85)"
+							fill="rgba(0,0,0,0.7)"
 							font-size={yearFontSize}
 							font-weight="600"
 							font-family="Source Sans 3"
@@ -300,7 +300,7 @@
 						y1={80}
 						x2={x}
 						y2={height - 60}
-						stroke="rgba(255,255,255,0.15)"
+						stroke="rgba(0,0,0,0.1)"
 						stroke-width="1"
 						stroke-dasharray="4,4"
 					/>
@@ -318,7 +318,7 @@
 						y1={y}
 						x2={width - 60}
 						y2={y}
-						stroke="rgba(255,255,255,0.15)"
+						stroke="rgba(0,0,0,0.1)"
 						stroke-width="1"
 						stroke-dasharray="4,4"
 					/>
@@ -380,7 +380,7 @@
 					r={node.radius}
 					fill={getCategoryColor(node.Category)}
 					opacity={getOpacity(node)}
-					stroke={hoveredNode === node ? '#fff' : 'transparent'}
+					stroke={hoveredNode === node ? '#1a1a1a' : 'transparent'}
 					stroke-width="2"
 					onmouseover={(e) => handleMouseOver(e, node)}
 					onmouseout={handleMouseOut}
@@ -433,34 +433,35 @@
 	.tooltip {
 		position: absolute;
 		transform: translate(-50%, -100%);
-		background: rgba(0, 0, 0, 0.9);
-		border: 1px solid rgba(255, 255, 255, 0.2);
+		background: rgba(255, 255, 255, 0.95);
+		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 6px;
 		padding: 10px 14px;
 		pointer-events: none;
 		z-index: 100;
 		min-width: 140px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 	}
 
 	.tooltip-location {
 		font-family: 'Source Sans 3', sans-serif;
 		font-weight: 600;
 		font-size: 14px;
-		color: white;
+		color: #1a1a1a;
 		margin-bottom: 4px;
 	}
 
 	.tooltip-date {
 		font-family: 'Source Sans 3', sans-serif;
 		font-size: 12px;
-		color: rgba(255, 255, 255, 0.6);
+		color: rgba(0, 0, 0, 0.5);
 		margin-bottom: 6px;
 	}
 
 	.tooltip-stat {
 		font-family: 'Source Sans 3', sans-serif;
 		font-size: 13px;
-		color: rgba(255, 255, 255, 0.9);
+		color: rgba(0, 0, 0, 0.8);
 	}
 
 	text {

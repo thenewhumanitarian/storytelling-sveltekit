@@ -200,19 +200,19 @@
 			<div class="legend-items">
 				<div class="legend-item">
 					<svg width="20" height="20">
-						<circle cx="10" cy="10" r="8" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+						<circle cx="10" cy="10" r="8" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
 					</svg>
 					<span>500</span>
 				</div>
 				<div class="legend-item">
 					<svg width="32" height="32">
-						<circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+						<circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
 					</svg>
 					<span>5,000</span>
 				</div>
 				<div class="legend-item">
 					<svg width="50" height="50">
-						<circle cx="25" cy="25" r="22" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+						<circle cx="25" cy="25" r="22" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
 					</svg>
 					<span>13,000</span>
 				</div>
@@ -240,7 +240,7 @@
 	}
 
 	.loading {
-		color: rgba(255, 255, 255, 0.5);
+		color: rgba(0, 0, 0, 0.4);
 		font-family: 'Source Sans 3', sans-serif;
 		text-align: center;
 		padding: 2rem;
@@ -255,11 +255,11 @@
 		position: absolute;
 		bottom: 2rem;
 		left: 2rem;
-		background: rgba(0, 0, 0, 0.6);
+		background: rgba(255, 255, 255, 0.85);
 		backdrop-filter: blur(4px);
 		padding: 0.75rem 1rem;
 		border-radius: 6px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(0, 0, 0, 0.08);
 	}
 
 	@media (max-width: 600px) {
@@ -282,7 +282,7 @@
 		font-family: 'Source Sans 3', sans-serif;
 		font-size: 11px;
 		font-weight: 500;
-		color: rgba(255, 255, 255, 0.5);
+		color: rgba(0, 0, 0, 0.45);
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
 		margin-bottom: 0.5rem;
@@ -304,22 +304,22 @@
 	.legend-item span {
 		font-family: 'Source Sans 3', sans-serif;
 		font-size: 11px;
-		color: rgba(255, 255, 255, 0.6);
+		color: rgba(0, 0, 0, 0.5);
 	}
 
 	.size-legend.legend-highlight {
 		animation: legendPulse 2s ease-in-out infinite;
-		border-color: rgba(255, 255, 255, 0.4);
+		border-color: rgba(0, 0, 0, 0.2);
 	}
 
 	@keyframes legendPulse {
 		0%, 100% {
 			transform: scale(1);
-			box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+			box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 		}
 		50% {
 			transform: scale(1.05);
-			box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.15);
+			box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.08);
 		}
 	}
 </style>

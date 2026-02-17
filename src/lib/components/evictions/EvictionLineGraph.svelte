@@ -71,7 +71,7 @@
 		<defs>
 			<!-- Gradient for area fill -->
 			<linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-				<stop offset="0%" stop-color={accentColor} stop-opacity="0.3" />
+				<stop offset="0%" stop-color={accentColor} stop-opacity="0.2" />
 				<stop offset="100%" stop-color={accentColor} stop-opacity="0.02" />
 			</linearGradient>
 			<!-- Glow filter for line -->
@@ -92,7 +92,7 @@
 					x2={innerWidth}
 					y1={yScale(tick)}
 					y2={yScale(tick)}
-					stroke="rgba(255,255,255,0.08)"
+					stroke="rgba(0,0,0,0.06)"
 					stroke-width="1"
 				/>
 			{/each}
@@ -103,7 +103,7 @@
 				y1="0"
 				x2="0"
 				y2={innerHeight}
-				stroke="rgba(255,255,255,0.2)"
+				stroke="rgba(0,0,0,0.15)"
 				stroke-width="1"
 			/>
 
@@ -112,7 +112,7 @@
 				<text
 					x="-8"
 					y={yScale(tick)}
-					fill="rgba(255,255,255,0.6)"
+					fill="rgba(0,0,0,0.5)"
 					font-size={axisFontSize}
 					font-family="Source Sans 3"
 					text-anchor="end"
@@ -127,7 +127,7 @@
 				<text
 					x={-margin.left * 0.6}
 					y={innerHeight / 2}
-					fill="rgba(255,255,255,0.5)"
+					fill="rgba(0,0,0,0.4)"
 					font-size={axisFontSize}
 					font-family="Source Sans 3"
 					text-anchor="middle"
@@ -143,7 +143,7 @@
 				y1={innerHeight}
 				x2={innerWidth}
 				y2={innerHeight}
-				stroke="rgba(255,255,255,0.2)"
+				stroke="rgba(0,0,0,0.15)"
 				stroke-width="1"
 			/>
 
@@ -152,7 +152,7 @@
 				<text
 					x={xScale(new Date(`${d.Year}-06-01`))}
 					y={innerHeight + margin.bottom * 0.35}
-					fill={highlightYear === d.Year ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.6)'}
+					fill={highlightYear === d.Year ? '#1a1a1a' : 'rgba(0,0,0,0.5)'}
 					font-size={highlightYear === d.Year ? labelFontSize * 1.2 : labelFontSize}
 					font-weight={highlightYear === d.Year ? '700' : '400'}
 					font-family="Source Sans 3"
@@ -197,7 +197,7 @@
 						{cx}
 						{cy}
 						r={isHighlighted ? 10 : 6}
-						fill={isHighlighted ? accentColor : '#fff'}
+						fill={isHighlighted ? accentColor : '#f5f0eb'}
 						stroke={accentColor}
 						stroke-width={isHighlighted ? 3 : 2}
 						style="transition: all 0.3s ease; transform-origin: {cx}px {cy}px;"
@@ -208,7 +208,7 @@
 					<text
 						x={cx}
 						y={cy - (isHighlighted ? valueFontSize * 1.5 : valueFontSize * 1.2)}
-						fill={isHighlighted ? '#fff' : 'rgba(255,255,255,0.8)'}
+						fill={isHighlighted ? '#1a1a1a' : 'rgba(0,0,0,0.65)'}
 						font-size={isHighlighted ? valueFontSize * 1.2 : valueFontSize}
 						font-weight={isHighlighted ? '700' : '500'}
 						font-family="Source Sans 3"
@@ -223,7 +223,7 @@
 						<text
 							x={cx}
 							y={innerHeight + margin.bottom * 0.65}
-							fill="rgba(255,255,255,0.7)"
+							fill="rgba(0,0,0,0.5)"
 							font-size={axisFontSize}
 							font-family="Source Sans 3"
 							text-anchor="middle"
@@ -239,7 +239,7 @@
 			<text
 				x={innerWidth / 2}
 				y={-margin.top * 0.45}
-				fill="rgba(255,255,255,0.9)"
+				fill="#1a1a1a"
 				font-size={titleFontSize}
 				font-weight="600"
 				font-family="Playfair Display"
