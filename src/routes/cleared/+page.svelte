@@ -295,6 +295,21 @@
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Maiful Naysa Introduction -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived.
+				</p>
+
+				<blockquote>
+					"At five in the morning, while we were sleeping, three JCBs came and started demolishing our house."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
 	<!-- Eviction Data Visualization -->
 	<ScrollySection
 		bind:activeStep={evictionStep}
