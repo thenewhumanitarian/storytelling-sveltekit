@@ -3,7 +3,7 @@
 	 * Cleared - Investigation into Assam's mass eviction campaign
 	 *
 	 * This article uses a unified ScrollySection pattern for all scrolly
-	 * sections to ensure consistent behavior, dark background throughout,
+	 * sections to ensure consistent behavior, light background throughout,
 	 * and no horizontal overflow issues.
 	 */
 	import { onMount } from 'svelte';
@@ -349,8 +349,6 @@
 		{/snippet}
 	</ScrollySection>
 
-	<div class="transition-dark-to-light"></div>
-
 	<!-- Maiful Naysa Introduction -->
 	<section class="content-section">
 		<div class="content-container">
@@ -366,13 +364,12 @@
 		</div>
 	</section>
 
-	<div class="transition-light-to-dark"></div>
-
 	<!-- Eviction Data Visualization -->
 	<ScrollySection
 		bind:activeStep={evictionStep}
 		steps={evictionSteps}
-		backgroundColor="#0a0a0a"
+		backgroundColor="#f5f0eb"
+		textBoxVariant="editorial"
 	>
 		{#snippet children({ activeStep })}
 			<EvictionScrolly {activeStep} />
@@ -383,9 +380,9 @@
 	<ScrollySection
 		bind:activeStep={backgroundStep}
 		steps={backgroundSteps}
-		backgroundColor="#0a0a0a"
+		backgroundColor="#f5f0eb"
 		showTextBoxes={true}
-		textBoxVariant="light"
+		textBoxVariant="editorial"
 		onScrollProgress={(p) => (backgroundScrollProgress = p)}
 	>
 		{#snippet children({ activeStep })}
@@ -395,7 +392,6 @@
 			/>
 		{/snippet}
 	</ScrollySection>
-	<div class="transition-dark-to-light"></div>
 
 	<!-- Background prose bridge (remaining paragraphs) -->
 	<section class="content-section">
@@ -411,6 +407,8 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="section-divider"></div>
 
 	<!-- Zain-ul-Abadin Testimony -->
 	<section class="content-section">
@@ -431,21 +429,18 @@
 		</div>
 	</section>
 
-	<div class="transition-light-to-dark"></div>
-
 	<!-- Eviction Notices Mosaic -->
 	<ScrollySection
 		bind:activeStep={noticeStep}
 		steps={noticeSteps}
-		backgroundColor="#0a0a0a"
+		backgroundColor="#f5f0eb"
 		showTextBoxes={false}
+		textBoxVariant="editorial"
 	>
 		{#snippet children({ activeStep })}
-			<NoticeMosaic {activeStep} {notices} backgroundColor="#0a0a0a" />
+			<NoticeMosaic {activeStep} {notices} backgroundColor="#f5f0eb" />
 		{/snippet}
 	</ScrollySection>
-
-	<div class="transition-dark-to-light"></div>
 
 	<!-- Abdul Barik Testimony -->
 	<section class="content-section">
@@ -465,6 +460,8 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="section-divider"></div>
 
 	<!-- Bulldozer Justice Section -->
 	<section class="content-section">
@@ -496,6 +493,8 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="section-divider"></div>
 
 	<!-- CM Rhetoric Section -->
 	<section class="content-section">
@@ -533,6 +532,8 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="section-divider"></div>
 
 	<!-- Supreme Court Directives -->
 	<section class="content-section">
@@ -591,6 +592,8 @@
 		</div>
 	</section>
 
+	<div class="section-divider"></div>
+
 	<!-- Content Section: The Violence -->
 	<section class="content-section">
 		<div class="content-container">
@@ -644,16 +647,15 @@
 		</div>
 	</section>
 
-	<div class="transition-light-to-dark"></div>
-
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
 		<ScrollySection
 			bind:activeStep={mapStep}
 			steps={mapSteps}
-			backgroundColor="#0d0d0d"
+			backgroundColor="#f5f0eb"
 			textBoxPosition="left"
 			firstStepOffset={0.5}
+			textBoxVariant="editorial"
 			onScrollProgress={(p) => (mapScrollProgress = p)}
 		>
 			{#snippet children({ activeStep })}
@@ -664,8 +666,6 @@
 
 	<!-- Transition Gallery - Demolition Images -->
 	<DemolitionGallery />
-
-	<div class="transition-dark-to-light"></div>
 
 	<!-- Maiful Naysa Continued -->
 	<section class="content-section">
@@ -691,10 +691,7 @@
 		</div>
 	</section>
 
-	<div class="transition-light-to-dark"></div>
 	<SatelliteComparison />
-
-	<div class="transition-dark-to-light"></div>
 
 	<!-- Where the Land Goes -->
 	<section class="content-section">
@@ -807,9 +804,7 @@
 	</div>
 
 	<!-- Media Headlines Section -->
-	<div class="transition-light-to-dark"></div>
 	<HeadlineStack {headlines} />
-	<div class="transition-dark-to-light"></div>
 
 	<!-- Content Section: The Pattern -->
 	<section class="content-section">
@@ -879,8 +874,6 @@
 			</div>
 		</div>
 	</section>
-
-	<div class="transition-light-to-dark"></div>
 
 	<!-- Footer -->
 	<footer class="article-footer">
@@ -973,9 +966,9 @@
 </div>
 
 <style>
-	/* Article container - dark background throughout */
+	/* Article container - unified light background */
 	.article-container {
-		background: #0a0a0a;
+		background: #f5f0eb;
 		min-height: 100vh;
 	}
 
@@ -1073,7 +1066,7 @@
 	.content-section {
 		position: relative;
 		background: #f5f0eb;
-		padding: 5rem 1.5rem;
+		padding: 3.5rem 1.5rem;
 	}
 
 	.content-container {
@@ -1179,6 +1172,7 @@
 		z-index: 10;
 		background: #1a1a1a;
 		padding: 0 1.5rem 3rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.footer-inner {
@@ -1505,14 +1499,4 @@
 		margin: 3rem 0 1.5rem 0;
 	}
 
-	/* Gradient transitions between dark and light sections */
-	.transition-dark-to-light {
-		height: 4rem;
-		background: linear-gradient(to bottom, #0a0a0a, #f5f0eb);
-	}
-
-	.transition-light-to-dark {
-		height: 4rem;
-		background: linear-gradient(to bottom, #f5f0eb, #0a0a0a);
-	}
 </style>
