@@ -14,7 +14,11 @@
 </script>
 
 <div class="hero-visualization">
-	<img src={currentImage} alt="Assam eviction scene" class="hero-image" class:contain-mode={useContain} />
+	{#if currentImage}
+		<img src={currentImage} alt="Assam eviction scene" class="hero-image" class:contain-mode={useContain} />
+	{:else}
+		<div class="placeholder-bg"></div>
+	{/if}
 	<div class="hero-overlay"></div>
 	{#if fadeProgress > 0}
 		<div class="fade-overlay" style:opacity={fadeProgress}></div>
@@ -42,6 +46,8 @@
 	.hero-image.contain-mode {
 		object-fit: contain;
 		background: #0a0a0a;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 4px;
 	}
 
 	/* On mobile, crop from left with cover behavior */
@@ -66,7 +72,13 @@
 	.fade-overlay {
 		position: absolute;
 		inset: 0;
-		background: #0a0a0a;
+		background: #f5f0eb;
 		pointer-events: none;
+	}
+
+	.placeholder-bg {
+		position: absolute;
+		inset: 0;
+		background: #f5f0eb;
 	}
 </style>

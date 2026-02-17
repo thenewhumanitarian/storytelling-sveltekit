@@ -51,7 +51,7 @@
 
 <style>
 	.headline-stack-section {
-		background: #111;
+		background: #f5f0eb;
 		position: relative;
 		z-index: 20;
 	}
@@ -73,7 +73,7 @@
 		font-weight: 600;
 		letter-spacing: 0.15em;
 		text-transform: uppercase;
-		color: #dc2626;
+		color: #9f3e52;
 		margin: 0 0 12px 0;
 	}
 
@@ -81,7 +81,7 @@
 		font-family: 'Playfair Display', Georgia, serif;
 		font-size: clamp(1.75rem, 4vw, 2.5rem);
 		font-weight: 600;
-		color: #ffffff;
+		color: #1a1a1a;
 		margin: 0 0 16px 0;
 		line-height: 1.2;
 	}
@@ -90,7 +90,7 @@
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 1.1rem;
 		line-height: 1.7;
-		color: rgba(255, 255, 255, 0.7);
+		color: #4a4a4a;
 		max-width: 600px;
 		margin: 0 auto;
 	}

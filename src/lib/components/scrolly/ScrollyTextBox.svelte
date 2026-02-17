@@ -17,7 +17,7 @@
 		image?: string | null;
 		bgColor?: string | null;
 		active?: boolean;
-		variant?: 'light' | 'dark';
+		variant?: 'light' | 'dark' | 'editorial';
 		maxWidth?: 'narrow' | 'wide';
 		source?: SourceLink | null;
 		imageCredit?: string | null;
@@ -41,6 +41,7 @@
 	class="scrolly-text-box"
 	class:active
 	class:dark={variant === 'dark'}
+	class:editorial={variant === 'editorial'}
 	class:wide={maxWidth === 'wide'}
 	class:has-image={image}
 	class:custom-bg={bgColor}
@@ -109,6 +110,14 @@
 
 	.scrolly-text-box.dark {
 		background: rgba(15, 15, 15, 0.92);
+	}
+
+	.scrolly-text-box.editorial {
+		background: #ffffff;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
 	}
 
 	.scrolly-text-box.custom-bg {
@@ -255,6 +264,10 @@
 
 		.box-title {
 			font-size: 1.35rem;
+		}
+
+		.scrolly-text-box.editorial {
+			box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
 		}
 	}
 </style>

@@ -3,7 +3,7 @@
 	 * Cleared - Investigation into Assam's mass eviction campaign
 	 *
 	 * This article uses a unified ScrollySection pattern for all scrolly
-	 * sections to ensure consistent behavior, dark background throughout,
+	 * sections to ensure consistent behavior, light background throughout,
 	 * and no horizontal overflow issues.
 	 */
 	import { onMount } from 'svelte';
@@ -15,6 +15,8 @@
 	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
 	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
 	import SatelliteComparison from '$lib/components/cleared/SatelliteComparison.svelte';
+	import XNotificationStack from '$lib/components/XNotificationStack.svelte';
+	import { inview } from 'svelte-inview';
 
 	// === SECTION STEP DATA ===
 
@@ -39,26 +41,21 @@
 		},
 		{
 			title: 'September 23, 2021',
-			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. A government photographer was filmed stomping repeatedly on Haque\'s body as he lay dying.',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that will reshape hundreds of thousands of lives.',
 			source: {
 				text: 'Al Jazeera',
 				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
-			},
-			imageCredit: 'Moinul Haque\'s family'
-		},
-		{
-			title: 'A Campaign',
-			text: 'This was not an isolated event. It was one operation in a campaign that has demolished more than 22,000 homes across Assam since 2021—the vast majority belonging to Bengali-speaking Muslims.',
-			source: {
-				text: 'Reuters',
-				url: 'https://www.reuters.com/world/asia-pacific/evictions-expulsions-muslims-bangladesh-precede-indian-state-polls-2025-07-28/'
 			}
 		},
 		{
-			text: 'That\'s 165,000 people — or twice Wembley Stadium.'
+			title: 'A Campaign of Displacement',
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes are demolished. The Assam government is led by the same party that governs at the federal level: the BJP. Chief Minister Himanta Biswa Sarma is widely seen as the BJP\'s poster boy for implementing the party\'s Hindu nationalist agenda. The eviction drives follow directly from federal policies like the National Register of Citizens and Citizenship Amendment Act, both passed by Modi\'s government. Federal Home Minister Amit Shah has repeatedly promised to take this model nationwide.'
 		},
 		{
-			text: 'One eviction every 3 minutes, 24 hours a day, for an entire year.',
+			text: 'That\'s 165,000 people \u2013 or twice Wembley Stadium.'
+		},
+		{
+			text: 'One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of those evicted are Bengali-speaking Muslims.',
 			imageCredit: 'Disclaimer: image generated with Nano Banana Pro and GPT Image 1.5'
 		}
 	];
@@ -66,16 +63,16 @@
 	// Eviction data visualization steps (12 steps)
 	const evictionSteps = [
 		{
-			text: 'Between 2021 and 2026, <strong>33 documented eviction events</strong> displaced over <strong>100,000 people</strong> across Assam. Each bubble represents one operation — the larger the bubble, the more people displaced.'
+			text: 'More than 100,000 people were displaced across Assam between 2021 and 2026 in 33 documented eviction drives. Each bubble represents one operation \u2014 the larger the bubble, the more people displaced.'
 		},
 		{
 			text: 'The government cited various legal grounds for these evictions. We\'ve grouped them into <strong>four categories</strong>.'
 		},
 		{
-			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> — forest clearances, wildlife sanctuaries, elephant corridors. 12 events affecting over 60,000 people.'
+			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
 		},
 		{
-			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the Rs 48,000 crore Adani thermal power plant in Dhubri.'
+			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the USD 4.75 billion allegedly allocated to Adani thermal power plant in Dhubri.'
 		},
 		{
 			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
@@ -84,13 +81,13 @@
 			text: '<span class="highlight-satra">Religious Land (Satra)</span> evictions cleared land claimed by Hindu monasteries in Barpeta and Nagaon districts.'
 		},
 		{
-			text: 'The pace of evictions has <strong>accelerated dramatically</strong> since 2021. Here\'s when each operation occurred.'
+			text: 'What is unfolding in Assam is not a series of sporadic clearances but an increasingly institutionalised campaign of dispossession. Since 2021, both the frequency and the scale of eviction operations have expanded markedly. Here\'s when each operation occurred.'
 		},
 		{
-			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: Dhalpur, where police shot two people dead.'
+			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: <a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur</a>, where police shot two people dead.'
 		},
 		{
-			text: '<strong>2025:</strong> The busiest year — 11 documented eviction operations across Assam.'
+			text: '<strong>2025:</strong> The busiest year \u2014 11 documented eviction operations across Assam.'
 		},
 		{
 			text: 'But it\'s not just the frequency. The <strong>scale</strong> of each operation has grown dramatically.'
@@ -99,14 +96,52 @@
 			text: '<strong>2021:</strong> Around 14,000 people evicted across all operations.'
 		},
 		{
-			text: '<strong>2025:</strong> Over 40,000 people evicted — nearly <strong>three times</strong> the 2021 total.'
+			text: '<strong>2025:</strong> More than 40,000 people evicted \u2014 nearly <strong>three times</strong> the 2021 total.'
 		}
+	];
+
+	// Background scrolly steps (6 steps covering Assam history and context)
+	const backgroundSteps = [
+		{
+			title: 'A Contested History',
+			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\'s most ethnically diverse regions. For decades, the question of who truly belongs here has defined its politics. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
+		},
+		{
+			title: 'The Brahmaputra',
+			text: 'Assam lies along the Brahmaputra, one of the world\'s largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life.'
+		},
+		{
+			title: 'The Miya',
+			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Over generations, they cleared the land, farmed it, and built communities on it. The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders.'
+		},
+		{
+			title: 'The Eviction Machine',
+			text: 'Since 2016, these communities have faced government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades. The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines. Some came with official permission. Others were given land by the Indian state itself. Many had been living in Assam for 50 to 70 years.'
+		},
+		{
+			title: 'The Register',
+			text: 'The National Register of Citizens (NRC), concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. Residents had to prove they or their families arrived before March 24, 1971. The final list excluded more than 1.9 million people, roughly 6% of Assam\'s population. Many were poor. Most were Muslim. Several detention centres were established, including India\'s largest in Goalpara, designed to house up to 3,500 people. In some cases, children were separated from their parents.'
+		},
+		{
+			title: 'After Partition',
+			text: 'More than one third of Assam\'s 31 million people are Muslim. That demographic reality has made Assam a focal point of a broader national shift. The BJP-led government has faced repeated accusations of targeting India\'s 200 million Muslims, from the Citizenship Amendment Act to the National Register of Citizens. In Assam, these national policies have found their sharpest expression.'
+		}
+	];
+
+	// Background scrolly images (gray placeholders for now)
+	const backgroundImages = [
+		'', // Step 0: Satellite/aerial of Assam (placeholder)
+		'', // Step 1: Brahmaputra floods (placeholder)
+		'', // Step 2: Char land community (placeholder)
+		'', // Step 3: Hands holding documents (placeholder)
+		'', // Step 4: Queue with documents (placeholder)
+		''  // Step 5: Historical/archival (placeholder)
 	];
 
 	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
 	const mapSteps = [
 		{
-			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">34 documented eviction operations</span> across the state.'
+			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">33 documented eviction operations</span> across the state.'
 		},
 		{
 			text: 'We traveled to <span class="highlight-env">20 demolished villages</span> to document what remains after the bulldozers left.'
@@ -255,6 +290,20 @@
 	let mapStep = $state(0);
 	let mapScrollProgress = $state(0);
 	let noticeStep = $state(0);
+	let notificationsTriggered = $state(false);
+	let backgroundStep = $state(0);
+	let backgroundScrollProgress = $state(0);
+
+	// Background scrolly image control
+	let currentBackgroundImage = $derived(backgroundImages[backgroundStep] ?? '');
+
+	// Fade effects for background scrolly
+	let backgroundFadeProgress = $derived(() => {
+		if (backgroundStep !== 5) return 0;
+		const fadeStart = 0.85;
+		if (backgroundScrollProgress < fadeStart) return 0;
+		return Math.min(1, (backgroundScrollProgress - fadeStart) / (1 - fadeStart));
+	});
 
 	// Map fade-in: starts black (1) and fades to visible (0) as we scroll into the section
 	let mapFadeProgress = $derived(() => {
@@ -300,37 +349,313 @@
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Maiful Naysa Introduction -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived.
+				</p>
+
+				<blockquote>
+					"At five in the morning, while we were sleeping, three JCBs came and started demolishing our house."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
 	<!-- Eviction Data Visualization -->
 	<ScrollySection
 		bind:activeStep={evictionStep}
 		steps={evictionSteps}
-		backgroundColor="#0a0a0a"
+		backgroundColor="#f5f0eb"
+		textBoxVariant="editorial"
 	>
 		{#snippet children({ activeStep })}
 			<EvictionScrolly {activeStep} />
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Background Scrolly -->
+	<ScrollySection
+		bind:activeStep={backgroundStep}
+		steps={backgroundSteps}
+		backgroundColor="#f5f0eb"
+		showTextBoxes={true}
+		textBoxVariant="editorial"
+		onScrollProgress={(p) => (backgroundScrollProgress = p)}
+	>
+		{#snippet children({ activeStep })}
+			<HeroVisualization
+				currentImage={currentBackgroundImage}
+				fadeProgress={backgroundFadeProgress()}
+			/>
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Background prose bridge (remaining paragraphs) -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					What makes these evictions particularly troubling is that many families held Patta &ndash; official land titles issued by the Assam government &ndash; along with ration cards and voter IDs, documents that under Indian law establish legal residence and citizenship.
+				</p>
+
+				<p>
+					Some Pattas dated back decades, proof that the state itself had recognised their right to the land. Yet documented cases show Patta-holders being evicted without warning, without due process, their legal papers rendered meaningless overnight.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<div class="section-divider"></div>
+
+	<!-- Zain-ul-Abadin Testimony -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					For Zain-ul-Abadin, a 43-year-old resident of Uriamghat in Assam's Golaghat district, the eviction represents more than the loss of a home. He says his family was among those encouraged by the Assam government to settle in the late 1970s in a border belt along Nagaland, then considered a disputed zone. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt. The long-running land dispute has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
+				</p>
+
+				<p>
+					The families of those civilians are now being labelled as "foreigners".
+				</p>
+
+				<blockquote>
+					"My father and grandfather lived here. We came from another part of the state to Uriamghat because the government told us to settle here to protect the land of Assam. This has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
 	<!-- Eviction Notices Mosaic -->
 	<ScrollySection
 		bind:activeStep={noticeStep}
 		steps={noticeSteps}
-		backgroundColor="#0a0a0a"
+		backgroundColor="#f5f0eb"
 		showTextBoxes={false}
+		textBoxVariant="editorial"
 	>
 		{#snippet children({ activeStep })}
-			<NoticeMosaic {activeStep} {notices} backgroundColor="#0a0a0a" />
+			<NoticeMosaic {activeStep} {notices} backgroundColor="#f5f0eb" />
 		{/snippet}
 	</ScrollySection>
+
+	<!-- Abdul Barik Testimony -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					In the early hours of July 12, 2025, the Asadubi Revenue Village, a community that had stood for over seven decades, was met with the mechanical roar of bulldozers. Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of "encroachment," but a matter of documented rights.
+				</p>
+
+				<blockquote>
+					"Our village is 70-75 years old. It was not forest land; it was Pattaland. We showed our documents to the District Officer, but they were rejected. It was written in the papers that this land is 'not indigenous' and reserved for public development."
+				</blockquote>
+
+				<blockquote>
+					"Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
+	<div class="section-divider"></div>
+
+	<!-- Bulldozer Justice Section -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: JCB bulldozer at demolition site</span>
+			</div>
+			<h2 class="content-heading">"Bulldozer justice"</h2>
+
+			<div class="prose-content">
+				<p>
+					In India, the yellow JCB bulldozer has taken on a meaning far beyond its function as a machine. Since 2017, the brand name has become almost generic in the country &ndash; used interchangeably with "bulldozer", especially during state-led demolition drives that critics say bypass due process. Amnesty International verified at least <a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">33 instances</a> of JCB equipment being used in what it described as punitive demolitions of Muslim properties across five states.
+				</p>
+
+				<p>
+					The practice has acquired its own name: "<a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">bulldozer justice</a>", a term used for demolitions that are openly celebrated by BJP leaders and their supporters. Amnesty International had described JCB as the "<a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">brand of choice in a hate campaign against the minority community</a>". Over time, the yellow excavator itself has become a potent political symbol for the use of demolitions as a show of state power against marginalized communities.
+				</p>
+			</div>
+
+			<div class="pull-quote">
+				<p>"The brand of choice in a hate campaign against the minority community."</p>
+				<span class="pull-quote-source">Amnesty International, February 2024</span>
+			</div>
+
+			<div class="prose-content">
+				<p>
+					<a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">Rights groups</a> and <a href="https://www.codastory.com/authoritarian-tech/india-bulldozers-muslim-neighborhoods/" target="_blank" rel="noopener">legal scholars</a> often draw parallels between India's "bulldozer justice" and Israel's long-standing practice of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home demolitions as a central tool of displacement against Palestinians, demolishing more than <a href="https://www.palestineportal.org/learn-teach/key-issues/home-demolitions/" target="_blank" rel="noopener">26,000 homes since 1967</a> alone. The justification is almost always the same: illegal construction, encroachment, or a bureaucratic infraction.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<div class="section-divider"></div>
+
+	<!-- CM Rhetoric Section -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					The language driving these evictions in Assam has been sharply polarising. Chief Minister Himanta Biswa Sarma has a long record of Islamophobic rhetoric, frequently framing Bengali-speaking Muslims as "Bangladeshi encroachers" and a demographic threat to justify the state's aggressive displacement policies.
+				</p>
+
+				<p>
+					This reached a violent peak in February 2026, when the Assam BJP's official X account posted a <a href="https://x.com/MahuaMoitra/status/2020444649857351865" target="_blank" rel="noopener">video</a> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned "point blank shot". Though deleted after a massive outrage by the public and opposition leaders, who warned it was a direct incitement to violence against minorities.
+				</p>
+
+				<p>
+					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minority rights.
+				</p>
+			</div>
+
+			<div class="pull-quote">
+				<p>"Point blank shot"</p>
+				<span class="pull-quote-source">Caption on AI-generated video of CM Sarma, deleted after outrage</span>
+			</div>
+
+			<!-- CM Tweets -->
+			<div
+				class="content-container tweet-container"
+				use:inview={{ rootMargin: '-20% 0px -20% 0px' }}
+				oninview_change={(e) => { if (e.detail.inView) notificationsTriggered = true; }}
+			>
+				<XNotificationStack
+					autoTrigger={false}
+					triggerDelay={200}
+					externalTrigger={notificationsTriggered}
+				/>
+			</div>
+		</div>
+	</section>
+
+	<div class="section-divider"></div>
+
+	<!-- Supreme Court Directives -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Courts</h2>
+
+			<div class="prose-content">
+				<p>
+					In November 2024, India's top court issued landmark directives to curb arbitrary demolitions. The ruling established strict safeguards: 15-day mandatory notice before any demolition, videographed proceedings, written reasons for action, and the right to be heard. The Court declared that the "executive cannot become the Judge", calling such demolitions unconstitutional and "reminiscent of a lawless state of affairs".
+				</p>
+			</div>
+
+			<!-- Pull Quote -->
+			<div class="pull-quote">
+				<p>"The executive cannot become the Judge."</p>
+				<span class="pull-quote-source">Supreme Court of India, November 2024</span>
+			</div>
+
+			<div class="prose-content">
+				<p>
+					Assam's BJP government, led by Chief Minister Himanta Biswa Sarma, appeared unmoved.
+				</p>
+
+				<p>
+					Between late 2024 and mid-2025, the state proceeded with mass evictions in Muslim-majority areas &ndash; demolitions that would lead India's highest court to issue two contempt notices against the Assam government, one in <a href="https://www.deccanchronicle.com/nation/assam-govt-gets-contempt-notice-from-supreme-court-for-bulldozer-action-1827032" target="_blank" rel="noopener">September 2024</a> and another in <a href="https://lawbeat.in/news-updates/supreme-court-issues-notice-on-contempt-plea-against-assams-goalpara-demolitions-1513859" target="_blank" rel="noopener">July 2025</a>.
+				</p>
+
+				<p>
+					But Assam was not alone in defying judicial authority. In April 2022, the Supreme Court had to issue its <a href="https://www.thehindu.com/news/cities/Delhi/supreme-court-halts-eviction-drive-in-delhis-jahangirpuri/article65337761.ece" target="_blank" rel="noopener">order</a> twice to stop demolitions in Delhi's Jahangirpuri neighbourhood, as <a href="https://www.ndtv.com/india-news/supreme-court-halts-demolition-in-delhis-violence-hit-jahangirpuri-orders-status-quo-hearing-tomorrow-2902922" target="_blank" rel="noopener">bulldozers kept moving</a> for an hour after the first order. In November 2024, the <a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">court</a> issued what was widely described as a landmark, categorical ban on bulldozer justice across India. The 12 months that followed were marked by demolition drives across states, revealing a distinctly different reality on the ground.
+				</p>
+
+				<p>
+					In Gujarat, thousands of homes in Muslim-majority settlements around Ahmedabad's Chandola Lake were <a href="https://article-14.com/post/the-hunt-for-bangladeshis-thousands-of-muslims-homeless-2-months-after-vast-gujarat-demolition-688fd625e41f6" target="_blank" rel="noopener">demolished in 2025</a> in a campaign framed as a crackdown on "illegal Bangladeshis", leaving families homeless for months.
+				</p>
+
+				<p>
+					The bulldozers continued to roll, raising a fundamental question about the limits of judicial authority when state power refuses to yield.
+				</p>
+			</div>
+
+			<!-- Contempt Timeline -->
+			<div class="contempt-timeline">
+				<div class="contempt-event">
+					<span class="contempt-date">Nov 2024</span>
+					<span class="contempt-desc">Supreme Court issues landmark ban on bulldozer justice</span>
+				</div>
+				<div class="contempt-event">
+					<span class="contempt-date">Sep 2024</span>
+					<span class="contempt-desc">First contempt notice against Assam government</span>
+				</div>
+				<div class="contempt-event">
+					<span class="contempt-date">Jul 2025</span>
+					<span class="contempt-desc">Second contempt notice against Assam government</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="section-divider"></div>
+
+	<!-- Content Section: The Violence -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: Aftermath of eviction drive</span>
+			</div>
+			<h2 class="content-heading">The Violence</h2>
+
+			<div class="prose-content">
+				<p>At least 10 people have been killed during eviction drives since the BJP came to power in 2016.</p>
+
+				<div class="timeline-events">
+					<div class="event">
+						<p class="event-date">September 21, 2016 &mdash; <a href="https://www.ndtv.com/guwahati-news/two-dead-as-eviction-drive-near-kaziranga-national-park-turns-violent-1460443" target="_blank" rel="noopener">Near Kaziranga National Park</a>, Nagaon district (2)</p>
+						<p>Two killed during a violent eviction drive.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">March 11, 2019 &mdash; <a href="https://www.aljazeera.com/news/2019/3/25/in-indias-assam-muslim-families-evicted-weeks-before-elections" target="_blank" rel="noopener">Hojai district</a> (1)</p>
+						<p>Heavily pregnant Kulsuma Begum succumbed to her injuries.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">September 23, 2021 &mdash; <a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur, Darrang</a> (2)</p>
+						<p>Moinul Haque (28) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">April 1, 2022 &mdash; <a href="https://www.youtube.com/watch?v=t2xSk2iULO8" target="_blank" rel="noopener">Purana Bazar, Hojai</a> (1)</p>
+						<p>One person died amid eviction for flyover construction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">July 17&ndash;18, 2023 &mdash; <a href="https://indianexpress.com/article/north-east-india/assam/woman-shot-dead-6-including-3-guards-injured-clash-assam-wildlife-sanctuary-8844594/" target="_blank" rel="noopener">Burha Chapori Wildlife Sanctuary</a>, Sonitpur (1)</p>
+						<p>Rahima Khatun was shot dead by forest officials during clashes after eviction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">September 12, 2024 &mdash; <a href="https://www.newindianexpress.com/nation/2024/Sep/12/two-muslims-killed-after-police-opened-fire-at-villagers-during-eviction-drive-in-assams-sonapur" target="_blank" rel="noopener">Kachutali, Sonapur</a> (2)</p>
+						<p>Haidar Ali (19) and Jubahir Ali (18) killed, 33 injured during "tribal belt protection" eviction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">July 17, 2025 &mdash; <a href="https://www.newindianexpress.com/nation/2025/Jul/17/eviction-drive-in-assams-goalpara-turns-violent-one-killed-in-police-firing" target="_blank" rel="noopener">Paikan Reserve Forest, Goalpara</a> (1)</p>
+						<p>Shakaur Ali killed and several injured during forest eviction clearance.</p>
+					</div>
+				</div>
+
+				<p>
+					The eviction was not merely a demolition; it was followed by what Barik describes as a calculated attempt to isolate the survivors. After the houses were levelled, the administration took physical steps to ensure no aid reached the displaced families living under tarpaulins.
+				</p>
+
+				<blockquote>
+					"With a JCB, they dug a massive pit in the middle of the road... This road was used for organisations to help us with food, water, and tarpaulins. They beat us up. They shot us. One of us died... the injured people were brought from the hospital and straight away put in jail."
+				</blockquote>
+			</div>
+		</div>
+	</section>
 
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
 		<ScrollySection
 			bind:activeStep={mapStep}
 			steps={mapSteps}
-			backgroundColor="#0d0d0d"
+			backgroundColor="#f5f0eb"
 			textBoxPosition="left"
 			firstStepOffset={0.5}
+			textBoxVariant="editorial"
 			onScrollProgress={(p) => (mapScrollProgress = p)}
 		>
 			{#snippet children({ activeStep })}
@@ -342,74 +667,141 @@
 	<!-- Transition Gallery - Demolition Images -->
 	<DemolitionGallery />
 
-	<!-- Content Section: The Violence -->
+	<!-- Maiful Naysa Continued -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Violence</h2>
-
 			<div class="prose-content">
-				<p>Four eviction operations have resulted in deaths:</p>
+				<p>
+					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.
+				</p>
 
-				<div class="timeline-events">
-					<div class="event">
-						<p class="event-date">September 23, 2021 — Dhalpur, Darrang</p>
-						<p>Moinul Haque (28) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
-					</div>
-					<div class="event">
-						<p class="event-date">April 1, 2022 — Purana Bazar, Hojai</p>
-						<p>One death during eviction for flyover construction.</p>
-					</div>
-					<div class="event">
-						<p class="event-date">September 12, 2024 — Kachutali, Kamrup Metropolitan</p>
-						<p>Two killed, 33 injured during "tribal belt protection" eviction.</p>
-					</div>
-					<div class="event">
-						<p class="event-date">July 12, 2025 — Paikan Reserve Forest, Goalpara</p>
-						<p>One killed, 15 injured during forest clearance.</p>
-					</div>
-				</div>
+				<blockquote>
+					"We had a solid house, a shop, and four rooms. Everything was settled. Now we have nothing."
+				</blockquote>
+
+				<p>
+					For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their "dream house" was reduced to rubble in seconds.
+				</p>
+
+				<ul class="before-after-list">
+					<li><strong>The Past:</strong> Sturdy walls, a family shop, and a barricade that kept the wildlife out.</li>
+					<li><strong>The Present:</strong> A plastic tent, no income, and the nightly terror of wild elephants.</li>
+				</ul>
 			</div>
+		</div>
+	</section>
 
 	<SatelliteComparison />
 
+	<!-- Where the Land Goes -->
+	<section class="content-section">
+		<div class="content-container">
 			<h2 class="content-heading">Where the Land Goes</h2>
 
 			<div class="prose-content">
 				<p>
-					On July 8, 2025, 1,400 families were evicted from villages in Dhubri district. Three people were injured.
+					On 8 July 2025, 1,400 families were evicted from villages in Dhubri district. Three people were injured.
 				</p>
 
 				<p>
-					The government's stated purpose: clearing land for an <strong>Adani Power Ltd thermal plant</strong>—a 3,200 megawatt facility representing a Rs 48,000 crore investment.
+					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing a <a href="https://www.adani.com/newsroom/media-releases/adani-to-invest-rs-63000-cr-in-transformative-energy-projects-in-assam" target="_blank" rel="noopener">USD 5.6 billion investment</a>. Weeks earlier, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group is one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure, and has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is the second richest Asian, with a net worth of $66.6 billion.
 				</p>
 
 				<p>
 					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
 				</p>
-			</div>
 
+				<h3 class="prose-subheading">Corporate Allocations</h3>
+
+				<p>
+					In <a href="https://nenow.in/north-east-news/assam/tribal-groups-flag-large-scale-corporate-land-transfers-in-assams-karbi-anglong-and-dima-hasao.html" target="_blank" rel="noopener">Karbi Anglong and Dima Hasao</a>, tribal organisations say more than 11,000 acres have been transferred for industrial projects, threatening 20,000&ndash;25,000 tribal families. Similar patterns emerged after the 2021 Gorukhuti evictions displaced 1,400 families, where land cleared for "agriculture" later fell within <a href="https://assamtribune.com/north-east/northeast-identified-as-new-hotspots-for-rare-earth-critical-minerals-gsi-1582932" target="_blank" rel="noopener">mineral exploration zones</a>.
+				</p>
+
+				<div class="placeholder-image">
+					<span>Photo: Industrial development site or Advantage Assam summit</span>
+				</div>
+
+				<h3 class="prose-subheading">The Eighteen Acres</h3>
+
+				<p>
+					Questions about where cleared land ultimately goes are not new. A 2021 <a href="https://thewire.in/government/assam-government-land-himanta-biswa-sarma-rbs-realtors" target="_blank" rel="noopener">joint investigation</a> by The Wire and The Crosscurrent reported that between 2006 and 2009, a real estate company co-founded by the chief minister's wife acquired at least 18 acres of government land in and around Guwahati through a series of transactions that appeared to contravene state land regulations. The parcels reportedly included ceiling-surplus land meant for redistribution to landless families, tribal belt land with transfer restrictions, and plots reserved for public or institutional use.
+				</p>
+
+				<div class="pull-quote">
+					<p>"At least 18 acres of government land acquired through transactions that appeared to contravene state land regulations."</p>
+					<span class="pull-quote-source">The Wire / The Crosscurrent, 2021</span>
+				</div>
+
+				<p>
+					The investigation found that some of these transfers took place at concessional rates or through direct allotments during a period when Himanta Biswa Sarma was serving as a senior cabinet minister in the Assam government. Land records cited in the report suggested irregularities in classification changes and eligibility criteria. The company &ndash; since renamed Vasistha Realtors &ndash; lists the chief minister's son as a shareholder. Sarma has denied any wrongdoing.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- The Displaced -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: Tarpaulin shelters along roadside</span>
+			</div>
 			<h2 class="content-heading">The Displaced</h2>
 
 			<div class="prose-content">
 				<p>Where do 20,000 families go?</p>
 
 				<p>
-					Field reports describe families living in makeshift shelters, dependent on NGO assistance. Many received no government rehabilitation despite Assam's stated policy of providing support to the landless.
+					We saw families living in makeshift shelters constructed from tarpaulin and bamboo along roadsides, on the banks of the river and at the edges of forests, sometimes dependent on NGO assistance for basic necessities. Many received no government rehabilitation, despite Assam's stated policy of providing support to the landless.
 				</p>
 
-				<p>
-					Some of the evicted have nowhere legal to go. The National Register of Citizens process—concluded in 2019—excluded over 1.9 million people who could not prove their families entered India before March 24, 1971.
-				</p>
-			</div>
+				<h3 class="prose-subheading">"Go Back to Bangladesh"</h3>
 
-			<div class="visual-placeholder">
 				<p>
-					[VISUAL: EVICTION AREAS AND MIGRATORY FLOWS]<br/>
-					<span>Map showing displacement patterns—where evicted families have moved.</span>
+					Despite Zain-ul-Abaadin possessing National Register of Citizens (NRC) documents and valid voter IDs, they were met with a familiar xenophobic taunt during the drive.
 				</p>
+
+				<blockquote>
+					"The police harassed us at the riverbanks and told us to 'go back to Bangladesh.' But we are not Bangladeshis. We are from Assam. We vote here. Our ancestors are from here. How do we go back to a place we have never known?"
+				</blockquote>
+
+				<p>
+					Zain describes a terrifying atmosphere where the displaced are being systematically cut off from the local economy. The eviction drives reflect layered systemic marginalisation. Economically, families lose land, livelihoods, and access to welfare, pushing them into deeper precarity. Politically and socially, even documented citizens face recurring challenges to their belonging, reinforcing stigma, exclusion, and a condition of insecurity where rights exist on paper but remain fragile in practice.
+				</p>
+
+				<div class="placeholder-image">
+					<span>Photo: Displaced families at the edge of the river</span>
+				</div>
+
+				<p>
+					The most harrowing aspect of Barik's testimony is the apparent defiance of the judiciary by executive forces. Just two days before the demolition, the residents believed they had secured a lifeline from the state's highest court.
+				</p>
+
+				<blockquote>
+					"We received an order from the High Court on 10 July. It said if it is necessary to evict them, the government must first arrange for their accommodation and food. The government didn't accept the court's order. They are lying to the court again and again."
+				</blockquote>
+
+				<p>
+					This reflects a broader pattern in Assam's eviction drives, where the category of "indigenous" functions as a shifting benchmark, often used to undermine the land claims of Bengali-origin Muslims regardless of decades of residence or tax records.
+				</p>
+
+				<blockquote>
+					"The current government refuses to follow the Constitution of India. The RSS wants to make India a Hindu state. There is no place for Muslims here."
+				</blockquote>
 			</div>
 		</div>
 	</section>
+
+	<!-- Migration Map Placeholder -->
+	<div class="content-section">
+		<div class="content-container">
+			<div class="visual-placeholder">
+				<p>
+					[VISUAL: EVICTION AREAS AND MIGRATORY FLOWS]<br/>
+					<span>Map showing displacement patterns&mdash;where evicted families have moved.</span>
+				</p>
+			</div>
+		</div>
+	</div>
 
 	<!-- Media Headlines Section -->
 	<HeadlineStack {headlines} />
@@ -421,15 +813,46 @@
 
 			<div class="prose-content">
 				<p>
-					Amnesty International. Human Rights Watch. UN Special Rapporteurs. The organizations that document human rights globally have all examined what is happening in Assam.
+					Amnesty International, Human Rights Watch, and UN Special Rapporteurs have all examined what is happening in Assam.
 				</p>
 
-				<blockquote>
-					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law. The organization found violations of the right to adequate housing, fair trial, and non-discrimination.
-				</blockquote>
+				<p>
+					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law, finding violations of the right to adequate housing, fair trial, and non-discrimination.
+				</p>
 
 				<p>
 					In June 2025, UN experts called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
+				</p>
+
+				<p>
+					Last month, <a href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/" target="_blank" rel="noopener">UN rights experts</a> flag systematic bias and "forced displacement" of Bengali Muslims in Assam.
+				</p>
+
+				<h3 class="prose-subheading">A Global Pattern</h3>
+
+				<p>
+					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine, over 55,000 Palestinian structures have been demolished since 1967 for systematic home destruction.
+				</p>
+
+				<p>
+					Similar patterns have been observed in parts of India and Latin America.
+				</p>
+
+				<p>
+					Paraguay forcibly evicted 3,000 people from Indigenous communities since September 2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
+				</p>
+
+				<p>
+					UN Special Rapporteur Balakrishnan Rajagopal noted an <a href="https://thepolisproject.com/research/un-rapporteur-balakrishnan-rajagopal-demolitions/" target="_blank" rel="noopener">"uncanny similarity"</a> between India's methods and Israel's conduct in Palestine, explaining both use bulldozers to create "chilling effects" and punish entire communities.
+				</p>
+
+				<div class="pull-quote">
+					<p>"Uncanny similarity" between India's methods and Israel's conduct in Palestine.</p>
+					<span class="pull-quote-source">UN Special Rapporteur Balakrishnan Rajagopal</span>
+				</div>
+
+				<p>
+					From Assam to Gaza, from Kashmir to the Andes, the bulldozer has become more than a piece of machinery. It is a tool of displacement, used to erase marginalised communities under the guise of "development," "security," and "legality." Its practical purpose may be to clear land, but its political function is to send a message about power, belonging, and whose homes are considered disposable.
 				</p>
 			</div>
 
@@ -437,40 +860,19 @@
 
 			<div class="prose-content">
 				<p>
-					Throughout this period, Chief Minister Himanta Biswa Sarma has characterized the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers." He has spoken of stopping "demographic invasion by people of one religion." He has used the phrase "land jihad."
+					Throughout this period, Modi's close ally Chief Minister Himanta Biswa Sarma has characterised the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers".
+				</p>
+
+				<blockquote>
+					"My job is to make the <a href="https://scroll.in/article/1090396/himanta-sarmas-remarks-about-miyas-make-a-mockery-of-constitution" target="_blank" rel="noopener">Miya people suffer</a>."
+					<footer>&mdash; Himanta Biswa Sarma, January 27</footer>
+				</blockquote>
+
+				<p class="additional-research">
+					<em>Additional research by Mir Wafa Raseeq</em>
 				</p>
 			</div>
-
-			<div class="cm-video-container">
-				<video
-					class="cm-video"
-					autoplay
-					muted
-					loop
-					playsinline
-					preload="auto"
-				>
-					<source src="/videos/assam-evictions/1952348361748594720_00001.mp4" type="video/mp4" />
-				</video>
-				<div class="cm-video-overlay"></div>
-			</div>
 		</div>
-	</section>
-
-	<!-- Continue to Part II -->
-	<section class="continue-section">
-		<a href="https://preview.thenewhumanitarian.org/the-eighteen-acres/" class="continue-link">
-			<div class="continue-content">
-				<span class="continue-label">Continue to Part II</span>
-				<span class="continue-title">The Eighteen Acres</span>
-				<span class="continue-subtitle">The land deal behind Assam's most powerful family</span>
-			</div>
-			<span class="continue-arrow">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</span>
-		</a>
 	</section>
 
 	<!-- Footer -->
@@ -498,6 +900,10 @@
 						<div class="credit-item">
 							<span class="credit-role">Visuals</span>
 							<span class="credit-name">Tom Vaillant</span>
+						</div>
+						<div class="credit-item">
+							<span class="credit-role">Additional Research</span>
+							<span class="credit-name">Mir Wafa Raseeq</span>
 						</div>
 					</div>
 				</div>
@@ -560,9 +966,9 @@
 </div>
 
 <style>
-	/* Article container - dark background throughout */
+	/* Article container - unified light background */
 	.article-container {
-		background: #0a0a0a;
+		background: #f5f0eb;
 		min-height: 100vh;
 	}
 
@@ -656,11 +1062,11 @@
 		}
 	}
 
-	/* Content sections - dark theme */
+	/* Content sections - warm neutral theme */
 	.content-section {
 		position: relative;
-		background: #0a0a0a;
-		padding: 5rem 1.5rem;
+		background: #f5f0eb;
+		padding: 3.5rem 1.5rem;
 	}
 
 	.content-container {
@@ -673,7 +1079,7 @@
 		font-size: clamp(1.75rem, 4vw, 2.5rem);
 		font-weight: 600;
 		line-height: 1.2;
-		color: #ffffff;
+		color: #1a1a1a;
 		margin: 0 0 2rem 0;
 	}
 
@@ -685,7 +1091,7 @@
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 1.125rem;
 		line-height: 1.85;
-		color: rgba(255, 255, 255, 0.85);
+		color: #2d2d2d;
 	}
 
 	.prose-content p {
@@ -694,15 +1100,27 @@
 
 	.prose-content strong {
 		font-weight: 600;
-		color: #ffffff;
+		color: #1a1a1a;
 	}
 
 	.prose-content blockquote {
-		border-left: 4px solid rgba(255, 255, 255, 0.2);
+		border-left: 4px solid #9f3e52;
 		padding-left: 1.5rem;
 		margin: 2rem 0;
 		font-style: italic;
-		color: rgba(255, 255, 255, 0.6);
+		color: #4a4a4a;
+	}
+
+	.prose-content a {
+		color: #9f3e52;
+		text-decoration: underline;
+		text-decoration-color: rgba(159, 62, 82, 0.3);
+		text-underline-offset: 2px;
+		transition: text-decoration-color 0.2s ease;
+	}
+
+	.prose-content a:hover {
+		text-decoration-color: #9f3e52;
 	}
 
 	/* Timeline events */
@@ -712,13 +1130,13 @@
 
 	.event {
 		padding-left: 1.5rem;
-		border-left: 4px solid #dc2626;
+		border-left: 4px solid #9f3e52;
 		margin-bottom: 1.5rem;
 	}
 
 	.event-date {
 		font-weight: 600;
-		color: #ffffff;
+		color: #1a1a1a;
 		margin: 0 0 0.25rem 0;
 	}
 
@@ -730,15 +1148,15 @@
 	.visual-placeholder {
 		margin: 3rem 0;
 		padding: 2rem;
-		background: rgba(255, 255, 255, 0.05);
-		border: 2px dashed rgba(255, 255, 255, 0.15);
+		background: #d4d0cb;
+		border: 2px dashed rgba(0, 0, 0, 0.15);
 		border-radius: 0.5rem;
 		text-align: center;
 	}
 
 	.visual-placeholder p {
 		font-style: italic;
-		color: rgba(255, 255, 255, 0.5);
+		color: #6b6b6b;
 		margin: 0;
 	}
 
@@ -748,153 +1166,13 @@
 		margin-top: 0.5rem;
 	}
 
-	/* Continue to Part II */
-	.continue-section {
-		background: #0a0a0a;
-		padding: 6rem 1.5rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.continue-link {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 2rem;
-		max-width: 560px;
-		width: 100%;
-		padding: 2rem 2.5rem;
-		background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
-		border: 1px solid rgba(159, 62, 82, 0.3);
-		border-left: 3px solid #9F3E52;
-		border-radius: 4px;
-		text-decoration: none;
-		position: relative;
-		overflow: hidden;
-		transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-		box-shadow:
-			0 4px 20px rgba(0, 0, 0, 0.3),
-			0 0 0 0 rgba(159, 62, 82, 0);
-	}
-
-	.continue-link::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(135deg, rgba(159, 62, 82, 0.08) 0%, transparent 50%);
-		opacity: 0;
-		transition: opacity 0.4s ease;
-	}
-
-	.continue-link:hover {
-		border-color: rgba(159, 62, 82, 0.6);
-		transform: translateY(-2px);
-		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.4),
-			0 0 40px rgba(159, 62, 82, 0.15);
-	}
-
-	.continue-link:hover::before {
-		opacity: 1;
-	}
-
-	.continue-link:active {
-		transform: translateY(0) scale(0.98);
-		transition: all 0.1s ease;
-	}
-
-	.continue-content {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		position: relative;
-		z-index: 1;
-	}
-
-	.continue-label {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
-		font-size: 0.75rem;
-		font-weight: 600;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		color: #9F3E52;
-	}
-
-	.continue-title {
-		font-family: 'Playfair Display', Georgia, serif;
-		font-size: 1.75rem;
-		font-weight: 600;
-		color: #ffffff;
-		line-height: 1.2;
-	}
-
-	.continue-subtitle {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
-		font-size: 1rem;
-		color: rgba(255, 255, 255, 0.6);
-		line-height: 1.5;
-	}
-
-	.continue-arrow {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 48px;
-		height: 48px;
-		border-radius: 50%;
-		background: rgba(159, 62, 82, 0.15);
-		color: #9F3E52;
-		flex-shrink: 0;
-		position: relative;
-		z-index: 1;
-		transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	}
-
-	.continue-arrow svg {
-		transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	}
-
-	.continue-link:hover .continue-arrow {
-		background: rgba(159, 62, 82, 0.25);
-		transform: scale(1.1);
-	}
-
-	.continue-link:hover .continue-arrow svg {
-		transform: translateX(4px);
-	}
-
-	.continue-link:active .continue-arrow {
-		transform: scale(0.95);
-	}
-
-	@media (max-width: 640px) {
-		.continue-section {
-			padding: 4rem 1rem;
-		}
-
-		.continue-link {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 1.5rem;
-			padding: 1.5rem;
-		}
-
-		.continue-title {
-			font-size: 1.5rem;
-		}
-
-		.continue-arrow {
-			align-self: flex-end;
-		}
-	}
-
 	/* Footer Styles */
 	.article-footer {
 		position: relative;
 		z-index: 10;
-		background: #0a0a0a;
+		background: #1a1a1a;
 		padding: 0 1.5rem 3rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
 	}
 
 	.footer-inner {
@@ -953,14 +1231,14 @@
 		font-weight: 500;
 		letter-spacing: 0.15em;
 		text-transform: uppercase;
-		color: #d4a574;
+		color: #9f3e52;
 		margin: 0;
 	}
 
 	.heading-marker {
 		width: 1rem;
 		height: 1px;
-		background: #d4a574;
+		background: #9f3e52;
 	}
 
 	/* Credits */
@@ -1094,30 +1372,131 @@
 		}
 	}
 
-	/* Chief Minister video - inline with editorial content */
-	.cm-video-container {
-		position: relative;
-		border-radius: 4px;
-		overflow: hidden;
+	/* Pull quotes */
+	.pull-quote {
+		margin: 3rem 0;
+		padding: 2rem 0;
+		border-top: 2px solid rgba(159, 62, 82, 0.3);
+		border-bottom: 2px solid rgba(159, 62, 82, 0.3);
+		text-align: center;
+	}
+
+	.pull-quote p {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(1.25rem, 3vw, 1.75rem);
+		font-weight: 500;
+		font-style: italic;
+		line-height: 1.4;
+		color: #1a1a1a;
+		margin: 0 0 0.75rem 0;
+	}
+
+	.pull-quote-source {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.875rem;
+		color: #6b6b6b;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	/* Contempt timeline */
+	.contempt-timeline {
+		margin: 2rem 0;
+		padding-left: 1.5rem;
+		border-left: 2px solid rgba(159, 62, 82, 0.3);
+	}
+
+	.contempt-event {
+		padding: 0.75rem 0 0.75rem 1rem;
+		display: flex;
+		gap: 1rem;
+		align-items: baseline;
+	}
+
+	.contempt-date {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.75rem;
+		color: #6b6b6b;
+		white-space: nowrap;
+		min-width: 5rem;
+	}
+
+	.contempt-desc {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.95rem;
+		color: #2d2d2d;
+		line-height: 1.5;
+	}
+
+	/* Tweet container spacing */
+	.tweet-container {
 		margin-top: 2rem;
 	}
 
-	.cm-video {
-		width: 100%;
-		height: auto;
-		display: block;
+	/* Before/after comparison list */
+	.before-after-list {
+		list-style: none;
+		padding: 0;
+		margin: 1.5rem 0;
 	}
 
-	.cm-video-overlay {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 0.05) 0%,
-			transparent 15%,
-			transparent 85%,
-			rgba(0, 0, 0, 0.1) 100%
-		);
-		pointer-events: none;
+	.before-after-list li {
+		padding: 0.75rem 0;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+		color: #2d2d2d;
+		font-size: 1.125rem;
+		line-height: 1.85;
 	}
+
+	.before-after-list li strong {
+		color: #1a1a1a;
+	}
+
+	/* Additional research credit */
+	.additional-research {
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		color: #6b6b6b;
+		font-size: 0.95rem;
+	}
+
+	/* Section divider between adjacent prose sections */
+	.section-divider {
+		width: 4rem;
+		height: 1px;
+		background: rgba(159, 62, 82, 0.2);
+		margin: 0 auto;
+	}
+
+	/* Placeholder image blocks */
+	.placeholder-image {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		background: #d4d0cb;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 2rem 0;
+	}
+
+	.placeholder-image span {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.875rem;
+		color: #6b6b6b;
+		text-align: center;
+		padding: 1rem;
+	}
+
+	/* Sub-headings within prose sections */
+	.prose-subheading {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(1.25rem, 3vw, 1.5rem);
+		font-weight: 600;
+		line-height: 1.3;
+		color: #1a1a1a;
+		margin: 3rem 0 1.5rem 0;
+	}
+
 </style>

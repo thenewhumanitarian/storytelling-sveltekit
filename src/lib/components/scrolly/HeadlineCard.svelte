@@ -58,13 +58,13 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		background: #1a1a1a;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #ffffff;
+		border: 1px solid rgba(0, 0, 0, 0.08);
 		border-radius: 8px;
 		padding: 24px;
 		text-decoration: none;
 		color: inherit;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 		transition:
 			transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
 			box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
@@ -82,8 +82,8 @@
 
 	.headline-card:hover {
 		transform: translateY(-4px);
-		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-		border-color: #dc2626;
+		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+		border-color: #9f3e52;
 	}
 
 	.card-content {
@@ -107,18 +107,18 @@
 		font-weight: 600;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #dc2626;
+		color: #9f3e52;
 	}
 
 	.date {
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.5);
+		color: #999999;
 	}
 
 	.card-divider {
 		height: 1px;
-		background: linear-gradient(to right, #dc2626, rgba(255, 255, 255, 0.1) 30%);
+		background: linear-gradient(to right, #9f3e52, rgba(0, 0, 0, 0.06) 30%);
 		margin-top: 16px;
 		margin-bottom: 12px;
 	}
@@ -128,7 +128,7 @@
 		font-size: 1.25rem;
 		font-weight: 600;
 		line-height: 1.35;
-		color: #ffffff;
+		color: #1a1a1a;
 		margin: 0 0 12px 0;
 	}
 
@@ -136,7 +136,7 @@
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 0.95rem;
 		line-height: 1.6;
-		color: rgba(255, 255, 255, 0.7);
+		color: #4a4a4a;
 		margin: 0;
 	}
 
@@ -149,7 +149,7 @@
 	.author {
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 0.85rem;
-		color: rgba(255, 255, 255, 0.5);
+		color: #999999;
 		font-style: italic;
 	}
 
@@ -160,7 +160,7 @@
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 0.85rem;
 		font-weight: 600;
-		color: #dc2626;
+		color: #9f3e52;
 		transition: gap 0.2s;
 	}
 
