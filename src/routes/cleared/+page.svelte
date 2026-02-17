@@ -39,26 +39,21 @@
 		},
 		{
 			title: 'September 23, 2021',
-			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. A government photographer was filmed stomping repeatedly on Haque\'s body as he lay dying.',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that will reshape hundreds of thousands of lives.',
 			source: {
 				text: 'Al Jazeera',
 				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
-			},
-			imageCredit: 'Moinul Haque\'s family'
-		},
-		{
-			title: 'A Campaign',
-			text: 'This was not an isolated event. It was one operation in a campaign that has demolished more than 22,000 homes across Assam since 2021—the vast majority belonging to Bengali-speaking Muslims.',
-			source: {
-				text: 'Reuters',
-				url: 'https://www.reuters.com/world/asia-pacific/evictions-expulsions-muslims-bangladesh-precede-indian-state-polls-2025-07-28/'
 			}
 		},
 		{
-			text: 'That\'s 165,000 people — or twice Wembley Stadium.'
+			title: 'A Campaign of Displacement',
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes are demolished. The Assam government is led by the same party that governs at the federal level: the BJP. Chief Minister Himanta Biswa Sarma is widely seen as the BJP\'s poster boy for implementing the party\'s Hindu nationalist agenda. The eviction drives follow directly from federal policies like the National Register of Citizens and Citizenship Amendment Act, both passed by Modi\'s government. Federal Home Minister Amit Shah has repeatedly promised to take this model nationwide.'
 		},
 		{
-			text: 'One eviction every 3 minutes, 24 hours a day, for an entire year.',
+			text: 'That\'s 165,000 people \u2013 or twice Wembley Stadium.'
+		},
+		{
+			text: 'One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of those evicted are Bengali-speaking Muslims.',
 			imageCredit: 'Disclaimer: image generated with Nano Banana Pro and GPT Image 1.5'
 		}
 	];
