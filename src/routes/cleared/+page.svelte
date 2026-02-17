@@ -405,6 +405,25 @@
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Abdul Barik Testimony -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					In the early hours of July 12, 2025, the Asadubi Revenue Village, a community that had stood for over seven decades, was met with the mechanical roar of bulldozers. Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of "encroachment," but a matter of documented rights.
+				</p>
+
+				<blockquote>
+					"Our village is 70-75 years old. It was not forest land; it was Pattaland. We showed our documents to the District Officer, but they were rejected. It was written in the papers that this land is 'not indigenous' and reserved for public development."
+				</blockquote>
+
+				<blockquote>
+					"Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
 		<ScrollySection
