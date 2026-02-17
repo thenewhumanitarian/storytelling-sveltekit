@@ -15,6 +15,8 @@
 	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
 	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
 	import SatelliteComparison from '$lib/components/cleared/SatelliteComparison.svelte';
+	import XNotificationStack from '$lib/components/XNotificationStack.svelte';
+	import { inview } from 'svelte-inview';
 
 	// === SECTION STEP DATA ===
 
@@ -250,6 +252,7 @@
 	let mapStep = $state(0);
 	let mapScrollProgress = $state(0);
 	let noticeStep = $state(0);
+	let notificationsTriggered = $state(false);
 
 	// Map fade-in: starts black (1) and fades to visible (0) as we scroll into the section
 	let mapFadeProgress = $derived(() => {
@@ -441,6 +444,95 @@
 				<p>
 					<a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">Rights groups</a> and <a href="https://www.codastory.com/authoritarian-tech/india-bulldozers-muslim-neighborhoods/" target="_blank" rel="noopener">legal scholars</a> often draw parallels between India's "bulldozer justice" and Israel's long-standing practice of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home demolitions as a central tool of displacement against Palestinians, demolishing more than <a href="https://www.palestineportal.org/learn-teach/key-issues/home-demolitions/" target="_blank" rel="noopener">26,000 homes since 1967</a> alone. The justification is almost always the same: illegal construction, encroachment, or a bureaucratic infraction.
 				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- CM Rhetoric Section -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					The language driving these evictions in Assam has been sharply polarising. Chief Minister Himanta Biswa Sarma has a long record of Islamophobic rhetoric, frequently framing Bengali-speaking Muslims as "Bangladeshi encroachers" and a demographic threat to justify the state's aggressive displacement policies.
+				</p>
+
+				<p>
+					This reached a violent peak in February 2026, when the Assam BJP's official X account posted a <a href="https://x.com/MahuaMoitra/status/2020444649857351865" target="_blank" rel="noopener">video</a> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned "point blank shot". Though deleted after a massive outrage by the public and opposition leaders, who warned it was a direct incitement to violence against minorities.
+				</p>
+
+				<p>
+					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minority rights.
+				</p>
+			</div>
+
+			<!-- CM Tweets -->
+			<div
+				class="content-container tweet-container"
+				use:inview={{ rootMargin: '-20% 0px -20% 0px' }}
+				oninview_change={(e) => { if (e.detail.inView) notificationsTriggered = true; }}
+			>
+				<XNotificationStack
+					autoTrigger={false}
+					triggerDelay={200}
+					externalTrigger={notificationsTriggered}
+				/>
+			</div>
+		</div>
+	</section>
+
+	<!-- Supreme Court Directives -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Courts</h2>
+
+			<div class="prose-content">
+				<p>
+					In November 2024, India's top court issued landmark directives to curb arbitrary demolitions. The ruling established strict safeguards: 15-day mandatory notice before any demolition, videographed proceedings, written reasons for action, and the right to be heard. The Court declared that the "executive cannot become the Judge", calling such demolitions unconstitutional and "reminiscent of a lawless state of affairs".
+				</p>
+			</div>
+
+			<!-- Pull Quote -->
+			<div class="pull-quote">
+				<p>"The executive cannot become the Judge."</p>
+				<span class="pull-quote-source">Supreme Court of India, November 2024</span>
+			</div>
+
+			<div class="prose-content">
+				<p>
+					Assam's BJP government, led by Chief Minister Himanta Biswa Sarma, appeared unmoved.
+				</p>
+
+				<p>
+					Between late 2024 and mid-2025, the state proceeded with mass evictions in Muslim-majority areas &ndash; demolitions that would lead India's highest court to issue two contempt notices against the Assam government, one in <a href="https://www.deccanchronicle.com/nation/assam-govt-gets-contempt-notice-from-supreme-court-for-bulldozer-action-1827032" target="_blank" rel="noopener">September 2024</a> and another in <a href="https://lawbeat.in/news-updates/supreme-court-issues-notice-on-contempt-plea-against-assams-goalpara-demolitions-1513859" target="_blank" rel="noopener">July 2025</a>.
+				</p>
+
+				<p>
+					But Assam was not alone in defying judicial authority. In April 2022, the Supreme Court had to issue its <a href="https://www.thehindu.com/news/cities/Delhi/supreme-court-halts-eviction-drive-in-delhis-jahangirpuri/article65337761.ece" target="_blank" rel="noopener">order</a> twice to stop demolitions in Delhi's Jahangirpuri neighbourhood, as <a href="https://www.ndtv.com/india-news/supreme-court-halts-demolition-in-delhis-violence-hit-jahangirpuri-orders-status-quo-hearing-tomorrow-2902922" target="_blank" rel="noopener">bulldozers kept moving</a> for an hour after the first order. In November 2024, the <a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">court</a> issued what was widely described as a landmark, categorical ban on bulldozer justice across India. The 12 months that followed were marked by demolition drives across states, revealing a distinctly different reality on the ground.
+				</p>
+
+				<p>
+					In Gujarat, thousands of homes in Muslim-majority settlements around Ahmedabad's Chandola Lake were <a href="https://article-14.com/post/the-hunt-for-bangladeshis-thousands-of-muslims-homeless-2-months-after-vast-gujarat-demolition-688fd625e41f6" target="_blank" rel="noopener">demolished in 2025</a> in a campaign framed as a crackdown on "illegal Bangladeshis", leaving families homeless for months.
+				</p>
+
+				<p>
+					The bulldozers continued to roll, raising a fundamental question about the limits of judicial authority when state power refuses to yield.
+				</p>
+			</div>
+
+			<!-- Contempt Timeline -->
+			<div class="contempt-timeline">
+				<div class="contempt-event">
+					<span class="contempt-date">Nov 2024</span>
+					<span class="contempt-desc">Supreme Court issues landmark ban on bulldozer justice</span>
+				</div>
+				<div class="contempt-event">
+					<span class="contempt-date">Sep 2024</span>
+					<span class="contempt-desc">First contempt notice against Assam government</span>
+				</div>
+				<div class="contempt-event">
+					<span class="contempt-date">Jul 2025</span>
+					<span class="contempt-desc">Second contempt notice against Assam government</span>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -1241,5 +1333,66 @@
 			rgba(0, 0, 0, 0.1) 100%
 		);
 		pointer-events: none;
+	}
+
+	/* Pull quotes */
+	.pull-quote {
+		margin: 3rem 0;
+		padding: 2rem 0;
+		border-top: 2px solid rgba(255, 255, 255, 0.1);
+		border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+		text-align: center;
+	}
+
+	.pull-quote p {
+		font-family: 'Playfair Display', Georgia, serif;
+		font-size: clamp(1.5rem, 4vw, 2rem);
+		font-weight: 500;
+		font-style: italic;
+		line-height: 1.4;
+		color: #ffffff;
+		margin: 0 0 0.75rem 0;
+	}
+
+	.pull-quote-source {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.875rem;
+		color: rgba(255, 255, 255, 0.4);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	/* Contempt timeline */
+	.contempt-timeline {
+		margin: 2rem 0;
+		padding-left: 1.5rem;
+		border-left: 2px solid rgba(255, 255, 255, 0.15);
+	}
+
+	.contempt-event {
+		padding: 0.75rem 0 0.75rem 1rem;
+		display: flex;
+		gap: 1rem;
+		align-items: baseline;
+	}
+
+	.contempt-date {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.75rem;
+		color: rgba(255, 255, 255, 0.4);
+		white-space: nowrap;
+		min-width: 5rem;
+	}
+
+	.contempt-desc {
+		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-size: 0.95rem;
+		color: rgba(255, 255, 255, 0.7);
+		line-height: 1.5;
+	}
+
+	/* Tweet container spacing */
+	.tweet-container {
+		margin-top: 2rem;
 	}
 </style>
