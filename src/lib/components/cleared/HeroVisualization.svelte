@@ -14,7 +14,11 @@
 </script>
 
 <div class="hero-visualization">
-	<img src={currentImage} alt="Assam eviction scene" class="hero-image" class:contain-mode={useContain} />
+	{#if currentImage}
+		<img src={currentImage} alt="Assam eviction scene" class="hero-image" class:contain-mode={useContain} />
+	{:else}
+		<div class="placeholder-bg"></div>
+	{/if}
 	<div class="hero-overlay"></div>
 	{#if fadeProgress > 0}
 		<div class="fade-overlay" style:opacity={fadeProgress}></div>
@@ -68,5 +72,11 @@
 		inset: 0;
 		background: #0a0a0a;
 		pointer-events: none;
+	}
+
+	.placeholder-bg {
+		position: absolute;
+		inset: 0;
+		background: #1a1a1a;
 	}
 </style>

@@ -100,6 +100,44 @@
 		}
 	];
 
+	// Background scrolly steps (6 steps covering Assam history and context)
+	const backgroundSteps = [
+		{
+			title: 'A Contested History',
+			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\'s most ethnically diverse regions. For decades, the question of who truly belongs here has defined its politics. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
+		},
+		{
+			title: 'The Brahmaputra',
+			text: 'Assam lies along the Brahmaputra, one of the world\'s largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life.'
+		},
+		{
+			title: 'The Miya',
+			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Over generations, they cleared the land, farmed it, and built communities on it. The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders.'
+		},
+		{
+			title: 'The Eviction Machine',
+			text: 'Since 2016, these communities have faced government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades. The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines. Some came with official permission. Others were given land by the Indian state itself. Many had been living in Assam for 50 to 70 years.'
+		},
+		{
+			title: 'The Register',
+			text: 'The National Register of Citizens (NRC), concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. Residents had to prove they or their families arrived before March 24, 1971. The final list excluded more than 1.9 million people, roughly 6% of Assam\'s population. Many were poor. Most were Muslim. Several detention centres were established, including India\'s largest in Goalpara, designed to house up to 3,500 people. In some cases, children were separated from their parents.'
+		},
+		{
+			title: 'After Partition',
+			text: 'More than one third of Assam\'s 31 million people are Muslim. That demographic reality has made Assam a focal point of a broader national shift. The BJP-led government has faced repeated accusations of targeting India\'s 200 million Muslims, from the Citizenship Amendment Act to the National Register of Citizens. In Assam, these national policies have found their sharpest expression.'
+		}
+	];
+
+	// Background scrolly images (gray placeholders for now)
+	const backgroundImages = [
+		'', // Step 0: Satellite/aerial of Assam (placeholder)
+		'', // Step 1: Brahmaputra floods (placeholder)
+		'', // Step 2: Char land community (placeholder)
+		'', // Step 3: Hands holding documents (placeholder)
+		'', // Step 4: Queue with documents (placeholder)
+		''  // Step 5: Historical/archival (placeholder)
+	];
+
 	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
 	const mapSteps = [
 		{
@@ -253,6 +291,19 @@
 	let mapScrollProgress = $state(0);
 	let noticeStep = $state(0);
 	let notificationsTriggered = $state(false);
+	let backgroundStep = $state(0);
+	let backgroundScrollProgress = $state(0);
+
+	// Background scrolly image control
+	let currentBackgroundImage = $derived(backgroundImages[backgroundStep] ?? '');
+
+	// Fade effects for background scrolly
+	let backgroundFadeProgress = $derived(() => {
+		if (backgroundStep !== 5) return 0;
+		const fadeStart = 0.85;
+		if (backgroundScrollProgress < fadeStart) return 0;
+		return Math.min(1, (backgroundScrollProgress - fadeStart) / (1 - fadeStart));
+	});
 
 	// Map fade-in: starts black (1) and fades to visible (0) as we scroll into the section
 	let mapFadeProgress = $derived(() => {
@@ -328,56 +379,34 @@
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Background Scrolly -->
+	<ScrollySection
+		bind:activeStep={backgroundStep}
+		steps={backgroundSteps}
+		backgroundColor="#0a0a0a"
+		showTextBoxes={true}
+		textBoxVariant="light"
+		onScrollProgress={(p) => (backgroundScrollProgress = p)}
+	>
+		{#snippet children({ activeStep })}
+			<HeroVisualization
+				currentImage={currentBackgroundImage}
+				fadeProgress={backgroundFadeProgress()}
+			/>
+		{/snippet}
+	</ScrollySection>
 	<div class="transition-dark-to-light"></div>
 
-	<!-- Background Section -->
+	<!-- Background prose bridge (remaining paragraphs) -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">Background</h2>
-
 			<div class="prose-content">
-				<p>
-					Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India's most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations. For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities (both Hindu and Muslim) have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.
-				</p>
-
-				<p>
-					Assam lies along the Brahmaputra, one of the world's largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life.
-				</p>
-
-				<p>
-					Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region, parts of which is now Bangladesh, to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice. Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra's relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it.
-				</p>
-
-				<p>
-					The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.
-				</p>
-
-				<p>
-					But since 2016, these communities have faced a different kind of uprooting: government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades, branding an entire community as illegal immigrants on land they had lived on for generations.
-				</p>
-
-				<p>
-					The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But the story is more complicated. Many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines. Some came with official permission from the government of what is now India. Others were given land by the Indian state itself, often unproductive char lands that the government was eager to have cultivated. By the time the evictions began, many had been living in Assam for 50 to 70 years.
-				</p>
-
-				<p>
-					More than one third of Assam's 31 million people are Muslim &ndash; one of the highest proportions of any Indian state. That demographic reality has made Assam a focal point of a broader national shift. In recent years, the BJP-led government of Narendra Modi has faced repeated accusations of enacting laws and policies that specifically target India's <a href="https://www.aljazeera.com/news/2024/3/11/india-implements-anti-muslim-2019-citizenship-law-weeks-before-election" target="_blank" rel="noopener">200 million Muslims</a>, from the Citizenship Amendment Act, which critics say deliberately excludes Muslims from a fast-tracked citizenship pathway, to the National Register of Citizens, which left millions stateless. In Assam, these national policies have found their sharpest expression.
-				</p>
-
 				<p>
 					What makes these evictions particularly troubling is that many families held Patta &ndash; official land titles issued by the Assam government &ndash; along with ration cards and voter IDs, documents that under Indian law establish legal residence and citizenship.
 				</p>
 
 				<p>
 					Some Pattas dated back decades, proof that the state itself had recognised their right to the land. Yet documented cases show Patta-holders being evicted without warning, without due process, their legal papers rendered meaningless overnight.
-				</p>
-
-				<p>
-					The National Register of Citizens (NRC), initiated after the right-wing BJP came to power in 2016 and concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before March 24, 1971 &ndash; the eve of Bangladesh's independence from Pakistan. The final list excluded over more than million people, roughly 6% of Assam's population, who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India's Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
-				</p>
-
-				<p>
-					The process was not free from error or bias. Legitimate citizens were excluded on the basis of technical errors, spelling mistakes, and documentation challenges. Several detention centres were established, including India's largest dedicated detention centre opened in Goalpara designed to house up to 3,500 people. In some cases, children were separated from their parents. For many of the evicted, there is literally nowhere legal to go.
 				</p>
 			</div>
 		</div>
