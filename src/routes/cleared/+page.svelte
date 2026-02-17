@@ -594,6 +594,9 @@
 	<!-- Content Section: The Violence -->
 	<section class="content-section">
 		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: Aftermath of eviction drive</span>
+			</div>
 			<h2 class="content-heading">The Violence</h2>
 
 			<div class="prose-content">
@@ -710,13 +713,26 @@
 					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
 				</p>
 
+				<h3 class="prose-subheading">Corporate Allocations</h3>
+
 				<p>
 					In <a href="https://nenow.in/north-east-news/assam/tribal-groups-flag-large-scale-corporate-land-transfers-in-assams-karbi-anglong-and-dima-hasao.html" target="_blank" rel="noopener">Karbi Anglong and Dima Hasao</a>, tribal organisations say more than 11,000 acres have been transferred for industrial projects, threatening 20,000&ndash;25,000 tribal families. Similar patterns emerged after the 2021 Gorukhuti evictions displaced 1,400 families, where land cleared for "agriculture" later fell within <a href="https://assamtribune.com/north-east/northeast-identified-as-new-hotspots-for-rare-earth-critical-minerals-gsi-1582932" target="_blank" rel="noopener">mineral exploration zones</a>.
 				</p>
 
+				<div class="placeholder-image">
+					<span>Photo: Industrial development site or Advantage Assam summit</span>
+				</div>
+
+				<h3 class="prose-subheading">The Eighteen Acres</h3>
+
 				<p>
 					Questions about where cleared land ultimately goes are not new. A 2021 <a href="https://thewire.in/government/assam-government-land-himanta-biswa-sarma-rbs-realtors" target="_blank" rel="noopener">joint investigation</a> by The Wire and The Crosscurrent reported that between 2006 and 2009, a real estate company co-founded by the chief minister's wife acquired at least 18 acres of government land in and around Guwahati through a series of transactions that appeared to contravene state land regulations. The parcels reportedly included ceiling-surplus land meant for redistribution to landless families, tribal belt land with transfer restrictions, and plots reserved for public or institutional use.
 				</p>
+
+				<div class="pull-quote">
+					<p>"At least 18 acres of government land acquired through transactions that appeared to contravene state land regulations."</p>
+					<span class="pull-quote-source">The Wire / The Crosscurrent, 2021</span>
+				</div>
 
 				<p>
 					The investigation found that some of these transfers took place at concessional rates or through direct allotments during a period when Himanta Biswa Sarma was serving as a senior cabinet minister in the Assam government. Land records cited in the report suggested irregularities in classification changes and eligibility criteria. The company &ndash; since renamed Vasistha Realtors &ndash; lists the chief minister's son as a shareholder. Sarma has denied any wrongdoing.
