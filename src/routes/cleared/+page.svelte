@@ -298,6 +298,8 @@
 		{/snippet}
 	</ScrollySection>
 
+	<div class="transition-dark-to-light"></div>
+
 	<!-- Maiful Naysa Introduction -->
 	<section class="content-section">
 		<div class="content-container">
@@ -313,6 +315,8 @@
 		</div>
 	</section>
 
+	<div class="transition-light-to-dark"></div>
+
 	<!-- Eviction Data Visualization -->
 	<ScrollySection
 		bind:activeStep={evictionStep}
@@ -323,6 +327,8 @@
 			<EvictionScrolly {activeStep} />
 		{/snippet}
 	</ScrollySection>
+
+	<div class="transition-dark-to-light"></div>
 
 	<!-- Background Section -->
 	<section class="content-section">
@@ -396,6 +402,8 @@
 		</div>
 	</section>
 
+	<div class="transition-light-to-dark"></div>
+
 	<!-- Eviction Notices Mosaic -->
 	<ScrollySection
 		bind:activeStep={noticeStep}
@@ -407,6 +415,8 @@
 			<NoticeMosaic {activeStep} {notices} backgroundColor="#0a0a0a" />
 		{/snippet}
 	</ScrollySection>
+
+	<div class="transition-dark-to-light"></div>
 
 	<!-- Abdul Barik Testimony -->
 	<section class="content-section">
@@ -587,6 +597,8 @@
 		</div>
 	</section>
 
+	<div class="transition-light-to-dark"></div>
+
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
 		<ScrollySection
@@ -605,6 +617,8 @@
 
 	<!-- Transition Gallery - Demolition Images -->
 	<DemolitionGallery />
+
+	<div class="transition-dark-to-light"></div>
 
 	<!-- Maiful Naysa Continued -->
 	<section class="content-section">
@@ -631,6 +645,8 @@
 	</section>
 
 	<SatelliteComparison />
+
+	<div class="transition-dark-to-light"></div>
 
 	<!-- Where the Land Goes -->
 	<section class="content-section">
@@ -784,6 +800,8 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="transition-light-to-dark"></div>
 
 	<!-- Footer -->
 	<footer class="article-footer">
