@@ -562,26 +562,46 @@
 			<h2 class="content-heading">The Violence</h2>
 
 			<div class="prose-content">
-				<p>Four eviction operations have resulted in deaths:</p>
+				<p>At least 10 people have been killed during eviction drives since the BJP came to power in 2016.</p>
 
 				<div class="timeline-events">
 					<div class="event">
-						<p class="event-date">September 23, 2021 — Dhalpur, Darrang</p>
+						<p class="event-date">September 21, 2016 &mdash; <a href="https://www.ndtv.com/guwahati-news/two-dead-as-eviction-drive-near-kaziranga-national-park-turns-violent-1460443" target="_blank" rel="noopener">Near Kaziranga National Park</a>, Nagaon district (2)</p>
+						<p>Two killed during a violent eviction drive.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">March 11, 2019 &mdash; <a href="https://www.aljazeera.com/news/2019/3/25/in-indias-assam-muslim-families-evicted-weeks-before-elections" target="_blank" rel="noopener">Hojai district</a> (1)</p>
+						<p>Heavily pregnant Kulsuma Begum succumbed to her injuries.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">September 23, 2021 &mdash; <a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur, Darrang</a> (2)</p>
 						<p>Moinul Haque (28) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
 					</div>
 					<div class="event">
-						<p class="event-date">April 1, 2022 — Purana Bazar, Hojai</p>
-						<p>One death during eviction for flyover construction.</p>
+						<p class="event-date">April 1, 2022 &mdash; <a href="https://www.youtube.com/watch?v=t2xSk2iULO8" target="_blank" rel="noopener">Purana Bazar, Hojai</a> (1)</p>
+						<p>One person died amid eviction for flyover construction.</p>
 					</div>
 					<div class="event">
-						<p class="event-date">September 12, 2024 — Kachutali, Kamrup Metropolitan</p>
-						<p>Two killed, 33 injured during "tribal belt protection" eviction.</p>
+						<p class="event-date">July 17&ndash;18, 2023 &mdash; <a href="https://indianexpress.com/article/north-east-india/assam/woman-shot-dead-6-including-3-guards-injured-clash-assam-wildlife-sanctuary-8844594/" target="_blank" rel="noopener">Burha Chapori Wildlife Sanctuary</a>, Sonitpur (1)</p>
+						<p>Rahima Khatun was shot dead by forest officials during clashes after eviction.</p>
 					</div>
 					<div class="event">
-						<p class="event-date">July 12, 2025 — Paikan Reserve Forest, Goalpara</p>
-						<p>One killed, 15 injured during forest clearance.</p>
+						<p class="event-date">September 12, 2024 &mdash; <a href="https://www.newindianexpress.com/nation/2024/Sep/12/two-muslims-killed-after-police-opened-fire-at-villagers-during-eviction-drive-in-assams-sonapur" target="_blank" rel="noopener">Kachutali, Sonapur</a> (2)</p>
+						<p>Haidar Ali (19) and Jubahir Ali (18) killed, 33 injured during "tribal belt protection" eviction.</p>
+					</div>
+					<div class="event">
+						<p class="event-date">July 17, 2025 &mdash; <a href="https://www.newindianexpress.com/nation/2025/Jul/17/eviction-drive-in-assams-goalpara-turns-violent-one-killed-in-police-firing" target="_blank" rel="noopener">Paikan Reserve Forest, Goalpara</a> (1)</p>
+						<p>Shakaur Ali killed and several injured during forest eviction clearance.</p>
 					</div>
 				</div>
+
+				<p>
+					The eviction was not merely a demolition; it was followed by what Barik describes as a calculated attempt to isolate the survivors. After the houses were levelled, the administration took physical steps to ensure no aid reached the displaced families living under tarpaulins.
+				</p>
+
+				<blockquote>
+					"With a JCB, they dug a massive pit in the middle of the road... This road was used for organisations to help us with food, water, and tarpaulins. They beat us up. They shot us. One of us died... the injured people were brought from the hospital and straight away put in jail."
+				</blockquote>
 			</div>
 
 	<SatelliteComparison />
