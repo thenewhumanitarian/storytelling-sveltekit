@@ -537,25 +537,6 @@
 		</div>
 	</section>
 
-	<!-- Map Scrolly Section -->
-	<div class="map-section">
-		<ScrollySection
-			bind:activeStep={mapStep}
-			steps={mapSteps}
-			backgroundColor="#0d0d0d"
-			textBoxPosition="left"
-			firstStepOffset={0.5}
-			onScrollProgress={(p) => (mapScrollProgress = p)}
-		>
-			{#snippet children({ activeStep })}
-				<MapScrolly {activeStep} fadeProgress={mapFadeProgress()} fadeOutProgress={mapFadeOutProgress()} />
-			{/snippet}
-		</ScrollySection>
-	</div>
-
-	<!-- Transition Gallery - Demolition Images -->
-	<DemolitionGallery />
-
 	<!-- Content Section: The Violence -->
 	<section class="content-section">
 		<div class="content-container">
@@ -603,47 +584,141 @@
 					"With a JCB, they dug a massive pit in the middle of the road... This road was used for organisations to help us with food, water, and tarpaulins. They beat us up. They shot us. One of us died... the injured people were brought from the hospital and straight away put in jail."
 				</blockquote>
 			</div>
+		</div>
+	</section>
+
+	<!-- Map Scrolly Section -->
+	<div class="map-section">
+		<ScrollySection
+			bind:activeStep={mapStep}
+			steps={mapSteps}
+			backgroundColor="#0d0d0d"
+			textBoxPosition="left"
+			firstStepOffset={0.5}
+			onScrollProgress={(p) => (mapScrollProgress = p)}
+		>
+			{#snippet children({ activeStep })}
+				<MapScrolly {activeStep} fadeProgress={mapFadeProgress()} fadeOutProgress={mapFadeOutProgress()} />
+			{/snippet}
+		</ScrollySection>
+	</div>
+
+	<!-- Transition Gallery - Demolition Images -->
+	<DemolitionGallery />
+
+	<!-- Maiful Naysa Continued -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.
+				</p>
+
+				<blockquote>
+					"We had a solid house, a shop, and four rooms. Everything was settled. Now we have nothing."
+				</blockquote>
+
+				<p>
+					For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their "dream house" was reduced to rubble in seconds.
+				</p>
+
+				<ul class="before-after-list">
+					<li><strong>The Past:</strong> Sturdy walls, a family shop, and a barricade that kept the wildlife out.</li>
+					<li><strong>The Present:</strong> A plastic tent, no income, and the nightly terror of wild elephants.</li>
+				</ul>
+			</div>
+		</div>
+	</section>
 
 	<SatelliteComparison />
 
+	<!-- Where the Land Goes -->
+	<section class="content-section">
+		<div class="content-container">
 			<h2 class="content-heading">Where the Land Goes</h2>
 
 			<div class="prose-content">
 				<p>
-					On July 8, 2025, 1,400 families were evicted from villages in Dhubri district. Three people were injured.
+					On 8 July 2025, 1,400 families were evicted from villages in Dhubri district. Three people were injured.
 				</p>
 
 				<p>
-					The government's stated purpose: clearing land for an <strong>Adani Power Ltd thermal plant</strong>—a 3,200 megawatt facility representing a Rs 48,000 crore investment.
+					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing a <a href="https://www.adani.com/newsroom/media-releases/adani-to-invest-rs-63000-cr-in-transformative-energy-projects-in-assam" target="_blank" rel="noopener">USD 5.6 billion investment</a>. Weeks earlier, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group is one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure, and has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is the second richest Asian, with a net worth of $66.6 billion.
 				</p>
 
 				<p>
 					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
 				</p>
-			</div>
 
+				<p>
+					In <a href="https://nenow.in/north-east-news/assam/tribal-groups-flag-large-scale-corporate-land-transfers-in-assams-karbi-anglong-and-dima-hasao.html" target="_blank" rel="noopener">Karbi Anglong and Dima Hasao</a>, tribal organisations say more than 11,000 acres have been transferred for industrial projects, threatening 20,000&ndash;25,000 tribal families. Similar patterns emerged after the 2021 Gorukhuti evictions displaced 1,400 families, where land cleared for "agriculture" later fell within <a href="https://assamtribune.com/north-east/northeast-identified-as-new-hotspots-for-rare-earth-critical-minerals-gsi-1582932" target="_blank" rel="noopener">mineral exploration zones</a>.
+				</p>
+
+				<p>
+					Questions about where cleared land ultimately goes are not new. A 2021 <a href="https://thewire.in/government/assam-government-land-himanta-biswa-sarma-rbs-realtors" target="_blank" rel="noopener">joint investigation</a> by The Wire and The Crosscurrent reported that between 2006 and 2009, a real estate company co-founded by the chief minister's wife acquired at least 18 acres of government land in and around Guwahati through a series of transactions that appeared to contravene state land regulations. The parcels reportedly included ceiling-surplus land meant for redistribution to landless families, tribal belt land with transfer restrictions, and plots reserved for public or institutional use.
+				</p>
+
+				<p>
+					The investigation found that some of these transfers took place at concessional rates or through direct allotments during a period when Himanta Biswa Sarma was serving as a senior cabinet minister in the Assam government. Land records cited in the report suggested irregularities in classification changes and eligibility criteria. The company &ndash; since renamed Vasistha Realtors &ndash; lists the chief minister's son as a shareholder. Sarma has denied any wrongdoing.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- The Displaced -->
+	<section class="content-section">
+		<div class="content-container">
 			<h2 class="content-heading">The Displaced</h2>
 
 			<div class="prose-content">
 				<p>Where do 20,000 families go?</p>
 
 				<p>
-					Field reports describe families living in makeshift shelters, dependent on NGO assistance. Many received no government rehabilitation despite Assam's stated policy of providing support to the landless.
+					We saw families living in makeshift shelters constructed from tarpaulin and bamboo along roadsides, on the banks of the river and at the edges of forests, sometimes dependent on NGO assistance for basic necessities. Many received no government rehabilitation, despite Assam's stated policy of providing support to the landless.
 				</p>
 
 				<p>
-					Some of the evicted have nowhere legal to go. The National Register of Citizens process—concluded in 2019—excluded over 1.9 million people who could not prove their families entered India before March 24, 1971.
+					Despite Zain-ul-Abaadin possessing National Register of Citizens (NRC) documents and valid voter IDs, they were met with a familiar xenophobic taunt during the drive.
 				</p>
-			</div>
 
-			<div class="visual-placeholder">
+				<blockquote>
+					"The police harassed us at the riverbanks and told us to 'go back to Bangladesh.' But we are not Bangladeshis. We are from Assam. We vote here. Our ancestors are from here. How do we go back to a place we have never known?"
+				</blockquote>
+
 				<p>
-					[VISUAL: EVICTION AREAS AND MIGRATORY FLOWS]<br/>
-					<span>Map showing displacement patterns—where evicted families have moved.</span>
+					Zain describes a terrifying atmosphere where the displaced are being systematically cut off from the local economy. The eviction drives reflect layered systemic marginalisation. Economically, families lose land, livelihoods, and access to welfare, pushing them into deeper precarity. Politically and socially, even documented citizens face recurring challenges to their belonging, reinforcing stigma, exclusion, and a condition of insecurity where rights exist on paper but remain fragile in practice.
 				</p>
+
+				<p>
+					The most harrowing aspect of Barik's testimony is the apparent defiance of the judiciary by executive forces. Just two days before the demolition, the residents believed they had secured a lifeline from the state's highest court.
+				</p>
+
+				<blockquote>
+					"We received an order from the High Court on 10 July. It said if it is necessary to evict them, the government must first arrange for their accommodation and food. The government didn't accept the court's order. They are lying to the court again and again."
+				</blockquote>
+
+				<p>
+					This reflects a broader pattern in Assam's eviction drives, where the category of "indigenous" functions as a shifting benchmark, often used to undermine the land claims of Bengali-origin Muslims regardless of decades of residence or tax records.
+				</p>
+
+				<blockquote>
+					"The current government refuses to follow the Constitution of India. The RSS wants to make India a Hindu state. There is no place for Muslims here."
+				</blockquote>
 			</div>
 		</div>
 	</section>
+
+	<!-- Migration Map Placeholder -->
+	<div class="content-section">
+		<div class="content-container">
+			<div class="visual-placeholder">
+				<p>
+					[VISUAL: EVICTION AREAS AND MIGRATORY FLOWS]<br/>
+					<span>Map showing displacement patterns&mdash;where evicted families have moved.</span>
+				</p>
+			</div>
+		</div>
+	</div>
 
 	<!-- Media Headlines Section -->
 	<HeadlineStack {headlines} />
@@ -655,15 +730,39 @@
 
 			<div class="prose-content">
 				<p>
-					Amnesty International. Human Rights Watch. UN Special Rapporteurs. The organizations that document human rights globally have all examined what is happening in Assam.
+					Amnesty International, Human Rights Watch, and UN Special Rapporteurs have all examined what is happening in Assam.
 				</p>
 
-				<blockquote>
-					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law. The organization found violations of the right to adequate housing, fair trial, and non-discrimination.
-				</blockquote>
+				<p>
+					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law, finding violations of the right to adequate housing, fair trial, and non-discrimination.
+				</p>
 
 				<p>
 					In June 2025, UN experts called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
+				</p>
+
+				<p>
+					Last month, <a href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/" target="_blank" rel="noopener">UN rights experts</a> flag systematic bias and "forced displacement" of Bengali Muslims in Assam.
+				</p>
+
+				<p>
+					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine, over 55,000 Palestinian structures have been demolished since 1967 for systematic home destruction.
+				</p>
+
+				<p>
+					Similar patterns have been observed in parts of India and Latin America.
+				</p>
+
+				<p>
+					Paraguay forcibly evicted 3,000 people from Indigenous communities since September 2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
+				</p>
+
+				<p>
+					UN Special Rapporteur Balakrishnan Rajagopal noted an <a href="https://thepolisproject.com/research/un-rapporteur-balakrishnan-rajagopal-demolitions/" target="_blank" rel="noopener">"uncanny similarity"</a> between India's methods and Israel's conduct in Palestine, explaining both use bulldozers to create "chilling effects" and punish entire communities.
+				</p>
+
+				<p>
+					From Assam to Gaza, from Kashmir to the Andes, the bulldozer has become more than a piece of machinery. It is a tool of displacement, used to erase marginalised communities under the guise of "development," "security," and "legality." Its practical purpose may be to clear land, but its political function is to send a message about power, belonging, and whose homes are considered disposable.
 				</p>
 			</div>
 
@@ -671,40 +770,19 @@
 
 			<div class="prose-content">
 				<p>
-					Throughout this period, Chief Minister Himanta Biswa Sarma has characterized the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers." He has spoken of stopping "demographic invasion by people of one religion." He has used the phrase "land jihad."
+					Throughout this period, Modi's close ally Chief Minister Himanta Biswa Sarma has characterised the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers".
+				</p>
+
+				<blockquote>
+					"My job is to make the <a href="https://scroll.in/article/1090396/himanta-sarmas-remarks-about-miyas-make-a-mockery-of-constitution" target="_blank" rel="noopener">Miya people suffer</a>."
+					<footer>&mdash; Himanta Biswa Sarma, January 27</footer>
+				</blockquote>
+
+				<p class="additional-research">
+					<em>Additional research by Mir Wafa Raseeq</em>
 				</p>
 			</div>
-
-			<div class="cm-video-container">
-				<video
-					class="cm-video"
-					autoplay
-					muted
-					loop
-					playsinline
-					preload="auto"
-				>
-					<source src="/videos/assam-evictions/1952348361748594720_00001.mp4" type="video/mp4" />
-				</video>
-				<div class="cm-video-overlay"></div>
-			</div>
 		</div>
-	</section>
-
-	<!-- Continue to Part II -->
-	<section class="continue-section">
-		<a href="https://preview.thenewhumanitarian.org/the-eighteen-acres/" class="continue-link">
-			<div class="continue-content">
-				<span class="continue-label">Continue to Part II</span>
-				<span class="continue-title">The Eighteen Acres</span>
-				<span class="continue-subtitle">The land deal behind Assam's most powerful family</span>
-			</div>
-			<span class="continue-arrow">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M5 12h14M12 5l7 7-7 7"/>
-				</svg>
-			</span>
-		</a>
 	</section>
 
 	<!-- Footer -->
@@ -732,6 +810,10 @@
 						<div class="credit-item">
 							<span class="credit-role">Visuals</span>
 							<span class="credit-name">Tom Vaillant</span>
+						</div>
+						<div class="credit-item">
+							<span class="credit-role">Additional Research</span>
+							<span class="credit-name">Mir Wafa Raseeq</span>
 						</div>
 					</div>
 				</div>
@@ -1414,5 +1496,33 @@
 	/* Tweet container spacing */
 	.tweet-container {
 		margin-top: 2rem;
+	}
+
+	/* Before/after comparison list */
+	.before-after-list {
+		list-style: none;
+		padding: 0;
+		margin: 1.5rem 0;
+	}
+
+	.before-after-list li {
+		padding: 0.75rem 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.125rem;
+		line-height: 1.85;
+	}
+
+	.before-after-list li strong {
+		color: #ffffff;
+	}
+
+	/* Additional research credit */
+	.additional-research {
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.95rem;
 	}
 </style>
