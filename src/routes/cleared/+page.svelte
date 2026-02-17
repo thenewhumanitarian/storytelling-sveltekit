@@ -744,6 +744,9 @@
 	<!-- The Displaced -->
 	<section class="content-section">
 		<div class="content-container">
+			<div class="placeholder-image">
+				<span>Photo: Tarpaulin shelters along roadside</span>
+			</div>
 			<h2 class="content-heading">The Displaced</h2>
 
 			<div class="prose-content">
@@ -752,6 +755,8 @@
 				<p>
 					We saw families living in makeshift shelters constructed from tarpaulin and bamboo along roadsides, on the banks of the river and at the edges of forests, sometimes dependent on NGO assistance for basic necessities. Many received no government rehabilitation, despite Assam's stated policy of providing support to the landless.
 				</p>
+
+				<h3 class="prose-subheading">"Go Back to Bangladesh"</h3>
 
 				<p>
 					Despite Zain-ul-Abaadin possessing National Register of Citizens (NRC) documents and valid voter IDs, they were met with a familiar xenophobic taunt during the drive.
@@ -764,6 +769,10 @@
 				<p>
 					Zain describes a terrifying atmosphere where the displaced are being systematically cut off from the local economy. The eviction drives reflect layered systemic marginalisation. Economically, families lose land, livelihoods, and access to welfare, pushing them into deeper precarity. Politically and socially, even documented citizens face recurring challenges to their belonging, reinforcing stigma, exclusion, and a condition of insecurity where rights exist on paper but remain fragile in practice.
 				</p>
+
+				<div class="placeholder-image">
+					<span>Photo: Displaced families at the edge of the river</span>
+				</div>
 
 				<p>
 					The most harrowing aspect of Barik's testimony is the apparent defiance of the judiciary by executive forces. Just two days before the demolition, the residents believed they had secured a lifeline from the state's highest court.
@@ -821,6 +830,8 @@
 					Last month, <a href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/" target="_blank" rel="noopener">UN rights experts</a> flag systematic bias and "forced displacement" of Bengali Muslims in Assam.
 				</p>
 
+				<h3 class="prose-subheading">A Global Pattern</h3>
+
 				<p>
 					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine, over 55,000 Palestinian structures have been demolished since 1967 for systematic home destruction.
 				</p>
@@ -836,6 +847,11 @@
 				<p>
 					UN Special Rapporteur Balakrishnan Rajagopal noted an <a href="https://thepolisproject.com/research/un-rapporteur-balakrishnan-rajagopal-demolitions/" target="_blank" rel="noopener">"uncanny similarity"</a> between India's methods and Israel's conduct in Palestine, explaining both use bulldozers to create "chilling effects" and punish entire communities.
 				</p>
+
+				<div class="pull-quote">
+					<p>"Uncanny similarity" between India's methods and Israel's conduct in Palestine.</p>
+					<span class="pull-quote-source">UN Special Rapporteur Balakrishnan Rajagopal</span>
+				</div>
 
 				<p>
 					From Assam to Gaza, from Kashmir to the Andes, the bulldozer has become more than a piece of machinery. It is a tool of displacement, used to erase marginalised communities under the guise of "development," "security," and "legality." Its practical purpose may be to clear land, but its political function is to send a message about power, belonging, and whose homes are considered disposable.
