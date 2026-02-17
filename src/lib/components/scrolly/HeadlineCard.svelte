@@ -83,7 +83,7 @@
 	.headline-card:hover {
 		transform: translateY(-4px);
 		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-		border-color: #dc2626;
+		border-color: #9f3e52;
 	}
 
 	.card-content {
@@ -107,7 +107,7 @@
 		font-weight: 600;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #dc2626;
+		color: #9f3e52;
 	}
 
 	.date {
@@ -118,7 +118,7 @@
 
 	.card-divider {
 		height: 1px;
-		background: linear-gradient(to right, #dc2626, rgba(255, 255, 255, 0.1) 30%);
+		background: linear-gradient(to right, #9f3e52, rgba(255, 255, 255, 0.1) 30%);
 		margin-top: 16px;
 		margin-bottom: 12px;
 	}
@@ -160,7 +160,7 @@
 		font-family: 'Source Sans 3', system-ui, sans-serif;
 		font-size: 0.85rem;
 		font-weight: 600;
-		color: #dc2626;
+		color: #9f3e52;
 		transition: gap 0.2s;
 	}
 

@@ -73,7 +73,7 @@
 		font-weight: 600;
 		letter-spacing: 0.15em;
 		text-transform: uppercase;
-		color: #dc2626;
+		color: #9f3e52;
 		margin: 0 0 12px 0;
 	}
 

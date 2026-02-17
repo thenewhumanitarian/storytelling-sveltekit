@@ -691,6 +691,7 @@
 		</div>
 	</section>
 
+	<div class="transition-light-to-dark"></div>
 	<SatelliteComparison />
 
 	<div class="transition-dark-to-light"></div>
@@ -806,7 +807,9 @@
 	</div>
 
 	<!-- Media Headlines Section -->
+	<div class="transition-light-to-dark"></div>
 	<HeadlineStack {headlines} />
+	<div class="transition-dark-to-light"></div>
 
 	<!-- Content Section: The Pattern -->
 	<section class="content-section">
