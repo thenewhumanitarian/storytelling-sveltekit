@@ -103,7 +103,7 @@
 	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
 	const mapSteps = [
 		{
-			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">34 documented eviction operations</span> across the state.'
+			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">33 documented eviction operations</span> across the state.'
 		},
 		{
 			text: 'We traveled to <span class="highlight-env">20 demolished villages</span> to document what remains after the bulldozers left.'
