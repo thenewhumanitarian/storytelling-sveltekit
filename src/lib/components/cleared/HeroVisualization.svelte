@@ -46,6 +46,8 @@
 	.hero-image.contain-mode {
 		object-fit: contain;
 		background: #0a0a0a;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 4px;
 	}
 
 	/* On mobile, crop from left with cover behavior */
@@ -70,13 +72,13 @@
 	.fade-overlay {
 		position: absolute;
 		inset: 0;
-		background: #0a0a0a;
+		background: #f5f0eb;
 		pointer-events: none;
 	}
 
 	.placeholder-bg {
 		position: absolute;
 		inset: 0;
-		background: #1a1a1a;
+		background: #f5f0eb;
 	}
 </style>
