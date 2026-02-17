@@ -321,6 +321,78 @@
 		{/snippet}
 	</ScrollySection>
 
+	<!-- Background Section -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">Background</h2>
+
+			<div class="prose-content">
+				<p>
+					Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India's most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations. For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities (both Hindu and Muslim) have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.
+				</p>
+
+				<p>
+					Assam lies along the Brahmaputra, one of the world's largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life.
+				</p>
+
+				<p>
+					Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region, parts of which is now Bangladesh, to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice. Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra's relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it.
+				</p>
+
+				<p>
+					The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.
+				</p>
+
+				<p>
+					But since 2016, these communities have faced a different kind of uprooting: government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades, branding an entire community as illegal immigrants on land they had lived on for generations.
+				</p>
+
+				<p>
+					The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But the story is more complicated. Many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines. Some came with official permission from the government of what is now India. Others were given land by the Indian state itself, often unproductive char lands that the government was eager to have cultivated. By the time the evictions began, many had been living in Assam for 50 to 70 years.
+				</p>
+
+				<p>
+					More than one third of Assam's 31 million people are Muslim &ndash; one of the highest proportions of any Indian state. That demographic reality has made Assam a focal point of a broader national shift. In recent years, the BJP-led government of Narendra Modi has faced repeated accusations of enacting laws and policies that specifically target India's <a href="https://www.aljazeera.com/news/2024/3/11/india-implements-anti-muslim-2019-citizenship-law-weeks-before-election" target="_blank" rel="noopener">200 million Muslims</a>, from the Citizenship Amendment Act, which critics say deliberately excludes Muslims from a fast-tracked citizenship pathway, to the National Register of Citizens, which left millions stateless. In Assam, these national policies have found their sharpest expression.
+				</p>
+
+				<p>
+					What makes these evictions particularly troubling is that many families held Patta &ndash; official land titles issued by the Assam government &ndash; along with ration cards and voter IDs, documents that under Indian law establish legal residence and citizenship.
+				</p>
+
+				<p>
+					Some Pattas dated back decades, proof that the state itself had recognised their right to the land. Yet documented cases show Patta-holders being evicted without warning, without due process, their legal papers rendered meaningless overnight.
+				</p>
+
+				<p>
+					The National Register of Citizens (NRC), initiated after the right-wing BJP came to power in 2016 and concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before March 24, 1971 &ndash; the eve of Bangladesh's independence from Pakistan. The final list excluded over more than million people, roughly 6% of Assam's population, who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India's Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
+				</p>
+
+				<p>
+					The process was not free from error or bias. Legitimate citizens were excluded on the basis of technical errors, spelling mistakes, and documentation challenges. Several detention centres were established, including India's largest dedicated detention centre opened in Goalpara designed to house up to 3,500 people. In some cases, children were separated from their parents. For many of the evicted, there is literally nowhere legal to go.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Zain-ul-Abadin Testimony -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					For Zain-ul-Abadin, a 43-year-old resident of Uriamghat in Assam's Golaghat district, the eviction represents more than the loss of a home. He says his family was among those encouraged by the Assam government to settle in the late 1970s in a border belt along Nagaland, then considered a disputed zone. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt. The long-running land dispute has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
+				</p>
+
+				<p>
+					The families of those civilians are now being labelled as "foreigners".
+				</p>
+
+				<blockquote>
+					"My father and grandfather lived here. We came from another part of the state to Uriamghat because the government told us to settle here to protect the land of Assam. This has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour."
+				</blockquote>
+			</div>
+		</div>
+	</section>
+
 	<!-- Eviction Notices Mosaic -->
 	<ScrollySection
 		bind:activeStep={noticeStep}
