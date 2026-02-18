@@ -162,12 +162,7 @@
 	];
 
 	// Notice mosaic steps (4 steps for 4 notices)
-	const noticeSteps = [
-		{ text: '' },
-		{ text: '' },
-		{ text: '' },
-		{ text: '' }
-	];
+	const noticeSteps = Array(4).fill({ text: '' });
 
 	// Notice data for the eviction documents mosaic
 	const notices = [
@@ -273,10 +268,7 @@
 		return Math.min(1, (heroScrollProgress - fadeStart) / (fadeEnd - fadeStart));
 	});
 
-	let evictionStep = $state(0);
-	let mapStep = $state(0);
 	let mapScrollProgress = $state(0);
-	let noticeStep = $state(0);
 	let notificationsTriggered = $state(false);
 	let backgroundStep = $state(0);
 	let backgroundScrollProgress = $state(0);
@@ -375,7 +367,6 @@
 
 	<!-- Eviction Data Visualization -->
 	<ScrollySection
-		bind:activeStep={evictionStep}
 		steps={evictionSteps}
 		backgroundColor="#f5f0eb"
 		textBoxVariant="editorial"
@@ -428,7 +419,6 @@
 
 	<!-- Eviction Notices Mosaic -->
 	<ScrollySection
-		bind:activeStep={noticeStep}
 		steps={noticeSteps}
 		backgroundColor="#f5f0eb"
 		showTextBoxes={false}
@@ -651,12 +641,12 @@
 			<!-- Contempt Timeline -->
 			<div class="contempt-timeline">
 				<div class="contempt-event">
-					<span class="contempt-date">Nov 2024</span>
-					<span class="contempt-desc">Supreme Court issues landmark ban on bulldozer justice</span>
-				</div>
-				<div class="contempt-event">
 					<span class="contempt-date">Sep 2024</span>
 					<span class="contempt-desc">First contempt notice against Assam government</span>
+				</div>
+				<div class="contempt-event">
+					<span class="contempt-date">Nov 2024</span>
+					<span class="contempt-desc">Supreme Court issues landmark ban on bulldozer justice</span>
 				</div>
 				<div class="contempt-event">
 					<span class="contempt-date">Jul 2025</span>
@@ -724,7 +714,6 @@
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
 		<ScrollySection
-			bind:activeStep={mapStep}
 			steps={mapSteps}
 			backgroundColor="#f5f0eb"
 			textBoxPosition="left"
@@ -1051,6 +1040,12 @@
 	:global(html), :global(body) {
 		overflow-x: clip;
 	}
+
+	/* Eviction category highlight colors (match EvictionBubbles.colorMapping) */
+	:global(.highlight-env) { color: #35B58B; font-weight: 600; }
+	:global(.highlight-dev) { color: #9F3E52; font-weight: 600; }
+	:global(.highlight-admin) { color: #E8A84C; font-weight: 600; }
+	:global(.highlight-satra) { color: #6B7FD7; font-weight: 600; }
 
 	/* Hero header styles (rendered via step 0) */
 	:global(.hero-header) {

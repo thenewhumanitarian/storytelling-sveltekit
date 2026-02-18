@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import XNotification from './XNotification.svelte';
 
 	interface Tweet {
@@ -49,28 +48,20 @@
 
 	let animationStarted = $state(false);
 
-	// Watch for external trigger
 	$effect(() => {
-		if (externalTrigger && !animationStarted) {
-			setTimeout(() => {
+		if ((externalTrigger || (autoTrigger && !externalTrigger)) && !animationStarted) {
+			const totalDuration = (tweets.length - 1) * 3 * 200 + 500;
+			const timerId = setTimeout(() => {
 				animationStarted = true;
-				if (onAnimationComplete) {
-					const totalDuration = (tweets.length - 1) * 3 * 200 + 500;
-					setTimeout(onAnimationComplete, totalDuration);
-				}
 			}, triggerDelay);
-		}
-	});
-
-	onMount(() => {
-		if (autoTrigger && !externalTrigger) {
-			setTimeout(() => {
-				animationStarted = true;
-				if (onAnimationComplete) {
-					const totalDuration = (tweets.length - 1) * 3 * 200 + 500;
-					setTimeout(onAnimationComplete, totalDuration);
-				}
-			}, triggerDelay);
+			let completionTimerId: ReturnType<typeof setTimeout> | undefined;
+			if (onAnimationComplete) {
+				completionTimerId = setTimeout(onAnimationComplete, triggerDelay + totalDuration);
+			}
+			return () => {
+				clearTimeout(timerId);
+				if (completionTimerId) clearTimeout(completionTimerId);
+			};
 		}
 	});
 </script>

@@ -73,7 +73,13 @@
 	let showCategoryLabels = $derived(activeStep >= 1 && activeStep < 6);
 
 	// Load data on mount
-	onMount(async () => {
+	onMount(() => {
+		loadData();
+		window.addEventListener('resize', updateDimensions);
+		return () => window.removeEventListener('resize', updateDimensions);
+	});
+
+	async function loadData() {
 		try {
 			const [evictionsRes, yearlyRes] = await Promise.all([
 				fetch('/data/cleared/evictions_sorted.csv'),
@@ -90,7 +96,7 @@
 		}
 		mounted = true;
 		updateDimensions();
-	});
+	}
 
 	function parseYearlyCSV(text: string): any[] {
 		const lines = text.trim().split('\n');
@@ -150,13 +156,6 @@
 		}
 	}
 
-	// Update dimensions on resize
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			window.addEventListener('resize', updateDimensions);
-			return () => window.removeEventListener('resize', updateDimensions);
-		}
-	});
 </script>
 
 <div class="eviction-viz" bind:this={containerEl}>

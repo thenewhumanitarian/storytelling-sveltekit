@@ -2,65 +2,82 @@
 	import { onMount } from 'svelte';
 	import { scaleLinear, scaleTime } from 'd3-scale';
 	import { line, curveMonotoneX, area } from 'd3-shape';
-	import { extent, max } from 'd3-array';
+	import { max } from 'd3-array';
 	import { fade, draw } from 'svelte/transition';
 
-	// Props
-	export let data: { Year: number; Total_People_Evicted: number; Events: number }[] = [];
-	export let width = 800;
-	export let height = 500;
-	export let highlightYear: number | null = null;
+	interface Props {
+		data?: { Year: number; Total_People_Evicted: number; Events: number }[];
+		width?: number;
+		height?: number;
+		highlightYear?: number | null;
+		animate?: boolean;
+	}
+
+	let {
+		data = [],
+		width = 800,
+		height = 500,
+		highlightYear = null,
+		animate = true
+	}: Props = $props();
 
 	// Y-axis tick values (used for grid lines and labels)
 	const Y_AXIS_TICKS = [0, 10000, 20000, 30000, 40000];
 
 	// Clamped margins - scale with container but with min AND max bounds
-	$: margin = {
-		top: Math.min(Math.max(height * 0.08, 35), 60),    // 35-60px
-		right: Math.min(Math.max(width * 0.04, 15), 50),   // 15-50px
-		bottom: Math.min(Math.max(height * 0.1, 45), 80),  // 45-80px
-		left: Math.min(Math.max(width * 0.1, 40), 100)     // 40-100px
-	};
-	$: innerWidth = width - margin.left - margin.right;
-	$: innerHeight = height - margin.top - margin.bottom;
+	let margin = $derived.by(() => ({
+		top: Math.min(Math.max(height * 0.08, 35), 60),
+		right: Math.min(Math.max(width * 0.04, 15), 50),
+		bottom: Math.min(Math.max(height * 0.1, 45), 80),
+		left: Math.min(Math.max(width * 0.1, 40), 100)
+	}));
+	let innerWidth = $derived(width - margin.left - margin.right);
+	let innerHeight = $derived(height - margin.top - margin.bottom);
 
 	// Fixed font sizes with mobile/desktop breakpoint
-	$: isMobile = width < 600;
-	$: titleFontSize = isMobile ? 18 : 24;
-	$: axisFontSize = isMobile ? 11 : 13;
-	$: labelFontSize = isMobile ? 12 : 14;
-	$: valueFontSize = isMobile ? 14 : 16;
+	let isMobile = $derived(width < 600);
+	let titleFontSize = $derived(isMobile ? 18 : 24);
+	let axisFontSize = $derived(isMobile ? 11 : 13);
+	let labelFontSize = $derived(isMobile ? 12 : 14);
+	let valueFontSize = $derived(isMobile ? 14 : 16);
 
 	// Show Y-axis title only on wider screens
-	$: showYAxisTitle = width > 500;
+	let showYAxisTitle = $derived(width > 500);
 
 	// Scales
-	$: xScale = scaleTime()
-		.domain([new Date('2021-01-01'), new Date('2025-12-31')])
-		.range([0, innerWidth]);
+	let xScale = $derived(
+		scaleTime()
+			.domain([new Date('2021-01-01'), new Date('2025-12-31')])
+			.range([0, innerWidth])
+	);
 
-	$: yScale = scaleLinear()
-		.domain([0, (max(data, d => d.Total_People_Evicted) || 45000) * 1.1])
-		.range([innerHeight, 0]);
+	let yScale = $derived(
+		scaleLinear()
+			.domain([0, (max(data, d => d.Total_People_Evicted) || 45000) * 1.1])
+			.range([innerHeight, 0])
+	);
 
 	// Line generator
-	$: linePath = line<any>()
-		.x(d => xScale(new Date(`${d.Year}-06-01`)))
-		.y(d => yScale(d.Total_People_Evicted))
-		.curve(curveMonotoneX);
+	let linePath = $derived(
+		line<any>()
+			.x((d: any) => xScale(new Date(`${d.Year}-06-01`)))
+			.y((d: any) => yScale(d.Total_People_Evicted))
+			.curve(curveMonotoneX)
+	);
 
 	// Area generator for gradient fill
-	$: areaPath = area<any>()
-		.x(d => xScale(new Date(`${d.Year}-06-01`)))
-		.y0(innerHeight)
-		.y1(d => yScale(d.Total_People_Evicted))
-		.curve(curveMonotoneX);
+	let areaPath = $derived(
+		area<any>()
+			.x((d: any) => xScale(new Date(`${d.Year}-06-01`)))
+			.y0(innerHeight)
+			.y1((d: any) => yScale(d.Total_People_Evicted))
+			.curve(curveMonotoneX)
+	);
 
 	// TNH accent color
 	const accentColor = '#9F3E52';
-	const tealColor = '#35B58B';
 
-	let mounted = false;
+	let mounted = $state(false);
 	onMount(() => {
 		mounted = true;
 	});

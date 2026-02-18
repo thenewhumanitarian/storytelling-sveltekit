@@ -57,6 +57,7 @@
 			}
 			displayedImage = newImage;
 		}
+		return () => { if (crossFadeTimer) clearTimeout(crossFadeTimer); };
 	});
 
 	// Veil intensity per step: [top, center, bottom] opacity values + warm tint
