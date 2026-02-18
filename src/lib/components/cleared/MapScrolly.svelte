@@ -15,9 +15,11 @@
 		activeStep: number;
 		fadeProgress?: number; // 0-1, controls fade-in overlay (1 = opaque, 0 = visible)
 		fadeOutProgress?: number; // 0-1, controls fade-out overlay at end (0 = visible, 1 = opaque)
+		narrativePath?: string; // Path to narrative JSON (defaults to map-narrative.json)
+		showDataLayers?: boolean; // Whether to fetch and display eviction/village data layers
 	}
 
-	let { activeStep, fadeProgress = 0, fadeOutProgress = 0 }: Props = $props();
+	let { activeStep, fadeProgress = 0, fadeOutProgress = 0, narrativePath = '/data/cleared/map-narrative.json', showDataLayers = true }: Props = $props();
 
 	// State
 	let map: any = null;
@@ -35,17 +37,22 @@
 	// Load narrative steps and GeoJSON data
 	async function loadData() {
 		try {
-			const [narrativeRes, evictionsRes, villagesRes] = await Promise.all([
-				fetch('/data/cleared/map-narrative.json'),
-				fetch('/data/cleared/evictions.geojson'),
-				fetch('/data/cleared/villages_demolished.geojson')
-			]);
+			const fetches: Promise<Response>[] = [fetch(narrativePath)];
+			if (showDataLayers) {
+				fetches.push(
+					fetch('/data/cleared/evictions.geojson'),
+					fetch('/data/cleared/villages_demolished.geojson')
+				);
+			}
 
-			const narrativeData = await narrativeRes.json();
+			const responses = await Promise.all(fetches);
+			const narrativeData = await responses[0].json();
 			steps = narrativeData.steps;
 
-			evictionsData = await evictionsRes.json();
-			villagesData = await villagesRes.json();
+			if (showDataLayers) {
+				evictionsData = await responses[1].json();
+				villagesData = await responses[2].json();
+			}
 		} catch (error) {
 			console.error('Error loading map data:', error);
 			mapError = 'Failed to load map data';
@@ -88,7 +95,7 @@
 			});
 
 			await map.onReadyAsync();
-			addMapLayers();
+			if (showDataLayers) addMapLayers();
 			mapReady = true;
 
 			// Fly to initial step if activeStep > 0
@@ -179,7 +186,7 @@
 	}
 
 	function updateLayerVisibility(stepIndex: number) {
-		if (!map || !mapReady) return;
+		if (!map || !mapReady || !showDataLayers) return;
 
 		const step = steps[stepIndex];
 		if (!step?.layers) return;
@@ -189,13 +196,13 @@
 			map.setPaintProperty(
 				'evictions-circles',
 				'circle-opacity',
-				step.layers.evictions.opacity || 0.6
+				step.layers.evictions.opacity ?? 0.6
 			);
 		}
 
 		// Update villages layer
 		if (step.layers.villages) {
-			const villageOpacity = step.layers.villages.visible ? (step.layers.villages.opacity || 1.0) : 0;
+			const villageOpacity = step.layers.villages.visible ? (step.layers.villages.opacity ?? 1.0) : 0;
 			map.setPaintProperty('villages-circles', 'circle-opacity', villageOpacity);
 			map.setPaintProperty('villages-circles', 'circle-stroke-opacity', villageOpacity);
 			map.setPaintProperty('villages-labels', 'text-opacity', villageOpacity > 0.5 ? 1 : 0);

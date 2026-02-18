@@ -13,6 +13,7 @@
 	import MapScrolly from '$lib/components/cleared/MapScrolly.svelte';
 	import NoticeMosaic from '$lib/components/scrolly/NoticeMosaic.svelte';
 	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
+	import EditorialGallery from '$lib/components/cleared/EditorialGallery.svelte';
 	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
 	import SatelliteComparison from '$lib/components/cleared/SatelliteComparison.svelte';
 	import XNotificationStack from '$lib/components/XNotificationStack.svelte';
@@ -20,12 +21,13 @@
 
 	// === SECTION STEP DATA ===
 
-	// Hero section steps (3 steps for the header with fading images)
+	// Hero section steps (7 steps: title, spacer, Dhalpur x2, campaign, stadium x2)
 	const heroSteps = [
 		{
 			raw: true,
 			text: `<div class="hero-header">
 				<h1 class="hero-title">Cleared</h1>
+				<div class="hero-accent-rule"></div>
 				<p class="hero-desc">How Assam demolished the homes of 20,000 families</p>
 				<div class="hero-byline">
 					<p class="byline-label">By</p>
@@ -39,17 +41,21 @@
 				</div>
 			</div>`
 		},
+		{},
 		{
 			title: 'September 23, 2021',
-			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old. As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that will reshape hundreds of thousands of lives.',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old.',
 			source: {
 				text: 'Al Jazeera',
 				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
 			}
 		},
 		{
+			text: 'As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that will reshape hundreds of thousands of lives.'
+		},
+		{
 			title: 'A Campaign of Displacement',
-			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes are demolished. The Assam government is led by the same party that governs at the federal level: the BJP. Chief Minister Himanta Biswa Sarma is widely seen as the BJP\'s poster boy for implementing the party\'s Hindu nationalist agenda. The eviction drives follow directly from federal policies like the National Register of Citizens and Citizenship Amendment Act, both passed by Modi\'s government. Federal Home Minister Amit Shah has repeatedly promised to take this model nationwide.'
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes were demolished.'
 		},
 		{
 			text: 'That\'s 165,000 people \u2013 or twice Wembley Stadium.'
@@ -100,11 +106,14 @@
 		}
 	];
 
-	// Background scrolly steps (6 steps covering Assam history and context)
+	// Background scrolly steps (5 steps: Assam history and geography)
 	const backgroundSteps = [
 		{
 			title: 'A Contested History',
-			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\'s most ethnically diverse regions. For decades, the question of who truly belongs here has defined its politics. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
+			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states.'
+		},
+		{
+			text: 'It is one of India\'s most ethnically diverse regions. For decades, the question of who truly belongs here has defined its politics. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
 		},
 		{
 			title: 'The Brahmaputra',
@@ -112,30 +121,11 @@
 		},
 		{
 			title: 'The Miya',
-			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Over generations, they cleared the land, farmed it, and built communities on it. The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders.'
+			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region to Assam during the colonial period and settled on low-lying river islands called chars.'
 		},
 		{
-			title: 'The Eviction Machine',
-			text: 'Since 2016, these communities have faced government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades. The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines. Some came with official permission. Others were given land by the Indian state itself. Many had been living in Assam for 50 to 70 years.'
-		},
-		{
-			title: 'The Register',
-			text: 'The National Register of Citizens (NRC), concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. Residents had to prove they or their families arrived before March 24, 1971. The final list excluded more than 1.9 million people, roughly 6% of Assam\'s population. Many were poor. Most were Muslim. Several detention centres were established, including India\'s largest in Goalpara, designed to house up to 3,500 people. In some cases, children were separated from their parents.'
-		},
-		{
-			title: 'After Partition',
-			text: 'More than one third of Assam\'s 31 million people are Muslim. That demographic reality has made Assam a focal point of a broader national shift. The BJP-led government has faced repeated accusations of targeting India\'s 200 million Muslims, from the Citizenship Amendment Act to the National Register of Citizens. In Assam, these national policies have found their sharpest expression.'
+			text: 'These were marginal, flood-prone strips of land that nobody else wanted. Over generations, they cleared the land, farmed it, and built communities on it. The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders.'
 		}
-	];
-
-	// Background scrolly images (gray placeholders for now)
-	const backgroundImages = [
-		'', // Step 0: Satellite/aerial of Assam (placeholder)
-		'', // Step 1: Brahmaputra floods (placeholder)
-		'', // Step 2: Char land community (placeholder)
-		'', // Step 3: Hands holding documents (placeholder)
-		'', // Step 4: Queue with documents (placeholder)
-		''  // Step 5: Historical/archival (placeholder)
 	];
 
 	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
@@ -255,18 +245,16 @@
 	let heroScrollProgress = $state(0);
 
 	// === HERO IMAGE CONTROL ===
-	// Each step maps directly to an image via $derived
+	// All 7 steps use full-bleed images with progressive veil overlay
 	const heroImages = [
-		'/images/assam-evictions/image1.jpg', // Step 0: header
-		'/images/assam-evictions/image2.jpg', // Step 1: Sept 23
-		'/images/cleared/villages/charuabakhra.jpg', // Step 2: campaign
-		'/images/assam-evictions/image3.jpg', // Step 3: stadium full
-		'/images/assam-evictions/image4.jpg' // Step 4: stadium empty
+		'/images/assam-evictions/image1.jpg',         // 0: title
+		'/images/assam-evictions/image1.jpg',         // 1: spacer (same image)
+		'/images/assam-evictions/image2.jpg',         // 2: Dhalpur shooting
+		'/images/assam-evictions/image2.jpg',         // 3: Dhalpur aftermath (same)
+		'/images/cleared/villages/charuabakhra.jpg', // 4: campaign
+		'/images/assam-evictions/image3.jpg',         // 5: Wembley
+		'/images/assam-evictions/image4.jpg'          // 6: rate
 	];
-	let currentHeroImage = $derived(heroImages[heroStep] ?? heroImages[0]);
-
-	// Whether to use contain mode (for stadium images)
-	let useContainMode = $derived(heroStep >= 3);
 
 	// Preload all hero images on mount
 	onMount(() => {
@@ -276,10 +264,9 @@
 		});
 	});
 
-	// Fade to black on last step: map the last ~15% of scroll progress to 0-1 fade
+	// Fade to cream on last step: map the last ~15% of scroll progress to 0-1 fade
 	let heroFadeProgress = $derived(() => {
-		if (heroStep !== 4) return 0; // Only fade on last image
-		// Start fading at 85% scroll progress, fully black at 100%
+		if (heroStep !== 6) return 0; // Only fade on last image
 		const fadeStart = 0.85;
 		const fadeEnd = 1.0;
 		if (heroScrollProgress < fadeStart) return 0;
@@ -294,12 +281,15 @@
 	let backgroundStep = $state(0);
 	let backgroundScrollProgress = $state(0);
 
-	// Background scrolly image control
-	let currentBackgroundImage = $derived(backgroundImages[backgroundStep] ?? '');
-
 	// Fade effects for background scrolly
+	let backgroundFadeInProgress = $derived(() => {
+		const fadeEnd = 0.20;
+		if (backgroundScrollProgress >= fadeEnd) return 0;
+		return 1 - (backgroundScrollProgress / fadeEnd);
+	});
+
 	let backgroundFadeProgress = $derived(() => {
-		if (backgroundStep !== 5) return 0;
+		if (backgroundStep !== 4) return 0;
 		const fadeStart = 0.85;
 		if (backgroundScrollProgress < fadeStart) return 0;
 		return Math.min(1, (backgroundScrollProgress - fadeStart) / (1 - fadeStart));
@@ -323,9 +313,9 @@
 
 <svelte:head>
 	<title>Cleared | TNH Storytelling</title>
-	<!-- Preload stadium images (larger files that need early fetching) -->
+	<!-- Preload hero images that need early fetching -->
+	<link rel="preload" as="image" href="/images/assam-evictions/image2.jpg" />
 	<link rel="preload" as="image" href="/images/assam-evictions/image3.jpg" />
-	<link rel="preload" as="image" href="/images/assam-evictions/image4.jpg" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
@@ -335,23 +325,42 @@
 </svelte:head>
 
 <div class="article-container">
-	<!-- Hero Section with fading background images -->
-	<ScrollySection
-		bind:activeStep={heroStep}
-		steps={heroSteps}
-		backgroundColor="#000000"
-		showTextBoxes={true}
-		textBoxVariant="light"
-		onScrollProgress={(p) => (heroScrollProgress = p)}
-	>
-		{#snippet children({ activeStep })}
-			<HeroVisualization currentImage={currentHeroImage} fadeProgress={heroFadeProgress()} useContain={useContainMode} />
-		{/snippet}
-	</ScrollySection>
+	<!-- Hero Section: cream title → cinematic photography → cream -->
+	<div class="hero-scrolly">
+		<ScrollySection
+			bind:activeStep={heroStep}
+			steps={heroSteps}
+			backgroundColor="#f5f0eb"
+			showTextBoxes={true}
+			textBoxVariant="editorial"
+			onScrollProgress={(p) => (heroScrollProgress = p)}
+		>
+			{#snippet children({ activeStep })}
+				<HeroVisualization
+					currentStep={heroStep}
+					images={heroImages}
+					fadeProgress={heroFadeProgress()}
+					scrollProgress={heroScrollProgress}
+				/>
+			{/snippet}
+		</ScrollySection>
+	</div>
+
+	<!-- BJP context prose (pulled from hero for readability) -->
+	<section class="content-section">
+		<div class="content-container">
+			<div class="prose-content">
+				<p>
+					The Assam government is led by the same party that governs at the federal level: the BJP. Chief Minister Himanta Biswa Sarma is widely seen as the BJP's poster boy for implementing the party's Hindu nationalist agenda. The eviction drives follow directly from federal policies like the National Register of Citizens and Citizenship Amendment Act, both passed by Modi's government. Federal Home Minister Amit Shah has promised to take this model nationwide.
+				</p>
+			</div>
+		</div>
+	</section>
 
 	<!-- Maiful Naysa Introduction -->
 	<section class="content-section">
 		<div class="content-container">
+			<h2 class="content-heading">The Witness</h2>
 			<div class="prose-content">
 				<p>
 					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived.
@@ -376,24 +385,79 @@
 		{/snippet}
 	</ScrollySection>
 
-	<!-- Background Scrolly -->
+	<!-- Background Scrolly (Assam geography, 5 map steps) -->
 	<ScrollySection
 		bind:activeStep={backgroundStep}
 		steps={backgroundSteps}
 		backgroundColor="#f5f0eb"
 		showTextBoxes={true}
 		textBoxVariant="editorial"
+		firstStepOffset={0.35}
 		onScrollProgress={(p) => (backgroundScrollProgress = p)}
 	>
 		{#snippet children({ activeStep })}
-			<HeroVisualization
-				currentImage={currentBackgroundImage}
-				fadeProgress={backgroundFadeProgress()}
+			<MapScrolly
+				{activeStep}
+				fadeProgress={backgroundFadeInProgress()}
+				fadeOutProgress={backgroundFadeProgress()}
+				narrativePath="/data/cleared/background-narrative.json"
+				showDataLayers={false}
 			/>
 		{/snippet}
 	</ScrollySection>
 
-	<!-- Background prose bridge (remaining paragraphs) -->
+	<!-- The Eviction Machine -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Eviction Machine</h2>
+			<div class="prose-content">
+				<p>
+					Since 2016, these communities have faced government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades.
+				</p>
+
+				<p>
+					The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when Partition divided Bengal along religious lines.
+				</p>
+
+				<p>
+					Some came with official permission. Others were given land by the Indian state itself. Many had been living in Assam for 50 to 70 years.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Eviction Notices Mosaic -->
+	<ScrollySection
+		bind:activeStep={noticeStep}
+		steps={noticeSteps}
+		backgroundColor="#f5f0eb"
+		showTextBoxes={false}
+		textBoxVariant="editorial"
+	>
+		{#snippet children({ activeStep })}
+			<NoticeMosaic {activeStep} {notices} backgroundColor="#f5f0eb" />
+		{/snippet}
+	</ScrollySection>
+
+	<!-- After Partition -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">After Partition</h2>
+			<div class="prose-content">
+				<p>
+					More than one third of Assam's 31 million people are Muslim. That demographic reality has made Assam a focal point of a broader national shift. The BJP-led government has faced repeated accusations of targeting India's 200 million Muslims, from the Citizenship Amendment Act to the National Register of Citizens. In Assam, these national policies have found their sharpest expression.
+				</p>
+
+				<EditorialGallery images={[
+					{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Sontoshpur village, Assam', caption: 'Sontoshpur, Darrang district' },
+					{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Dubapara Luptachar, Assam', caption: 'Dubapara Luptachar, Dhubri district' },
+					{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Ashudubi village, Assam', caption: 'Ashudubi, Goalpara district' }
+				]} />
+			</div>
+		</div>
+	</section>
+
+	<!-- Prose bridge -->
 	<section class="content-section">
 		<div class="content-container">
 			<div class="prose-content">
@@ -403,6 +467,28 @@
 
 				<p>
 					Some Pattas dated back decades, proof that the state itself had recognised their right to the land. Yet documented cases show Patta-holders being evicted without warning, without due process, their legal papers rendered meaningless overnight.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- The Register -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">The Register</h2>
+			<div class="prose-content">
+				<p>
+					The National Register of Citizens (NRC), concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. Residents had to prove they or their families arrived before March 24, 1971. The final list excluded more than 1.9 million people, roughly 6% of Assam's population.
+				</p>
+
+				<EditorialGallery images={[
+					{ src: '/images/cleared/villages/kandapara.jpg', alt: 'Kandapara Bosti, Nagaon', caption: 'Kandapara Bosti, Nagaon district' },
+					{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Doloni Pathar, Golaghat', caption: 'Doloni Pathar, Golaghat district' },
+					{ src: '/images/cleared/villages/charuabakhra.jpg', alt: 'Charuabakhra, Dhubri', caption: 'Charuabakhra, Dhubri district' }
+				]} />
+
+				<p>
+					Many were poor. Most were Muslim. Several detention centres were established, including India's largest in Goalpara, designed to house up to 3,500 people. In some cases, children were separated from their parents.
 				</p>
 			</div>
 		</div>
@@ -429,19 +515,6 @@
 		</div>
 	</section>
 
-	<!-- Eviction Notices Mosaic -->
-	<ScrollySection
-		bind:activeStep={noticeStep}
-		steps={noticeSteps}
-		backgroundColor="#f5f0eb"
-		showTextBoxes={false}
-		textBoxVariant="editorial"
-	>
-		{#snippet children({ activeStep })}
-			<NoticeMosaic {activeStep} {notices} backgroundColor="#f5f0eb" />
-		{/snippet}
-	</ScrollySection>
-
 	<!-- Abdul Barik Testimony -->
 	<section class="content-section">
 		<div class="content-container">
@@ -466,9 +539,10 @@
 	<!-- Bulldozer Justice Section -->
 	<section class="content-section">
 		<div class="content-container">
-			<div class="placeholder-image">
-				<span>Photo: JCB bulldozer at demolition site</span>
-			</div>
+			<EditorialGallery images={[
+				{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Demolished structures in Sontoshpur', caption: 'Sontoshpur, Darrang district' },
+				{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Aftermath of eviction in Doloni Pathar', caption: 'Doloni Pathar, Golaghat district' }
+			]} />
 			<h2 class="content-heading">"Bulldozer justice"</h2>
 
 			<div class="prose-content">
@@ -742,9 +816,10 @@
 	<!-- The Displaced -->
 	<section class="content-section">
 		<div class="content-container">
-			<div class="placeholder-image">
-				<span>Photo: Tarpaulin shelters along roadside</span>
-			</div>
+			<EditorialGallery images={[
+				{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Tarpaulin shelters along roadside in Dubapara Luptachar', caption: 'Dubapara Luptachar, Dhubri district' },
+				{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Displaced families in Ashudubi', caption: 'Ashudubi, Goalpara district' }
+			]} />
 			<h2 class="content-heading">The Displaced</h2>
 
 			<div class="prose-content">
@@ -988,12 +1063,25 @@
 
 	:global(.hero-title) {
 		font-family: 'Playfair Display', Georgia, serif;
-		font-size: clamp(2.5rem, 8vw, 5rem);
-		font-weight: 600;
+		font-size: clamp(3rem, 10vw, 6rem);
+		font-weight: 700;
 		letter-spacing: -0.02em;
-		line-height: 1.1;
-		color: #fff;
-		margin: 0 0 1.5rem 0;
+		line-height: 1.05;
+		color: #1a1a1a;
+		margin: 0 0 1.25rem 0;
+		opacity: 0;
+		animation: heroFadeUp 1.2s ease forwards;
+		animation-delay: 0.3s;
+	}
+
+	:global(.hero-accent-rule) {
+		width: 3.5rem;
+		height: 2px;
+		background: rgba(159, 62, 82, 0.5);
+		margin: 0 auto 1.75rem;
+		transform: scaleX(0);
+		animation: heroDrawLine 0.8s ease forwards;
+		animation-delay: 0.9s;
 	}
 
 	:global(.hero-desc) {
@@ -1001,17 +1089,23 @@
 		font-size: clamp(1.1rem, 2.5vw, 1.35rem);
 		font-weight: 300;
 		line-height: 1.7;
-		color: rgba(255, 255, 255, 0.9);
-		max-width: 42ch;
+		color: rgba(45, 45, 45, 0.85);
+		max-width: 38ch;
 		margin: 0 0 2rem 0;
+		opacity: 0;
+		animation: heroFadeUp 1s ease forwards;
+		animation-delay: 1.2s;
 	}
 
 	:global(.hero-byline) {
 		font-family: 'Source Sans 3', system-ui, sans-serif;
+		opacity: 0;
+		animation: heroFadeUp 1s ease forwards;
+		animation-delay: 1.6s;
 	}
 
 	:global(.byline-label) {
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(0, 0, 0, 0.5);
 		font-size: 0.75rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
@@ -1019,26 +1113,29 @@
 	}
 
 	:global(.byline-authors) {
-		color: #fff;
+		color: #1a1a1a;
 		font-weight: 500;
 		font-size: 1.125rem;
 		margin: 0;
 	}
 
 	:global(.byline-date) {
-		color: rgba(255, 255, 255, 0.5);
+		color: rgba(0, 0, 0, 0.4);
 		font-size: 0.875rem;
 		margin: 0.5rem 0 0 0;
 	}
 
 	:global(.scroll-indicator) {
 		margin-top: 3rem;
+		opacity: 0;
+		animation: heroFadeUp 0.8s ease forwards;
+		animation-delay: 2.2s;
 	}
 
 	:global(.scroll-indicator-track) {
 		width: 1.5rem;
 		height: 2.5rem;
-		border: 2px solid rgba(255, 255, 255, 0.4);
+		border: 2px solid rgba(0, 0, 0, 0.25);
 		border-radius: 9999px;
 		display: flex;
 		justify-content: center;
@@ -1048,7 +1145,7 @@
 	:global(.scroll-indicator-dot) {
 		width: 0.25rem;
 		height: 0.5rem;
-		background: rgba(255, 255, 255, 0.6);
+		background: rgba(0, 0, 0, 0.4);
 		border-radius: 9999px;
 		animation: bounce 1.5s ease-in-out infinite;
 	}
@@ -1061,6 +1158,17 @@
 			transform: translateY(6px);
 		}
 	}
+
+	@keyframes heroFadeUp {
+		from { opacity: 0; transform: translateY(12px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	@keyframes heroDrawLine {
+		from { transform: scaleX(0); }
+		to { transform: scaleX(1); }
+	}
+
 
 	/* Content sections - warm neutral theme */
 	.content-section {
