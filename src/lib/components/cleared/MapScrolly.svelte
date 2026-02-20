@@ -303,8 +303,11 @@
 		</div>
 	{/if}
 
-	{#if fadeProgress > 0 || fadeOutProgress > 0}
-		<div class="fade-overlay" style:opacity={Math.max(fadeProgress, fadeOutProgress)}></div>
+	{#if fadeProgress > 0}
+		<div class="fade-overlay fade-in" style:opacity={fadeProgress}></div>
+	{/if}
+	{#if fadeOutProgress > 0}
+		<div class="fade-overlay fade-out" style:opacity={fadeOutProgress}></div>
 	{/if}
 </div>
 
@@ -346,8 +349,15 @@
 	.fade-overlay {
 		position: absolute;
 		inset: 0;
-		background: #f5f0eb;
 		pointer-events: none;
 		z-index: 10;
+	}
+
+	.fade-overlay.fade-in {
+		background: linear-gradient(to bottom, #f5f0eb 0%, transparent 50%);
+	}
+
+	.fade-overlay.fade-out {
+		background: linear-gradient(to bottom, transparent 50%, #f5f0eb 100%);
 	}
 </style>

@@ -39,51 +39,52 @@
 </script>
 
 <div class="satellite-slider" bind:this={containerRef}>
-	<div class="location-label">{location}</div>
+		<div class="location-label">{location}</div>
 
-	<div class="image-container">
-		<!-- After image (full width, underneath) -->
-		<img src={afterImage} alt="{location} - {afterLabel}" class="after-image" />
+		<div class="image-container">
+			<!-- After image (full width, underneath) -->
+			<img src={afterImage} alt="{location} - {afterLabel}" class="after-image" />
 
-		<!-- Before image (clipped) -->
-		<div class="before-container" style="clip-path: inset(0 {100 - sliderPosition}% 0 0);">
-			<img src={beforeImage} alt="{location} - {beforeLabel}" class="before-image" />
-		</div>
+			<!-- Before image (clipped) -->
+			<div class="before-container" style="clip-path: inset(0 {100 - sliderPosition}% 0 0);">
+				<img src={beforeImage} alt="{location} - {beforeLabel}" class="before-image" />
+			</div>
 
-		<!-- Labels -->
-		<div class="label before-label" class:visible={sliderPosition > 15}>{beforeLabel}</div>
-		<div class="label after-label" class:visible={sliderPosition < 85}>{afterLabel}</div>
+			<!-- Labels -->
+			<div class="label before-label" class:visible={sliderPosition > 15}>{beforeLabel}</div>
+			<div class="label after-label" class:visible={sliderPosition < 85}>{afterLabel}</div>
 
-		<!-- Slider handle -->
-		<div
-			class="slider-handle"
-			style="left: {sliderPosition}%;"
-			onpointerdown={handlePointerDown}
-			onpointermove={handlePointerMove}
-			onpointerup={handlePointerUp}
-			onpointercancel={handlePointerUp}
-			role="slider"
-			aria-valuenow={sliderPosition}
-			aria-valuemin={0}
-			aria-valuemax={100}
-			aria-label="Comparison slider"
-			tabindex="0"
-		>
-			<div class="handle-line"></div>
-			<div class="handle-grip">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-					<circle cx="12" cy="12" r="11" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
-					<path d="M8 12H6M18 12H16" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
-					<path d="M9 9L6 12L9 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					<path d="M15 9L18 12L15 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
+			<!-- Slider handle -->
+			<div
+				class="slider-handle"
+				style="left: {sliderPosition}%;"
+				onpointerdown={handlePointerDown}
+				onpointermove={handlePointerMove}
+				onpointerup={handlePointerUp}
+				onpointercancel={handlePointerUp}
+				role="slider"
+				aria-valuenow={sliderPosition}
+				aria-valuemin={0}
+				aria-valuemax={100}
+				aria-label="Comparison slider"
+				tabindex="0"
+			>
+				<div class="handle-line"></div>
+				<div class="handle-grip">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+						<circle cx="12" cy="12" r="11" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+						<path d="M8 12H6M18 12H16" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+						<path d="M9 9L6 12L9 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<path d="M15 9L18 12L15 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</div>
 			</div>
 		</div>
-	</div>
-	<p class="credit">{credit}</p>
+		<p class="credit">{credit}</p>
 </div>
 
 <style>
+	/* ── Desktop: horizontal slider ── */
 	.satellite-slider {
 		position: relative;
 		width: 100%;
@@ -200,13 +201,6 @@
 
 	.handle-grip svg {
 		display: block;
-	}
-
-	/* Expand touch target on mobile */
-	@media (max-width: 768px) {
-		.slider-handle {
-			width: 44px;
-		}
 	}
 
 	.credit {

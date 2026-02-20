@@ -254,7 +254,7 @@
 
 			<!-- Title -->
 			<text
-				x={innerWidth / 2}
+				x={(width / 2) - margin.left}
 				y={-margin.top * 0.45}
 				fill="#1a1a1a"
 				font-size={titleFontSize}

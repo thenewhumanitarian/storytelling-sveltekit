@@ -152,7 +152,12 @@
 	function updateDimensions() {
 		if (containerEl) {
 			containerWidth = Math.min(containerEl.clientWidth, 900);
-			containerHeight = Math.min(window.innerHeight * 0.8, 700);
+			// Mobile: 65% of viewport height; Desktop: viewport-based height
+			if (containerWidth < 600) {
+				containerHeight = Math.min(window.innerHeight * 0.65, 550);
+			} else {
+				containerHeight = Math.min(window.innerHeight * 0.8, 700);
+			}
 		}
 	}
 

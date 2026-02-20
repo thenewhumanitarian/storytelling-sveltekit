@@ -78,11 +78,11 @@
 	let isMobile = $derived(width < 600);
 	let axisX = $derived(
 		isMobile
-			? Math.max(width * 0.08, 35)
+			? Math.max(width * 0.12, 55)
 			: Math.min(Math.max(width * 0.08, 50), 80)
 	);
 	let yearFontSize = $derived(isMobile ? 14 : 18);
-	let labelFontSize = $derived(isMobile ? 10 : 12);
+	let labelFontSize = $derived(isMobile ? 13 : 12);
 
 	// Scales - derived from data and dimensions
 	let radiusScale = $derived(

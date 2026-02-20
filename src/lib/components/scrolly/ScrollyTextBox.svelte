@@ -158,6 +158,14 @@
 		margin-top: 1em;
 	}
 
+	.box-content :global(blockquote) {
+		border-left: none;
+		padding-left: 0;
+		margin: 0.75rem 0 0 0;
+		font-style: italic;
+		color: #4a4a4a;
+	}
+
 	.box-content :global(strong) {
 		font-weight: 600;
 		color: #000;
