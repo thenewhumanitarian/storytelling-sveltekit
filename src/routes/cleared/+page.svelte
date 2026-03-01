@@ -877,6 +877,44 @@
 					<span class="pull-quote-source">The Wire / The Crosscurrent, 2021</span>
 				</div>
 
+				<div class="data-table-wrapper">
+					<div class="table-header">
+						<h4 class="table-title">Declared Family Assets</h4>
+						<p class="table-subtitle">Election Commission affidavit filings, 2006&ndash;2021</p>
+					</div>
+					<table class="evidence-table">
+						<thead>
+							<tr>
+								<th>Year</th>
+								<th class="text-right">Total Assets</th>
+								<th class="text-right highlight-col">Growth</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="year-cell">2006</td>
+								<td class="text-right">Rs 1.02 Cr</td>
+								<td class="text-right highlight-col">&mdash;</td>
+							</tr>
+							<tr>
+								<td class="year-cell">2011</td>
+								<td class="text-right">Rs 3.06 Cr</td>
+								<td class="text-right highlight-col"><span class="growth-badge">+200%</span></td>
+							</tr>
+							<tr>
+								<td class="year-cell">2016</td>
+								<td class="text-right">Rs 6.38 Cr</td>
+								<td class="text-right highlight-col"><span class="growth-badge">+108%</span></td>
+							</tr>
+							<tr class="highlight-row">
+								<td class="year-cell">2021</td>
+								<td class="text-right font-medium">Rs 17.27 Cr</td>
+								<td class="text-right highlight-col"><span class="growth-badge primary">+170%</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
 				<p>
 					The investigation found that some of these transfers took place at concessional rates or through direct allotments during a period when Himanta Biswa Sarma was serving as a senior cabinet minister in the Assam government. Land records cited in the report suggested irregularities in classification changes and eligibility criteria. The company &ndash; since renamed Vasistha Realtors &ndash; lists the chief minister's son as a shareholder. Sarma has denied any wrongdoing.
 				</p>
@@ -903,7 +941,7 @@
 				<h3 class="prose-subheading">"Go Back to Bangladesh"</h3>
 
 				<p>
-					Despite Zain-ul-Abaadin possessing National Register of Citizens (NRC) documents and valid voter IDs, they were met with a familiar xenophobic taunt during the drive.
+					Despite Zain-ul-Abaadin and his family and neighbours possessing NRC documents and valid voter IDs, they were met with a familiar xenophobic taunt during the drive.
 				</p>
 
 				<blockquote>
@@ -915,7 +953,7 @@
 				</p>
 
 				<p>
-					The most harrowing aspect of Barik's testimony is the apparent defiance of the judiciary by executive forces. Just two days before the demolition, the residents believed they had secured a lifeline from the state's highest court.
+					The most harrowing aspect of Barik's testimony was the apparent defiance of the judiciary by executive forces. Just two days before the demolition, the residents believed they had secured a lifeline from the state's highest court. For Barik, the violence and the disregard for the High Court&rsquo;s stay orders are symptoms of a larger ideological shift in the region.
 				</p>
 
 				<blockquote>
@@ -943,7 +981,7 @@
 
 			<div class="prose-content">
 				<p>
-					Amnesty International, Human Rights Watch, and UN Special Rapporteurs have all examined what is happening in Assam.
+					Amnesty International, Human Rights Watch, and UN special rapporteurs have all examined what is happening in Assam.
 				</p>
 
 				<p>
@@ -955,7 +993,7 @@
 				</p>
 
 				<p>
-					Last month, <a href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/" target="_blank" rel="noopener">UN rights experts</a> flag systematic bias and "forced displacement" of Bengali Muslims in Assam.
+					Last month, <a href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/" target="_blank" rel="noopener">UN rights experts</a> flagged systematic bias and "forced displacement" of Bengali Muslims in Assam.
 				</p>
 
 				<h3 class="prose-subheading">A Global Pattern</h3>
@@ -969,7 +1007,7 @@
 				</p>
 
 				<p>
-					Paraguay forcibly evicted 3,000 people from Indigenous communities since September 2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
+					Paraguay has forcibly evicted 3,000 people from Indigenous communities since September 2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
 				</p>
 
 				<p>
@@ -990,7 +1028,7 @@
 
 			<div class="prose-content">
 				<p>
-					Throughout this period, Modi's close ally Chief Minister Himanta Biswa Sarma has characterised the evictions publicly. He has described them as necessary action against "Bangladeshi encroachers".
+					Throughout this period, Modi&rsquo;s close ally, Chief Minister Himanta Biswa Sarma, has characterised the evictions publicly. He has described them as necessary action against &ldquo;Bangladeshi encroachers&rdquo;.
 				</p>
 
 				<blockquote>
@@ -1014,7 +1052,7 @@
 					</div>
 					<div class="credit-entry">
 						<span class="credit-label">Edited by</span>
-						<span class="credit-value">Andrew Gully and Ali Latifi</span>
+						<span class="credit-value">Andrew Gully and Ali M. Latifi</span>
 					</div>
 					<div class="credit-entry">
 						<span class="credit-label">Visuals</span>
@@ -1542,6 +1580,95 @@
 
 	.before-after-list li strong {
 		color: #1a1a1a;
+	}
+
+	/* Evidence table (light theme) */
+	.data-table-wrapper {
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 2px;
+		padding: 1.5rem;
+		margin: 2rem 0;
+	}
+
+	.table-header {
+		margin-bottom: 1.25rem;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	}
+
+	.table-title {
+		font-family: 'GT Sectra Bold', Georgia, serif;
+		font-size: 1.125rem;
+		color: #1a1a1a;
+		margin: 0;
+	}
+
+	.table-subtitle {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.7rem;
+		color: #6b6b6b;
+		margin-top: 0.25rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.evidence-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.95rem;
+	}
+
+	.evidence-table th {
+		text-align: left;
+		padding: 0.75rem 1rem;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.7rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: #6b6b6b;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+		font-weight: 500;
+	}
+
+	.evidence-table td {
+		padding: 0.875rem 1rem;
+		color: #2d2d2d;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	}
+
+	.evidence-table .text-right {
+		text-align: right;
+	}
+
+	.year-cell {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.85rem;
+		color: #6b6b6b;
+	}
+
+	.highlight-col {
+		background: rgba(159, 62, 82, 0.04);
+	}
+
+	.highlight-row {
+		background: rgba(159, 62, 82, 0.06);
+	}
+
+	.growth-badge {
+		display: inline-block;
+		padding: 0.2rem 0.5rem;
+		background: rgba(0, 0, 0, 0.06);
+		border-radius: 2px;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.75rem;
+		color: #4a4a4a;
+	}
+
+	.growth-badge.primary {
+		background: rgba(159, 62, 82, 0.12);
+		color: #9f3e52;
 	}
 
 	/* Section divider between adjacent prose sections */
