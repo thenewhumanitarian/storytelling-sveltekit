@@ -1119,8 +1119,14 @@
 					Some sources reported the number of people displaced, while others reported the number of households affected. To create a consistent metric, we applied a conversion factor of five people per household, in line with India&rsquo;s national census average. This yielded an estimate of more than 22,000 homes demolished and approximately 100,000 people displaced.
 				</p>
 				<p>
-					The full dataset, including sources for each operation, is available <a href="#" target="_blank" rel="noopener">here</a>.
+					The full dataset, including sources for each operation, is available below.
 				</p>
+				<a
+					href="https://notebooklm.google.com/notebook/e0be672a-48c4-4542-ba44-d82ae03d8e5a"
+					target="_blank"
+					rel="noopener"
+					class="dataset-button"
+				>View the evictions database</a>
 			</div>
 		</div>
 	</section>
@@ -1582,9 +1588,11 @@
 		line-height: 1.5;
 	}
 
-	/* Tweet container spacing */
+	/* Tweet container spacing — no side padding so cards fill editorial width */
 	.tweet-container {
 		margin-top: 2rem;
+		padding-left: 0;
+		padding-right: 0;
 	}
 
 	/* Before/after comparison list */
@@ -1694,6 +1702,29 @@
 	.growth-badge.primary {
 		background: rgba(159, 62, 82, 0.12);
 		color: #9f3e52;
+	}
+
+	/* Dataset button — matches expandable infobox trigger styling */
+	.dataset-button {
+		display: inline-block;
+		background: rgba(159, 62, 82, 0.08);
+		border: 1px solid rgba(159, 62, 82, 0.2);
+		border-radius: 3px;
+		padding: 0.5em 1em;
+		margin-top: 0.75rem;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.95rem;
+		color: #9f3e52;
+		text-decoration: none;
+		cursor: pointer;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+		transition: all 0.2s ease;
+	}
+
+	.dataset-button:hover {
+		background: rgba(159, 62, 82, 0.12);
+		border-color: rgba(159, 62, 82, 0.35);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	}
 
 	/* Section divider between adjacent prose sections */
