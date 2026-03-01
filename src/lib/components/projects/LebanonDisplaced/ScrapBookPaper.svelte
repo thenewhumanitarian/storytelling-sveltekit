@@ -1,17 +1,13 @@
 <script>
-	// import FadeIn from '$lib/components/animations/FadeIn.svelte';
 	const { children, mouseOver = true, maxWidthMobile = '100%' } = $props();
 </script>
 
-<!-- <FadeIn duration={1} delay={1} isAbsolute={true} blurAmount={20}> -->
 <div
 	class={`scrap-book-paper relative flex h-full w-full items-center justify-center ${mouseOver ? 'has-mouseover' : ''}`}
 	style={`--max-width-mobile: ${maxWidthMobile};`}
 >
 	{@render children?.()}
 </div>
-
-<!-- </FadeIn> -->
 
 <style>
 	.scrap-book-paper {
@@ -50,11 +46,6 @@
 			z-index: 999;
 		}
 	}
-
-	/* TO DO: Create different scenario for <825px */
-	/* @media screen and (max-width: 825px) {
-
-	} */
 
 	@media screen and (max-width: 640px) {
 		.scrap-book-paper {

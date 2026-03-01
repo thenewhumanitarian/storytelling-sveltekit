@@ -1,8 +1,5 @@
 <script lang="ts">
 	import { StoryblokComponent, storyblokEditable } from '@storyblok/svelte';
-	//@ts-ignore
-	// import IntroAnimation from '$lib/components/projects/LebanonDisplaced/IntroAnimation.svelte';
-
 	const { blok, className } = $props();
 
 	const hasDesktopImage = !!blok.backgroundImage?.filename;
@@ -89,7 +86,6 @@
 	<div class="preview-image--mobile"></div>
 	<div class="mobile-image"></div>
 
-	<!-- <IntroAnimation {blok} /> -->
 	<div class="intro-text -z-1">
 		<div class="intro-title text-shadow">
 			{#if blok.title.length > 0}
@@ -123,7 +119,6 @@
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
-		/* background-image: var(--intro-bg-desktop); */
 	}
 
 	.intro-view--wrapper .preview-image--desktop {
@@ -168,7 +163,6 @@
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
-			/* background-image: var(--intro-bg-tablet); */
 		}
 
 		.intro-view--wrapper .preview-image--mobile {
@@ -203,7 +197,6 @@
 		.intro-view--wrapper {
 			padding: 0.5rem 1rem 1rem;
 			height: 100svh !important;
-			/* background-image: var(--intro-bg-mobile); */
 		}
 	}
 
@@ -244,7 +237,6 @@
 	}
 
 	:global(.storyblok--richtext .intro-text h1) {
-		/* font-size: 8rem !important; */
 		line-height: 1.2;
 		margin-bottom: 0.5rem;
 	}

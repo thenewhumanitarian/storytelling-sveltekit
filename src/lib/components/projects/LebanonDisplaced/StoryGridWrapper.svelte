@@ -5,7 +5,6 @@
 
 	/* Own components */
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
-	// import RichText from '$lib/components/projects/LebanonDisplaced/RichText.svelte';
 
 	// Default row height
 	const rowHeight = blok.rowHeight ? blok.rowHeight + 'px' : 'auto';
