@@ -481,11 +481,13 @@
 					More than one third of Assam&rsquo;s 31 million people are Muslim &ndash; one of the highest proportions of any Indian state. That demographic reality has made Assam a focal point of a broader national shift. In recent years, Modi&rsquo;s BJP-led government has faced repeated accusations of enacting laws and policies that specifically target India&rsquo;s <a href="https://www.aljazeera.com/news/2024/3/11/india-implements-anti-muslim-2019-citizenship-law-weeks-before-election" target="_blank" rel="noopener">200 million Muslims</a>, from the Citizenship Amendment Act, which critics say deliberately excludes Muslims from a fast-tracked citizenship pathway, to the <a href="https://www.aljazeera.com/news/2019/8/31/india-publishes-final-nrc-all-you-need-to-know-on-citizens-list" target="_blank" rel="noopener">National Register of Citizens</a>, which left millions stateless. In Assam, these national policies have found their sharpest expression.
 				</p>
 
-				<EditorialGallery images={[
-					{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Sontoshpur village, Assam', caption: 'Sontoshpur, Darrang district' },
-					{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Dubapara Luptachar, Assam', caption: 'Dubapara Luptachar, Dhubri district' },
-					{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Ashudubi village, Assam', caption: 'Ashudubi, Goalpara district' }
-				]} />
+				<div class="gallery-breakout">
+					<EditorialGallery images={[
+						{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Sontoshpur village, Assam', caption: 'Sontoshpur, Darrang district' },
+						{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Dubapara Luptachar, Assam', caption: 'Dubapara Luptachar, Dhubri district' },
+						{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Ashudubi village, Assam', caption: 'Ashudubi, Goalpara district' }
+					]} />
+				</div>
 			</div>
 		</div>
 	</section>
@@ -514,11 +516,13 @@
 					The National Register of Citizens (NRC) &ndash; initiated after the right-wing BJP came to power in 2016 and concluded in 2019 &ndash; was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before 24 March 1971 &ndash; the eve of Bangladesh&rsquo;s independence from Pakistan. The final list excluded <a href="https://www.aljazeera.com/news/2019/8/31/india-excludes-nearly-2-million-people-from-assam-citizen-list" target="_blank" rel="noopener">more than a million people</a> (roughly 6% of Assam&rsquo;s population) who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India&rsquo;s Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
 				</p>
 
-				<EditorialGallery images={[
-					{ src: '/images/cleared/villages/kandapara.jpg', alt: 'Kandapara Bosti, Nagaon', caption: 'Kandapara Bosti, Nagaon district' },
-					{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Doloni Pathar, Golaghat', caption: 'Doloni Pathar, Golaghat district' },
-					{ src: '/images/cleared/villages/charuabakhra.jpg', alt: 'Charuabakhra, Dhubri', caption: 'Charuabakhra, Dhubri district' }
-				]} />
+				<div class="gallery-breakout">
+					<EditorialGallery images={[
+						{ src: '/images/cleared/villages/kandapara.jpg', alt: 'Kandapara Bosti, Nagaon', caption: 'Kandapara Bosti, Nagaon district' },
+						{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Doloni Pathar, Golaghat', caption: 'Doloni Pathar, Golaghat district' },
+						{ src: '/images/cleared/villages/charuabakhra.jpg', alt: 'Charuabakhra, Dhubri', caption: 'Charuabakhra, Dhubri district' }
+					]} />
+				</div>
 
 				<p>
 					The process was not free from error or bias. Legitimate citizens were excluded on the basis of technical errors, spelling mistakes, and documentation challenges. Several detention centres were established, including India&rsquo;s largest dedicated <a href="https://www.outlookindia.com/national/68-foreigners-moved-to-country-s-largest-detention-centre-in-assam-s-goalpara-news-257735" target="_blank" rel="noopener">detention centre</a> opened in Goalpara and designed to house up to 3,500 people. In some cases, children were separated from their parents. For many of the evicted, there is literally nowhere legal to go.
@@ -809,7 +813,9 @@
 	</div>
 
 	<!-- Transition Gallery - Demolition Images -->
-	<DemolitionGallery />
+	<div class="gallery-breakout">
+		<DemolitionGallery />
+	</div>
 
 	<!-- Maiful Naysa Continued -->
 	<section class="content-section">
@@ -861,10 +867,12 @@
 					In <a href="https://nenow.in/north-east-news/assam/tribal-groups-flag-large-scale-corporate-land-transfers-in-assams-karbi-anglong-and-dima-hasao.html" target="_blank" rel="noopener">Karbi Anglong and Dima Hasao</a>, tribal organisations say more than 11,000 acres have been transferred for industrial projects, threatening 20,000&ndash;25,000 tribal families. Similar patterns emerged after the 2021 Gorukhuti evictions displaced 1,400 families, where land cleared for "agriculture" later fell within <a href="https://assamtribune.com/north-east/northeast-identified-as-new-hotspots-for-rare-earth-critical-minerals-gsi-1582932" target="_blank" rel="noopener">mineral exploration zones</a>.
 				</p>
 
-				<EditorialGallery images={[
-					{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Demolished structures in Sontoshpur', caption: 'Sontoshpur, Darrang district' },
-					{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Aftermath of eviction in Doloni Pathar', caption: 'Doloni Pathar, Golaghat district' }
-				]} />
+				<div class="gallery-breakout">
+					<EditorialGallery images={[
+						{ src: '/images/cleared/villages/sontoshpur.jpg', alt: 'Demolished structures in Sontoshpur', caption: 'Sontoshpur, Darrang district' },
+						{ src: '/images/cleared/villages/doloni-pathar.jpg', alt: 'Aftermath of eviction in Doloni Pathar', caption: 'Doloni Pathar, Golaghat district' }
+					]} />
+				</div>
 
 				<h3 class="prose-subheading">The Eighteen Acres</h3>
 
@@ -925,10 +933,12 @@
 	<!-- The Displaced -->
 	<section class="content-section">
 		<div class="content-container">
-			<EditorialGallery images={[
-				{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Tarpaulin shelters along roadside in Dubapara Luptachar', caption: 'Dubapara Luptachar, Dhubri district' },
-				{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Displaced families in Ashudubi', caption: 'Ashudubi, Goalpara district' }
-			]} />
+			<div class="gallery-breakout">
+				<EditorialGallery images={[
+					{ src: '/images/cleared/villages/luptachar.jpg', alt: 'Tarpaulin shelters along roadside in Dubapara Luptachar', caption: 'Dubapara Luptachar, Dhubri district' },
+					{ src: '/images/cleared/villages/ashudubi.jpg', alt: 'Displaced families in Ashudubi', caption: 'Ashudubi, Goalpara district' }
+				]} />
+			</div>
 			<h2 class="content-heading">The Displaced</h2>
 
 			<div class="prose-content">
@@ -1752,6 +1762,64 @@
 		margin: 1.5rem 0 0.75rem 0;
 		padding-top: 1rem;
 		border-top: 1px solid rgba(0, 0, 0, 0.06);
+	}
+
+	/* Gallery breakout — wider than prose on desktop */
+	.gallery-breakout {
+		max-width: 42rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	@media (min-width: 768px) {
+		.gallery-breakout {
+			max-width: 56rem;
+			margin-left: calc(50% - 28rem);
+			margin-right: calc(50% - 28rem);
+		}
+	}
+
+	/* ── Mobile audit ── */
+	@media (max-width: 767px) {
+		/* Ensure body text is at least 1rem */
+		.prose-text {
+			font-size: 1rem;
+			line-height: 1.75;
+		}
+
+		/* Screen-edge padding */
+		.content-container {
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+
+		/* Pull quotes sizing */
+		.pull-quote {
+			font-size: clamp(1.1rem, 4vw, 1.35rem);
+			padding: 1.25rem 0;
+		}
+
+		/* Assets table horizontal scroll */
+		.data-table-wrapper {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.evidence-table {
+			min-width: 28rem;
+		}
+
+		/* Methodology box reduce padding */
+		.methodology-box {
+			padding: 1.5rem 1rem;
+		}
+
+		/* Gallery breakout resets to normal width on mobile */
+		.gallery-breakout {
+			max-width: 100%;
+			margin-left: 0;
+			margin-right: 0;
+		}
 	}
 
 </style>
