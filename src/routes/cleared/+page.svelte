@@ -1089,13 +1089,24 @@
 					Eviction data was compiled from official government records, court filings, media reports, and on-the-ground verification. We cross-referenced displacement figures using satellite imagery analysis, district-level administrative data, and reporting by local and international news organisations. Where official figures were unavailable or contested, we relied on corroborated estimates from humanitarian organisations and independent researchers.
 				</p>
 				<p>
-					All testimony was gathered through in-person interviews conducted in Assamese, Bengali, and English, with translation assistance where necessary. Interviewees gave informed consent. Some names have been withheld at the request of those who feared reprisal.
+					All testimony was gathered through in-person interviews conducted in Assamese, Bengali, and English, with translation assistance where necessary. Interviewees gave informed consent. Some names have been changed at the request of those who feared reprisal.
 				</p>
 				<p>
 					Satellite imagery was sourced from publicly available archives and analysed to document changes in settlement patterns before and after eviction operations. Legal documents, including eviction notices and court orders, were obtained directly from affected families and verified against public records.
 				</p>
 				<p>
 					The Assam government was contacted for comment. At the time of publication, no response had been received.
+				</p>
+
+				<h4 class="methodology-subheading">Evictions Data</h4>
+				<p>
+					The eviction figures cited in this investigation are derived from a database we compiled, aggregating data from all 33 documented eviction operations conducted between May 2021 and 2026. Sources include official government records, court filings, media reports from local and international outlets, and on-the-ground verification by our reporting team.
+				</p>
+				<p>
+					Some sources reported the number of people displaced, while others reported the number of households affected. To create a consistent metric, we applied a conversion factor of five people per household, in line with India&rsquo;s national census average. This yielded an estimate of more than 22,000 homes demolished and approximately 100,000 people displaced.
+				</p>
+				<p>
+					The full dataset, including sources for each operation, is available <a href="#" target="_blank" rel="noopener">here</a>.
 				</p>
 			</div>
 		</div>
@@ -1729,6 +1740,18 @@
 
 	.methodology-content p:last-child {
 		margin-bottom: 0;
+	}
+
+	.methodology-subheading {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.65rem;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: #9f3e52;
+		margin: 1.5rem 0 0.75rem 0;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.06);
 	}
 
 </style>
