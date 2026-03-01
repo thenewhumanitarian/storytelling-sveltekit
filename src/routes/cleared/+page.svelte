@@ -351,7 +351,8 @@
 	<title>Cleared | TNH Storytelling</title>
 	<!-- Preload stadium images (used in stadium scrolly) -->
 	<link rel="preload" as="image" href="/images/assam-evictions/image2.jpg" />
-	<link rel="preload" as="image" href="/images/assam-evictions/image3.jpg" />
+	<link rel="preload" as="image" href="/images/assam-evictions/stadium-full.jpg" />
+	<link rel="preload" as="image" href="/images/assam-evictions/stadium-empty.jpg" />
 	<!-- Preload hint for hero video -->
 	<link rel="preload" as="video" href="/videos/assam-evictions/1952348361748594720_00001.mp4" />
 </svelte:head>
@@ -895,31 +896,31 @@
 					<table class="evidence-table">
 						<thead>
 							<tr>
-								<th>Year</th>
-								<th class="text-right">Total Assets</th>
-								<th class="text-right highlight-col">Growth</th>
+								<th class="col-year">Year</th>
+								<th>Total Assets</th>
+								<th class="highlight-col">Growth</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
 								<td class="year-cell">2006</td>
-								<td class="text-right">Rs 1.02 Cr</td>
-								<td class="text-right highlight-col">&mdash;</td>
+								<td>Rs 1.02 Cr</td>
+								<td class="highlight-col">&mdash;</td>
 							</tr>
 							<tr>
 								<td class="year-cell">2011</td>
-								<td class="text-right">Rs 3.06 Cr</td>
-								<td class="text-right highlight-col"><span class="growth-badge">+200%</span></td>
+								<td>Rs 3.06 Cr</td>
+								<td class="highlight-col"><span class="growth-badge">+200%</span></td>
 							</tr>
 							<tr>
 								<td class="year-cell">2016</td>
-								<td class="text-right">Rs 6.38 Cr</td>
-								<td class="text-right highlight-col"><span class="growth-badge">+108%</span></td>
+								<td>Rs 6.38 Cr</td>
+								<td class="highlight-col"><span class="growth-badge">+108%</span></td>
 							</tr>
 							<tr class="highlight-row">
 								<td class="year-cell">2021</td>
-								<td class="text-right font-medium">Rs 17.27 Cr</td>
-								<td class="text-right highlight-col"><span class="growth-badge primary">+170%</span></td>
+								<td class="font-medium">Rs 17.27 Cr</td>
+								<td class="highlight-col"><span class="growth-badge primary">+170%</span></td>
 							</tr>
 						</tbody>
 					</table>
@@ -1661,8 +1662,9 @@
 		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 	}
 
-	.evidence-table .text-right {
-		text-align: right;
+	.col-year,
+	.year-cell {
+		width: 4rem;
 	}
 
 	.year-cell {
@@ -1801,14 +1803,26 @@
 			padding: 1.25rem 0;
 		}
 
-		/* Assets table horizontal scroll */
+		/* Assets table — fit all columns in viewport */
 		.data-table-wrapper {
-			overflow-x: auto;
-			-webkit-overflow-scrolling: touch;
+			padding: 1rem 0.75rem;
+			margin-left: -0.5rem;
+			margin-right: -0.5rem;
 		}
 
 		.evidence-table {
-			min-width: 28rem;
+			min-width: 0;
+		}
+
+		.evidence-table th,
+		.evidence-table td {
+			padding: 0.625rem 0.5rem;
+			font-size: 0.875rem;
+		}
+
+		.col-year,
+		.year-cell {
+			width: 3.5rem;
 		}
 
 		/* Methodology box reduce padding */
