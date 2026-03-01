@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunktnh_storytelling_standalone=self.webpackChunktnh_storytelling_standalone||[]).push([[125],{23331:function(e,n,t){t.r(n),t.d(n,{default:function(){return u}});var l=t(96540);function u(){return l.createElement("div",null,l.createElement("h1",null,"Page Not Found"),l.createElement("p",null,"Oops, we couldn't find this page."))}}}]);
-//# sourceMappingURL=component---src-pages-404-js-6514f09a008cb8178179.js.map
