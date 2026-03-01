@@ -22,3 +22,23 @@ vite.config.ts.timestamp-*
 
 *storybook.log
 tmp/
+.firecrawl/
+
+# Old Gatsby build artifacts
+/static/*.js
+/static/*.js.map
+/static/*.js.LICENSE.txt
+/static/*.css
+/static/static/
+/static/_gatsby/
+/static/~partytown/
+/static/page-data/
+/static/404/
+/static/chunk-map.json
+/static/webpack.stats.json
+
+# Error logs
+yarn-error.log
+
+# Temp/output
+output/
