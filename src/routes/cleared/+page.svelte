@@ -47,7 +47,7 @@
 		},
 		{
 			title: 'September 23, 2021',
-			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old.',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, in Assam\u2019s Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old.',
 			source: {
 				text: 'Al Jazeera',
 				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
@@ -62,7 +62,7 @@
 	const stadiumSteps = [
 		{
 			title: 'A Campaign of Displacement',
-			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
 		},
 		{
 			text: 'Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived. <blockquote>"At five in the morning, while we were sleeping, three JCBs came and started demolishing our house."</blockquote>'
@@ -84,7 +84,7 @@
 			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
 		},
 		{
-			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the USD 4.75 billion allegedly allocated to Adani thermal power plant in Dhubri.'
+			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the <a href="https://cjp.org.in/bulldozing-the-poor-assams-eviction-drives-for-adani-project-leave-thousands-homeless/" target="_blank" rel="noopener">$4.75 billion</a> allegedly allocated to Adani thermal power plant in Dhubri.'
 		},
 		{
 			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
@@ -112,11 +112,14 @@
 		}
 	];
 
-	// Background scrolly steps (5 steps: Assam history and geography)
+	// Background scrolly steps (7 steps: Assam history and geography)
 	const backgroundSteps = [
 		{
 			title: 'A Label with Consequences',
-			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\u2019s most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations.'
+			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs.'
+		},
+		{
+			text: 'Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\u2019s most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations.'
 		},
 		{
 			text: 'For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities (both Hindu and Muslim) have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
@@ -130,7 +133,10 @@
 			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region \u2013 parts of which now lie in Bangladesh \u2013 to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice.'
 		},
 		{
-			text: 'Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra\u2019s relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it. The word \u201cMiya\u201d was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.'
+			text: 'Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra\u2019s relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it.'
+		},
+		{
+			text: 'The word \u201cMiya\u201d was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.'
 		}
 	];
 
@@ -171,16 +177,16 @@
 	const displacementSteps = [
 		{
 			title: '"Bulldozer justice"',
-			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades was met with the mechanical roar of bulldozers. Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment,\u201d but a matter of documented rights.'
+			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades was met with the mechanical roar of bulldozers.'
 		},
 		{
-			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of "encroachment," but a matter of documented rights.'
+			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment,\u201d but a matter of documented rights.'
 		},
 		{
 			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development. Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses.\u201d</blockquote>'
 		},
 		{
-			text: '<blockquote>"Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses."</blockquote>'
+			text: '<blockquote>\u201cIt was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development.\u201d</blockquote>'
 		}
 	];
 
@@ -377,11 +383,7 @@
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					One eviction every three minutes, 24 hours a day, for an entire year.
-					The vast majority of those evicted are Bengali-speaking Muslims.
-				</p>
-				<p>
-					The vast majority of those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata Party (BJP).
+					One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata Party (BJP).
 				</p>
 			</div>
 		</div>
@@ -579,11 +581,11 @@
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					In India, the yellow JCB bulldozer has taken on a meaning far beyond its function as a machine. Since 2017, the brand name has become almost generic in the country &ndash; used interchangeably with "bulldozer", especially during state-led demolition drives that critics say bypass due process. Amnesty International verified at least <a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">33 instances</a> of JCB equipment being used in what it described as punitive demolitions of Muslim properties across five states.
+					In India, the yellow JCB has taken on a meaning far beyond its function as a machine. Since 2017, the brand name has become almost generic in the country &ndash; used interchangeably with "bulldozer", especially during state-led demolition drives that critics say bypass due process. Amnesty International verified at least <a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">33 instances</a> of JCB equipment being used in what it described as punitive demolitions of Muslim properties across five states.
 				</p>
 
 				<p>
-					The practice has acquired its own name: "<a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">bulldozer justice</a>", a term used for demolitions that are openly celebrated by BJP leaders and their supporters. Amnesty International had described JCB as the "<a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">brand of choice in a hate campaign against the minority community</a>". Over time, the yellow excavator itself has become a potent political symbol for the use of demolitions as a show of state power against marginalized communities.
+					The practice has acquired its own name: "<a href="https://www.bbc.com/news/articles/c0k8d3ynvzxo" target="_blank" rel="noopener">bulldozer justice</a>", a term used for demolitions that are openly celebrated by BJP leaders and their supporters. Amnesty International had described JCB as the "<a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">brand of choice in a hate campaign against the minority community</a>". Over time, the yellow excavator itself has become a potent political symbol for the use of demolitions as a show of state power against marginalised communities.
 				</p>
 			</div>
 
@@ -660,7 +662,7 @@
 
 			<div class="prose-content">
 				<p>
-					Assam's BJP government, led by Chief Minister Himanta Biswa Sarma, appeared unmoved.
+					Assam's BJP government, led by Sarma, appeared unmoved.
 				</p>
 
 				<p>
@@ -672,7 +674,7 @@
 				</p>
 
 				<p>
-					In Gujarat, thousands of homes in Muslim-majority settlements around Ahmedabad's Chandola Lake were <a href="https://article-14.com/post/the-hunt-for-bangladeshis-thousands-of-muslims-homeless-2-months-after-vast-gujarat-demolition-688fd625e41f6" target="_blank" rel="noopener">demolished in 2025</a> in a campaign framed as a crackdown on "illegal Bangladeshis", leaving families homeless for months.
+					In Gujarat, for instance, thousands of homes in Muslim-majority settlements around Ahmedabad's Chandola Lake were <a href="https://article-14.com/post/the-hunt-for-bangladeshis-thousands-of-muslims-homeless-2-months-after-vast-gujarat-demolition-688fd625e41f6" target="_blank" rel="noopener">demolished in 2025</a> in a campaign framed as a crackdown on "illegal Bangladeshis", leaving families homeless for months.
 				</p>
 
 				<p>
@@ -854,7 +856,7 @@
 				</p>
 
 				<p>
-					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing a <a href="https://www.adani.com/newsroom/media-releases/adani-to-invest-rs-63000-cr-in-transformative-energy-projects-in-assam" target="_blank" rel="noopener">USD 5.6 billion investment</a>. Weeks earlier, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group is one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure, and has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is the second richest Asian, with a net worth of $66.6 billion.
+					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing a <a href="https://www.adani.com/newsroom/media-releases/adani-to-invest-rs-63000-cr-in-transformative-energy-projects-in-assam" target="_blank" rel="noopener">USD 5.6 billion investment</a>. Weeks earlier, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group &ndash; one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure &ndash; has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is the second richest Asian, with a net worth of $66.6 billion.
 				</p>
 
 				<p>
