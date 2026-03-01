@@ -68,7 +68,7 @@
 	}
 
 	.gallery-heading {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(1.5rem, 3.5vw, 2rem);
 		font-weight: 600;
 		color: #1a1a1a;
@@ -77,7 +77,7 @@
 	}
 
 	.gallery-subtitle {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.1rem;
 		color: #6b6b6b;
 		margin: 0 0 2rem 0;
@@ -115,7 +115,7 @@
 	}
 
 	.image-caption {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.8rem;
 		color: #6b6b6b;
 		padding: 0.5rem 0.75rem;

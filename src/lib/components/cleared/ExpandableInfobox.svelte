@@ -102,7 +102,7 @@
 	}
 
 	.infobox-content p {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		line-height: 1.75;
 		color: #4a4a4a;

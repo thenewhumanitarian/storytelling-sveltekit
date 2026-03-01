@@ -103,7 +103,7 @@
 	}
 
 	.caption-text {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.9rem;
 		line-height: 1.6;
 		color: var(--text-secondary);

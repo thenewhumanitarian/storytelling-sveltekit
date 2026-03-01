@@ -184,7 +184,7 @@
 	}
 
 	.placard-title {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.25rem;
 		font-weight: 700;
 		color: #1a1a1a;
@@ -193,7 +193,7 @@
 	}
 
 	.placard-subtitle {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.9375rem;
 		font-weight: 500;
 		color: #6b6b6b;

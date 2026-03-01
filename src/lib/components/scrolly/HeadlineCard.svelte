@@ -102,7 +102,7 @@
 	}
 
 	.source {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.75rem;
 		font-weight: 600;
 		letter-spacing: 0.08em;
@@ -111,7 +111,7 @@
 	}
 
 	.date {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.8rem;
 		color: #999999;
 	}
@@ -124,7 +124,7 @@
 	}
 
 	.title {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: 1.25rem;
 		font-weight: 600;
 		line-height: 1.35;
@@ -133,7 +133,7 @@
 	}
 
 	.description {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		line-height: 1.6;
 		color: #4a4a4a;
@@ -147,7 +147,7 @@
 	}
 
 	.author {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.85rem;
 		color: #999999;
 		font-style: italic;
@@ -157,7 +157,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.85rem;
 		font-weight: 600;
 		color: #9f3e52;

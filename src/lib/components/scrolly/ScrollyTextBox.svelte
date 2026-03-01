@@ -135,7 +135,7 @@
 	}
 
 	.box-title {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: 1.5rem;
 		font-weight: 600;
 		line-height: 1.25;
@@ -144,7 +144,7 @@
 	}
 
 	.box-content {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.05rem;
 		line-height: 1.65;
 		color: #2a2a2a;
@@ -209,7 +209,7 @@
 		margin-top: 1rem;
 		padding-top: 0.75rem;
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.8rem;
 		color: rgba(0, 0, 0, 0.5);
 		display: flex;

@@ -135,7 +135,7 @@
 	}
 
 	figcaption {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.8rem;
 		color: #6b6b6b;
 		line-height: 1.4;

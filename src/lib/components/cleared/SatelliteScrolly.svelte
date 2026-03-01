@@ -114,7 +114,7 @@
 		color: #1a1a1a;
 		border: 1px solid rgba(0, 0, 0, 0.08);
 		border-radius: 3px;
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		pointer-events: none;
 	}
 
@@ -147,7 +147,7 @@
 		color: rgba(255, 255, 255, 0.85);
 		padding: 4px 10px;
 		border-radius: 100px;
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.6rem;
 		letter-spacing: 0.02em;
 		pointer-events: none;

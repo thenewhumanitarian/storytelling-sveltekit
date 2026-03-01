@@ -68,7 +68,7 @@
 	}
 
 	.eyebrow {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.75rem;
 		font-weight: 600;
 		letter-spacing: 0.15em;
@@ -78,7 +78,7 @@
 	}
 
 	.section-title {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(1.75rem, 4vw, 2.5rem);
 		font-weight: 600;
 		color: #1a1a1a;
@@ -87,7 +87,7 @@
 	}
 
 	.section-desc {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.1rem;
 		line-height: 1.7;
 		color: #4a4a4a;

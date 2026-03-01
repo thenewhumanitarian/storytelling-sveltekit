@@ -280,7 +280,7 @@
 							fill="rgba(0,0,0,0.7)"
 							font-size={yearFontSize}
 							font-weight="600"
-							font-family="Source Sans 3"
+							font-family="Roboto"
 							text-anchor="end"
 						>
 							{year}
@@ -335,7 +335,7 @@
 						y={height - 30}
 						fill={colorMapping[category]}
 						font-size="12"
-						font-family="Source Sans 3"
+						font-family="Roboto"
 						font-weight="600"
 						text-anchor="middle"
 						opacity={highlightCategory && highlightCategory !== category ? 0.3 : 1}
@@ -357,7 +357,7 @@
 						y={(yScaleClusteredMobile(category) || 0) + yScaleClusteredMobile.bandwidth() / 2}
 						fill={colorMapping[category]}
 						font-size={labelFontSize}
-						font-family="Source Sans 3"
+						font-family="Roboto"
 						font-weight="600"
 						text-anchor="start"
 						dominant-baseline="middle"
@@ -444,7 +444,7 @@
 	}
 
 	.tooltip-location {
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-weight: 600;
 		font-size: 14px;
 		color: #1a1a1a;
@@ -452,14 +452,14 @@
 	}
 
 	.tooltip-date {
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 12px;
 		color: rgba(0, 0, 0, 0.5);
 		margin-bottom: 6px;
 	}
 
 	.tooltip-stat {
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 13px;
 		color: rgba(0, 0, 0, 0.8);
 	}

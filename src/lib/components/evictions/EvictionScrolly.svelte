@@ -245,7 +245,7 @@
 
 	.loading {
 		color: rgba(0, 0, 0, 0.4);
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		text-align: center;
 		padding: 2rem;
 	}
@@ -283,7 +283,7 @@
 	}
 
 	.legend-title {
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 11px;
 		font-weight: 500;
 		color: rgba(0, 0, 0, 0.45);
@@ -306,7 +306,7 @@
 	}
 
 	.legend-item span {
-		font-family: 'Source Sans 3', sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 11px;
 		color: rgba(0, 0, 0, 0.5);
 	}

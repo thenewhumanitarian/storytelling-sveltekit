@@ -131,7 +131,7 @@
 					y={yScale(tick)}
 					fill="rgba(0,0,0,0.5)"
 					font-size={axisFontSize}
-					font-family="Source Sans 3"
+					font-family="Roboto"
 					text-anchor="end"
 					dominant-baseline="middle"
 				>
@@ -146,7 +146,7 @@
 					y={innerHeight / 2}
 					fill="rgba(0,0,0,0.4)"
 					font-size={axisFontSize}
-					font-family="Source Sans 3"
+					font-family="Roboto"
 					text-anchor="middle"
 					transform="rotate(-90, {-margin.left * 0.6}, {innerHeight / 2})"
 				>
@@ -172,7 +172,7 @@
 					fill={highlightYear === d.Year ? '#1a1a1a' : 'rgba(0,0,0,0.5)'}
 					font-size={highlightYear === d.Year ? labelFontSize * 1.2 : labelFontSize}
 					font-weight={highlightYear === d.Year ? '700' : '400'}
-					font-family="Source Sans 3"
+					font-family="Roboto"
 					text-anchor="middle"
 				>
 					{d.Year}
@@ -228,7 +228,7 @@
 						fill={isHighlighted ? '#1a1a1a' : 'rgba(0,0,0,0.65)'}
 						font-size={isHighlighted ? valueFontSize * 1.2 : valueFontSize}
 						font-weight={isHighlighted ? '700' : '500'}
-						font-family="Source Sans 3"
+						font-family="Roboto"
 						text-anchor="middle"
 						transition:fade={{ duration: 300, delay: 500 + i * 150 }}
 					>
@@ -242,7 +242,7 @@
 							y={innerHeight + margin.bottom * 0.65}
 							fill="rgba(0,0,0,0.5)"
 							font-size={axisFontSize}
-							font-family="Source Sans 3"
+							font-family="Roboto"
 							text-anchor="middle"
 							transition:fade={{ duration: 200 }}
 						>
@@ -259,7 +259,7 @@
 				fill="#1a1a1a"
 				font-size={titleFontSize}
 				font-weight="600"
-				font-family="Playfair Display"
+				font-family="GT Sectra Bold"
 				text-anchor="middle"
 			>
 				Evictions Have Accelerated Since 2021

@@ -34,6 +34,13 @@
 	// Track previous step to detect changes
 	let prevStep = $state(-1);
 
+	// Custom layer definitions for admin borders (from MapTiler style)
+	const CUSTOM_LAYERS: Record<string, { type: 'fill' | 'line'; color?: string }> = {
+		assam: { type: 'fill', color: '#9F3E52' },
+		border_india: { type: 'line' },
+		border_bangladesh: { type: 'line' }
+	};
+
 	// Load narrative steps and GeoJSON data
 	async function loadData() {
 		try {
@@ -77,7 +84,7 @@
 
 			map = new window.maptilersdk.Map({
 				container: mapContainer,
-				style: `https://api.maptiler.com/maps/streets-v2-light/style.json?key=${MAPTILER_API_KEY}`,
+				style: `https://api.maptiler.com/maps/019ca96f-ec0c-7369-8e21-cbc66575204c/style.json?key=${MAPTILER_API_KEY}`,
 				center: initialStep.coordinates,
 				zoom: initialStep.zoom,
 				pitch: initialStep.pitch,
@@ -95,10 +102,12 @@
 			});
 
 			await map.onReadyAsync();
+			initCustomLayers();
 			if (showDataLayers) addMapLayers();
 			mapReady = true;
 
-			// Fly to initial step if activeStep > 0
+			// Apply initial step layers and fly if needed
+			updateCustomLayers(0);
 			if (activeStep > 0 && steps[activeStep]) {
 				flyToStep(activeStep);
 			}
@@ -185,6 +194,31 @@
 		});
 	}
 
+	function initCustomLayers() {
+		if (!map) return;
+		for (const [layerId, config] of Object.entries(CUSTOM_LAYERS)) {
+			if (!map.getLayer(layerId)) continue;
+			const opacityProp = config.type === 'fill' ? 'fill-opacity' : 'line-opacity';
+			map.setPaintProperty(layerId, opacityProp, 0);
+			if (config.color && config.type === 'fill') {
+				map.setPaintProperty(layerId, 'fill-color', config.color);
+			}
+		}
+	}
+
+	function updateCustomLayers(stepIndex: number) {
+		if (!map || !mapReady) return;
+		const step = steps[stepIndex];
+		if (!step?.customLayers) return;
+
+		for (const [layerId, layerConfig] of Object.entries(step.customLayers as Record<string, { opacity: number }>)) {
+			const config = CUSTOM_LAYERS[layerId];
+			if (!config || !map.getLayer(layerId)) continue;
+			const opacityProp = config.type === 'fill' ? 'fill-opacity' : 'line-opacity';
+			map.setPaintProperty(layerId, opacityProp, layerConfig.opacity ?? 0);
+		}
+	}
+
 	function updateLayerVisibility(stepIndex: number) {
 		if (!map || !mapReady || !showDataLayers) return;
 
@@ -233,6 +267,7 @@
 		});
 
 		updateLayerVisibility(index);
+		updateCustomLayers(index);
 	}
 
 	// Effect to fly to step when activeStep changes
@@ -337,7 +372,7 @@
 
 	.map-loading p,
 	.map-error p {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1rem;
 		color: rgba(0, 0, 0, 0.4);
 	}
