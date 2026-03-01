@@ -36,7 +36,7 @@
 				<div class="hero-byline">
 					<p class="byline-label">By</p>
 					<p class="byline-authors">Ahmer Khan and Tom Vaillant</p>
-					<p class="byline-date">January 2026</p>
+					<p class="byline-date">17 March 2026</p>
 				</div>
 				<div class="scroll-indicator">
 					<div class="scroll-indicator-track">
@@ -62,20 +62,20 @@
 	const stadiumSteps = [
 		{
 			title: 'A Campaign of Displacement',
-			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes were demolished.'
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the Assam government conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
 		},
 		{
 			text: 'Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived. <blockquote>"At five in the morning, while we were sleeping, three JCBs came and started demolishing our house."</blockquote>'
 		},
 		{
-			text: 'That\u2019s 165,000 people \u2013 or twice Wembley Stadium.'
+			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 more than enough to fill Wembley Stadium.'
 		}
 	];
 
 	// Eviction data visualization steps (12 steps)
 	const evictionSteps = [
 		{
-			text: 'More than 100,000 people were displaced across Assam between 2021 and 2026 in 33 documented eviction drives. Each bubble represents one operation \u2014 the larger the bubble, the more people displaced.'
+			text: 'Each bubble represents one operation \u2014 the larger the bubble, the more people displaced.'
 		},
 		{
 			text: 'The government cited various legal grounds for these evictions. We\'ve grouped them into <strong>four categories</strong>.'
@@ -93,7 +93,7 @@
 			text: '<span class="highlight-satra">Religious Land (Satra)</span> evictions cleared land claimed by Hindu monasteries in Barpeta and Nagaon districts.'
 		},
 		{
-			text: 'What is unfolding in Assam is not a series of sporadic clearances but an increasingly institutionalised campaign of dispossession. Since 2021, both the frequency and the scale of eviction operations have expanded markedly. Here\'s when each operation occurred.'
+			text: 'What is unfolding now in Assam is not a series of sporadic clearances but an increasingly institutionalised campaign of dispossession. Since 2021, both the frequency and the scale of eviction operations have expanded markedly, indicating a sustained policy shift rather than episodic enforcement. Here\u2019s when each operation occurred.'
 		},
 		{
 			text: '<strong>2021:</strong> The campaign began with 4 major operations. The deadliest: <a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur</a>, where police shot two people dead.'
@@ -115,11 +115,11 @@
 	// Background scrolly steps (5 steps: Assam history and geography)
 	const backgroundSteps = [
 		{
-			title: 'A Contested History',
-			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states.'
+			title: 'A Label with Consequences',
+			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs. Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\u2019s most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations.'
 		},
 		{
-			text: 'It is one of India\'s most ethnically diverse regions. For decades, the question of who truly belongs here has defined its politics. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
+			text: 'For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities (both Hindu and Muslim) have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
 		},
 		{
 			title: 'The Brahmaputra',
@@ -127,10 +127,10 @@
 		},
 		{
 			title: 'The Miya',
-			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region to Assam during the colonial period and settled on low-lying river islands called chars.'
+			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region \u2013 parts of which now lie in Bangladesh \u2013 to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice.'
 		},
 		{
-			text: 'These were marginal, flood-prone strips of land that nobody else wanted. Over generations, they cleared the land, farmed it, and built communities on it. The word "Miya" was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders.'
+			text: 'Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra\u2019s relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it. The word \u201cMiya\u201d was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.'
 		}
 	];
 
@@ -381,7 +381,7 @@
 					The vast majority of those evicted are Bengali-speaking Muslims.
 				</p>
 				<p>
-					The Assam government is led by the same party that governs at the federal level: the BJP. Chief Minister Himanta Biswa Sarma is widely seen as the BJP's poster boy for implementing the party's Hindu nationalist agenda. The eviction drives follow directly from federal policies like the National Register of Citizens and Citizenship Amendment Act, both passed by Modi's government. Federal Home Minister Amit Shah has promised to take this model nationwide.
+					The vast majority of those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata Party (BJP).
 				</p>
 			</div>
 		</div>
