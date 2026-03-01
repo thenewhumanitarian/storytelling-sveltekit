@@ -3,7 +3,8 @@
 	 * ExpandableInfobox - Inline expandable context box
 	 *
 	 * Renders a clickable inline trigger that expands a context box below.
-	 * Content is loaded from a JSON data file keyed by id.
+	 * Uses <span> elements throughout so it can be placed inside <p> tags
+	 * without breaking paragraph flow.
 	 */
 
 	interface InfoboxData {
@@ -21,7 +22,7 @@
 	let { data, suffix = '' }: Props = $props();
 
 	let expanded = $state(false);
-	let contentEl: HTMLDivElement | undefined = $state();
+	let contentEl: HTMLSpanElement | undefined = $state();
 	let contentHeight = $state(0);
 
 	function toggle() {
@@ -45,17 +46,18 @@
 		onclick={toggle}
 		aria-expanded={expanded}
 	>{data.label}{suffix}</button>
-	<div
+	<span
 		class="infobox-panel"
 		class:expanded
 		style:max-height={expanded ? `${contentHeight}px` : '0px'}
+		style:display={expanded ? 'block' : 'none'}
 	>
-		<div class="infobox-content" bind:this={contentEl}>
+		<span class="infobox-content" bind:this={contentEl}>
 			{#each data.paragraphs as paragraph}
-				<p>{paragraph}</p>
+				<span class="infobox-paragraph">{paragraph}</span>
 			{/each}
-		</div>
-	</div>
+		</span>
+	</span>
 </span>
 
 <style>
@@ -87,13 +89,18 @@
 	}
 
 	.infobox-panel {
-		display: block;
+		display: none;
 		max-height: 0;
 		overflow: hidden;
 		transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}
 
+	.infobox-panel.expanded {
+		display: block;
+	}
+
 	.infobox-content {
+		display: block;
 		margin-top: 1rem;
 		padding: 1.25rem 1.5rem;
 		background: rgba(159, 62, 82, 0.04);
@@ -101,7 +108,8 @@
 		border-radius: 0 4px 4px 0;
 	}
 
-	.infobox-content p {
+	.infobox-paragraph {
+		display: block;
 		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		line-height: 1.75;
@@ -109,7 +117,7 @@
 		margin: 0 0 0.75rem 0;
 	}
 
-	.infobox-content p:last-child {
+	.infobox-paragraph:last-child {
 		margin-bottom: 0;
 	}
 </style>
