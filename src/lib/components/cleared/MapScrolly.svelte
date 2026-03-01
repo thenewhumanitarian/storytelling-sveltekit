@@ -29,6 +29,7 @@
 	let mapError = $state<string | null>(null);
 	let evictionsData: any = null;
 	let villagesData: any = null;
+	let assamOutlineData: any = null;
 	let checkSDKInterval: ReturnType<typeof setInterval> | null = null;
 
 	// Track previous step to detect changes
@@ -48,7 +49,8 @@
 			if (showDataLayers) {
 				fetches.push(
 					fetch('/data/cleared/evictions.geojson'),
-					fetch('/data/cleared/villages_demolished.geojson')
+					fetch('/data/cleared/villages_demolished.geojson'),
+					fetch('/data/cleared/assam.geojson')
 				);
 			}
 
@@ -59,6 +61,7 @@
 			if (showDataLayers) {
 				evictionsData = await responses[1].json();
 				villagesData = await responses[2].json();
+				assamOutlineData = await responses[3].json();
 			}
 		} catch (error) {
 			console.error('Error loading map data:', error);
@@ -98,6 +101,7 @@
 				doubleClickZoom: false,
 				touchZoomRotate: false,
 				navigationControl: false,
+				geolocateControl: false,
 				attributionControl: true
 			});
 
@@ -119,6 +123,25 @@
 
 	function addMapLayers() {
 		if (!evictionsData || !villagesData || !map) return;
+
+		// Add Assam outline source and layer
+		if (assamOutlineData) {
+			map.addSource('assam-outline', {
+				type: 'geojson',
+				data: assamOutlineData
+			});
+
+			map.addLayer({
+				id: 'assam-outline',
+				type: 'line',
+				source: 'assam-outline',
+				paint: {
+					'line-color': '#9F3E52',
+					'line-width': 2.5,
+					'line-opacity': 0.4
+				}
+			});
+		}
 
 		// Add evictions source and layer
 		map.addSource('evictions', {

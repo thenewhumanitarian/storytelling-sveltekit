@@ -1,11 +1,5 @@
 <script lang="ts">
-	/**
-	 * ExpandableInfobox - Inline expandable context box
-	 *
-	 * Renders a clickable inline trigger that expands a context box below.
-	 * Uses <span> elements throughout so it can be placed inside <p> tags
-	 * without breaking paragraph flow.
-	 */
+	import { tick } from 'svelte';
 
 	interface InfoboxData {
 		label: string;
@@ -13,60 +7,54 @@
 	}
 
 	interface Props {
-		/** The infobox data object */
 		data: InfoboxData;
-		/** Punctuation to include inside the button (e.g. ".") */
 		suffix?: string;
 	}
 
 	let { data, suffix = '' }: Props = $props();
 
 	let expanded = $state(false);
-	let contentEl: HTMLSpanElement | undefined = $state();
-	let contentHeight = $state(0);
+	let panelVisible = $state(false);
+	let panelOpen = $state(false);
 
 	function toggle() {
-		expanded = !expanded;
-		if (expanded && contentEl) {
-			contentHeight = contentEl.scrollHeight;
+		if (!expanded) {
+			expanded = true;
+			panelVisible = true;
+			tick().then(() => {
+				requestAnimationFrame(() => {
+					panelOpen = true;
+				});
+			});
+		} else {
+			expanded = false;
+			panelOpen = false;
+			setTimeout(() => {
+				panelVisible = false;
+			}, 410);
 		}
 	}
-
-	$effect(() => {
-		if (expanded && contentEl) {
-			contentHeight = contentEl.scrollHeight;
-		}
-	});
 </script>
 
-<span class="infobox-wrapper">
-	<button
-		class="infobox-trigger"
-		class:expanded
-		onclick={toggle}
-		aria-expanded={expanded}
-	>{data.label}{suffix}</button>
-	<span
-		class="infobox-panel"
-		class:expanded
-		style:max-height={expanded ? `${contentHeight}px` : '0px'}
-		style:display={expanded ? 'block' : 'none'}
-	>
-		<span class="infobox-content" bind:this={contentEl}>
-			{#each data.paragraphs as paragraph}
-				<span class="infobox-paragraph">{paragraph}</span>
-			{/each}
-		</span>
-	</span>
-</span>
+<button
+	class="infobox-trigger"
+	class:expanded
+	onclick={toggle}
+	aria-expanded={expanded}
+>{data.label}{suffix}</button>{#if panelVisible}<span
+	class="infobox-panel"
+	class:open={panelOpen}
+><span class="infobox-content"><span class="infobox-inner"
+		>{#each data.paragraphs as paragraph}<span class="infobox-paragraph">{paragraph}</span
+			>{/each}</span
+		></span></span>{/if}
 
 <style>
-	.infobox-wrapper {
-		display: inline;
-	}
-
 	.infobox-trigger {
 		display: inline;
+		appearance: none;
+		-webkit-appearance: none;
+		vertical-align: baseline;
 		background: rgba(159, 62, 82, 0.08);
 		border: 1px solid rgba(159, 62, 82, 0.2);
 		border-radius: 3px;
@@ -89,17 +77,21 @@
 	}
 
 	.infobox-panel {
-		display: none;
-		max-height: 0;
-		overflow: hidden;
-		transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}
 
-	.infobox-panel.expanded {
-		display: block;
+	.infobox-panel.open {
+		grid-template-rows: 1fr;
 	}
 
 	.infobox-content {
+		display: block;
+		overflow: hidden;
+	}
+
+	.infobox-inner {
 		display: block;
 		margin-top: 1rem;
 		padding: 1.25rem 1.5rem;

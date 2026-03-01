@@ -6,22 +6,73 @@
 	 * sections to ensure consistent behavior, light background throughout,
 	 * and no horizontal overflow issues.
 	 */
-	import ScrollySection from '$lib/components/scrolly/ScrollySection.svelte';
+	import ScrollySection from '$lib/components/cleared/scrolly/ScrollySection.svelte';
 	import VideoHeroVisualization from '$lib/components/cleared/VideoHeroVisualization.svelte';
 	import StadiumWipeVisualization from '$lib/components/cleared/StadiumWipeVisualization.svelte';
-	import EvictionScrolly from '$lib/components/evictions/EvictionScrolly.svelte';
-	import MapScrolly from '$lib/components/cleared/MapScrolly.svelte';
-	import NoticeMosaic from '$lib/components/scrolly/NoticeMosaic.svelte';
-	import DemolitionGallery from '$lib/components/cleared/DemolitionGallery.svelte';
+	import NoticeMosaic from '$lib/components/cleared/scrolly/NoticeMosaic.svelte';
 	import EditorialGallery from '$lib/components/cleared/EditorialGallery.svelte';
-	import HeadlineStack from '$lib/components/scrolly/HeadlineStack.svelte';
-	import SatelliteComparison from '$lib/components/cleared/SatelliteComparison.svelte';
-	import XNotificationStack from '$lib/components/XNotificationStack.svelte';
+	import XNotificationStack from '$lib/components/cleared/XNotificationStack.svelte';
 	import ExpandableInfobox from '$lib/components/cleared/ExpandableInfobox.svelte';
 	import { inview } from 'svelte-inview';
 
+	// Lazy-loaded heavy components (loaded when scrolled near)
+	let loadEviction = $state(false);
+	let EvictionScrolly = $state<any>(null);
+
+	let loadMap = $state(false);
+	let MapScrolly = $state<any>(null);
+
+	let loadSatellite = $state(false);
+	let SatelliteComparison = $state<any>(null);
+
+	let loadDemolition = $state(false);
+	let DemolitionGallery = $state<any>(null);
+
+	let loadHeadlines = $state(false);
+	let HeadlineStack = $state<any>(null);
+
+	$effect(() => {
+		if (loadEviction && !EvictionScrolly) {
+			import('$lib/components/cleared/evictions/EvictionScrolly.svelte').then(m => {
+				EvictionScrolly = m.default;
+			});
+		}
+	});
+
+	$effect(() => {
+		if (loadMap && !MapScrolly) {
+			import('$lib/components/cleared/MapScrolly.svelte').then(m => {
+				MapScrolly = m.default;
+			});
+		}
+	});
+
+	$effect(() => {
+		if (loadSatellite && !SatelliteComparison) {
+			import('$lib/components/cleared/SatelliteComparison.svelte').then(m => {
+				SatelliteComparison = m.default;
+			});
+		}
+	});
+
+	$effect(() => {
+		if (loadDemolition && !DemolitionGallery) {
+			import('$lib/components/cleared/DemolitionGallery.svelte').then(m => {
+				DemolitionGallery = m.default;
+			});
+		}
+	});
+
+	$effect(() => {
+		if (loadHeadlines && !HeadlineStack) {
+			import('$lib/components/cleared/scrolly/HeadlineStack.svelte').then(m => {
+				HeadlineStack = m.default;
+			});
+		}
+	});
+
 	// Infobox data
-	import infoboxData from '$lib/data/infoboxes-cleared.json';
+	import infoboxData from '$lib/data/cleared/infoboxes-cleared.json';
 
 	// === SECTION STEP DATA ===
 
@@ -65,10 +116,10 @@
 			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
 		},
 		{
-			text: 'Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived. <blockquote>"At five in the morning, while we were sleeping, three JCBs came and started demolishing our house."</blockquote>'
+			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 more than enough to fill the Narendra Modi Stadium \u2014 the largest cricket stadium in the world.'
 		},
 		{
-			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 more than enough to fill Wembley Stadium.'
+			text: ''
 		}
 	];
 
@@ -112,7 +163,7 @@
 		}
 	];
 
-	// Background scrolly steps (7 steps: Assam history and geography)
+	// Background scrolly steps (5 steps: Assam history and geography)
 	const backgroundSteps = [
 		{
 			title: 'A Label with Consequences',
@@ -122,21 +173,28 @@
 			text: 'Assam sits at a volatile crossroads, bordered by Bangladesh to the west, Bhutan to the north, and surrounded by six other Indian states. It is one of India\u2019s most ethnically diverse regions, home to dozens of Indigenous communities, tribal groups, and migrant populations.'
 		},
 		{
-			text: 'For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities (both Hindu and Muslim) have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims. That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
+			text: 'For decades, the question of who truly belongs here has defined its politics. Indigenous Assamese communities have long feared being culturally and demographically overwhelmed, particularly by Bengali-speaking Muslims.'
+		},
+		{
+			text: 'That anxiety has been systematically exploited. Under the BJP, which came to power in Assam in 2016, it became policy.'
 		},
 		{
 			title: 'The Brahmaputra',
 			text: 'Assam lies along the Brahmaputra, one of the world\'s largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life.'
+		}
+	];
+
+	// Miya editorial gallery images
+	const miyaImages = [
+		{
+			src: '/images/cleared/miya/char-island-landscape.jpg',
+			alt: 'A char island on the Brahmaputra river in Assam',
+			caption: 'A char — a shifting riverine island on the Brahmaputra. Miya communities have farmed these flood-prone strips of land for generations. Photo: Dhrubazaan Photography / Wikimedia Commons (CC BY-SA 4.0)'
 		},
 		{
-			title: 'The Miya',
-			text: 'Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region \u2013 parts of which now lie in Bangladesh \u2013 to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice.'
-		},
-		{
-			text: 'Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra\u2019s relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it.'
-		},
-		{
-			text: 'The word \u201cMiya\u201d was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.'
+			src: '/images/cleared/miya/river-island.jpg',
+			alt: 'Majuli, the world\'s largest river island in the Brahmaputra, Assam',
+			caption: 'The Brahmaputra\'s river islands are among the most flood-prone and marginal land in India. Photo: Udit Kapoor / Wikimedia Commons (CC BY-SA 4.0)'
 		}
 	];
 
@@ -350,11 +408,11 @@
 <svelte:head>
 	<title>Cleared | TNH Storytelling</title>
 	<!-- Preload stadium images (used in stadium scrolly) -->
-	<link rel="preload" as="image" href="/images/assam-evictions/image2.jpg" />
-	<link rel="preload" as="image" href="/images/assam-evictions/stadium-full.jpg" />
-	<link rel="preload" as="image" href="/images/assam-evictions/stadium-empty.jpg" />
+	<link rel="preload" as="image" href="/images/cleared/stadium/image2.jpg" />
+	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-full.jpg" />
+	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-empty.jpg" />
 	<!-- Preload hint for hero video -->
-	<link rel="preload" as="video" href="/videos/assam-evictions/1952348361748594720_00001.mp4" />
+	<link rel="preload" as="video" href="/videos/cleared/hero.mp4" />
 </svelte:head>
 
 <div class="article-container">
@@ -373,24 +431,31 @@
 					currentStep={heroStep}
 					fadeProgress={heroFadeProgress()}
 					scrollProgress={heroScrollProgress}
-					videoSrc="/videos/assam-evictions/1952348361748594720_00001.mp4"
+					videoSrc="/videos/cleared/hero.mp4"
 				/>
 			{/snippet}
 		</ScrollySection>
 	</div>
 
-	<!-- Editorial prose block -->
-	<section class="content-section content-section--spacious">
+	<!-- The Eviction Machine — editorial bridge between video hero and stadium -->
+	<section class="content-section content-section--bridge">
 		<div class="content-container">
+			<h2 class="content-heading">The Eviction Machine</h2>
 			<div class="prose-content">
 				<p>
 					One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata Party (BJP).
 				</p>
+				<p>
+					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, bulldozers arrived.
+				</p>
+				<blockquote>
+					&ldquo;At five in the morning, while we were sleeping, three JCBs came and started demolishing our house.&rdquo;
+				</blockquote>
 			</div>
 		</div>
 	</section>
 
-	<!-- Stadium image scrolly: campaign stats → full Wembley → wipe to empty -->
+	<!-- Stadium image scrolly: campaign stats → full Modi Stadium → wipe to empty -->
 	<div class="stadium-scrolly">
 		<ScrollySection
 			bind:activeStep={stadiumStep}
@@ -406,47 +471,88 @@
 					activeStep={stadiumStep}
 					scrollProgress={stadiumScrollProgress}
 					fadeInProgress={stadiumFadeInProgress()}
+					credits={[
+						{ label: 'Photo: [Name TBD]' },
+						{ label: 'AI-generated image', detail: 'Generated with Google Gemini 2.5 Flash using the real stadium photo as a reference for framing' },
+						{ label: 'Photo: A Cricket Premi / Wikimedia Commons (CC BY-SA 4.0)' }
+					]}
 				/>
 			{/snippet}
 		</ScrollySection>
 	</div>
 
 	<!-- Eviction Data Visualization -->
-	<ScrollySection
-		steps={evictionSteps}
-		backgroundColor="#f5f0eb"
-		textBoxVariant="editorial"
+	<div
+		use:inview={{ rootMargin: '200px' }}
+		oninview_change={(e) => { if (e.detail.inView) loadEviction = true; }}
 	>
-		{#snippet children({ activeStep })}
-			<EvictionScrolly {activeStep} />
-		{/snippet}
-	</ScrollySection>
+		{#if EvictionScrolly}
+			<ScrollySection
+				steps={evictionSteps}
+				backgroundColor="#f5f0eb"
+				textBoxVariant="editorial"
+			>
+				{#snippet children({ activeStep })}
+					<EvictionScrolly {activeStep} />
+				{/snippet}
+			</ScrollySection>
+		{/if}
+	</div>
 
 	<!-- Background Scrolly (Assam geography, 5 map steps) -->
-	<ScrollySection
-		bind:activeStep={backgroundStep}
-		steps={backgroundSteps}
-		backgroundColor="#f5f0eb"
-		showTextBoxes={true}
-		textBoxVariant="editorial"
-		firstStepOffset={0.35}
-		onScrollProgress={(p) => (backgroundScrollProgress = p)}
+	<div
+		use:inview={{ rootMargin: '200px' }}
+		oninview_change={(e) => { if (e.detail.inView) loadMap = true; }}
 	>
-		{#snippet children({ activeStep })}
-			<MapScrolly
-				{activeStep}
-				fadeProgress={backgroundFadeInProgress()}
-				fadeOutProgress={backgroundFadeProgress()}
-				narrativePath="/data/cleared/background-narrative.json"
-				showDataLayers={false}
-			/>
-		{/snippet}
-	</ScrollySection>
+		{#if MapScrolly}
+			<ScrollySection
+				bind:activeStep={backgroundStep}
+				steps={backgroundSteps}
+				backgroundColor="#f5f0eb"
+				showTextBoxes={true}
+				textBoxVariant="editorial"
+				firstStepOffset={0.35}
+				onScrollProgress={(p) => (backgroundScrollProgress = p)}
+			>
+				{#snippet children({ activeStep })}
+					<MapScrolly
+						{activeStep}
+						fadeProgress={backgroundFadeInProgress()}
+						fadeOutProgress={backgroundFadeProgress()}
+						narrativePath="/data/cleared/background-narrative.json"
+						showDataLayers={false}
+					/>
+				{/snippet}
+			</ScrollySection>
+		{/if}
+	</div>
 
-	<!-- The Eviction Machine -->
+	<!-- The Miya -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Eviction Machine</h2>
+			<h2 class="content-heading">The Miya</h2>
+			<div class="prose-content">
+				<p>
+					Many of those now facing eviction are Miya Muslims, Bengali-speaking Muslims whose ancestors migrated from the Bengal region &ndash; parts of which now lie in Bangladesh &ndash; to Assam during the colonial period and settled on low-lying river islands called chars. These were marginal, flood-prone strips of land that nobody else wanted. Their forefathers had little choice.
+				</p>
+
+				<p>
+					Many settled there 50 to 60 years ago after losing their original homes and farmland to the Brahmaputra&rsquo;s relentless erosion. Over generations, they cleared the land, farmed it, and built communities on it.
+				</p>
+			</div>
+			<EditorialGallery images={miyaImages} />
+			<div class="prose-content">
+				<p>
+					The word &ldquo;Miya&rdquo; was once a term of respect. Today, it is used as a slur to mark Bengali-speaking Muslims as outsiders, regardless of how long they have lived in Assam or whether they hold legal citizenship documents.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Cleared for Development -->
+	<section class="content-section">
+		<div class="content-container">
+			<h2 class="content-heading">Cleared for Development</h2>
 			<div class="prose-content">
 				<p>
 					But since 2016, these communities have faced a different kind of uprooting: government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades, branding an entire community as illegal immigrants on land they had lived on for generations.
@@ -801,23 +907,31 @@
 
 	<!-- Map Scrolly Section -->
 	<div class="map-section">
-		<ScrollySection
-			steps={mapSteps}
-			backgroundColor="#f5f0eb"
-			textBoxPosition="left"
-			firstStepOffset={0.5}
-			textBoxVariant="editorial"
-			onScrollProgress={(p) => (mapScrollProgress = p)}
-		>
-			{#snippet children({ activeStep })}
-				<MapScrolly {activeStep} fadeProgress={mapFadeProgress()} fadeOutProgress={mapFadeOutProgress()} />
-			{/snippet}
-		</ScrollySection>
+		{#if MapScrolly}
+			<ScrollySection
+				steps={mapSteps}
+				backgroundColor="#f5f0eb"
+				textBoxPosition="left"
+				firstStepOffset={0.5}
+				textBoxVariant="editorial"
+				onScrollProgress={(p) => (mapScrollProgress = p)}
+			>
+				{#snippet children({ activeStep })}
+					<MapScrolly {activeStep} fadeProgress={mapFadeProgress()} fadeOutProgress={mapFadeOutProgress()} />
+				{/snippet}
+			</ScrollySection>
+		{/if}
 	</div>
 
 	<!-- Transition Gallery - Demolition Images -->
-	<div class="gallery-breakout">
-		<DemolitionGallery />
+	<div
+		class="gallery-breakout"
+		use:inview={{ rootMargin: '200px' }}
+		oninview_change={(e) => { if (e.detail.inView) loadDemolition = true; }}
+	>
+		{#if DemolitionGallery}
+			<DemolitionGallery />
+		{/if}
 	</div>
 
 	<!-- Maiful Naysa Continued -->
@@ -844,7 +958,14 @@
 		</div>
 	</section>
 
-	<SatelliteComparison />
+	<div
+		use:inview={{ rootMargin: '200px' }}
+		oninview_change={(e) => { if (e.detail.inView) loadSatellite = true; }}
+	>
+		{#if SatelliteComparison}
+			<SatelliteComparison />
+		{/if}
+	</div>
 
 	<!-- Where the Land Goes -->
 	<section class="content-section">
@@ -985,7 +1106,14 @@
 	</section>
 
 	<!-- Media Headlines Section -->
-	<HeadlineStack {headlines} />
+	<div
+		use:inview={{ rootMargin: '200px' }}
+		oninview_change={(e) => { if (e.detail.inView) loadHeadlines = true; }}
+	>
+		{#if HeadlineStack}
+			<HeadlineStack {headlines} />
+		{/if}
+	</div>
 
 	<!-- Content Section: The Pattern -->
 	<section class="content-section">
@@ -1079,11 +1207,33 @@
 				<div class="credits-column">
 					<span class="credit-label">Sources</span>
 					<ul class="credits-source-list">
-						<li>Reuters</li>
 						<li>Al Jazeera</li>
-						<li>Article 14</li>
-						<li>Human Rights Watch</li>
 						<li>Amnesty International</li>
+						<li>Article 14</li>
+						<li>Assam Tribune</li>
+						<li>BBC</li>
+						<li>Business Standard</li>
+						<li>Citizens for Justice and Peace</li>
+						<li>Coda Story</li>
+						<li>Deccan Chronicle</li>
+						<li>India Today NE</li>
+						<li>KRC Times</li>
+						<li>Land Conflict Watch</li>
+						<li>Law Beat</li>
+						<li>Maktoob Media</li>
+						<li>NDTV</li>
+						<li>NE News</li>
+						<li>Northeast Now</li>
+						<li>Outlook India</li>
+						<li>Scroll.in</li>
+						<li>The Hindu</li>
+						<li>The Indian Express</li>
+						<li>The New Indian Express</li>
+						<li>The Polis Project</li>
+						<li>The Wire</li>
+						<li>ThePrint</li>
+						<li>TwoCircles.net</li>
+						<li>UN Human Rights (OHCHR)</li>
 					</ul>
 				</div>
 			</div>
@@ -1124,7 +1274,7 @@
 				<a
 					href="https://notebooklm.google.com/notebook/e0be672a-48c4-4542-ba44-d82ae03d8e5a"
 					target="_blank"
-					rel="noopener"
+					rel="noopener noreferrer"
 					class="dataset-button"
 				>View the evictions database</a>
 			</div>
@@ -1176,11 +1326,11 @@
 	:global(.hero-accent-rule) {
 		width: 3.5rem;
 		height: 2px;
-		background: rgba(159, 62, 82, 0.5);
+		background: rgba(159, 62, 82, 0.7);
 		margin: 0 auto 1.75rem;
 		transform: scaleX(0);
 		animation: heroDrawLine 0.8s ease forwards;
-		animation-delay: 0.9s;
+		animation-delay: 0.8s;
 	}
 
 	:global(.hero-desc) {
@@ -1193,14 +1343,14 @@
 		margin: 0 0 2rem 0;
 		opacity: 0;
 		animation: heroFadeUp 1s ease forwards;
-		animation-delay: 1.2s;
+		animation-delay: 1.0s;
 	}
 
 	:global(.hero-byline) {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
 		opacity: 0;
 		animation: heroFadeUp 1s ease forwards;
-		animation-delay: 1.6s;
+		animation-delay: 1.3s;
 	}
 
 	:global(.byline-label) {
@@ -1228,7 +1378,7 @@
 		margin-top: 3rem;
 		opacity: 0;
 		animation: heroFadeUp 0.8s ease forwards;
-		animation-delay: 2.2s;
+		animation-delay: 1.8s;
 	}
 
 	:global(.scroll-indicator-track) {
@@ -1276,8 +1426,10 @@
 		padding: 3.5rem 1.5rem;
 	}
 
-	.content-section--spacious {
-		padding-top: 6rem;
+	/* Bridge block between video hero and stadium scrolly —
+	   extra top margin pushes it visually midway between the two */
+	.content-section--bridge {
+		padding-top: 10rem;
 		padding-bottom: 6rem;
 	}
 
@@ -1506,22 +1658,27 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
+		columns: 2;
+		column-gap: 1.5rem;
 	}
 
 	.credits-source-list li {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 		color: #4a4a4a;
 		line-height: 1.4;
+		padding: 0.15rem 0;
+		break-inside: avoid;
 	}
 
 	@media (max-width: 640px) {
 		.credits-grid {
 			grid-template-columns: 1fr;
 			gap: 1.5rem;
+		}
+
+		.credits-source-list {
+			columns: 1;
 		}
 	}
 
@@ -1816,12 +1973,6 @@
 
 	/* ── Mobile audit ── */
 	@media (max-width: 767px) {
-		/* Ensure body text is at least 1rem */
-		.prose-text {
-			font-size: 1rem;
-			line-height: 1.75;
-		}
-
 		/* Screen-edge padding */
 		.content-container {
 			padding-left: 1rem;

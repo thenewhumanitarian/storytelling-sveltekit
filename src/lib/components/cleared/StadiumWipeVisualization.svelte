@@ -3,19 +3,25 @@
 	 * StadiumWipeVisualization - Image scrolly with horizontal wipe
 	 *
 	 * Step 0: image2.jpg (family in shelter) with dark veil
-	 * Step 1: Cross-fade to image3.jpg (full Wembley) with dark veil
-	 * Step 2: Horizontal wipe reveals image4.jpg (empty Wembley) + "165,000 people" text
+	 * Step 1: Cross-fade to stadium-full.jpg (Narendra Modi Stadium, packed crowd) with dark veil
+	 * Step 2: Horizontal wipe reveals stadium-empty.jpg (empty Modi Stadium)
 	 *
 	 * Wipe uses CSS clip-path driven by scroll progress within step 2.
 	 */
+
+	interface CreditInfo {
+		label: string;
+		detail?: string;
+	}
 
 	interface Props {
 		activeStep: number;
 		scrollProgress?: number;
 		fadeInProgress?: number;
+		credits?: CreditInfo[];
 	}
 
-	let { activeStep, scrollProgress = 0, fadeInProgress = 0 }: Props = $props();
+	let { activeStep, scrollProgress = 0, fadeInProgress = 0, credits }: Props = $props();
 
 	const totalSteps = 3;
 	const stepFraction = 1 / totalSteps;
@@ -36,8 +42,8 @@
 	// Veil configs per step
 	const veilConfigs = [
 		{ top: 0.55, center: 0.38, bottom: 0.55, warm: 0 },     // Step 0: shelter image
-		{ top: 0.48, center: 0.32, bottom: 0.50, warm: 0.12 },   // Step 1: full Wembley
-		{ top: 0.30, center: 0.18, bottom: 0.38, warm: 0.25 },   // Step 2: wipe + 165k stat
+		{ top: 0.48, center: 0.32, bottom: 0.50, warm: 0.12 },   // Step 1: full Modi Stadium
+		{ top: 0.30, center: 0.18, bottom: 0.38, warm: 0.25 },   // Step 2: wipe to empty
 	];
 
 	let veil = $derived(veilConfigs[activeStep] ?? veilConfigs[0]);
@@ -64,24 +70,24 @@
 <div class="stadium-visualization">
 	<!-- Contained 16:9 frame for images -->
 	<div class="stadium-frame">
-		<!-- Layer 1: image4.jpg (empty Wembley) - always underneath, revealed by wipe -->
+		<!-- Layer 1: Empty Modi Stadium - always underneath, revealed by wipe -->
 		<img
-			src="/images/assam-evictions/image4.jpg"
-			alt="Empty stadium representing displaced population"
+			src="/images/cleared/stadium/stadium-empty.jpg"
+			alt="Empty Narendra Modi Stadium representing displaced population"
 			class="stadium-image stadium-empty"
 		/>
 
-		<!-- Layer 2: image3.jpg (full Wembley) - clips away left-to-right during step 2 -->
+		<!-- Layer 2: Full Modi Stadium - clips away left-to-right during step 2 -->
 		<img
-			src="/images/assam-evictions/image3.jpg"
-			alt="Full stadium representing 165,000 displaced people"
+			src="/images/cleared/stadium/stadium-full.jpg"
+			alt="Narendra Modi Stadium packed with 132,000 people"
 			class="stadium-image stadium-full"
 			style:clip-path="inset(0 {clipRight} 0 0)"
 		/>
 
 		<!-- Layer 3: image2.jpg (shelter) - visible on step 0, fades out on step 1 -->
 		<img
-			src="/images/assam-evictions/image2.jpg"
+			src="/images/cleared/stadium/image2.jpg"
 			alt="Family in makeshift shelter after eviction"
 			class="stadium-image stadium-shelter"
 			class:faded={activeStep >= 1}
@@ -98,6 +104,16 @@
 
 		<!-- Film grain -->
 		<div class="stadium-grain"></div>
+
+		<!-- Image credit bubble -->
+		{#if credits?.[activeStep]}
+			<div class="credit-bubble" class:has-detail={credits[activeStep].detail}>
+				<span class="credit-label">{credits[activeStep].label}</span>
+				{#if credits[activeStep].detail}
+					<span class="credit-detail">{credits[activeStep].detail}</span>
+				{/if}
+			</div>
+		{/if}
 	</div>
 
 	<!-- Fade-from-cream: gradient covering top half (full viewport) -->
@@ -146,6 +162,7 @@
 	/* Bottom layer: empty stadium, always present */
 	.stadium-empty {
 		z-index: 1;
+		filter: saturate(0.8);
 	}
 
 	/* Middle layer: full stadium, clips left-to-right during wipe */
@@ -221,8 +238,70 @@
 	@media (max-width: 640px) {
 		.stadium-frame {
 			width: 100%;
-			aspect-ratio: 4 / 3;
+			height: 100%;
+			top: 0;
+			left: 0;
+			transform: none;
+			aspect-ratio: auto;
 			border-radius: 0;
+		}
+	}
+
+	@media (min-width: 641px) {
+		.fade-from-cream,
+		.fade-to-cream {
+			display: none;
+		}
+	}
+
+	/* Image credit bubble */
+	.credit-bubble {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		z-index: 7;
+		background: rgba(0, 0, 0, 0.55);
+		color: rgba(255, 255, 255, 0.85);
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.6rem;
+		letter-spacing: 0.02em;
+		padding: 4px 10px;
+		border-radius: 100px;
+		pointer-events: none;
+		white-space: nowrap;
+		transition: opacity 300ms ease;
+	}
+
+	.credit-bubble.has-detail {
+		border-radius: 6px;
+		padding: 5px 10px;
+		white-space: normal;
+		max-width: 280px;
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+	}
+
+	.credit-detail {
+		font-size: 0.52rem;
+		opacity: 0.7;
+		line-height: 1.3;
+	}
+
+	@media (max-width: 640px) {
+		.credit-bubble {
+			bottom: 8px;
+			right: 8px;
+			font-size: 0.55rem;
+			padding: 3px 8px;
+		}
+
+		.credit-bubble.has-detail {
+			max-width: 220px;
+		}
+
+		.credit-detail {
+			font-size: 0.48rem;
 		}
 	}
 </style>

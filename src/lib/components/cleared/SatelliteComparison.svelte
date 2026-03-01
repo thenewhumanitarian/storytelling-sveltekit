@@ -16,16 +16,16 @@
 
 {#if isMobile}
 	<SatelliteScrolly
-		beforeImage="/images/cleared/satellite/charuabakhra_1_past.png"
-		afterImage="/images/cleared/satellite/charuabakhra_1_today.png"
+		beforeImage="/images/cleared/satellite/charuabakhra_1_past.webp"
+		afterImage="/images/cleared/satellite/charuabakhra_1_today.webp"
 		beforeLabel="Before"
 		afterLabel="January 2026"
 		location="Charuabakhra"
 	/>
 
 	<SatelliteScrolly
-		beforeImage="/images/cleared/satellite/sonapur_1_past.png"
-		afterImage="/images/cleared/satellite/sonapur_1_today.png"
+		beforeImage="/images/cleared/satellite/sonapur_1_past.webp"
+		afterImage="/images/cleared/satellite/sonapur_1_today.webp"
 		beforeLabel="Before"
 		afterLabel="January 2026"
 		location="Sonapur"
@@ -33,16 +33,16 @@
 {:else}
 	<div class="satellite-comparison">
 		<SatelliteSlider
-			beforeImage="/images/cleared/satellite/charuabakhra_1_past.png"
-			afterImage="/images/cleared/satellite/charuabakhra_1_today.png"
+			beforeImage="/images/cleared/satellite/charuabakhra_1_past.webp"
+			afterImage="/images/cleared/satellite/charuabakhra_1_today.webp"
 			beforeLabel="Before"
 			afterLabel="January 2026"
 			location="Charuabakhra"
 		/>
 
 		<SatelliteSlider
-			beforeImage="/images/cleared/satellite/sonapur_1_past.png"
-			afterImage="/images/cleared/satellite/sonapur_1_today.png"
+			beforeImage="/images/cleared/satellite/sonapur_1_past.webp"
+			afterImage="/images/cleared/satellite/sonapur_1_today.webp"
 			beforeLabel="Before"
 			afterLabel="January 2026"
 			location="Sonapur"

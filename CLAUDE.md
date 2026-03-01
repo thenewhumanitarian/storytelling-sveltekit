@@ -148,17 +148,11 @@ Investigation into Assam's mass eviction campaign displacing 20,000+ families si
 - EvictionScrolly data visualization (bubble chart + line graph)
 - NoticeMosaic: scroll-triggered mosaic of eviction notice documents with scattered "evidence board" layout and animated text placard showing recipient names and excerpts
 
-**Components:**
-- `src/lib/components/evictions/` - EvictionScrolly, EvictionBubbles
-- `src/lib/components/scrolly/` - NoticeMosaic, ScrollyHelper (reusable scroll-triggered components)
+**Components:** All under `src/lib/components/cleared/`
+- `cleared/evictions/` - EvictionScrolly, EvictionBubbles, EvictionLineGraph
+- `cleared/scrolly/` - ScrollySection, ScrollyHelper, ScrollyTextBox, NoticeMosaic, HeadlineStack, HeadlineCard
+- `cleared/` - XNotificationStack, XNotification, MapScrolly, StadiumWipeVisualization, SatelliteComparison, SatelliteScrolly, SatelliteSlider, VideoHeroVisualization, EditorialGallery, DemolitionGallery, ExpandableInfobox
 
-**Assets:** `/static/images/cleared/notices/` (notice_1-4.jpg eviction documents)
+**Data:** `src/lib/data/cleared/infoboxes-cleared.json`, `static/data/cleared/`
 
-### The Eighteen Acres (`/src/routes/the-eighteen-acres/`)
-Investigation into government land acquisition by the family of Assam CM Himanta Biswa Sarma. Features:
-- Video header with scroll-triggered content
-- XNotificationStack for social media posts
-- Video scrolly with quote overlays
-- Data tables for wealth analysis
-
-**Data:** `/data/` (hiswanta-tweets.csv, article markdown files)
+**Assets:** `static/images/cleared/` (notices/, miya/, satellite/, stadium/, villages/), `static/videos/cleared/`

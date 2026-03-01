@@ -2,8 +2,8 @@
   "steps": [
     {
       "id": "evictions-overview",
-      "coordinates": [92.9376, 26.2006],
-      "zoom": 7,
+      "coordinates": [91.5, 26.2],
+      "zoom": 5.5,
       "pitch": 0,
       "bearing": 0,
       "duration": 2000,
@@ -14,8 +14,8 @@
     },
     {
       "id": "our-investigation",
-      "coordinates": [92.9376, 26.2006],
-      "zoom": 7,
+      "coordinates": [91.5, 26.2],
+      "zoom": 5.5,
       "pitch": 0,
       "bearing": 0,
       "duration": 1500,
@@ -74,8 +74,8 @@
     },
     {
       "id": "full-picture",
-      "coordinates": [92.9376, 26.2006],
-      "zoom": 7,
+      "coordinates": [91.5, 26.2],
+      "zoom": 5.5,
       "pitch": 0,
       "bearing": 0,
       "duration": 2500,
