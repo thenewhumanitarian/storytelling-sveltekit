@@ -348,12 +348,6 @@
 	<link rel="preload" as="image" href="/images/assam-evictions/image3.jpg" />
 	<!-- Preload hint for hero video -->
 	<link rel="preload" as="video" href="/videos/assam-evictions/1952348361748594720_00001.mp4" />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap"
-		rel="stylesheet"
-	/>
 </svelte:head>
 
 <div class="article-container">
@@ -1091,7 +1085,7 @@
 	}
 
 	:global(.hero-title) {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(3rem, 10vw, 6rem);
 		font-weight: 700;
 		letter-spacing: -0.02em;
@@ -1114,7 +1108,7 @@
 	}
 
 	:global(.hero-desc) {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: clamp(1.1rem, 2.5vw, 1.35rem);
 		font-weight: 300;
 		line-height: 1.7;
@@ -1127,7 +1121,7 @@
 	}
 
 	:global(.hero-byline) {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		opacity: 0;
 		animation: heroFadeUp 1s ease forwards;
 		animation-delay: 1.6s;
@@ -1217,7 +1211,7 @@
 	}
 
 	.content-heading {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(1.75rem, 4vw, 2.5rem);
 		font-weight: 600;
 		line-height: 1.2;
@@ -1230,7 +1224,7 @@
 	}
 
 	.prose-content {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.125rem;
 		line-height: 1.85;
 		color: #2d2d2d;
@@ -1325,13 +1319,13 @@
 	}
 
 	.vt-date {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.85rem;
 		color: #6b6b6b;
 	}
 
 	.vt-location {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1rem;
 		font-weight: 600;
 		color: #1a1a1a;
@@ -1352,7 +1346,7 @@
 	}
 
 	.vt-description {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		color: #2d2d2d;
 		line-height: 1.6;
@@ -1427,7 +1421,7 @@
 	}
 
 	.credit-value {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		color: #2d2d2d;
 	}
@@ -1442,7 +1436,7 @@
 	}
 
 	.credits-source-list li {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.9rem;
 		color: #4a4a4a;
 		line-height: 1.4;
@@ -1472,7 +1466,7 @@
 	}
 
 	.pull-quote p {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(1.25rem, 3vw, 1.75rem);
 		font-weight: 500;
 		font-style: italic;
@@ -1482,7 +1476,7 @@
 	}
 
 	.pull-quote-source {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.875rem;
 		color: #6b6b6b;
 		text-transform: uppercase;
@@ -1512,7 +1506,7 @@
 	}
 
 	.contempt-desc {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		color: #2d2d2d;
 		line-height: 1.5;
@@ -1552,7 +1546,7 @@
 
 	/* Sub-headings within prose sections */
 	.prose-subheading {
-		font-family: 'Playfair Display', Georgia, serif;
+		font-family: 'GT Sectra Bold', Georgia, serif;
 		font-size: clamp(1.25rem, 3vw, 1.5rem);
 		font-weight: 600;
 		line-height: 1.3;
@@ -1588,7 +1582,7 @@
 	}
 
 	.methodology-content {
-		font-family: 'Source Sans 3', system-ui, sans-serif;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		line-height: 1.75;
 		color: #4a4a4a;
