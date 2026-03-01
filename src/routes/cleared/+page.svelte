@@ -171,13 +171,13 @@
 	const displacementSteps = [
 		{
 			title: '"Bulldozer justice"',
-			text: 'In the early hours of July 12, 2025, the Asadubi Revenue Village, a community that had stood for over seven decades, was met with the mechanical roar of bulldozers.'
+			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades was met with the mechanical roar of bulldozers. Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment,\u201d but a matter of documented rights.'
 		},
 		{
 			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of "encroachment," but a matter of documented rights.'
 		},
 		{
-			text: '<blockquote>"Our village is 70-75 years old. It was not forest land; it was Pattaland. We showed our documents to the District Officer, but they were rejected. It was written in the papers that this land is \'not indigenous\' and reserved for public development."</blockquote>'
+			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development. Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses.\u201d</blockquote>'
 		},
 		{
 			text: '<blockquote>"Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses."</blockquote>'
@@ -607,11 +607,11 @@
 				</p>
 
 				<p>
-					This reached a violent peak in February 2026, when the Assam BJP's official X account posted a <a href="https://x.com/MahuaMoitra/status/2020444649857351865" target="_blank" rel="noopener">video</a> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned "point blank shot". Though deleted after a massive outrage by the public and opposition leaders, who warned it was a direct incitement to violence against minorities.
+					This reached a violent peak in February 2026, when the Assam BJP's official X account posted a <a href="https://x.com/MahuaMoitra/status/2020444649857351865" target="_blank" rel="noopener">video</a> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned "point blank shot". It was deleted after a massive outrage by the public and opposition leaders, who warned it was a direct incitement to violence against minorities.
 				</p>
 
 				<p>
-					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minority rights.
+					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minorities.
 				</p>
 			</div>
 
@@ -673,6 +673,10 @@
 
 				<p>
 					The bulldozers continued to roll, raising a fundamental question about the limits of judicial authority when state power refuses to yield.
+				</p>
+
+				<p>
+					For hundreds of evicted families, losing their homes was only the beginning: Many have since found their <a href="https://scroll.in/article/1090844/home-was-razed-now-vote-gone-in-assam-hundreds-of-evicted-find-names-struck-off-electoral-roll" target="_blank" rel="noopener">names struck</a> off the electoral rolls, stripping them of their right to vote.
 				</p>
 			</div>
 
@@ -823,7 +827,11 @@
 					For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their "dream house" was reduced to rubble in seconds.
 				</p>
 
-				</div>
+				<ul class="before-after-list">
+					<li><strong>The Past:</strong> Sturdy walls, a family shop, and a barricade that kept the wildlife out.</li>
+					<li><strong>The Present:</strong> A plastic tent, no income, and the nightly terror of wild elephants. This structure highlights that the eviction didn&rsquo;t just take their land; it stripped away their human right to protection.</li>
+				</ul>
+			</div>
 		</div>
 	</section>
 
