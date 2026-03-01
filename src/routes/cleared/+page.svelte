@@ -422,11 +422,10 @@
 			bind:activeStep={heroStep}
 			steps={heroSteps}
 			backgroundColor="#f5f0eb"
-			showTextBoxes={true}
 			textBoxVariant="editorial"
 			onScrollProgress={(p) => (heroScrollProgress = p)}
 		>
-			{#snippet children({ activeStep })}
+			{#snippet children()}
 				<VideoHeroVisualization
 					currentStep={heroStep}
 					fadeProgress={heroFadeProgress()}
@@ -461,12 +460,11 @@
 			bind:activeStep={stadiumStep}
 			steps={stadiumSteps}
 			backgroundColor="#f5f0eb"
-			showTextBoxes={true}
 			textBoxVariant="editorial"
 			firstStepOffset={0.35}
 			onScrollProgress={(p) => (stadiumScrollProgress = p)}
 		>
-			{#snippet children({ activeStep })}
+			{#snippet children()}
 				<StadiumWipeVisualization
 					activeStep={stadiumStep}
 					scrollProgress={stadiumScrollProgress}
@@ -509,7 +507,6 @@
 				bind:activeStep={backgroundStep}
 				steps={backgroundSteps}
 				backgroundColor="#f5f0eb"
-				showTextBoxes={true}
 				textBoxVariant="editorial"
 				firstStepOffset={0.35}
 				onScrollProgress={(p) => (backgroundScrollProgress = p)}
@@ -666,11 +663,10 @@
 		bind:activeStep={displacementStep}
 		steps={displacementSteps}
 		backgroundColor="#f5f0eb"
-		showTextBoxes={true}
 		textBoxVariant="editorial"
 		onScrollProgress={(p) => (displacementScrollProgress = p)}
 	>
-		{#snippet children({ activeStep })}
+		{#snippet children()}
 			<VideoHeroVisualization
 				currentStep={displacementStep}
 				fadeProgress={displacementFadeProgress()}
@@ -1447,11 +1443,7 @@
 		margin: 0 0 2rem 0;
 	}
 
-	.content-heading + .content-heading {
-		margin-top: 4rem;
-	}
-
-	.prose-content {
+.prose-content {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 1.125rem;
 		line-height: 1.85;
