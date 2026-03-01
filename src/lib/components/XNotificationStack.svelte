@@ -80,4 +80,11 @@
 		padding: 24px 16px;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 	}
+
+	@media (max-width: 600px) {
+		.x-notification-stack {
+			align-items: stretch;
+			padding: 24px 0;
+		}
+	}
 </style>

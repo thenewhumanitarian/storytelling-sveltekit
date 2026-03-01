@@ -143,8 +143,8 @@
 
 	@media (max-width: 600px) {
 		.x-notification {
-			max-width: calc(100% - 32px);
-			margin: 0 16px 12px 16px;
+			max-width: 100%;
+			margin: 0 0 12px 0;
 		}
 
 		.tweet-text {
