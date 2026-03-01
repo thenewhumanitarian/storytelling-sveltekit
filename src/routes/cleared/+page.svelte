@@ -446,15 +446,15 @@
 			<h2 class="content-heading">The Eviction Machine</h2>
 			<div class="prose-content">
 				<p>
-					Since 2016, these communities have faced government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades.
+					But since 2016, these communities have faced a different kind of uprooting: government-led eviction drives targeting what officials call "illegal encroachments". It is a label with consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades, branding an entire community as illegal immigrants on land they had lived on for generations.
 				</p>
 
 				<p>
-					The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when <ExpandableInfobox data={infoboxData.partition} suffix="." />
+					The Assam government frames these evictions as action against "illegal immigrants" from Bangladesh. But the story is more complicated. Many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947, when <ExpandableInfobox data={infoboxData.partition} suffix="." />
 				</p>
 
 				<p>
-					Some came with official permission. Others were given land by the Indian state itself. Many had been living in Assam for 50 to 70 years.
+					Some came with official permission from the government of what is now India. Others were given land by the Indian state itself, often unproductive char lands that the government was eager to have cultivated. By the time the evictions began, many had been living in Assam for 50 to 70 years.
 				</p>
 			</div>
 		</div>
@@ -478,7 +478,7 @@
 			<h2 class="content-heading">After Partition</h2>
 			<div class="prose-content">
 				<p>
-					More than one third of Assam's 31 million people are Muslim. That demographic reality has made Assam a focal point of a broader national shift. The BJP-led government has faced repeated accusations of targeting India's 200 million Muslims, from the Citizenship Amendment Act to the National Register of Citizens. In Assam, these national policies have found their sharpest expression.
+					More than one third of Assam&rsquo;s 31 million people are Muslim &ndash; one of the highest proportions of any Indian state. That demographic reality has made Assam a focal point of a broader national shift. In recent years, Modi&rsquo;s BJP-led government has faced repeated accusations of enacting laws and policies that specifically target India&rsquo;s <a href="https://www.aljazeera.com/news/2024/3/11/india-implements-anti-muslim-2019-citizenship-law-weeks-before-election" target="_blank" rel="noopener">200 million Muslims</a>, from the Citizenship Amendment Act, which critics say deliberately excludes Muslims from a fast-tracked citizenship pathway, to the <a href="https://www.aljazeera.com/news/2019/8/31/india-publishes-final-nrc-all-you-need-to-know-on-citizens-list" target="_blank" rel="noopener">National Register of Citizens</a>, which left millions stateless. In Assam, these national policies have found their sharpest expression.
 				</p>
 
 				<EditorialGallery images={[
@@ -511,7 +511,7 @@
 			<h2 class="content-heading">The Register</h2>
 			<div class="prose-content">
 				<p>
-					The National Register of Citizens (NRC), concluded in 2019, was designed to identify who qualified as an Indian citizen in Assam. Residents had to prove they or their families arrived before March 24, 1971. The final list excluded more than 1.9 million people, roughly 6% of Assam's population.
+					The National Register of Citizens (NRC) &ndash; initiated after the right-wing BJP came to power in 2016 and concluded in 2019 &ndash; was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before 24 March 1971 &ndash; the eve of Bangladesh&rsquo;s independence from Pakistan. The final list excluded <a href="https://www.aljazeera.com/news/2019/8/31/india-excludes-nearly-2-million-people-from-assam-citizen-list" target="_blank" rel="noopener">more than a million people</a> (roughly 6% of Assam&rsquo;s population) who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India&rsquo;s Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
 				</p>
 
 				<EditorialGallery images={[
@@ -521,7 +521,7 @@
 				]} />
 
 				<p>
-					Many were poor. Most were Muslim. Several detention centres were established, including India's largest in Goalpara, designed to house up to 3,500 people. In some cases, children were separated from their parents.
+					The process was not free from error or bias. Legitimate citizens were excluded on the basis of technical errors, spelling mistakes, and documentation challenges. Several detention centres were established, including India&rsquo;s largest dedicated <a href="https://www.outlookindia.com/national/68-foreigners-moved-to-country-s-largest-detention-centre-in-assam-s-goalpara-news-257735" target="_blank" rel="noopener">detention centre</a> opened in Goalpara and designed to house up to 3,500 people. In some cases, children were separated from their parents. For many of the evicted, there is literally nowhere legal to go.
 				</p>
 			</div>
 		</div>
@@ -534,7 +534,7 @@
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					For Zain-ul-Abadin, a 43-year-old resident of Uriamghat in Assam's Golaghat district, the eviction represents more than the loss of a home. He says his family was among those encouraged by the Assam government to settle in the late 1970s in a border belt along Nagaland, then considered a disputed zone. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt. The long-running land dispute has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
+					For Zain-ul-Abadin, a 43-year-old resident of Uriamghat in Assam's Golaghat district, the eviction represents more than the loss of a home. He says his family was among those encouraged by the Assam government to settle in the late 1970s in a border belt along Nagaland, then considered a disputed zone. The Assam-Nagaland border has been contested since <ExpandableInfobox data={infoboxData.nagaland} />, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt. The long-running land dispute has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
 				</p>
 
 				<p>
