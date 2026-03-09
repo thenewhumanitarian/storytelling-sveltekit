@@ -98,7 +98,7 @@
 		},
 		{
 			title: 'September 23, 2021',
-			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, in Assam\u2019s Darrang district. Two people died: Moinul Haque, 28, and Sheikh Farid, 12 years old.',
+			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, in Assam\u2019s Darrang district. Two people died: Moinul Haque, 33, and Sheikh Farid, 12 years old.',
 			source: {
 				text: 'Al Jazeera',
 				url: 'https://www.aljazeera.com/news/2021/9/29/assam'
@@ -135,7 +135,7 @@
 			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
 		},
 		{
-			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the <a href="https://cjp.org.in/bulldozing-the-poor-assams-eviction-drives-for-adani-project-leave-thousands-homeless/" target="_blank" rel="noopener">$4.75 billion</a> allegedly allocated to Adani thermal power plant in Dhubri.'
+			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the <a href="https://www.reuters.com/sustainability/climate-energy/adani-group-invest-717-bln-power-projects-indias-assam-state-2025-11-14/" target="_blank" rel="noopener">approximately $5.5 billion</a> allocated to an Adani thermal power plant in Dhubri.'
 		},
 		{
 			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
@@ -619,7 +619,7 @@
 			<h2 class="content-heading">The Register</h2>
 			<div class="prose-content">
 				<p>
-					The National Register of Citizens (NRC) &ndash; initiated after the right-wing BJP came to power in 2016 and concluded in 2019 &ndash; was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before 24 March 1971 &ndash; the eve of Bangladesh&rsquo;s independence from Pakistan. The final list excluded <a href="https://www.aljazeera.com/news/2019/8/31/india-excludes-nearly-2-million-people-from-assam-citizen-list" target="_blank" rel="noopener">more than a million people</a> (roughly 6% of Assam&rsquo;s population) who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India&rsquo;s Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
+					The National Register of Citizens (NRC) &ndash; initiated after the right-wing BJP came to power in 2016 and concluded in 2019 &ndash; was designed to identify who qualified as an Indian citizen in Assam. To be included, residents had to prove that they or their families arrived in Assam before 24 March 1971 &ndash; the eve of Bangladesh&rsquo;s independence from Pakistan. The final list excluded <a href="https://www.aljazeera.com/news/2019/8/31/india-excludes-nearly-2-million-people-from-assam-citizen-list" target="_blank" rel="noopener">nearly two million people</a> (roughly 6% of Assam&rsquo;s population) who failed to meet this requirement. Many were poor. Most were Muslim. For many observers, the NRC was not an administrative exercise. It was the latest manifestation of a broader, systematic effort by the BJP government to target and disenfranchise India&rsquo;s Muslims, using the machinery of the state to question the citizenship of communities that have lived on Indian soil for generations.
 				</p>
 
 				<div class="gallery-breakout">
@@ -699,7 +699,7 @@
 
 			<div class="prose-content">
 				<p>
-					<a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">Rights groups</a> and <a href="https://www.codastory.com/authoritarian-tech/india-bulldozers-muslim-neighborhoods/" target="_blank" rel="noopener">legal scholars</a> often draw parallels between India's "bulldozer justice" and Israel's long-standing practice of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home demolitions as a central tool of displacement against Palestinians, demolishing more than <a href="https://www.palestineportal.org/learn-teach/key-issues/home-demolitions/" target="_blank" rel="noopener">26,000 homes since 1967</a> alone. The justification is almost always the same: illegal construction, encroachment, or a bureaucratic infraction.
+					<a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">Rights groups</a> and <a href="https://www.codastory.com/authoritarian-tech/india-bulldozers-muslim-neighborhoods/" target="_blank" rel="noopener">legal scholars</a> often draw parallels between India's "bulldozer justice" and Israel's long-standing practice of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home demolitions as a central tool of displacement against Palestinians, demolishing more than <a href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/" target="_blank" rel="noopener">55,000 structures since 1967</a> alone. The justification is almost always the same: illegal construction, encroachment, or a bureaucratic infraction.
 				</p>
 			</div>
 		</div>
@@ -720,7 +720,7 @@
 				</p>
 
 				<p>
-					Concerns about the chief minister's language have also been raised by a group of more than 180 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minorities.
+					Concerns about the chief minister's language have also been raised by a group of 188 scholars, lawyers, and activists who issued a joint <a href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement" target="_blank" rel="noopener">statement</a> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led rhetoric fundamentally threatens constitutional rights and the safety of minorities.
 				</p>
 			</div>
 
@@ -822,7 +822,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2016</span>
-							<span class="vt-date">September 21</span>
+							<span class="vt-date">September 19</span>
 							<p class="vt-location"><a href="https://www.ndtv.com/guwahati-news/two-dead-as-eviction-drive-near-kaziranga-national-park-turns-violent-1460443" target="_blank" rel="noopener">Kaziranga National Park</a>, Nagaon district</p>
 							<p class="vt-description">Two killed during a violent eviction drive.</p>
 							<span class="vt-toll">2 killed</span>
@@ -844,7 +844,7 @@
 							<span class="vt-year">2021</span>
 							<span class="vt-date">September 23</span>
 							<p class="vt-location"><a href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/" target="_blank" rel="noopener">Dhalpur</a>, Darrang district</p>
-							<p class="vt-description">Moinul Haque (28) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
+							<p class="vt-description">Moinul Haque (33) and Sheikh Farid (12) killed by police firing. 20 injured.</p>
 							<span class="vt-toll">2 killed</span>
 						</div>
 					</div>
@@ -974,11 +974,11 @@
 				</p>
 
 				<p>
-					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing a <a href="https://www.adani.com/newsroom/media-releases/adani-to-invest-rs-63000-cr-in-transformative-energy-projects-in-assam" target="_blank" rel="noopener">USD 5.6 billion investment</a>. Weeks earlier, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group &ndash; one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure &ndash; has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is the second richest Asian, with a net worth of $66.6 billion.
+					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant &ndash; a 3,200 megawatt facility representing an <a href="https://www.reuters.com/sustainability/climate-energy/adani-group-invest-717-bln-power-projects-indias-assam-state-2025-11-14/" target="_blank" rel="noopener">approximately $5.5 billion investment</a>. Weeks later, the Geological Survey of India reported <a href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21" target="_blank" rel="noopener">18.29 million tonnes of iron</a> ore in the same area. Adani Group &ndash; one of India's most powerful conglomerates, with interests spanning energy, ports, mining, and infrastructure &ndash; has expanded rapidly over the past decade alongside the country's infrastructure push. Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the company and the government deny any preferential treatment. Adani is India's second-wealthiest person.
 				</p>
 
 				<p>
-					In February 2025, the Assam government held its Advantage Assam 2.0 investment summit. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
+					In February 2025, the Assam government held its <a href="https://www.business-standard.com/economy/news/biz-summit-day-1-assam-receives-rs-2-5-trillion-investment-proposals-125022501400_1.html" target="_blank" rel="noopener">Advantage Assam 2.0 investment summit</a>. Since then, land has been allocated to major corporations including Adani, Patanjali, Reliance Industries, and Vedanta for industrial and agricultural projects.
 				</p>
 
 				<h3 class="prose-subheading">Corporate Allocations</h3>
@@ -1122,11 +1122,11 @@
 				</p>
 
 				<p>
-					Amnesty's February 2024 report documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law, finding violations of the right to adequate housing, fair trial, and non-discrimination.
+					<a href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/" target="_blank" rel="noopener">Amnesty's February 2024 report</a> documented that evictions in Assam constitute "forced evictions" prohibited under international human rights law, finding violations of the right to adequate housing, fair trial, and non-discrimination.
 				</p>
 
 				<p>
-					In June 2025, UN experts called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
+					In June 2025, <a href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised" target="_blank" rel="noopener">UN experts</a> called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
 				</p>
 
 				<p>
@@ -1136,7 +1136,7 @@
 				<h3 class="prose-subheading">A Global Pattern</h3>
 
 				<p>
-					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine, over 55,000 Palestinian structures have been demolished since 1967 for systematic home destruction.
+					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine, over <a href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/" target="_blank" rel="noopener">55,000 Palestinian structures</a> have been demolished since 1967 for systematic home destruction.
 				</p>
 
 				<p>
