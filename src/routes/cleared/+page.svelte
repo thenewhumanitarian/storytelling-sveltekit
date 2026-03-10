@@ -241,15 +241,59 @@
 			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment,\u201d but a matter of documented rights.'
 		},
 		{
-			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development. Nearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses.\u201d</blockquote>'
+			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development.\u201d</blockquote>'
 		},
 		{
-			text: '<blockquote>\u201cIt was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development.\u201d</blockquote>'
+			text: '<blockquote>\u201cNearly 60 bulldozers came early morning around 6am and bulldozed our village, including our houses.\u201d</blockquote>'
 		}
 	];
 
 	const displacementOverlays = [
 		{ top: 0.3, center: 0.4, bottom: 0.5, warm: 0.2 },
+		{ top: 0.3, center: 0.4, bottom: 0.5, warm: 0.2 },
+		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
+		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
+	];
+
+	// Zain-ul-Abadin video scrolly steps
+	const zainSteps = [
+		{
+			title: 'Zain-ul-Abadin',
+			text: 'Zain-ul-Abadin, 43, of Uriamghat in Golaghat district, says his family was among those encouraged by the Assam government to settle in the late 1970s in a disputed border zone along Nagaland.'
+		},
+		{
+			text: '<blockquote>\u201cMy father and grandfather lived here. We came from another part of the state to Uriamghat because the government told us to settle here to protect the land of Assam.\u201d</blockquote>'
+		},
+		{
+			text: '<blockquote>\u201cThis has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour.\u201d</blockquote>'
+		},
+		{
+			text: 'For Zain-ul-Abadin, the eviction represents more than the loss of a home. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt.'
+		}
+	];
+
+	const zainOverlays = [
+		{ top: 0.3, center: 0.4, bottom: 0.5, warm: 0.2 },
+		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
+		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
+		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
+	];
+
+	// Maiful Naysa video scrolly steps
+	const maifulSteps = [
+		{
+			title: 'Maiful Naysa',
+			text: 'Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.'
+		},
+		{
+			text: '<blockquote>\u201cWe had a solid house, a shop, and four rooms. Everything was settled. Now we have nothing.\u201d</blockquote>'
+		},
+		{
+			text: 'For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their \u201cdream house\u201d was reduced to rubble in seconds.'
+		}
+	];
+
+	const maifulOverlays = [
 		{ top: 0.3, center: 0.4, bottom: 0.5, warm: 0.2 },
 		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
 		{ top: 0.3, center: 0.45, bottom: 0.5, warm: 0.15 },
@@ -370,6 +414,42 @@
 		return Math.min(1, (displacementScrollProgress - fadeStart) / (fadeEnd - fadeStart));
 	});
 
+	// Zain-ul-Abadin video scrolly state
+	let zainStep = $state(0);
+	let zainScrollProgress = $state(0);
+
+	let zainFadeInProgress = $derived(() => {
+		const fadeEnd = 0.15;
+		if (zainScrollProgress >= fadeEnd) return 0;
+		return 1 - (zainScrollProgress / fadeEnd);
+	});
+
+	let zainFadeProgress = $derived(() => {
+		if (zainStep !== 3) return 0;
+		const fadeStart = 0.85;
+		const fadeEnd = 1.0;
+		if (zainScrollProgress < fadeStart) return 0;
+		return Math.min(1, (zainScrollProgress - fadeStart) / (fadeEnd - fadeStart));
+	});
+
+	// Maiful Naysa video scrolly state
+	let maifulStep = $state(0);
+	let maifulScrollProgress = $state(0);
+
+	let maifulFadeInProgress = $derived(() => {
+		const fadeEnd = 0.15;
+		if (maifulScrollProgress >= fadeEnd) return 0;
+		return 1 - (maifulScrollProgress / fadeEnd);
+	});
+
+	let maifulFadeProgress = $derived(() => {
+		if (maifulStep !== 2) return 0;
+		const fadeStart = 0.85;
+		const fadeEnd = 1.0;
+		if (maifulScrollProgress < fadeStart) return 0;
+		return Math.min(1, (maifulScrollProgress - fadeStart) / (fadeEnd - fadeStart));
+	});
+
 	let mapScrollProgress = $state(0);
 	let notificationsTriggered = $state(false);
 	let backgroundStep = $state(0);
@@ -411,8 +491,11 @@
 	<link rel="preload" as="image" href="/images/cleared/stadium/image2.jpg" />
 	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-full.jpg" />
 	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-empty.jpg" />
-	<!-- Preload hint for hero video -->
+	<!-- Preload hints for videos -->
 	<link rel="preload" as="video" href="/videos/cleared/hero.mp4" />
+	<link rel="preload" as="video" href="/videos/cleared/zain-ul-abadin.mp4" />
+	<link rel="preload" as="video" href="/videos/cleared/abdul-barik.mp4" />
+	<link rel="preload" as="video" href="/videos/cleared/maiful-naysa.mp4" />
 </svelte:head>
 
 <div class="article-container">
@@ -639,21 +722,38 @@
 
 	<div class="section-divider"></div>
 
-	<!-- Zain-ul-Abadin Testimony -->
+	<!-- Zain-ul-Abadin Video Testimony -->
+	<ScrollySection
+		bind:activeStep={zainStep}
+		steps={zainSteps}
+		backgroundColor="#f5f0eb"
+		textBoxVariant="editorial"
+		onScrollProgress={(p) => (zainScrollProgress = p)}
+	>
+		{#snippet children()}
+			<VideoHeroVisualization
+				currentStep={zainStep}
+				fadeProgress={zainFadeProgress()}
+				fadeInProgress={zainFadeInProgress()}
+				scrollProgress={zainScrollProgress}
+				videoSrc="/videos/cleared/zain-ul-abadin.mp4"
+				overlayConfig={zainOverlays}
+				showCreamOverlay={false}
+			/>
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Zain-ul-Abadin Context -->
 	<section class="content-section">
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					For Zain-ul-Abadin, a 43-year-old resident of Uriamghat in Assam's Golaghat district, the eviction represents more than the loss of a home. He says his family was among those encouraged by the Assam government to settle in the late 1970s in a border belt along Nagaland, then considered a disputed zone. The Assam-Nagaland border has been contested since <ExpandableInfobox data={infoboxData.nagaland} />, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt. The long-running land dispute has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
+					The <ExpandableInfobox data={infoboxData.nagaland} /> has triggered repeated bouts of violent clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people dead. In the 1970s, the Assam government settled landless communities in this zone as part of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family was part of that policy. Now, decades later, the same government is demolishing the settlement it once built.
 				</p>
 
 				<p>
 					The families of those civilians are now being labelled as "foreigners".
 				</p>
-
-				<blockquote>
-					"My father and grandfather lived here. We came from another part of the state to Uriamghat because the government told us to settle here to protect the land of Assam. This has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour."
-				</blockquote>
 			</div>
 		</div>
 	</section>
@@ -672,7 +772,7 @@
 				fadeProgress={displacementFadeProgress()}
 				fadeInProgress={displacementFadeInProgress()}
 				scrollProgress={displacementScrollProgress}
-				videoSrc="/videos/cleared/displacement.mp4"
+				videoSrc="/videos/cleared/abdul-barik.mp4"
 				overlayConfig={displacementOverlays}
 				showCreamOverlay={false}
 			/>
@@ -930,22 +1030,31 @@
 		{/if}
 	</div>
 
-	<!-- Maiful Naysa Continued -->
+	<!-- Maiful Naysa Video Testimony -->
+	<ScrollySection
+		bind:activeStep={maifulStep}
+		steps={maifulSteps}
+		backgroundColor="#f5f0eb"
+		textBoxVariant="editorial"
+		onScrollProgress={(p) => (maifulScrollProgress = p)}
+	>
+		{#snippet children()}
+			<VideoHeroVisualization
+				currentStep={maifulStep}
+				fadeProgress={maifulFadeProgress()}
+				fadeInProgress={maifulFadeInProgress()}
+				scrollProgress={maifulScrollProgress}
+				videoSrc="/videos/cleared/maiful-naysa.mp4"
+				overlayConfig={maifulOverlays}
+				showCreamOverlay={false}
+			/>
+		{/snippet}
+	</ScrollySection>
+
+	<!-- Maiful Naysa Before/After -->
 	<section class="content-section">
 		<div class="content-container">
 			<div class="prose-content">
-				<p>
-					Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.
-				</p>
-
-				<blockquote>
-					"We had a solid house, a shop, and four rooms. Everything was settled. Now we have nothing."
-				</blockquote>
-
-				<p>
-					For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their "dream house" was reduced to rubble in seconds.
-				</p>
-
 				<ul class="before-after-list">
 					<li><strong>The Past:</strong> Sturdy walls, a family shop, and a barricade that kept the wildlife out.</li>
 					<li><strong>The Present:</strong> A plastic tent, no income, and the nightly terror of wild elephants. This structure highlights that the eviction didn&rsquo;t just take their land; it stripped away their human right to protection.</li>
@@ -1232,6 +1341,10 @@
 						<li>UN Human Rights (OHCHR)</li>
 					</ul>
 				</div>
+			</div>
+			<div class="credits-support">
+				<span class="credits-support-text">Visual development and interactive design supported by</span>
+				<a href="https://www.grstiftung.ch/de.html" target="_blank" rel="noopener noreferrer" class="credits-support-link">Gebert R&uuml;f Stiftung</a>
 			</div>
 		</div>
 	</section>
@@ -1661,6 +1774,38 @@
 		line-height: 1.4;
 		padding: 0.15rem 0;
 		break-inside: avoid;
+	}
+
+	.credits-support {
+		margin-top: 1.75rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		display: flex;
+		align-items: baseline;
+		gap: 0.35em;
+		flex-wrap: wrap;
+	}
+
+	.credits-support-text {
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.8rem;
+		color: #8a8a8a;
+		letter-spacing: 0.01em;
+	}
+
+	.credits-support-link {
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.8rem;
+		color: #6a6a6a;
+		font-weight: 500;
+		text-decoration: none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+		transition: color 0.2s ease, border-color 0.2s ease;
+	}
+
+	.credits-support-link:hover {
+		color: #9f3e52;
+		border-color: rgba(159, 62, 82, 0.3);
 	}
 
 	@media (max-width: 640px) {
