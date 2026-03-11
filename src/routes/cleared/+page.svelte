@@ -1308,6 +1308,10 @@
 						<span class="credit-label">Additional Research</span>
 						<span class="credit-value">Mir Wafa Raseeq</span>
 					</div>
+					<div class="credit-entry">
+						<span class="credit-label">Artwork by</span>
+						<span class="credit-value">Shah Faisal</span>
+					</div>
 				</div>
 				<div class="credits-column">
 					<span class="credit-label">Sources</span>
