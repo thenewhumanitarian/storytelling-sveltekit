@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { forceSimulation, forceX, forceY, forceCollide, type Simulation } from 'd3-force';
 	import { scaleLinear, scaleBand, scaleTime } from 'd3-scale';
 	import { extent } from 'd3-array';
@@ -220,17 +220,30 @@
 	let prevMode = $state(mode);
 
 	// Effect to handle data changes - recreate simulation
+	// Only track `data` and `mounted`; untrack internal reads (nodes, scales, etc.)
 	$effect(() => {
-		if (mounted && data.length > 0) {
-			createSimulation();
+		const d = data;
+		const m = mounted;
+		if (m && d.length > 0) {
+			untrack(() => createSimulation());
 		}
 	});
 
 	// Effect to handle mode changes - just update forces
 	$effect(() => {
-		if (mounted && simulation && mode !== prevMode) {
-			prevMode = mode;
-			updateSimulationForces();
+		const currentMode = mode;
+		if (mounted && simulation && currentMode !== prevMode) {
+			prevMode = currentMode;
+			untrack(() => updateSimulationForces());
+		}
+	});
+
+	// Effect to handle dimension changes - update forces without full recreation
+	$effect(() => {
+		const w = width;
+		const h = height;
+		if (mounted && simulation) {
+			untrack(() => updateSimulationForces());
 		}
 	});
 
