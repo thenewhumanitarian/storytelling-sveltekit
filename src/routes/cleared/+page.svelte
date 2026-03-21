@@ -195,16 +195,20 @@
 	// Miya editorial gallery images
 	const miyaImages = [
 		{
-			src: '/images/cleared/miya/char-island-landscape.jpg',
-			alt: 'A char island on the Brahmaputra river in Assam',
-			caption:
-				'A char — a shifting riverine island on the Brahmaputra. Miya communities have farmed these flood-prone strips of land for generations. Photo: Dhrubazaan Photography / Wikimedia Commons (CC BY-SA 4.0)'
+			src: '/images/cleared/miya/char-settlement-wide.jpg',
+			alt: 'Miya community settlement on a Brahmaputra char island',
+			caption: 'A Miya community on a char — a shifting riverine island on the Brahmaputra.'
 		},
 		{
-			src: '/images/cleared/miya/river-island.jpg',
-			alt: "Majuli, the world's largest river island in the Brahmaputra, Assam",
-			caption:
-				"The Brahmaputra's river islands are among the most flood-prone and marginal land in India. Photo: Udit Kapoor / Wikimedia Commons (CC BY-SA 4.0)"
+			src: '/videos/cleared/drone-brahmaputra-loop.mp4',
+			alt: 'Aerial view of char island communities on the Brahmaputra',
+			caption: 'Aerial view of char island settlements along the Brahmaputra.',
+			type: 'video' as const
+		},
+		{
+			src: '/images/cleared/miya/char-boy-eating.jpg',
+			alt: 'A boy eats overlooking a Brahmaputra char settlement',
+			caption: 'Life on the char. Miya communities have farmed these flood-prone strips of land for generations.'
 		}
 	];
 
@@ -769,25 +773,11 @@
 				</p>
 
 				<div class="gallery-breakout">
-					<EditorialGallery
-						images={[
-							{
-								src: '/images/cleared/villages/sontoshpur.jpg',
-								alt: 'Sontoshpur village, Assam',
-								caption: 'Sontoshpur, Darrang district'
-							},
-							{
-								src: '/images/cleared/villages/luptachar.jpg',
-								alt: 'Dubapara Luptachar, Assam',
-								caption: 'Dubapara Luptachar, Dhubri district'
-							},
-							{
-								src: '/images/cleared/villages/ashudubi.jpg',
-								alt: 'Ashudubi village, Assam',
-								caption: 'Ashudubi, Goalpara district'
-							}
-						]}
-					/>
+					<EditorialGallery images={[
+						{ src: '/images/cleared/field/rubble-brick-foundations.jpg', alt: 'Brick rubble and cleared foundations where homes once stood', caption: 'Only brick foundations remain where a village once stood.' },
+						{ src: '/images/cleared/field/cleared-landscape-wide.jpg', alt: 'Wide view of excavated land where a community was demolished', caption: 'Cleared ground stretches to the horizon. Vegetation is already reclaiming the earth.' },
+						{ src: '/images/cleared/field/concrete-debris-dense.jpg', alt: 'Dense concrete and brick debris covering the ground', caption: 'Concrete rubble marks the footprint of demolished homes.' }
+					]} />
 				</div>
 			</div>
 		</div>
@@ -834,25 +824,11 @@
 				</p>
 
 				<div class="gallery-breakout">
-					<EditorialGallery
-						images={[
-							{
-								src: '/images/cleared/villages/kandapara.jpg',
-								alt: 'Kandapara Bosti, Nagaon',
-								caption: 'Kandapara Bosti, Nagaon district'
-							},
-							{
-								src: '/images/cleared/villages/doloni-pathar.jpg',
-								alt: 'Doloni Pathar, Golaghat',
-								caption: 'Doloni Pathar, Golaghat district'
-							},
-							{
-								src: '/images/cleared/villages/charuabakhra.jpg',
-								alt: 'Charuabakhra, Dhubri',
-								caption: 'Charuabakhra, Dhubri district'
-							}
-						]}
-					/>
+					<EditorialGallery images={[
+						{ src: '/images/cleared/field/collapsed-walls-green.jpg', alt: 'Collapsed painted walls of demolished homes overtaken by vegetation', caption: 'Collapsed walls of demolished homes. Vegetation grows over what remains.' },
+						{ src: '/images/cleared/field/flattened-earth-palms.jpg', alt: 'Flattened earth with palm trees where a village was bulldozed', caption: 'Bulldozed earth and exposed roots. Only the palm trees survived.' },
+						{ src: '/images/cleared/field/corrugated-rubble-hills.jpg', alt: 'Corrugated metal sheets amid rubble with hills in background', caption: 'Twisted corrugated sheets mark where a home once stood.' }
+					]} />
 				</div>
 
 				<p>
@@ -1458,20 +1434,10 @@
 				</p>
 
 				<div class="gallery-breakout">
-					<EditorialGallery
-						images={[
-							{
-								src: '/images/cleared/villages/sontoshpur.jpg',
-								alt: 'Demolished structures in Sontoshpur',
-								caption: 'Sontoshpur, Darrang district'
-							},
-							{
-								src: '/images/cleared/villages/doloni-pathar.jpg',
-								alt: 'Aftermath of eviction in Doloni Pathar',
-								caption: 'Doloni Pathar, Golaghat district'
-							}
-						]}
-					/>
+					<EditorialGallery images={[
+						{ src: '/images/cleared/field/foundation-steps-rubble.jpg', alt: 'Concrete foundation steps amid rubble where homes were demolished', caption: 'Foundation steps leading to nothing. The structures above were demolished.' },
+						{ src: '/images/cleared/field/muddy-remains-laundry.jpg', alt: 'Flattened muddy ground with laundry hanging in the background', caption: 'Flattened ground and scattered concrete. Laundry dries where homes once stood.' }
+					]} />
 				</div>
 
 				<h3 class="prose-subheading">The Eighteen Acres</h3>
@@ -1551,20 +1517,10 @@
 	<section class="content-section">
 		<div class="content-container">
 			<div class="gallery-breakout">
-				<EditorialGallery
-					images={[
-						{
-							src: '/images/cleared/villages/luptachar.jpg',
-							alt: 'Tarpaulin shelters along roadside in Dubapara Luptachar',
-							caption: 'Dubapara Luptachar, Dhubri district'
-						},
-						{
-							src: '/images/cleared/villages/ashudubi.jpg',
-							alt: 'Displaced families in Ashudubi',
-							caption: 'Ashudubi, Goalpara district'
-						}
-					]}
-				/>
+				<EditorialGallery images={[
+					{ src: '/images/cleared/displaced/camp-pathway.jpg', alt: 'Narrow pathway between rows of tarpaulin shelters in a displacement camp', caption: 'A displacement camp. Tarpaulin and corrugated shelters line a narrow path.' },
+					{ src: '/images/cleared/displaced/camp-woman-cooking.jpg', alt: 'A woman prepares food outside a tarpaulin tent in a displacement camp', caption: 'A woman prepares a meal outside her tarpaulin shelter.' }
+				]} />
 			</div>
 			<h2 class="content-heading">The Displaced</h2>
 
@@ -1800,15 +1756,10 @@
 				</div>
 			</div>
 			<div class="credits-support">
-				<span class="credits-support-text"
-					>Visual development and interactive design supported by</span
-				>
-				<a
-					href="https://www.grstiftung.ch/de.html"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="credits-support-link">Gebert R&uuml;f Stiftung</a
-				>
+				<span class="credits-support-eyebrow">This project has been supported by</span>
+				<a href="https://www.imj-fjm.ch/" target="_blank" rel="noopener noreferrer" class="credits-support-logo-link">
+					<img src="/images/cleared/logo-imj-schwarz.svg" alt="Innovationsfonds für Multimedialen Journalismus" class="credits-support-logo" />
+				</a>
 			</div>
 		</div>
 	</section>
@@ -2107,6 +2058,7 @@
 		border-left: 4px solid #9f3e52;
 		padding-left: 1.5rem;
 		margin: 2rem 0;
+		font-family: 'GT Sectra', Georgia, serif;
 		font-style: italic;
 		color: #4a4a4a;
 	}
@@ -2314,37 +2266,33 @@
 		padding-top: 1.25rem;
 		border-top: 1px solid rgba(0, 0, 0, 0.08);
 		display: flex;
-		align-items: baseline;
-		gap: 0.35em;
-		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.75rem;
 	}
 
-	.credits-support-text {
+	.credits-support-eyebrow {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 		color: #8a8a8a;
-		letter-spacing: 0.01em;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
 	}
 
-	.credits-support-link {
-		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.8rem;
-		color: #9f3e52;
-		font-weight: 500;
+	.credits-support-logo-link {
+		display: inline-block;
 		text-decoration: none;
-		transition:
-			color 0.2s ease,
-			border-color 0.2s ease;
-		/* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
-
-		&:hover {
-			text-decoration: underline;
-		}
+		opacity: 0.85;
+		transition: opacity 0.2s ease;
 	}
 
-	.credits-support-link:hover {
-		color: #9f3e52;
-		border-color: rgba(159, 62, 82, 0.3);
+	.credits-support-logo-link:hover {
+		opacity: 1;
+	}
+
+	.credits-support-logo {
+		height: 28px;
+		width: auto;
 	}
 
 	@media (max-width: 640px) {

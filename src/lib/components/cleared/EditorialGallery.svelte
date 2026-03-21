@@ -7,6 +7,7 @@
 		src: string;
 		alt: string;
 		caption?: string;
+		type?: 'video';
 	}
 
 	interface Props {
@@ -32,17 +33,21 @@
 	>
 		{#each images as image, i}
 			<figure class="gallery-item item-{i}" class:visible style="--delay: {i * 120}ms">
-				<button
-					type="button"
-					class="lightbox-trigger"
-					data-lightbox
-					data-lightbox-src={image.src}
-					data-lightbox-type="image"
-					data-lightbox-caption={image.caption || ''}
-					onclick={() => openLightbox(image.src)}
-				>
-					<ResponsiveImage src={image.src} alt={image.alt} sizes="(max-width: 640px) 100vw, 400px" />
-				</button>
+				{#if image.type === 'video'}
+					<video src={image.src} autoplay loop muted playsinline></video>
+				{:else}
+					<button
+						type="button"
+						class="lightbox-trigger"
+						data-lightbox
+						data-lightbox-src={image.src}
+						data-lightbox-type="image"
+						data-lightbox-caption={image.caption || ''}
+						onclick={() => openLightbox(image.src)}
+					>
+						<ResponsiveImage src={image.src} alt={image.alt} sizes="(max-width: 640px) 100vw, 400px" />
+					</button>
+				{/if}
 				{#if image.caption}
 					<figcaption>{image.caption}</figcaption>
 				{/if}
@@ -71,11 +76,13 @@
 		grid-row: 1;
 	}
 
-	.layout-2 .item-0 :global(img) {
+	.layout-2 .item-0 :global(img),
+	.layout-2 .item-0 video {
 		aspect-ratio: 4 / 5;
 	}
 
-	.layout-2 .item-1 :global(img) {
+	.layout-2 .item-1 :global(img),
+	.layout-2 .item-1 video {
 		aspect-ratio: 3 / 4;
 	}
 
@@ -89,13 +96,16 @@
 		grid-row: 1 / 3;
 	}
 
-	.layout-3 .item-0 :global(img) {
+	.layout-3 .item-0 :global(img),
+	.layout-3 .item-0 video {
 		aspect-ratio: 3 / 4;
 		height: 100%;
 	}
 
 	.layout-3 .item-1 :global(img),
-	.layout-3 .item-2 :global(img) {
+	.layout-3 .item-1 video,
+	.layout-3 .item-2 :global(img),
+	.layout-3 .item-2 video {
 		aspect-ratio: 16 / 10;
 	}
 
@@ -109,15 +119,18 @@
 		grid-column: 1 / 3;
 	}
 
-	.layout-4 .item-0 :global(img) {
+	.layout-4 .item-0 :global(img),
+	.layout-4 .item-0 video {
 		aspect-ratio: 16 / 10;
 	}
 
-	.layout-4 .item-1 :global(img) {
+	.layout-4 .item-1 :global(img),
+	.layout-4 .item-1 video {
 		aspect-ratio: 3 / 4;
 	}
 
-	.layout-4 .item-2 :global(img) {
+	.layout-4 .item-2 :global(img),
+	.layout-4 .item-2 video {
 		aspect-ratio: 4 / 3;
 	}
 
@@ -125,7 +138,8 @@
 		grid-column: 2 / 4;
 	}
 
-	.layout-4 .item-3 :global(img) {
+	.layout-4 .item-3 :global(img),
+	.layout-4 .item-3 video {
 		aspect-ratio: 16 / 10;
 	}
 
@@ -158,7 +172,8 @@
 		overflow: hidden;
 	}
 
-	.gallery-item :global(img) {
+	.gallery-item :global(img),
+	.gallery-item video {
 		width: 100%;
 		object-fit: cover;
 		display: block;
@@ -190,7 +205,8 @@
 			grid-row: auto;
 		}
 
-		.gallery-item :global(img) {
+		.gallery-item :global(img),
+		.gallery-item video {
 			aspect-ratio: 16 / 10 !important;
 			height: auto !important;
 		}
