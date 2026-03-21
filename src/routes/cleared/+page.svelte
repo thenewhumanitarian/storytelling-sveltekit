@@ -1437,13 +1437,14 @@
 	}
 
 	:global(.hero-accent-rule) {
-		width: 3.5rem;
-		height: 2px;
 		background: rgba(159, 62, 82, 0.7);
 		margin: 0 auto 1.75rem;
 		transform: scaleX(0);
 		animation: heroDrawLine 0.8s ease forwards;
 		animation-delay: 0.8s;
+		/* Marc's note: This is to increase the width and height of the accent rule so it matches TNH design pattern */
+		width: 4rem;
+		height: 4px;
 	}
 
 	:global(.hero-desc) {
