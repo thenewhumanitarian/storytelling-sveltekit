@@ -307,6 +307,6 @@
 	}
 	@container (max-width: 380px) {
 		.num { font-size: 1.75rem; }
-		.label { font-size: 0.7rem; }
+		.label { font-size: 0.8rem; }
 	}
 </style>
