@@ -326,7 +326,7 @@
 		transition: opacity 300ms ease;
 	}
 
-	/* Caption below frame — matches EditorialGallery figcaption */
+	/* Caption below frame — small, subtle, italic */
 	.stadium-caption {
 		position: absolute;
 		z-index: 7;
@@ -334,15 +334,14 @@
 		transform: translateX(-50%);
 		width: calc(100% - 4rem);
 		max-width: 64rem;
-		top: calc(50% + min(calc(100vw - 4rem), 64rem) * 9 / 32);
+		top: calc(50% + min(calc(100vw - 4rem), 64rem) * 9 / 32 + 0.3rem);
 		margin: 0;
 		text-align: left;
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 1rem;
-		color: #282828;
+		font-size: 0.75rem;
+		font-style: italic;
+		color: rgba(0, 0, 0, 0.35);
 		line-height: 1.4;
-		padding: 0.5rem 0.75rem;
-		background: rgba(230, 230, 230, 0.8);
 		pointer-events: none;
 		transition: opacity 300ms ease;
 	}
@@ -354,13 +353,7 @@
 		}
 
 		.stadium-caption {
-			top: auto;
-			bottom: 0;
-			left: 0;
-			transform: none;
-			width: 100%;
-			max-width: none;
-			font-size: 0.85rem;
+			display: none;
 		}
 	}
 </style>
