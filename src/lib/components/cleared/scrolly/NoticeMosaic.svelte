@@ -200,7 +200,7 @@
 
 	.placard-label {
 		font-family: 'JetBrains Mono', monospace;
-		font-size: 0.6rem;
+		font-size: 0.8rem;
 		font-weight: 500;
 		letter-spacing: 0.15em;
 		text-transform: uppercase;
