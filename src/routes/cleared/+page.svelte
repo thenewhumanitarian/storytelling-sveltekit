@@ -1599,14 +1599,13 @@
 
 	.prose-content a {
 		color: #9f3e52;
-		text-decoration: underline;
-		text-decoration-color: rgba(159, 62, 82, 0.3);
-		text-underline-offset: 2px;
-		transition: text-decoration-color 0.2s ease;
+		text-decoration: none;
+		font-weight: 500;
+		transition: text-decoration 0.2s ease;
 	}
 
 	.prose-content a:hover {
-		text-decoration-color: #9f3e52;
+		text-decoration: underline;
 	}
 
 	/* Violence timeline */
@@ -1689,14 +1688,13 @@
 
 	.vt-location a {
 		color: #9f3e52;
-		text-decoration: underline;
-		text-decoration-color: rgba(159, 62, 82, 0.3);
-		text-underline-offset: 2px;
-		transition: text-decoration-color 0.2s ease;
+		text-decoration: none;
+		font-weight: 500;
+		transition: text-decoration 0.2s ease;
 	}
 
 	.vt-location a:hover {
-		text-decoration-color: #9f3e52;
+		text-decoration: underline;
 	}
 
 	.vt-description {
