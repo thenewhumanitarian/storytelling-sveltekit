@@ -136,11 +136,12 @@
 
 	figcaption {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.8rem;
-		color: #6b6b6b;
+		font-size: 1rem;
+		color: #282828;
 		line-height: 1.4;
-		padding: 0.5rem 0;
+		padding: 0.5rem 0.75rem;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+		background: rgba(230,230,230,.5);
 	}
 
 	@media (max-width: 640px) {
