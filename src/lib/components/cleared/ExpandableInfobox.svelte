@@ -57,7 +57,6 @@
 		vertical-align: baseline;
 		background: rgba(159, 62, 82, 0.08);
 		border: 1px solid rgba(159, 62, 82, 0.2);
-		border-radius: 3px;
 		padding: 0.05em 0.4em;
 		margin: 0;
 		font: inherit;
@@ -68,6 +67,8 @@
 		text-decoration: none;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 		transition: all 0.2s ease;
+		/* Marc's note: This is to remove the border radius from the infobox trigger so it matches TNH design pattern */
+		/* border-radius: 3px; */
 	}
 
 	.infobox-trigger:hover {

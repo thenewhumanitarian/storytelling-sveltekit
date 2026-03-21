@@ -148,7 +148,9 @@
 						class:step-first={isFirst}
 						style:min-height={isFirst && step.raw ? `${viewportHeight}px` : `${stepHeight}px`}
 						style:margin-bottom={`${isLast ? viewportHeight * 0.5 : stepGap}px`}
-						style:margin-top={isFirst && firstStepOffset > 0 ? `${viewportHeight * (-1 + firstStepOffset)}px` : undefined}
+						style:margin-top={isFirst && firstStepOffset > 0
+							? `${viewportHeight * (-1 + firstStepOffset)}px`
+							: undefined}
 					>
 						{#if step.raw && step.text}
 							<!-- Raw content without text box wrapper -->
@@ -218,7 +220,9 @@
 		justify-content: center;
 		opacity: 0.35;
 		transform: translateY(6px);
-		transition: opacity 220ms ease, transform 220ms ease;
+		transition:
+			opacity 220ms ease,
+			transform 220ms ease;
 		pointer-events: none;
 	}
 
@@ -245,6 +249,8 @@
 		max-width: 480px;
 		width: 100%;
 		padding: 0 0.5rem;
+		display: flex; /* Marc's note: This is to center the text box in the step */
+		justify-content: center; /* Marc's note: This is to center the text box in the step */
 	}
 
 	.step-content.position-left {

@@ -80,12 +80,13 @@
 		backdrop-filter: blur(6px);
 		-webkit-backdrop-filter: blur(6px);
 		padding: 1.5rem 1.75rem;
-		border-radius: 6px;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 		opacity: 0.75;
 		transform: translateY(8px);
 		transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		pointer-events: auto;
+		/* Marc's note: This is to remove the border radius from the text box so it matches TNH design pattern */
+		/* border-radius: 6px; */
 	}
 
 	.scrolly-text-box.active {
@@ -166,6 +167,11 @@
 		color: #4a4a4a;
 	}
 
+	.box-content :global(blockquote:first-child) {
+		/* Marc's note: This is to remove the margin top from blockquoe when it's the first child */
+		margin-top: 0;
+	}
+
 	.box-content :global(strong) {
 		font-weight: 600;
 		color: #000;
@@ -182,10 +188,11 @@
 	.box-content :global(.highlight-satra) {
 		color: white;
 		padding: 0.1em 0.4em;
-		border-radius: 3px;
 		font-weight: 500;
 		box-decoration-break: clone;
 		-webkit-box-decoration-break: clone;
+		/* Marc's note: This is to remove the border radius from the highlight so it matches TNH design pattern */
+		/* border-radius: 3px; */
 	}
 
 	.box-content :global(.highlight-env) {
