@@ -1610,8 +1610,9 @@
 		left: 0.5rem;
 		top: 0.5rem;
 		bottom: 0.5rem;
-		width: 2px;
-		background: rgba(159, 62, 82, 0.25);
+		/* Marc's note: This is to increase the width of the timeline so it matches blockquote boldness and TNH design pattern */
+		width: 4px;
+		background: rgba(159, 62, 82, 1);
 	}
 
 	.vt-event {
@@ -1625,7 +1626,8 @@
 
 	.vt-node {
 		position: absolute;
-		left: -2.5rem;
+		/* Marc's note: Re-align the dots in the timeline to match the bolder line */
+		left: -2.45rem;
 		top: 0.25rem;
 		width: 1.125rem;
 		height: 1.125rem;
@@ -1646,6 +1648,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
+		/* Marc's note: This is to increase the padding top of the content so is in line with the timeline dots */
+		padding-top: 0.05rem;
 	}
 
 	.vt-year {
@@ -1862,7 +1866,8 @@
 	.contempt-timeline {
 		margin: 2rem 0;
 		padding-left: 1.5rem;
-		border-left: 2px solid rgba(159, 62, 82, 0.3);
+		/* Marc's note: This is to increase the width of the contempt timeline so it matches TNH design pattern */
+		border-left: 4px solid rgba(159, 62, 82, 1);
 	}
 
 	.contempt-event {
