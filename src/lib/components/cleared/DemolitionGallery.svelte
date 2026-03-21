@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inview } from 'svelte-inview';
+	import { openLightbox } from '$lib/stores/lightbox';
 
 	let visible = $state(false);
 
@@ -48,7 +49,17 @@
 		<div class="gallery-grid">
 			{#each images as image, i}
 				<div class="gallery-card" class:visible style="--delay: {i * 80}ms">
-					<img src={image.src} alt={image.alt} loading="lazy" />
+					<button
+						type="button"
+						class="lightbox-trigger"
+						data-lightbox
+						data-lightbox-src={image.src}
+						data-lightbox-type="image"
+						data-lightbox-caption={image.caption}
+						onclick={() => openLightbox(image.src)}
+					>
+						<img src={image.src} alt={image.alt} loading="lazy" />
+					</button>
 					<p class="image-caption">{image.caption}</p>
 				</div>
 			{/each}
@@ -106,6 +117,16 @@
 	.gallery-card.visible {
 		opacity: 1;
 		transform: translateY(0);
+	}
+
+	.lightbox-trigger {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: zoom-in;
+		overflow: hidden;
 	}
 
 	.gallery-card img {

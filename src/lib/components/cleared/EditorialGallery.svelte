@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inview } from 'svelte-inview';
+	import { openLightbox } from '$lib/stores/lightbox';
 
 	interface GalleryImage {
 		src: string;
@@ -23,7 +24,17 @@
 	<div class="gallery-grid" class:layout-2={images.length === 2} class:layout-3={images.length === 3} class:layout-4={images.length >= 4}>
 		{#each images as image, i}
 			<figure class="gallery-item item-{i}" class:visible style="--delay: {i * 120}ms">
-				<img src={image.src} alt={image.alt} loading="lazy" />
+				<button
+					type="button"
+					class="lightbox-trigger"
+					data-lightbox
+					data-lightbox-src={image.src}
+					data-lightbox-type="image"
+					data-lightbox-caption={image.caption || ''}
+					onclick={() => openLightbox(image.src)}
+				>
+					<img src={image.src} alt={image.alt} loading="lazy" />
+				</button>
 				{#if image.caption}
 					<figcaption>{image.caption}</figcaption>
 				{/if}
@@ -126,6 +137,16 @@
 	.gallery-item.visible {
 		opacity: 1;
 		transform: translateY(0);
+	}
+
+	.lightbox-trigger {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: zoom-in;
+		overflow: hidden;
 	}
 
 	.gallery-item img {

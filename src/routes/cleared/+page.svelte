@@ -13,6 +13,7 @@
 	import EditorialGallery from '$lib/components/cleared/EditorialGallery.svelte';
 	import XNotificationStack from '$lib/components/cleared/XNotificationStack.svelte';
 	import ExpandableInfobox from '$lib/components/cleared/ExpandableInfobox.svelte';
+	import Lightbox from '$lib/components/projects/LebanonDisplaced/Lightbox.svelte';
 	import { inview } from 'svelte-inview';
 
 	// Lazy-loaded heavy components (loaded when scrolled near)
@@ -1396,6 +1397,8 @@
 
 </div>
 
+<Lightbox />
+
 <style>
 	/* Article container - unified light background */
 	.article-container {
@@ -1406,6 +1409,15 @@
 	/* Override global overflow-x: hidden which breaks position: sticky */
 	:global(html), :global(body) {
 		overflow-x: clip;
+	}
+
+	/* Lightbox overlay theme for cleared article */
+	:global(.lightbox-overlay) {
+		--lightbox-bg: rgba(20, 20, 20, 0.97);
+		--lightbox-bg-image: none;
+		--lightbox-caption-font: 'Roboto', 'Open Sans', sans-serif;
+		--lightbox-bullet-radius: 0;
+		--lightbox-bullet-active-color: #9F3E52;
 	}
 
 	/* Eviction category highlight colors (match EvictionBubbles.colorMapping) */
