@@ -1,0 +1,116 @@
+{
+	"/images/cleared/miya/char-island-landscape.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAwCdASoUAA0APzmKulQvKaWjMAgB4CcJQBdja/23+A8hLZBTlQCgAP3Vho1ACp2PcFVgaOP59dHgPCNKbJdjt6F0kCNcAAA=",
+		"width": 1200,
+		"height": 795,
+		"srcset": "480w, 800w, 1200w"
+	},
+	"/images/cleared/miya/river-island.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoUAA8APzmGuVOvKSWisAgB4CcJZgCdH8ADAwlUIxQJCBbgAP3dEkGi/Pks9vJn1aHqUbCQZHSuxgDtUCuUq3jjK6OUmVDtLdpIjK8fb53sM6bmf+l6MCSA4GtvkszO/gAAAA==",
+		"width": 1200,
+		"height": 900,
+		"srcset": "480w, 800w, 1200w"
+	},
+	"/images/cleared/notices/notice_1.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACQBACdASoUABwAPzmGvlavKCajsBgIAeAnCWkAAC51ASvDA42UhNvd/C1GQAAA/ucf+uzlDSYkXRh31Y5QKxzZivZ060NCmUiILhXCGA6dKsf+4EYYhoB028H9gIs9Up3sZgAAAAA=",
+		"width": 2480,
+		"height": 3509,
+		"srcset": "480w, 800w, 1200w, 2480w"
+	},
+	"/images/cleared/notices/notice_2.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAABwBACdASoUABwAPzmQulWvKqWjMBgIAeAnCWlh4AAbpX3qxfi5tt7zdAj8AAD+7TtwMTbX2Lghc7KDGnKc4XGLyTQT3oLBExOED1Hi/Wafh699gsy1LvyuzAAAAA==",
+		"width": 2480,
+		"height": 3509,
+		"srcset": "480w, 800w, 1200w, 2480w"
+	},
+	"/images/cleared/notices/notice_3.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQBACdASoUABwAPzmOwFcvKacjqAqp4CcJaQAAL6ubBGGn5wLn5NQXWJvenAAA/tcXBgN8IqosoYyFELyKWJCXtILQed6U4ttymHKovdTee3JNHrC/p3jyBQBAW57WCbhHBwgaJBHrwgm39Cn0BJAAAAA=",
+		"width": 2480,
+		"height": 3509,
+		"srcset": "480w, 800w, 1200w, 2480w"
+	},
+	"/images/cleared/notices/notice_4.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwBACdASoUABwAPzmQv1evKaajqAqp4CcJaQAALahQcnmHL12CmUZu98AA/ucgKylS7IllqMoOTTJaQYpgQl3x6HTjwHAFc426aB+aJRDacXBDPLrUbAXySMEHcZhBUDaoLrlouYAAAA==",
+		"width": 2480,
+		"height": 3509,
+		"srcset": "480w, 800w, 1200w, 2480w"
+	},
+	"/images/cleared/satellite/charuabakhra_1_past.webp": {
+		"placeholder": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACQAwCdASoUAA8APzmEuVOvKKWisAgB4CcJZQAAXAabQfrUKt3AAP4UW2u7HhxE3rvUVcZJug5Pa9yTu5dNuD/7AAA=",
+		"width": 1610,
+		"height": 1219,
+		"srcset": "480w, 800w, 1200w, 1610w"
+	},
+	"/images/cleared/satellite/charuabakhra_1_today.webp": {
+		"placeholder": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAgCdASoUAA8APzmGuVOvKSWisAgB4CcJZwDMHDBsAAD+4P6tRvmUNtokj8kazd9toD8E4AA=",
+		"width": 1610,
+		"height": 1219,
+		"srcset": "480w, 800w, 1200w, 1610w"
+	},
+	"/images/cleared/satellite/sonapur_1_past.webp": {
+		"placeholder": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAACwAgCdASoUAA8APzmGuVOvKSWisAgB4CcJYwAAeyAA/uUt61QrxSEsp8RWp2EAAAA=",
+		"width": 1610,
+		"height": 1219,
+		"srcset": "480w, 800w, 1200w, 1610w"
+	},
+	"/images/cleared/satellite/sonapur_1_today.webp": {
+		"placeholder": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAAAQAwCdASoUAA8APzmGuVOvKSWisAgB4CcJZwAAetDNFQAA/ubuJTc76EJymu3OLn0kAAAA",
+		"width": 1610,
+		"height": 1219,
+		"srcset": "480w, 800w, 1200w, 1610w"
+	},
+	"/images/cleared/stadium/image2.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADwAwCdASoUAA8APzmEuVOvKKWisAgB4CcJZAC1GoACO1yxCYZ6fEeOAPxm8Oi8vC5MsL29BS7fHLIx3v8BbijZUAFgvfMi3AANTtk3OdX6n1OU50ICzVTBCG6VuUZQAut7K+6maAezun15R2og+EvoK+GKb2t8lxD9nvYAAAA=",
+		"width": 1280,
+		"height": 960,
+		"srcset": "480w, 800w, 1200w, 1280w"
+	},
+	"/images/cleared/stadium/stadium-empty.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQBACdASoUAAsAPzmEuVOvKKWisAgB4CcJagCdMoADYG7zfUtz+bG72AD9+i/cbzhvPAqN3SQU3O1Br16LPpZgX3zvuuHp41qgGCQqp6FrUXr+DgAAAA==",
+		"width": 2000,
+		"height": 1115,
+		"srcset": "480w, 800w, 1200w, 2000w"
+	},
+	"/images/cleared/stadium/stadium-full.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACQAwCdASoUAAsAPzmGulQvKSWjMAgB4CcJQBgbhD0L+51pOwUAAPzRIpsjoNEdnyeFyqKN+drxhNtXGynOIo70xqfTZ4DfqAzlCFZ+CKIYegAA",
+		"width": 2000,
+		"height": 1142,
+		"srcset": "480w, 800w, 1200w, 2000w"
+	},
+	"/images/cleared/villages/ashudubi.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAwBACdASoUAA8APzmGuVOvKSWisAgB4CcJZACdABmCMw/GT1ZUkjlqWyAA+/+auRPBf09MIQobJwU1bqgqHaE2B9gA2pu4ljr4KsbV2nSpI8jHS7V7quzQKv8pMLP2tzCuqB4ubPh1znGQKyi1Rw0ZGCMQAAAA",
+		"width": 1156,
+		"height": 867,
+		"srcset": "480w, 800w, 1156w"
+	},
+	"/images/cleared/villages/charuabakhra.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoUAA8APzmEuVOvKKWisAgB4CcJZgCdMoMyTCvAQwOI7830AAD5PFrGmRT6BCJUAZDNR6D+WrYJZLi/A8ETNqds9VBWUaYQXcrcYSZl0ut/f2U1si0kLkQl/j1M6WAgdO34hMdpKr3zroAA",
+		"width": 1156,
+		"height": 867,
+		"srcset": "480w, 800w, 1156w"
+	},
+	"/images/cleared/villages/doloni-pathar.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoUAA8APzmEuVOvKKWisAgB4CcJYgCdISABo8CMvn8ZhVCYAPwLBpGCM+mOfjzMLvdmFbB55A/RRXYftwpF/Oit9t+OnTI+/uOxfRfEKlItBHRz3IR0N0ApGYstEMRZz2ccBYxaoHSr4W3yCkizidGi0xSm4AAA",
+		"width": 1600,
+		"height": 1200,
+		"srcset": "480w, 800w, 1200w, 1600w"
+	},
+	"/images/cleared/villages/kandapara.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAwCdASoUAA8APzmEuVOvKKWisAgB4CcJYgC06CPvyDdyAYlcC6AAyxwcmF18ZSqHtOuoC2+F3LBzqxcls0cJKE4zbRHPXFhN7D/Cdpbd6Ehx1O1+b7dAKtzuPxHmwAA=",
+		"width": 1156,
+		"height": 867,
+		"srcset": "480w, 800w, 1156w"
+	},
+	"/images/cleared/villages/luptachar.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAACwAwCdASoUAA8APzmGuVOvKSWisAgB4CcJQAALbJ5zJozmV3c0AADyK6nTmOlvXFIzCjGfG8QUS0FCr2/LB2mR6kU5KRHX4G1d8LyESPmnDlAUcKmjEEtJFMqRu7MFZ2YbPIKvMw8gAA==",
+		"width": 1156,
+		"height": 867,
+		"srcset": "480w, 800w, 1156w"
+	},
+	"/images/cleared/villages/sontoshpur.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACwAwCdASoUAA8APzmGulQvKSWjMAgB4CcJQBOmUABFMpdYW75+AAD8Wmnfuf9spnJF1beCj2HSv6mi+qVvJLeGCIFtTB71DdfQChf1N7hQAdQA",
+		"width": 1600,
+		"height": 1200,
+		"srcset": "480w, 800w, 1200w, 1600w"
+	}
+}
