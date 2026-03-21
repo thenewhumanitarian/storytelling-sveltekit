@@ -60,19 +60,20 @@
 		height: 100%;
 		background: #ffffff;
 		border: 1px solid rgba(0, 0, 0, 0.08);
-		border-radius: 8px;
 		padding: 24px;
 		text-decoration: none;
 		color: inherit;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 		transition:
-			transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
-			box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
-			border-color 0.3s ease,
-			opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s),
-			translate 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s);
+		transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+		box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+		border-color 0.3s ease,
+		opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s),
+		translate 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s);
 		opacity: 0;
 		translate: 0 30px;
+		/* Marc's note: This is to remove the border radius from the headline card so it matches TNH design pattern */
+		/* border-radius: 8px; */
 	}
 
 	.headline-card.visible {
@@ -118,7 +119,7 @@
 
 	.card-divider {
 		height: 1px;
-		background: linear-gradient(to right, #9f3e52, rgba(0, 0, 0, 0.06) 30%);
+		background: #282828;
 		margin-top: 16px;
 		margin-bottom: 12px;
 	}
@@ -165,7 +166,8 @@
 	}
 
 	.headline-card:hover .read-link {
-		gap: 8px;
+		/* Marc's note: This is to add a underline to the read link so it matches TNH design pattern */
+		text-decoration: underline;
 	}
 
 	.arrow-icon {

@@ -61,12 +61,16 @@
 		margin: 0;
 		font: inherit;
 		font-size: inherit;
+		font-weight: 500;
 		line-height: inherit;
+		font-style: normal;
 		color: #9f3e52;
 		cursor: pointer;
 		text-decoration: none;
 		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 		transition: all 0.2s ease;
+		/* Marc's note: This is to increase the font weight of the infobox trigger so it matches TNH design pattern */
+		font-weight: 500;
 		/* Marc's note: This is to remove the border radius from the infobox trigger so it matches TNH design pattern */
 		/* border-radius: 3px; */
 	}

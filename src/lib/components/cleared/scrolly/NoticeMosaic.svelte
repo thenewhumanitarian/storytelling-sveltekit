@@ -150,7 +150,7 @@
 		max-width: 520px;
 		height: 190px;
 		background: #ffffff;
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		border: 4px solid rgba(0, 0, 0, 1);
 		border-left: 3px solid #9f3e52;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 		border-radius: 2px;
@@ -167,7 +167,7 @@
 	.placard-content {
 		position: absolute;
 		inset: 0;
-		padding: 1.25rem 1.5rem;
+		padding: 1.25rem 1.5rem 0.75rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.35rem;

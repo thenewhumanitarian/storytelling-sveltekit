@@ -131,7 +131,7 @@
 		top: 14px;
 		right: 14px;
 		padding: 4px 9px;
-		font-size: 0.7rem;
+		font-size: 0.8rem; /* Making all labels .8rem to be consistent */
 		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -140,16 +140,15 @@
 
 	.credit-bubble {
 		position: absolute;
-		bottom: 14px;
-		right: 14px;
+		bottom: 0;
+		left: 0;
 		z-index: 5;
-		background: rgba(0, 0, 0, 0.45);
-		color: rgba(255, 255, 255, 0.85);
-		padding: 4px 10px;
-		border-radius: 100px;
+		background: rgba(255, 255, 255, 0.85);
+		color: #282828;
+		padding: 0.25rem 0.75rem;
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.6rem;
-		letter-spacing: 0.02em;
+		font-size: 0.8rem;
+		font-weight: 400;
 		pointer-events: none;
 	}
 </style>

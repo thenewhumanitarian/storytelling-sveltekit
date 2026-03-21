@@ -19,9 +19,16 @@
 <div
 	class="editorial-gallery"
 	use:inview={{ rootMargin: '-15% 0px' }}
-	oninview_change={(e) => { if (e.detail.inView) visible = true; }}
+	oninview_change={(e) => {
+		if (e.detail.inView) visible = true;
+	}}
 >
-	<div class="gallery-grid" class:layout-2={images.length === 2} class:layout-3={images.length === 3} class:layout-4={images.length >= 4}>
+	<div
+		class="gallery-grid"
+		class:layout-2={images.length === 2}
+		class:layout-3={images.length === 3}
+		class:layout-4={images.length >= 4}
+	>
 		{#each images as image, i}
 			<figure class="gallery-item item-{i}" class:visible style="--delay: {i * 120}ms">
 				<button
@@ -125,13 +132,14 @@
 	.gallery-item {
 		margin: 0;
 		overflow: hidden;
-		border-radius: 3px;
 		opacity: 0;
 		transform: translateY(16px);
 		transition:
-			opacity 0.6s ease,
-			transform 0.6s ease;
+		opacity 0.6s ease,
+		transform 0.6s ease;
 		transition-delay: var(--delay);
+		/* Marc's note: This is to remove the border radius from the gallery item so it matches TNH design pattern */
+		/* border-radius: 3px; */
 	}
 
 	.gallery-item.visible {
@@ -161,8 +169,9 @@
 		color: #282828;
 		line-height: 1.4;
 		padding: 0.5rem 0.75rem;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-		background: rgba(230,230,230,.5);
+		background: rgba(230, 230, 230, 0.8);
+		/* Marc's note: This is to remove the border bottom from the figcaption so it matches TNH design pattern */
+		/* border-bottom: 1px solid rgba(0, 0, 0, 0.06); */
 	}
 
 	@media (max-width: 640px) {

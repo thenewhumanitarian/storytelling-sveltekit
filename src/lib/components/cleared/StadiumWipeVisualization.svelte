@@ -146,8 +146,9 @@
 		width: calc(100% - 4rem);
 		max-width: 64rem;
 		aspect-ratio: 16 / 9;
-		border-radius: 4px;
 		overflow: hidden;
+		/* Marc's note: This is to remove the border radius from the frame so it matches TNH design pattern */
+		/* border-radius: 4px; */
 	}
 
 	.stadium-image {
@@ -254,54 +255,51 @@
 		}
 	}
 
-	/* Image credit bubble */
+	/* Image credit — TNH style */
 	.credit-bubble {
 		position: absolute;
-		bottom: 10px;
-		right: 10px;
 		z-index: 7;
-		background: rgba(0, 0, 0, 0.55);
-		color: rgba(255, 255, 255, 0.85);
+		bottom: -1px;
+		left: 0;
+		background: rgba(255, 255, 255, 0.92);
+		color: #282828;
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.6rem;
-		letter-spacing: 0.02em;
-		padding: 4px 10px;
-		border-radius: 100px;
+		/* Marc's note: was going to go with .8rem here for consistency but feels too big so compromising consistency over felt size on image pls check */
+		font-size: 0.7rem;
+		font-weight: 400;
+		padding: 0.2rem 0.7rem;
 		pointer-events: none;
 		white-space: nowrap;
 		transition: opacity 300ms ease;
 	}
 
 	.credit-bubble.has-detail {
-		border-radius: 6px;
-		padding: 5px 10px;
+		padding: 0.25rem 0.75rem;
 		white-space: normal;
-		max-width: 280px;
+		max-width: 320px;
 		display: flex;
 		flex-direction: column;
 		gap: 1px;
 	}
 
 	.credit-detail {
-		font-size: 0.52rem;
-		opacity: 0.7;
+		font-size: 0.7rem;
+		opacity: 0.6;
 		line-height: 1.3;
 	}
 
 	@media (max-width: 640px) {
 		.credit-bubble {
-			bottom: 8px;
-			right: 8px;
-			font-size: 0.55rem;
-			padding: 3px 8px;
+			font-size: 0.7rem;
+			padding: 0.2rem 0.5rem;
 		}
 
 		.credit-bubble.has-detail {
-			max-width: 220px;
+			max-width: 240px;
 		}
 
 		.credit-detail {
-			font-size: 0.48rem;
+			font-size: 0.6rem;
 		}
 	}
 </style>

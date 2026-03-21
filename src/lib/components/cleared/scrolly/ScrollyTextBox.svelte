@@ -79,7 +79,8 @@
 		background: rgba(255, 255, 255, 0.96);
 		backdrop-filter: blur(6px);
 		-webkit-backdrop-filter: blur(6px);
-		padding: 1.5rem 1.75rem;
+		/* Marc's note: suggestion to balance padding here slightly — a bit less looks more balanced to me? */
+		padding: 1.25rem 1.5rem;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 		opacity: 0.75;
 		transform: translateY(8px);
@@ -105,8 +106,9 @@
 	.box-image {
 		width: 100%;
 		height: auto;
-		border-radius: 4px;
 		margin-bottom: 1rem;
+		/* Marc's note: This is to remove the border radius from the image so it matches TNH design pattern */
+		/* border-radius: 4px; */
 	}
 
 	.scrolly-text-box.dark {
@@ -196,19 +198,19 @@
 	}
 
 	.box-content :global(.highlight-env) {
-		background: #35B58B;
+		background: #35b58b;
 	}
 
 	.box-content :global(.highlight-dev) {
-		background: #9F3E52;
+		background: #9f3e52;
 	}
 
 	.box-content :global(.highlight-admin) {
-		background: #E8A84C;
+		background: #e8a84c;
 	}
 
 	.box-content :global(.highlight-satra) {
-		background: #6B7FD7;
+		background: #6b7fd7;
 	}
 
 	/* Footer with source and image credit */
@@ -242,11 +244,15 @@
 		color: inherit;
 		text-decoration: none;
 		transition: color 0.15s ease;
-	}
+		/* Marc's note: This is to increase the font weight of the source link so it matches TNH design pattern */
+		font-weight: 500;
+		color: #9f3e52;
 
-	.source-link:hover {
-		color: rgba(0, 0, 0, 0.8);
-		text-decoration: underline;
+		&:hover {	
+			/* Marc's note: This is to remove the hover color from the source link so it matches TNH design pattern */
+			/* color: rgba(0, 0, 0, 0.8); */
+			text-decoration: underline;
+		}
 	}
 
 	.scrolly-text-box.dark .source-link:hover {
