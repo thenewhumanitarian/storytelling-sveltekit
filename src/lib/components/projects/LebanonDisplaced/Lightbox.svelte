@@ -234,14 +234,14 @@
 					<div class="swiper-slide lightbox-media">
 						{#if item.type === 'image'}
 							<figure class="media-figure bg-transparent">
-								<div class="swiper-zoom-container sm:bg-lebgreen">
+								<div class="swiper-zoom-container">
 									<img
-										src={`${item.src}/m/1024x0`}
+										src={item.src.startsWith('http') ? `${item.src}/m/1024x0` : item.src}
 										alt={item.caption || 'Photo alt text is missing.'}
 										class="max-h-full w-full object-contain"
 										loading="lazy"
 										onload={() => (state.imagesLoaded[i] = true)}
-										style={`width: 100%; aspect-ratio: ${item.width} / ${item.height};`}
+										style={item.width && item.height ? `width: 100%; aspect-ratio: ${item.width} / ${item.height};` : 'width: 100%;'}
 									/>
 								</div>
 								{#if !state.isZoomed && state.imagesLoaded[i]}
@@ -392,7 +392,7 @@
 		background: white;
 		width: 1rem;
 		height: 1rem;
-		border-radius: 1px;
+		border-radius: var(--lightbox-bullet-radius, 1px);
 		opacity: 1;
 	}
 
@@ -422,10 +422,10 @@
 	}
 
 	:global(.swiper-pagination-bullet-active) {
-		background-color: #9f3e52;
+		background-color: var(--lightbox-bullet-active-color, #9f3e52);
 		width: 5rem;
 		height: 1rem;
-		border-radius: 1px;
+		border-radius: var(--lightbox-bullet-radius, 1px);
 	}
 
 	.video--controls {
@@ -474,15 +474,14 @@
 		z-index: 9999;
 		position: fixed;
 		inset: 0;
-		background: #ffe0b5;
-		background-image: url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp');
+		background: var(--lightbox-bg, #ffe0b5);
+		background-image: var(--lightbox-bg-image, url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp'));
 		background-repeat: repeat;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		box-sizing: border-box;
 		overflow: hidden;
-		/* padding: 2rem; */
 	}
 
 	.lightbox-overlay:hover {
@@ -524,7 +523,7 @@
 		text-align: start;
 		font-size: 1rem;
 		box-sizing: border-box;
-		font-family: 'ff-amman-serif-pro', 'Roboto', sans-serif !important;
+		font-family: var(--lightbox-caption-font, 'ff-amman-serif-pro', 'Roboto', sans-serif);
 	}
 
 	.swiper {
