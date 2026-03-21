@@ -16,9 +16,13 @@
 		videoSrc: string;
 		overlayConfig?: { top: number; center: number; bottom: number; warm: number }[];
 		showCreamOverlay?: boolean;
+		caption?: string;
 	}
 
-	let { currentStep, fadeProgress = 0, fadeInProgress = 0, scrollProgress = 0, videoSrc, overlayConfig, showCreamOverlay = true }: Props = $props();
+	let { currentStep, fadeProgress = 0, fadeInProgress = 0, scrollProgress = 0, videoSrc, overlayConfig, showCreamOverlay = true, caption }: Props = $props();
+
+	// Caption fades in once the cream overlay has faded (step 1+)
+	let captionOpacity = $derived(currentStep >= 1 ? 1 : 0);
 
 	// Cream overlay: visible on step 0, fades to 0 as we scroll toward step 1
 	let creamOpacity = $derived(
@@ -98,6 +102,11 @@
 	<!-- Final fade-to-cream overlay (driven by scroll progress on last step) -->
 	{#if fadeProgress > 0}
 		<div class="fade-to-cream" style:opacity={fadeProgress}></div>
+	{/if}
+
+	<!-- Image/video caption - fades in once cream overlay lifts -->
+	{#if caption}
+		<p class="hero-caption" style:opacity={captionOpacity}>{caption}</p>
 	{/if}
 </div>
 
@@ -204,5 +213,24 @@
 		background: linear-gradient(to bottom, transparent 50%, #f5f0eb 100%);
 		pointer-events: none;
 		transition: opacity 100ms linear;
+	}
+
+	/* Hero caption - TNH house style, bottom-left, white background */
+	.hero-caption {
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		z-index: 11;
+		background: rgba(255, 255, 255, 0.92);
+		color: #282828;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.8rem;
+		font-weight: 400;
+		line-height: 1.4;
+		padding: 0.25rem 0.75rem;
+		max-width: 80%;
+		pointer-events: none;
+		transition: opacity 600ms ease;
+		margin: 0;
 	}
 </style>
