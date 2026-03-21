@@ -41,7 +41,19 @@
 <div class="satellite-slider" bind:this={containerRef}>
 		<div class="location-label">{location}</div>
 
-		<div class="image-container">
+		<div
+			class="image-container"
+			onpointerdown={handlePointerDown}
+			onpointermove={handlePointerMove}
+			onpointerup={handlePointerUp}
+			onpointercancel={handlePointerUp}
+			role="slider"
+			aria-valuenow={sliderPosition}
+			aria-valuemin={0}
+			aria-valuemax={100}
+			aria-label="Comparison slider"
+			tabindex="0"
+		>
 			<!-- After image (full width, underneath) -->
 			<img src={afterImage} alt="{location} - {afterLabel}" class="after-image" />
 
@@ -55,20 +67,7 @@
 			<div class="label after-label" class:visible={sliderPosition < 85}>{afterLabel}</div>
 
 			<!-- Slider handle -->
-			<div
-				class="slider-handle"
-				style="left: {sliderPosition}%;"
-				onpointerdown={handlePointerDown}
-				onpointermove={handlePointerMove}
-				onpointerup={handlePointerUp}
-				onpointercancel={handlePointerUp}
-				role="slider"
-				aria-valuenow={sliderPosition}
-				aria-valuemin={0}
-				aria-valuemax={100}
-				aria-label="Comparison slider"
-				tabindex="0"
-			>
+			<div class="slider-handle" style="left: {sliderPosition}%;">
 				<div class="handle-line"></div>
 				<div class="handle-grip">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -103,8 +102,9 @@
 		font-size: 0.875rem;
 		font-weight: 600;
 		letter-spacing: 0.02em;
-		border-radius: 4px;
 		border: 1px solid rgba(0, 0, 0, 0.08);
+		/* Marc's note: This is to remove the border radius from the location label so it matches TNH design pattern */
+		/* border-radius: 4px; */
 	}
 
 	.image-container {
@@ -115,6 +115,7 @@
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		background: #f5f0eb;
 		cursor: ew-resize;
+		touch-action: none;
 		/* Marc's note: This is to remove the border radius from the image container so it matches TNH design pattern */
 		/* border-radius: 8px; */
 	}
@@ -150,9 +151,10 @@
 		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		border-radius: 3px;
 		opacity: 0;
 		transition: opacity 0.2s ease;
+		/* Marc's note: This is to remove the border radius from the label so it matches TNH design pattern */
+		/* border-radius: 3px; */
 	}
 
 	.label.visible {
@@ -173,9 +175,8 @@
 		bottom: 0;
 		width: 4px;
 		transform: translateX(-50%);
-		cursor: ew-resize;
+		pointer-events: none;
 		z-index: 5;
-		touch-action: none;
 	}
 
 	.handle-line {
@@ -206,7 +207,7 @@
 
 	.credit {
 		text-align: right;
-		font-size: 0.7rem;
+		font-size: 0.8rem; /* Making all labels .8rem to be consistent */
 		color: rgba(0, 0, 0, 0.35);
 		margin-top: 0.35rem;
 		padding-right: 4px;
