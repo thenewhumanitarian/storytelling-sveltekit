@@ -90,7 +90,7 @@
 		<img
 			src="/images/cleared/stadium/stadium-empty.jpg"
 			srcset={getSrcset('/images/cleared/stadium/stadium-empty.jpg')}
-			sizes="100vw"
+			sizes="(max-width: 640px) 100vw, (max-width: 1088px) calc(100vw - 4rem), 1024px"
 			alt="Empty Narendra Modi Stadium representing displaced population"
 			class="stadium-image stadium-empty"
 			class:img-loaded={emptyLoaded}
@@ -106,7 +106,7 @@
 		<img
 			src="/images/cleared/stadium/stadium-full.jpg"
 			srcset={getSrcset('/images/cleared/stadium/stadium-full.jpg')}
-			sizes="100vw"
+			sizes="(max-width: 640px) 100vw, (max-width: 1088px) calc(100vw - 4rem), 1024px"
 			alt="Narendra Modi Stadium packed with 132,000 people"
 			class="stadium-image stadium-full"
 			class:img-loaded={fullLoaded}
@@ -123,7 +123,7 @@
 		<img
 			src="/images/cleared/stadium/image2.jpg"
 			srcset={getSrcset('/images/cleared/stadium/image2.jpg')}
-			sizes="100vw"
+			sizes="(max-width: 640px) 100vw, (max-width: 1088px) calc(100vw - 4rem), 1024px"
 			alt="Family in makeshift shelter after eviction"
 			class="stadium-image stadium-shelter"
 			class:img-loaded={shelterLoaded}

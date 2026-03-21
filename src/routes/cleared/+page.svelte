@@ -501,14 +501,23 @@
 
 <svelte:head>
 	<title>Cleared | The New Humanitarian</title>
-	<meta name="description" content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes." />
+	<meta
+		name="description"
+		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+	/>
 
 	<!-- Open Graph (Facebook, LinkedIn, WhatsApp, etc.) -->
 	<meta property="og:type" content="article" />
 	<meta property="og:site_name" content="The New Humanitarian" />
 	<meta property="og:title" content="Cleared" />
-	<meta property="og:description" content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes." />
-	<meta property="og:image" content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp" />
+	<meta
+		property="og:description"
+		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+	/>
+	<meta
+		property="og:image"
+		content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp"
+	/>
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
 	<meta property="og:image:type" content="image/webp" />
@@ -518,8 +527,14 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="@newhumanitarian" />
 	<meta name="twitter:title" content="Cleared" />
-	<meta name="twitter:description" content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes." />
-	<meta name="twitter:image" content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp" />
+	<meta
+		name="twitter:description"
+		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+	/>
+	<meta
+		name="twitter:image"
+		content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp"
+	/>
 
 	<!-- Preload stadium images (used in stadium scrolly) -->
 	<link rel="preload" as="image" href="/images/cleared/stadium/image2.jpg" />
@@ -543,12 +558,12 @@
 			onScrollProgress={(p) => (heroScrollProgress = p)}
 		>
 			{#snippet children()}
-			<VideoHeroVisualization
-				currentStep={heroStep}
-				fadeProgress={heroFadeProgress()}
-				scrollProgress={heroScrollProgress}
-				videoSrc="/videos/cleared/hero.mp4"
-			/>
+				<VideoHeroVisualization
+					currentStep={heroStep}
+					fadeProgress={heroFadeProgress()}
+					scrollProgress={heroScrollProgress}
+					videoSrc="/videos/cleared/hero.mp4"
+				/>
 			{/snippet}
 		</ScrollySection>
 	</div>
@@ -1850,13 +1865,12 @@
 				>
 				<h4 class="methodology-subheading">Disclaimer</h4>
 				<p>
-					The Assam government failed to respond to questions sent by The New Humanitarian in time for publication.
+					The Assam government failed to respond to questions sent by The New Humanitarian in time
+					for publication.
 				</p>
 			</div>
 		</div>
 	</section>
-
-
 </div>
 
 <TNHFooter />
@@ -2680,7 +2694,5 @@
 			margin-left: 0;
 			margin-right: 0;
 		}
-
 	}
-
 </style>
