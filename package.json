@@ -12,6 +12,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
+    "optimize:images": "node scripts/optimize-cleared-images.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -47,6 +48,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-svelte": "^3.2.6",
     "prettier-plugin-tailwindcss": "^0.6.5",
+    "sharp": "^0.34.5",
     "storybook": "^8.4.0",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
