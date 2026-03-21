@@ -112,10 +112,11 @@
 		width: 100%;
 		aspect-ratio: 16 / 10;
 		overflow: hidden;
-		border-radius: 8px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 		background: #f5f0eb;
 		cursor: ew-resize;
+		/* Marc's note: This is to remove the border radius from the image container so it matches TNH design pattern */
+		/* border-radius: 8px; */
 	}
 
 	.after-image,
