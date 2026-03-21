@@ -1,4 +1,6 @@
 <script lang="ts">
+	import placeholderData from '$lib/data/cleared/image-placeholders.json';
+
 	interface Props {
 		beforeImage: string;
 		afterImage: string;
@@ -9,6 +11,20 @@
 	}
 
 	let { beforeImage, afterImage, beforeLabel = 'Before', afterLabel = 'Today', location, credit = 'Satellite imagery: Planet Labs' }: Props = $props();
+
+	function getSrcset(src: string): string {
+		const meta = (placeholderData as Record<string, any>)[src];
+		if (!meta) return '';
+		const base = src.replace(/\.\w+$/, '');
+		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+	}
+
+	function getPlaceholder(src: string): string {
+		return (placeholderData as Record<string, any>)[src]?.placeholder || '';
+	}
+
+	let beforeLoaded = $state(false);
+	let afterLoaded = $state(false);
 
 	let sliderPosition = $state(50);
 	let isDragging = $state(false);
@@ -55,11 +71,31 @@
 			tabindex="0"
 		>
 			<!-- After image (full width, underneath) -->
-			<img src={afterImage} alt="{location} - {afterLabel}" class="after-image" />
+			<img
+				src={afterImage}
+				srcset={getSrcset(afterImage)}
+				sizes="(max-width: 800px) 100vw, 800px"
+				alt="{location} - {afterLabel}"
+				class="after-image"
+				class:img-loaded={afterLoaded}
+				onload={() => (afterLoaded = true)}
+				style:background-image="url({getPlaceholder(afterImage)})"
+				style:background-size="cover"
+			/>
 
 			<!-- Before image (clipped) -->
 			<div class="before-container" style="clip-path: inset(0 {100 - sliderPosition}% 0 0);">
-				<img src={beforeImage} alt="{location} - {beforeLabel}" class="before-image" />
+				<img
+					src={beforeImage}
+					srcset={getSrcset(beforeImage)}
+					sizes="(max-width: 800px) 100vw, 800px"
+					alt="{location} - {beforeLabel}"
+					class="before-image"
+					class:img-loaded={beforeLoaded}
+					onload={() => (beforeLoaded = true)}
+					style:background-image="url({getPlaceholder(beforeImage)})"
+					style:background-size="cover"
+				/>
 			</div>
 
 			<!-- Labels -->
@@ -120,6 +156,12 @@
 		/* border-radius: 8px; */
 	}
 
+	/* Marc's note: Override default blue browser focus ring with TNH burgundy */
+	.image-container:focus-visible {
+		outline: 2px solid #9f3e52;
+		outline-offset: 2px;
+	}
+
 	.after-image,
 	.before-image {
 		position: absolute;
@@ -130,6 +172,14 @@
 		object-fit: cover;
 		pointer-events: none;
 		user-select: none;
+		filter: blur(20px);
+		transition: filter 0.5s ease;
+	}
+
+	.after-image.img-loaded,
+	.before-image.img-loaded {
+		filter: none;
+		background-image: none !important;
 	}
 
 	.before-container {

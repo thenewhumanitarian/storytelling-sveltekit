@@ -1,5 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import placeholderData from '$lib/data/cleared/image-placeholders.json';
+
+	function getSrcset(src: string): string {
+		const meta = (placeholderData as Record<string, any>)[src];
+		if (!meta) return '';
+		const base = src.replace(/\.\w+$/, '');
+		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+	}
+
+	function getPlaceholder(src: string): string {
+		return (placeholderData as Record<string, any>)[src]?.placeholder || '';
+	}
+
+	let beforeLoaded = $state(false);
+	let afterLoaded = $state(false);
 
 	interface Props {
 		beforeImage: string;
@@ -55,14 +70,30 @@
 <div class="satellite-scrolly" bind:this={outerEl}>
 	<div class="satellite-sticky">
 		<!-- Before image — always visible underneath -->
-		<img src={beforeImage} alt="{location} - {beforeLabel}" class="sat-image" />
+		<img
+			src={beforeImage}
+			srcset={getSrcset(beforeImage)}
+			sizes="100vw"
+			alt="{location} - {beforeLabel}"
+			class="sat-image"
+			class:img-loaded={beforeLoaded}
+			onload={() => (beforeLoaded = true)}
+			style:background-image="url({getPlaceholder(beforeImage)})"
+			style:background-size="cover"
+		/>
 
 		<!-- After image — wipes in from bottom -->
 		<img
 			src={afterImage}
+			srcset={getSrcset(afterImage)}
+			sizes="100vw"
 			alt="{location} - {afterLabel}"
 			class="sat-image sat-after"
+			class:img-loaded={afterLoaded}
+			onload={() => (afterLoaded = true)}
 			style:clip-path="inset({clipInset})"
+			style:background-image="url({getPlaceholder(afterImage)})"
+			style:background-size="cover"
 		/>
 
 		<!-- Location label — top-left -->
@@ -101,6 +132,13 @@
 		object-fit: cover;
 		pointer-events: none;
 		user-select: none;
+		filter: blur(20px);
+		transition: filter 0.5s ease;
+	}
+
+	.sat-image.img-loaded {
+		filter: none;
+		background-image: none !important;
 	}
 
 	.sat-after {

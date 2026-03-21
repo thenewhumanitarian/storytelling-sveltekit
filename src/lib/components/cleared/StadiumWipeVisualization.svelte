@@ -8,6 +8,22 @@
 	 *
 	 * Wipe uses CSS clip-path driven by scroll progress within step 2.
 	 */
+	import placeholderData from '$lib/data/cleared/image-placeholders.json';
+
+	function getSrcset(src: string): string {
+		const meta = (placeholderData as Record<string, any>)[src];
+		if (!meta) return '';
+		const base = src.replace(/\.\w+$/, '');
+		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+	}
+
+	function getPlaceholder(src: string): string {
+		return (placeholderData as Record<string, any>)[src]?.placeholder || '';
+	}
+
+	let emptyLoaded = $state(false);
+	let fullLoaded = $state(false);
+	let shelterLoaded = $state(false);
 
 	interface CreditInfo {
 		label: string;
@@ -73,24 +89,51 @@
 		<!-- Layer 1: Empty Modi Stadium - always underneath, revealed by wipe -->
 		<img
 			src="/images/cleared/stadium/stadium-empty.jpg"
+			srcset={getSrcset('/images/cleared/stadium/stadium-empty.jpg')}
+			sizes="100vw"
 			alt="Empty Narendra Modi Stadium representing displaced population"
 			class="stadium-image stadium-empty"
+			class:img-loaded={emptyLoaded}
+			width="2000"
+			height="1115"
+			onload={() => (emptyLoaded = true)}
+			style:background-image="url({getPlaceholder('/images/cleared/stadium/stadium-empty.jpg')})"
+			style:background-size="cover"
+			style:background-position="center 30%"
 		/>
 
 		<!-- Layer 2: Full Modi Stadium - clips away left-to-right during step 2 -->
 		<img
 			src="/images/cleared/stadium/stadium-full.jpg"
+			srcset={getSrcset('/images/cleared/stadium/stadium-full.jpg')}
+			sizes="100vw"
 			alt="Narendra Modi Stadium packed with 132,000 people"
 			class="stadium-image stadium-full"
+			class:img-loaded={fullLoaded}
+			width="2000"
+			height="1142"
+			onload={() => (fullLoaded = true)}
 			style:clip-path="inset(0 {clipRight} 0 0)"
+			style:background-image="url({getPlaceholder('/images/cleared/stadium/stadium-full.jpg')})"
+			style:background-size="cover"
+			style:background-position="center 30%"
 		/>
 
 		<!-- Layer 3: image2.jpg (shelter) - visible on step 0, fades out on step 1 -->
 		<img
 			src="/images/cleared/stadium/image2.jpg"
+			srcset={getSrcset('/images/cleared/stadium/image2.jpg')}
+			sizes="100vw"
 			alt="Family in makeshift shelter after eviction"
 			class="stadium-image stadium-shelter"
+			class:img-loaded={shelterLoaded}
+			width="1280"
+			height="960"
 			class:faded={activeStep >= 1}
+			onload={() => (shelterLoaded = true)}
+			style:background-image="url({getPlaceholder('/images/cleared/stadium/image2.jpg')})"
+			style:background-size="cover"
+			style:background-position="center 30%"
 		/>
 
 		<!-- Dark veil overlay -->
@@ -158,11 +201,22 @@
 		height: 100%;
 		object-fit: cover;
 		object-position: center 30%;
+		filter: blur(20px);
+		transition: filter 0.5s ease;
+	}
+
+	.stadium-image.img-loaded {
+		filter: none;
+		background-image: none !important;
 	}
 
 	/* Bottom layer: empty stadium, always present */
 	.stadium-empty {
 		z-index: 1;
+		filter: saturate(0.8) blur(20px);
+	}
+
+	.stadium-empty.img-loaded {
 		filter: saturate(0.8);
 	}
 
@@ -176,7 +230,7 @@
 	.stadium-shelter {
 		z-index: 3;
 		opacity: 1;
-		transition: opacity 900ms ease;
+		transition: opacity 900ms ease, filter 0.5s ease;
 	}
 
 	.stadium-shelter.faded {

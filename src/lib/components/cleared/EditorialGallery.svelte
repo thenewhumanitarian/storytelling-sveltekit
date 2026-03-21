@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { inview } from 'svelte-inview';
 	import { openLightbox } from '$lib/stores/lightbox';
+	import ResponsiveImage from './ResponsiveImage.svelte';
 
 	interface GalleryImage {
 		src: string;
@@ -40,7 +41,7 @@
 					data-lightbox-caption={image.caption || ''}
 					onclick={() => openLightbox(image.src)}
 				>
-					<img src={image.src} alt={image.alt} loading="lazy" />
+					<ResponsiveImage src={image.src} alt={image.alt} sizes="(max-width: 640px) 100vw, 400px" />
 				</button>
 				{#if image.caption}
 					<figcaption>{image.caption}</figcaption>
@@ -70,11 +71,11 @@
 		grid-row: 1;
 	}
 
-	.layout-2 .item-0 img {
+	.layout-2 .item-0 :global(img) {
 		aspect-ratio: 4 / 5;
 	}
 
-	.layout-2 .item-1 img {
+	.layout-2 .item-1 :global(img) {
 		aspect-ratio: 3 / 4;
 	}
 
@@ -88,13 +89,13 @@
 		grid-row: 1 / 3;
 	}
 
-	.layout-3 .item-0 img {
+	.layout-3 .item-0 :global(img) {
 		aspect-ratio: 3 / 4;
 		height: 100%;
 	}
 
-	.layout-3 .item-1 img,
-	.layout-3 .item-2 img {
+	.layout-3 .item-1 :global(img),
+	.layout-3 .item-2 :global(img) {
 		aspect-ratio: 16 / 10;
 	}
 
@@ -108,15 +109,15 @@
 		grid-column: 1 / 3;
 	}
 
-	.layout-4 .item-0 img {
+	.layout-4 .item-0 :global(img) {
 		aspect-ratio: 16 / 10;
 	}
 
-	.layout-4 .item-1 img {
+	.layout-4 .item-1 :global(img) {
 		aspect-ratio: 3 / 4;
 	}
 
-	.layout-4 .item-2 img {
+	.layout-4 .item-2 :global(img) {
 		aspect-ratio: 4 / 3;
 	}
 
@@ -124,7 +125,7 @@
 		grid-column: 2 / 4;
 	}
 
-	.layout-4 .item-3 img {
+	.layout-4 .item-3 :global(img) {
 		aspect-ratio: 16 / 10;
 	}
 
@@ -157,7 +158,7 @@
 		overflow: hidden;
 	}
 
-	.gallery-item img {
+	.gallery-item :global(img) {
 		width: 100%;
 		object-fit: cover;
 		display: block;
@@ -189,7 +190,7 @@
 			grid-row: auto;
 		}
 
-		.gallery-item img {
+		.gallery-item :global(img) {
 			aspect-ratio: 16 / 10 !important;
 			height: auto !important;
 		}

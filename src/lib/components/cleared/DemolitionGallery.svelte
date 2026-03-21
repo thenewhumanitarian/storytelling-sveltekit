@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { inview } from 'svelte-inview';
 	import { openLightbox } from '$lib/stores/lightbox';
+	import ResponsiveImage from './ResponsiveImage.svelte';
 
 	let visible = $state(false);
 
@@ -58,7 +59,7 @@
 						data-lightbox-caption={image.caption}
 						onclick={() => openLightbox(image.src)}
 					>
-						<img src={image.src} alt={image.alt} loading="lazy" />
+						<ResponsiveImage src={image.src} alt={image.alt} sizes="(max-width: 640px) 100vw, 320px" />
 					</button>
 					<p class="image-caption">{image.caption}</p>
 				</div>
@@ -129,19 +130,20 @@
 		overflow: hidden;
 	}
 
-	.gallery-card img {
+	.gallery-card :global(img) {
 		width: 100%;
 		aspect-ratio: 4 / 3;
 		object-fit: cover;
 		display: block;
 	}
 
+	/* Marc's note: Aligned with EditorialGallery figcaption for consistency */
 	.image-caption {
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.8rem;
-		color: #6b6b6b;
+		font-size: 1rem;
+		color: #282828;
 		padding: 0.5rem 0.75rem;
-		background: #ffffff;
+		background: rgba(230, 230, 230, 0.8);
 		margin: 0;
 		line-height: 1.4;
 	}

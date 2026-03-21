@@ -6,6 +6,7 @@
 	 * Features active state transitions, responsive sizing, and slot-based content.
 	 */
 	import type { Snippet } from 'svelte';
+	import ResponsiveImage from '../ResponsiveImage.svelte';
 
 	interface SourceLink {
 		text: string;
@@ -48,7 +49,7 @@
 	style:--custom-bg={bgColor}
 >
 	{#if image}
-		<img src={image} alt="" class="box-image" />
+		<ResponsiveImage src={image} alt="" sizes="480px" class="box-image" />
 	{/if}
 	{#if title}
 		<h2 class="box-title">{title}</h2>
@@ -103,12 +104,10 @@
 		max-width: 320px;
 	}
 
-	.box-image {
+	.scrolly-text-box :global(.box-image) {
 		width: 100%;
 		height: auto;
 		margin-bottom: 1rem;
-		/* Marc's note: This is to remove the border radius from the image so it matches TNH design pattern */
-		/* border-radius: 4px; */
 	}
 
 	.scrolly-text-box.dark {
@@ -275,7 +274,7 @@
 			padding: 1rem 1.25rem;
 		}
 
-		.box-image {
+		.scrolly-text-box :global(.box-image) {
 			margin-bottom: 0.75rem;
 		}
 

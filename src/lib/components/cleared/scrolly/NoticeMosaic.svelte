@@ -8,6 +8,7 @@
 	 */
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import ResponsiveImage from '../ResponsiveImage.svelte';
 
 	export interface Notice {
 		image: string;
@@ -79,7 +80,7 @@
 				style:transform="rotate({pos[2]}deg)"
 				in:fade={{ duration: 350 }}
 			>
-				<img src={notice.image} alt={notice.alt} loading="lazy" />
+				<ResponsiveImage src={notice.image} alt={notice.alt} sizes="(max-width: 640px) 50vw, 25vw" />
 			</div>
 		{/if}
 	{/each}
@@ -133,7 +134,7 @@
 		max-width: 50vw;
 	}
 
-	.notice-image img {
+	.notice-image :global(img) {
 		display: block;
 		width: 100%;
 		height: auto;
@@ -150,7 +151,7 @@
 		max-width: 520px;
 		height: 190px;
 		background: #ffffff;
-		border: 4px solid rgba(0, 0, 0, 1);
+		/* border: 4px solid rgba(0, 0, 0, 1); */
 		border-left: 3px solid #9f3e52;
 		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 		border-radius: 2px;

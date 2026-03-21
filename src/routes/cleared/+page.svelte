@@ -2549,8 +2549,8 @@
 	/* Section divider between adjacent prose sections */
 	.section-divider {
 		width: 4rem;
-		height: 1px;
-		background: rgba(159, 62, 82, 0.2);
+		height: 4px;
+		background: rgba(159, 62, 82, 1);
 		margin: 0 auto;
 	}
 

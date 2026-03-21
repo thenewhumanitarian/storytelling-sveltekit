@@ -264,10 +264,12 @@
 
 	.step-content.position-left {
 		margin-right: auto;
+		justify-content: flex-start;
 	}
 
 	.step-content.position-right {
 		margin-left: auto;
+		justify-content: flex-end;
 	}
 
 	@media (max-width: 900px) {
