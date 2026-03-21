@@ -81,8 +81,6 @@
 	});
 
 	let viewportHeight = $state(800);
-	let stepHeight = $derived(Math.max(viewportHeight * 0.7, 520));
-	let stepGap = $derived(Math.max(viewportHeight * 0.25, 240));
 	let triggerOffset = $derived(Math.round(viewportHeight * 0.25));
 
 	// Section element reference for scroll progress tracking
@@ -125,7 +123,6 @@
 	bind:this={sectionEl}
 	class="scroll-section"
 	style:background={backgroundColor}
-	style={`--vh:${viewportHeight}px`}
 >
 	<div class="scroll-inner">
 		<!-- Sticky visualization layer -->
@@ -146,10 +143,10 @@
 						class="step"
 						class:active
 						class:step-first={isFirst}
-						style:min-height={isFirst && step.raw ? `${viewportHeight}px` : `${stepHeight}px`}
-						style:margin-bottom={`${isLast ? viewportHeight * 0.5 : stepGap}px`}
+						class:step-last={isLast}
+						class:step-raw-first={isFirst && step.raw}
 						style:margin-top={isFirst && firstStepOffset > 0
-							? `${viewportHeight * (-1 + firstStepOffset)}px`
+							? `calc(-100vh + ${firstStepOffset * 100}vh)`
 							: undefined}
 					>
 						{#if step.raw && step.text}
@@ -199,7 +196,7 @@
 		top: 0;
 		width: 100%;
 		height: 100vh;
-		min-height: var(--vh);
+		min-height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -211,13 +208,15 @@
 		z-index: 2;
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 0 1.5rem calc(var(--vh) * 0.4);
+		padding: 0 1.5rem 40vh;
 	}
 
 	.step {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		min-height: max(70vh, 520px);
+		margin-bottom: max(25vh, 240px);
 		opacity: 0.35;
 		transform: translateY(6px);
 		transition:
@@ -233,7 +232,17 @@
 
 	/* First step starts at negative margin to overlap sticky layer from top */
 	.step.step-first {
-		margin-top: calc(var(--vh) * -1);
+		margin-top: -100vh;
+	}
+
+	/* First step with raw content gets full viewport height */
+	.step.step-raw-first {
+		min-height: 100vh;
+	}
+
+	/* Last step gets larger bottom margin for scroll-out room */
+	.step.step-last {
+		margin-bottom: 50vh;
 	}
 
 	.step-raw {
@@ -263,13 +272,13 @@
 
 	@media (max-width: 900px) {
 		.text-track {
-			padding: calc(var(--vh) * 0.2) 1.25rem calc(var(--vh) * 0.35);
+			padding: 20vh 1.25rem 35vh;
 		}
 	}
 
 	@media (max-width: 768px) {
 		.text-track {
-			padding: calc(var(--vh) * 0.18) 1rem calc(var(--vh) * 0.25);
+			padding: 18vh 1rem 25vh;
 		}
 
 		.step-content {
