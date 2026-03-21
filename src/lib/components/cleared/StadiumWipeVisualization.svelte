@@ -26,8 +26,8 @@
 	let shelterLoaded = $state(false);
 
 	interface CreditInfo {
-		label: string;
-		detail?: string;
+		credit: string;
+		caption?: string;
 	}
 
 	interface Props {
@@ -121,17 +121,17 @@
 
 		<!-- Layer 3: image2.jpg (shelter) - visible on step 0, fades out on step 1 -->
 		<img
-			src="/images/cleared/stadium/image2.jpg"
-			srcset={getSrcset('/images/cleared/stadium/image2.jpg')}
+			src="/images/cleared/stadium/eviction-drive.jpg"
+			srcset={getSrcset('/images/cleared/stadium/eviction-drive.jpg')}
 			sizes="(max-width: 640px) 100vw, (max-width: 1088px) calc(100vw - 4rem), 1024px"
-			alt="Family in makeshift shelter after eviction"
+			alt="Families displaced during an eviction drive in Assam"
 			class="stadium-image stadium-shelter"
 			class:img-loaded={shelterLoaded}
-			width="1280"
-			height="960"
+			width="7360"
+			height="4912"
 			class:faded={activeStep >= 1}
 			onload={() => (shelterLoaded = true)}
-			style:background-image="url({getPlaceholder('/images/cleared/stadium/image2.jpg')})"
+			style:background-image="url({getPlaceholder('/images/cleared/stadium/eviction-drive.jpg')})"
 			style:background-size="cover"
 			style:background-position="center 30%"
 		/>
@@ -148,16 +148,16 @@
 		<!-- Film grain -->
 		<div class="stadium-grain"></div>
 
-		<!-- Image credit bubble -->
-		{#if credits?.[activeStep]}
-			<div class="credit-bubble" class:has-detail={credits[activeStep].detail}>
-				<span class="credit-label">{credits[activeStep].label}</span>
-				{#if credits[activeStep].detail}
-					<span class="credit-detail">{credits[activeStep].detail}</span>
-				{/if}
-			</div>
+		<!-- Credit label inside frame -->
+		{#if credits?.[activeStep]?.credit}
+			<div class="credit-bubble">{credits[activeStep].credit}</div>
 		{/if}
 	</div>
+
+	<!-- Caption below frame -->
+	{#if credits?.[activeStep]?.caption}
+		<p class="stadium-caption">{credits[activeStep].caption}</p>
+	{/if}
 
 	<!-- Fade-from-cream: gradient covering top half (full viewport) -->
 	{#if fadeInProgress > 0}
@@ -309,16 +309,15 @@
 		}
 	}
 
-	/* Image credit — TNH style */
+	/* Credit label — short attribution inside frame */
 	.credit-bubble {
 		position: absolute;
 		z-index: 7;
 		bottom: -1px;
 		left: 0;
-		background: rgba(255, 255, 255, 0.92);
+		background: rgba(255, 255, 255, 0.7);
 		color: #282828;
 		font-family: 'Roboto', 'Open Sans', sans-serif;
-		/* Marc's note: was going to go with .8rem here for consistency but feels too big so compromising consistency over felt size on image pls check */
 		font-size: 0.7rem;
 		font-weight: 400;
 		padding: 0.2rem 0.7rem;
@@ -327,19 +326,25 @@
 		transition: opacity 300ms ease;
 	}
 
-	.credit-bubble.has-detail {
-		padding: 0.25rem 0.75rem;
-		white-space: normal;
-		max-width: 320px;
-		display: flex;
-		flex-direction: column;
-		gap: 1px;
-	}
-
-	.credit-detail {
-		font-size: 0.7rem;
-		opacity: 0.6;
-		line-height: 1.3;
+	/* Caption below frame — matches EditorialGallery figcaption */
+	.stadium-caption {
+		position: absolute;
+		z-index: 7;
+		left: 50%;
+		transform: translateX(-50%);
+		width: calc(100% - 4rem);
+		max-width: 64rem;
+		top: calc(50% + min(calc(100vw - 4rem), 64rem) * 9 / 32);
+		margin: 0;
+		text-align: left;
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 1rem;
+		color: #282828;
+		line-height: 1.4;
+		padding: 0.5rem 0.75rem;
+		background: rgba(230, 230, 230, 0.8);
+		pointer-events: none;
+		transition: opacity 300ms ease;
 	}
 
 	@media (max-width: 640px) {
@@ -348,12 +353,14 @@
 			padding: 0.2rem 0.5rem;
 		}
 
-		.credit-bubble.has-detail {
-			max-width: 240px;
-		}
-
-		.credit-detail {
-			font-size: 0.6rem;
+		.stadium-caption {
+			top: auto;
+			bottom: 0;
+			left: 0;
+			transform: none;
+			width: 100%;
+			max-width: none;
+			font-size: 0.85rem;
 		}
 	}
 </style>

@@ -59,6 +59,12 @@
 		"height": 1219,
 		"srcset": "480w, 800w, 1200w, 1610w"
 	},
+	"/images/cleared/stadium/eviction-drive.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwDG9CLHuZA3+0C4Iy8AAP7L+YEG+3UalbcTbeWBLzEksgGysNqVa9k73Dp/k3vZ3wVESwlGMKaEkKHBDwLJKC/ys0cvYIeyFzMYzbJb7Q+UAAA=",
+		"width": 7360,
+		"height": 4912,
+		"srcset": "480w, 800w, 1200w, 7360w"
+	},
 	"/images/cleared/stadium/image2.jpg": {
 		"placeholder": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADwAwCdASoUAA8APzmEuVOvKKWisAgB4CcJZAC1GoACO1yxCYZ6fEeOAPxm8Oi8vC5MsL29BS7fHLIx3v8BbijZUAFgvfMi3AANTtk3OdX6n1OU50ICzVTBCG6VuUZQAut7K+6maAezun15R2og+EvoK+GKb2t8lxD9nvYAAAA=",
 		"width": 1280,

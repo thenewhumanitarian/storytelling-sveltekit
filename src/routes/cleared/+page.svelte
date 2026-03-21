@@ -537,7 +537,7 @@
 	/>
 
 	<!-- Preload stadium images (used in stadium scrolly) -->
-	<link rel="preload" as="image" href="/images/cleared/stadium/image2.jpg" />
+	<link rel="preload" as="image" href="/images/cleared/stadium/eviction-drive.jpg" />
 	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-full.jpg" />
 	<link rel="preload" as="image" href="/images/cleared/stadium/stadium-empty.jpg" />
 	<!-- Preload hints for videos -->
@@ -607,15 +607,19 @@
 					activeStep={stadiumStep}
 					scrollProgress={stadiumScrollProgress}
 					fadeInProgress={stadiumFadeInProgress()}
-					credits={[
-						{ label: 'Photo: [Name TBD]' },
-						{
-							label: 'AI-generated image',
-							detail:
-								'Generated with Google Gemini 2.5 Flash using the real stadium photo as a reference for framing'
-						},
-						{ label: 'Photo: A Cricket Premi / Wikimedia Commons (CC BY-SA 4.0)' }
-					]}
+				credits={[
+					{
+						credit: 'Photo: Reuters',
+						caption:
+							"Villagers watch the demolition of their houses by local authorities during an eviction drive at an alleged illegal residential settlement inside a reserved forest area in Assam's Nagaon district, on 29 November 2025."
+					},
+					{
+						credit: 'AI-generated image',
+						caption:
+							'Generated with Google Gemini 2.5 Flash using the real stadium photo as a reference for framing'
+					},
+					{ credit: 'Photo: A Cricket Premi / Wikimedia Commons (CC BY-SA 4.0)' }
+				]}
 				/>
 			{/snippet}
 		</ScrollySection>
