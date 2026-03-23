@@ -39,7 +39,7 @@ For security reasons, all three interviewees are now referred to by first name o
 
 ## Footnote added
 
-A new line has been added at the bottom of the article (after the methodology section, before the footer):
+A new line has been added inside the methodology/disclaimer box, directly after the government disclaimer paragraph:
 
 > *First names used only for security reasons.
 

@@ -1825,13 +1825,12 @@
 					The Assam government failed to respond to questions sent by The New Humanitarian in time
 					for publication.
 				</p>
+				<p class="names-footnote">
+					*First names used only for security reasons.
+				</p>
 			</div>
 		</div>
 	</section>
-
-	<div class="names-footnote">
-		<p>*First names used only for security reasons.</p>
-	</div>
 </div>
 
 <TNHFooter />
@@ -2607,18 +2606,9 @@
 
 	/* Names footnote */
 	.names-footnote {
-		max-width: 42rem;
-		margin: 0 auto;
-		padding: 1rem 1.5rem 2rem;
-		background: #f5f0eb;
-	}
-
-	.names-footnote p {
-		font-family: 'Roboto', 'Open Sans', sans-serif;
-		font-size: 0.85rem;
 		font-style: italic;
 		color: #6b6b6b;
-		margin: 0;
+		margin-top: 1rem;
 	}
 
 	/* ── Mobile audit ── */
