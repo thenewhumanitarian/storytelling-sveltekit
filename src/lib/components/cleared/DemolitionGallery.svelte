@@ -46,7 +46,7 @@
 >
 	<div class="gallery-content">
 		<h2 class="gallery-heading">Across Assam, the bulldozers have left their mark.</h2>
-		<p class="gallery-subtitle">We traveled to 20 villages to document what remains.</p>
+		<p class="gallery-subtitle">We travelled to 20 villages to document what remains.</p>
 		<div class="gallery-grid">
 			{#each images as image, i}
 				<div class="gallery-card" class:visible style="--delay: {i * 80}ms">
