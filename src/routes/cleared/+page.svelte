@@ -252,7 +252,7 @@
 			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades \u2013 was met with the mechanical roar of bulldozers.'
 		},
 		{
-			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment\u201d, but a matter of documented rights.'
+			text: 'Among the 1,080 families displaced was Abdul*, a man who insists that his presence there was not an act of \u201cencroachment\u201d, but a matter of documented rights.'
 		},
 		{
 			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development.\u201d</blockquote>'
@@ -272,8 +272,8 @@
 	// Zain-ul-Abadin video scrolly steps
 	const zainSteps = [
 		{
-			title: 'Zain-ul-Abadin',
-			text: 'Zain-ul-Abadin, 43, of Uriamghat in Golaghat district, says his family was among those encouraged by the Assam government to settle in the late 1970s in a disputed border zone along Nagaland.'
+			title: 'Zain*',
+			text: 'Zain, 43, of Uriamghat in Golaghat district, says his family was among those encouraged by the Assam government to settle in the late 1970s in a disputed border zone along Nagaland.'
 		},
 		{
 			text: '<blockquote>\u201cMy father and grandfather lived here. We came from another part of the state to Uriamghat because the government told us to settle here to protect the land of Assam.\u201d</blockquote>'
@@ -282,7 +282,7 @@
 			text: '<blockquote>\u201cThis has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour.\u201d</blockquote>'
 		},
 		{
-			text: 'For Zain-ul-Abadin, the eviction represents more than the loss of a home. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt.'
+			text: 'For Zain, the eviction represents more than the loss of a home. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt.'
 		}
 	];
 
@@ -296,14 +296,14 @@
 	// Maiful Naysa video scrolly steps
 	const maifulSteps = [
 		{
-			title: 'Maiful Naysa',
-			text: 'Maiful Naysa, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.'
+			title: 'Maiful',
+			text: 'Maiful, 65, says her family received an eviction notice in November and were given a month to respond. Before dawn, just a day after the deadline, evictions began.'
 		},
 		{
 			text: '<blockquote>\u201cWe had a solid house, a shop, and four rooms. Everything was settled. Now we have nothing.\u201d</blockquote>'
 		},
 		{
-			text: 'For Naysa and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their \u201cdream house\u201d was reduced to rubble in seconds.'
+			text: 'For Maiful and her family, the demolition was not just the removal of a structure, but the erasure of a lifetime of labour. Despite holding land titles and tax receipts, they watched from behind a police cordon as their \u201cdream house\u201d was reduced to rubble in seconds.'
 		}
 	];
 
@@ -586,7 +586,7 @@
 					Party (BJP).
 				</p>
 				<p>
-					Maiful Naysa, 65, says her family received an eviction notice in November and were given a
+					Maiful*, 65, says her family received an eviction notice in November and were given a
 					month to respond. Before dawn, just a day after the deadline, bulldozers arrived.
 				</p>
 				<blockquote>
@@ -878,7 +878,7 @@
 					The <ExpandableInfobox data={infoboxData.nagaland} /> has triggered repeated bouts of violent
 					clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people
 					dead. In the 1970s, the Assam government settled landless communities in this zone as part
-					of a strategy to strengthen its territorial claims. According to Zain-ul-Abadin, his family
+					of a strategy to strengthen its territorial claims. According to Zain, his family
 					was part of that policy. Now, decades later, the same government is demolishing the settlement
 					it once built.
 				</p>
@@ -1276,7 +1276,7 @@
 				</div>
 
 				<p>
-					The eviction was not merely a demolition; it was followed by what Barik describes as a
+					The eviction was not merely a demolition; it was followed by what Abdul describes as a
 					calculated attempt to isolate the survivors. After the houses were levelled, the
 					administration took physical steps to ensure no aid reached the displaced families living
 					under tarpaulins.
@@ -1539,7 +1539,7 @@
 				<!-- CHANGED: sentence case + curly quotes --><h3 class="prose-subheading">&ldquo;Go back to Bangladesh&rdquo;</h3>
 
 				<p>
-					Despite Zain-ul-Abadin and his family and neighbours possessing NRC documents and valid
+					Despite Zain and his family and neighbours possessing NRC documents and valid
 					voter IDs, they were met with a familiar xenophobic taunt during the drive.
 				</p>
 
@@ -1550,7 +1550,7 @@
 				</blockquote>
 
 				<p>
-					Zain-ul-Abadin describes a terrifying atmosphere where the displaced are being systematically cut
+					Zain describes a terrifying atmosphere where the displaced are being systematically cut
 					off from the local economy. The eviction drives reflect layered systemic marginalisation.
 					Economically, families lose land, livelihoods, and access to welfare, pushing them into
 					deeper precarity. Politically and socially, even documented citizens face recurring
@@ -1559,9 +1559,9 @@
 				</p>
 
 				<p>
-					<!-- CHANGED: curly apostrophes -->The most harrowing aspect of Barik&rsquo;s testimony was the apparent defiance of the judiciary
+					The most harrowing aspect of Abdul&rsquo;s testimony was the apparent defiance of the judiciary
 					by executive forces. Just two days before the demolition, the residents believed they had
-					secured a lifeline from the state&rsquo;s highest court. For Barik, the violence and the
+					secured a lifeline from the state&rsquo;s highest court. For Abdul, the violence and the
 					disregard for the High Court&rsquo;s stay orders are symptoms of a larger ideological
 					shift in the region.
 				</p>
@@ -1828,6 +1828,10 @@
 			</div>
 		</div>
 	</section>
+
+	<div class="names-footnote">
+		<p>*First names used only for security reasons.</p>
+	</div>
 </div>
 
 <TNHFooter />
@@ -2599,6 +2603,22 @@
 			margin-left: calc(50% - 28rem);
 			margin-right: calc(50% - 28rem);
 		}
+	}
+
+	/* Names footnote */
+	.names-footnote {
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 1rem 1.5rem 2rem;
+		background: #f5f0eb;
+	}
+
+	.names-footnote p {
+		font-family: 'Roboto', 'Open Sans', sans-serif;
+		font-size: 0.85rem;
+		font-style: italic;
+		color: #6b6b6b;
+		margin: 0;
 	}
 
 	/* ── Mobile audit ── */
