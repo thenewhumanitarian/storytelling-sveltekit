@@ -81,7 +81,7 @@
 		backdrop-filter: blur(6px);
 		-webkit-backdrop-filter: blur(6px);
 		/* Marc's note: suggestion to balance padding here slightly — a bit less looks more balanced to me? */
-		padding: 1.25rem 1.5rem;
+		padding: 1.25rem;
 		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 		opacity: 0.75;
 		transform: translateY(8px);

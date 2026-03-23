@@ -522,8 +522,8 @@
 		property="og:image"
 		content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp"
 	/>
-	<meta property="og:image:width" content="1200" />
-	<meta property="og:image:height" content="630" />
+	<meta property="og:image:width" content="1000" />
+	<meta property="og:image:height" content="552" />
 	<meta property="og:image:type" content="image/webp" />
 	<meta property="og:url" content="{PUBLIC_BASE_URL}/cleared" />
 

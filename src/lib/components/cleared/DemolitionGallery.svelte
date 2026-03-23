@@ -104,13 +104,13 @@
 
 	.gallery-card {
 		overflow: hidden;
-		border: 1px solid rgba(0, 0, 0, 0.06);
 		opacity: 0;
 		transform: translateY(20px);
 		transition:
 		opacity 0.5s ease,
 		transform 0.5s ease;
 		transition-delay: var(--delay);
+		/* border: 1px solid rgba(0, 0, 0, 0.06); */
 		/* Marc's note: This is to remove the border radius from the gallery card so it matches TNH design pattern */
 		/* border-radius: 4px; */
 	}
