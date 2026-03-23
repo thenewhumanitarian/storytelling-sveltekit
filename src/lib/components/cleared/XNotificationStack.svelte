@@ -12,20 +12,20 @@
 	const defaultTweets: Tweet[] = [
 		{
 			id: '2008539054044823637',
-			text: 'Mess Around and Find Out! You don\'t encroach on our lands, our culture and then cry victim when the JCBs arrive. The eviction drive will spare no one.',
-			date: 'Jan 6, 2026',
+			text: 'Mess Around and Find Out! You don\u2019t encroach on our lands, our culture and then cry victim when the JCBs arrive. The eviction drive will spare no one.', // CHANGED: curly apostrophe
+			date: '6 January 2026', // CHANGED: date format to TNH style
 			link: 'https://x.com/himantabiswa/status/2008539054044823637'
 		},
 		{
 			id: '1966415643126972911',
 			text: 'We will hunt down every illegal infiltrator and send them back to their origins. Assam is NOT your breeding ground.',
-			date: 'Sep 12, 2025',
+			date: '12 September 2025', // CHANGED: date format to TNH style
 			link: 'https://x.com/himantabiswa/status/1966415643126972911'
 		},
 		{
 			id: '1944386602626699579',
 			text: 'There is a concerted effort to change the demography of our constituencies.',
-			date: 'Jul 13, 2025',
+			date: '13 July 2025', // CHANGED: date format to TNH style
 			link: 'https://x.com/himantabiswa/status/1944386602626699579'
 		}
 	];

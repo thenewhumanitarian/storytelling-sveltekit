@@ -105,7 +105,7 @@
 			</div>`
 		},
 		{
-			title: 'September 23, 2021',
+			title: '23 September 2021', // CHANGED: date format to TNH style (day month year)
 			text: 'In the early morning, police opened fire on a crowd in Dhalpur village, in Assam\u2019s Darrang district. Two people died: Moinul Haque, 33, and Sheikh Farid, 12 years old.',
 			source: {
 				text: 'Al Jazeera',
@@ -120,7 +120,7 @@
 	// Stadium image scrolly steps (3 steps: campaign, testimony, wipe + 165k stat)
 	const stadiumSteps = [
 		{
-			title: 'A Campaign of Displacement',
+			title: 'A campaign of displacement', // CHANGED: sentence case
 			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
 		},
 		{
@@ -137,7 +137,7 @@
 			text: 'Each bubble represents one operation \u2014 the larger the bubble, the more people displaced.'
 		},
 		{
-			text: "The government cited various legal grounds for these evictions. We've grouped them into <strong>four categories</strong>."
+			text: "The government cited various legal grounds for these evictions. We\u2019ve grouped them into <strong>four categories</strong>." // CHANGED: curly apostrophe
 		},
 		{
 			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
@@ -146,7 +146,7 @@
 			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the <a href="https://www.reuters.com/sustainability/climate-energy/adani-group-invest-717-bln-power-projects-indias-assam-state-2025-11-14/" target="_blank" rel="noopener">approximately $5.5 billion</a> allocated to an Adani thermal power plant in Dhubri.'
 		},
 		{
-			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged "encroachers" on government land, including controversial border pushbacks to Bangladesh.'
+			text: '<span class="highlight-admin">Administrative Enforcement</span> targeted alleged \u201cencroachers\u201d on government land, including controversial border pushbacks to Bangladesh.' // CHANGED: curly quotes
 		},
 		{
 			text: '<span class="highlight-satra">Religious Land (Satra)</span> evictions cleared land claimed by Hindu monasteries in Barpeta and Nagaon districts.'
@@ -161,7 +161,7 @@
 			text: '<strong>2025:</strong> The busiest year \u2014 11 documented eviction operations across Assam.'
 		},
 		{
-			text: "But it's not just the frequency. The <strong>scale</strong> of each operation has grown dramatically."
+			text: "But it\u2019s not just the frequency. The <strong>scale</strong> of each operation has grown dramatically." // CHANGED: curly apostrophe
 		},
 		{
 			text: '<strong>2021:</strong> Around 14,000 people evicted across all operations.'
@@ -174,7 +174,7 @@
 	// Background scrolly steps (5 steps: Assam history and geography)
 	const backgroundSteps = [
 		{
-			title: 'A Label with Consequences',
+			title: 'A label with consequences', // CHANGED: sentence case
 			text: 'Behind these numbers is a state with a long, contested history of deciding who belongs.'
 		},
 		{
@@ -188,7 +188,7 @@
 		},
 		{
 			title: 'The Brahmaputra',
-			text: "Assam lies along the Brahmaputra, one of the world's largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life."
+			text: "Assam lies along the Brahmaputra, one of the world\u2019s largest rivers. Every monsoon season, it floods, swallowing villages and forcing families to rebuild from scratch. Displacement here is not new. It is a way of life." // CHANGED: curly apostrophe
 		}
 	];
 
@@ -218,7 +218,7 @@
 			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">33 documented eviction operations</span> across the state.'
 		},
 		{
-			text: 'We traveled to <span class="highlight-env">20 demolished villages</span> to document what remains after the bulldozers left.'
+			text: 'We travelled to <span class="highlight-env">20 demolished villages</span> to document what remains after the bulldozers left.'
 		},
 		{
 			title: 'Charuabakhra, Dhubri',
@@ -227,7 +227,7 @@
 		},
 		{
 			title: 'Doloni Pathar, Golaghat',
-			text: '700 homes demolished. 8,900 people displaced—the largest single eviction we documented.',
+			text: '700 homes demolished. 8,900 people displaced – the largest single eviction we documented.',
 			image: '/images/cleared/villages/doloni-pathar.jpg'
 		},
 		{
@@ -248,11 +248,11 @@
 	// Displacement video scrolly steps (4 steps: title, Barik intro, two blockquotes)
 	const displacementSteps = [
 		{
-			title: '"Bulldozer justice"',
-			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades was met with the mechanical roar of bulldozers.'
+			title: '\u201cBulldozer justice\u201d', // CHANGED: curly quotes
+			text: 'In the early hours of 12 July 2025, the Asudubi Revenue Village \u2013 a community that had stood for over seven decades \u2013 was met with the mechanical roar of bulldozers.'
 		},
 		{
-			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment,\u201d but a matter of documented rights.'
+			text: 'Among the 1,080 families displaced was Abdul Barik, a man who insists that his presence there was not an act of \u201cencroachment\u201d, but a matter of documented rights.'
 		},
 		{
 			text: '<blockquote>\u201cOur village is 70-75 years old. It was not a forest land; it was Pattaland. We showed our documents to the district officer, but they were rejected. It was written in the papers that this land is \u2018not indigenous\u2019 and reserved for public development.\u201d</blockquote>'
@@ -323,28 +323,28 @@
 			alt: 'Eviction notice document in Assamese',
 			title: 'Gorakhor Unarni',
 			subtitle: 'Olamghuri Village, Nagaon District',
-			excerpt: '"15 days to vacate. No compensation will be entertained."'
+			excerpt: '\u201c15 days to vacate. No compensation will be entertained.\u201d' // CHANGED: curly quotes
 		},
 		{
 			image: '/images/cleared/notices/notice_2.jpg',
 			alt: 'Eviction notice document in Assamese',
 			title: 'Anara Opni',
 			subtitle: 'Alamgudi Village, Nagaon District',
-			excerpt: '"Forced eviction within 30 days. All structures removed."'
+			excerpt: '\u201cForced eviction within 30 days. All structures removed.\u201d' // CHANGED: curly quotes
 		},
 		{
 			image: '/images/cleared/notices/notice_3.jpg',
 			alt: 'Eviction notice document in Assamese',
 			title: 'Minara Takim',
 			subtitle: 'Olaguri Village, Nagaon District',
-			excerpt: '"Recipient will bear all costs of eviction proceedings."'
+			excerpt: '\u201cRecipient will bear all costs of eviction proceedings.\u201d' // CHANGED: curly quotes
 		},
 		{
 			image: '/images/cleared/notices/notice_4.jpg',
 			alt: 'Eviction notice document in Assamese',
 			title: 'Fairas Haresho',
 			subtitle: 'Olamghuri Village, Nagaon District',
-			excerpt: '"Illegal occupation. Trees cut. Houses built. Land cleared."'
+			excerpt: '\u201cIllegal occupation. Trees cut. Houses built. Land cleared.\u201d' // CHANGED: curly quotes
 		}
 	];
 
@@ -353,7 +353,7 @@
 		{
 			id: '1',
 			source: 'VICE NEWS',
-			date: 'September 24, 2021',
+			date: '24 September 2021', // CHANGED: date format to TNH style
 			title: 'Shocking Video Shows Police Firing and Killing Protestors in India',
 			author: 'Shamani Joshi',
 			url: 'https://www.vice.com/en/article/shocking-video-shows-police-firing-and-killing-protestors-in-india/'
@@ -361,7 +361,7 @@
 		{
 			id: '2',
 			source: 'THE INDIAN EXPRESS',
-			date: 'September 25, 2024',
+			date: '25 September 2024', // CHANGED: date format to TNH style
 			title: 'At village that saw deadly eviction drive in Assam, bulldozers are back',
 			description:
 				'Over the next three days, 151 families were evicted and 237 structures demolished.',
@@ -371,7 +371,7 @@
 		{
 			id: '3',
 			source: 'THE INDIAN EXPRESS',
-			date: 'July 8, 2025',
+			date: '8 July 2025', // CHANGED: date format to TNH style
 			title:
 				'Mega eviction drive across 3 Assam villages sees stone pelting and lathi charge; 1,400 families displaced',
 			description:
@@ -382,8 +382,8 @@
 		{
 			id: '4',
 			source: 'THE WIRE',
-			date: 'August 23, 2025',
-			title: "Supreme Court Halts Eviction Drive in Assam's Golaghat District",
+			date: '23 August 2025', // CHANGED: date format to TNH style
+			title: "Supreme Court Halts Eviction Drive in Assam\u2019s Golaghat District", // CHANGED: curly apostrophe
 			description:
 				'The petition challenged concurrent orders of the high court refusing relief to petitioners.',
 			author: 'The Wire Staff',
@@ -505,9 +505,10 @@
 
 <svelte:head>
 	<title>Cleared | The New Humanitarian</title>
+	<!-- CHANGED: curly apostrophes in meta descriptions -->
 	<meta
 		name="description"
-		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+		content="How Assam&rsquo;s mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
 	/>
 
 	<!-- Open Graph (Facebook, LinkedIn, WhatsApp, etc.) -->
@@ -516,7 +517,7 @@
 	<meta property="og:title" content="Cleared" />
 	<meta
 		property="og:description"
-		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+		content="How Assam&rsquo;s mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
 	/>
 	<meta
 		property="og:image"
@@ -533,8 +534,8 @@
 	<meta name="twitter:title" content="Cleared" />
 	<meta
 		name="twitter:description"
-		content="How Assam's mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
-	/>
+		content="How Assam&rsquo;s mass eviction campaign has displaced more than 100,000 people since 2021 — and where the cleared land goes."
+	/><!-- CHANGED: curly apostrophe -->
 	<meta
 		name="twitter:image"
 		content="{PUBLIC_BASE_URL}/images/cleared/social/cleared-social-share.webp"
@@ -575,7 +576,7 @@
 	<!-- The Eviction Machine — editorial bridge between video hero and stadium -->
 	<section class="content-section content-section--bridge">
 		<div class="content-container">
-			<h2 class="content-heading">The Eviction Machine</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The eviction machine</h2>
 			<div class="prose-content">
 				<p>
 					One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of
@@ -615,7 +616,7 @@
 					{
 						credit: 'Photo: Reuters',
 						caption:
-							"Villagers watch the demolition of their houses by local authorities during an eviction drive at an alleged illegal residential settlement inside a reserved forest area in Assam's Nagaon district, on 29 November 2025."
+							"Villagers watch the demolition of their houses by local authorities during an eviction drive at an alleged illegal residential settlement inside a reserved forest area in Assam\u2019s Nagaon district, on 29 November 2025." // CHANGED: curly apostrophe
 					},
 					{
 						credit: 'AI-generated image',
@@ -707,18 +708,18 @@
 	<!-- Cleared for Development -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">Cleared for Development</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">Cleared for development</h2>
 			<div class="prose-content">
 				<p>
 					But since 2016, these communities have faced a different kind of uprooting: government-led
-					eviction drives targeting what officials call "illegal encroachments". It is a label with
+					eviction drives targeting what officials call &ldquo;illegal encroachments&rdquo;.<!-- CHANGED: curly quotes --> It is a label with
 					consequences. In Myanmar, the same logic was applied to Rohingya Muslims for decades,
 					branding an entire community as illegal immigrants on land they had lived on for
 					generations.
 				</p>
 
 				<p>
-					The Assam government frames these evictions as action against "illegal immigrants" from
+					The Assam government frames these evictions as action against &ldquo;illegal immigrants&rdquo;<!-- CHANGED: curly quotes --> from
 					Bangladesh. But the story is more complicated. Many of those being displaced are
 					Bengali-speaking Muslims whose families arrived after 1947, when <ExpandableInfobox
 						data={infoboxData.partition}
@@ -805,7 +806,7 @@
 	<!-- The Register -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Register</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The register</h2>
 			<div class="prose-content">
 				<p>
 					The National Register of Citizens (NRC) &ndash; initiated after the right-wing BJP came to
@@ -882,7 +883,7 @@
 					it once built.
 				</p>
 
-				<p>The families of those civilians are now being labelled as "foreigners".</p>
+				<!-- CHANGED: curly quotes --><p>The families of those civilians are now being labelled as &ldquo;foreigners&rdquo;.</p>
 			</div>
 		</div>
 	</section>
@@ -915,7 +916,7 @@
 				<p>
 					In India, the yellow JCB has taken on a meaning far beyond its function as a machine.
 					Since 2017, the brand name has become almost generic in the country &ndash; used
-					interchangeably with "bulldozer", especially during state-led demolition drives that
+					interchangeably with &ldquo;bulldozer&rdquo;,<!-- CHANGED: curly quotes --> especially during state-led demolition drives that
 					critics say bypass due process. Amnesty International verified at least <a
 						href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/"
 						target="_blank"
@@ -925,22 +926,23 @@
 				</p>
 
 				<p>
-					The practice has acquired its own name: "<a
-						href="https://www.bbc.com/news/articles/c0k8d3ynvzxo"
-						target="_blank"
-						rel="noopener">bulldozer justice</a
-					>", a term used for demolitions that are openly celebrated by BJP leaders and their
-					supporters. Amnesty International had described JCB as the "<a
-						href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/"
-						target="_blank"
-						rel="noopener">brand of choice in a hate campaign against the minority community</a
-					>". Over time, the yellow excavator itself has become a potent political symbol for the
+				<!-- CHANGED: curly quotes around linked phrases -->
+				The practice has acquired its own name: &ldquo;<a
+					href="https://www.bbc.com/news/articles/c0k8d3ynvzxo"
+					target="_blank"
+					rel="noopener">bulldozer justice</a
+				>&rdquo;, a term used for demolitions that are openly celebrated by BJP leaders and their
+				supporters. Amnesty International had described JCB as the &ldquo;<a
+					href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/"
+					target="_blank"
+					rel="noopener">brand of choice in a hate campaign against the minority community</a
+				>&rdquo;. Over time, the yellow excavator itself has become a potent political symbol for the
 					use of demolitions as a show of state power against marginalised communities.
 				</p>
 			</div>
 
 			<div class="pull-quote">
-				<p>"The brand of choice in a hate campaign against the minority community."</p>
+				<!-- CHANGED: curly quotes --><p>&ldquo;The brand of choice in a hate campaign against the minority community.&rdquo;</p>
 				<span class="pull-quote-source">Amnesty International, February 2024</span>
 			</div>
 
@@ -957,7 +959,7 @@
 						target="_blank"
 						rel="noopener">legal scholars</a
 					>
-					often draw parallels between India's "bulldozer justice" and Israel's long-standing practice
+					often draw parallels between India&rsquo;s &ldquo;bulldozer justice&rdquo; and Israel&rsquo;s long-standing practice<!-- CHANGED: curly quotes + apostrophes -->
 					of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home
 					demolitions as a central tool of displacement against Palestinians, demolishing more than
 					<a
@@ -980,34 +982,33 @@
 				<p>
 					The language driving these evictions in Assam has been sharply polarising. Chief Minister
 					Himanta Biswa Sarma has a long record of Islamophobic rhetoric, frequently framing
-					Bengali-speaking Muslims as "Bangladeshi encroachers" and a demographic threat to justify
-					the state's aggressive displacement policies.
+					Bengali-speaking Muslims as &ldquo;Bangladeshi encroachers&rdquo; and a demographic threat to justify
+					the state&rsquo;s aggressive displacement policies.<!-- CHANGED: curly quotes + apostrophe -->
 				</p>
 
 				<p>
-					This reached a violent peak in February 2026, when the Assam BJP's official X account
+					This reached a violent peak in February 2026, when the Assam BJP&rsquo;s official X account<!-- CHANGED: curly apostrophe -->
 					posted a <a
 						href="https://x.com/MahuaMoitra/status/2020444649857351865"
 						target="_blank"
 						rel="noopener">video</a
-					> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned "point blank shot".
-					It was deleted after a massive outrage by the public and opposition leaders, who warned it
-					was a direct incitement to violence against minorities.
+					> of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned &ldquo;point blank shot&rdquo;.<!-- CHANGED: curly quotes -->
+					It was deleted after it was met by mass outrage from the general public and opposition leaders, who warned that it was a direct incitement to violence against minorities.
 				</p>
 
 				<p>
-					Concerns about the chief minister's language have also been raised by a group of 188
+					Concerns about the chief minister&rsquo;s language have also been raised by a group of 188<!-- CHANGED: curly apostrophe -->
 					scholars, lawyers, and activists who issued a joint <a
 						href="https://thewire.in/communalism/himanta-government-policies-hallmarks-ethnic-cleansing-statement"
 						target="_blank"
 						rel="noopener">statement</a
-					> condemning Sarma's relentless "hateful and divisive" remarks, warning that such state-led
+					> condemning Sarma&rsquo;s relentless &ldquo;hateful and divisive&rdquo; remarks, warning that such state-led<!-- CHANGED: curly quotes + apostrophe -->
 					rhetoric fundamentally threatens constitutional rights and the safety of minorities.
 				</p>
 			</div>
 
 			<div class="pull-quote">
-				<p>"Point blank shot"</p>
+				<!-- CHANGED: curly quotes --><p>&ldquo;Point blank shot&rdquo;</p>
 				<span class="pull-quote-source"
 					>Caption on AI-generated video of CM Sarma, deleted after outrage</span
 				>
@@ -1035,30 +1036,31 @@
 	<!-- Supreme Court Directives -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Courts</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The courts</h2>
 
 			<div class="prose-content">
 				<p>
-					In November 2024, India's top court issued landmark directives to curb arbitrary
-					demolitions. The ruling established strict safeguards: 15-day mandatory notice before any
+					<!-- CHANGED: curly quotes + apostrophe -->
+					In November 2024, India&rsquo;s top court issued landmark directives to curb arbitrary
+					demolitions. The ruling established strict safeguards: 15-day mandatory notices before any
 					demolition, videographed proceedings, written reasons for action, and the right to be
-					heard. The Court declared that the "executive cannot become the Judge", calling such
-					demolitions unconstitutional and "reminiscent of a lawless state of affairs".
+					heard. The Court declared that the &ldquo;executive cannot become the Judge&rdquo;, calling such
+					demolitions unconstitutional and &ldquo;reminiscent of a lawless state of affairs&rdquo;.
 				</p>
 			</div>
 
 			<!-- Pull Quote -->
 			<div class="pull-quote">
-				<p>"The executive cannot become the Judge."</p>
+				<!-- CHANGED: curly quotes --><p>&ldquo;The executive cannot become the Judge.&rdquo;</p>
 				<span class="pull-quote-source">Supreme Court of India, November 2024</span>
 			</div>
 
 			<div class="prose-content">
-				<p>Assam's BJP government, led by Sarma, appeared unmoved.</p>
+				<!-- CHANGED: curly apostrophe --><p>Assam&rsquo;s BJP government, led by Sarma, appeared unmoved.</p>
 
 				<p>
 					Between late 2024 and mid-2025, the state proceeded with mass evictions in Muslim-majority
-					areas &ndash; demolitions that would lead India's highest court to issue two contempt
+					areas &ndash; demolitions that would lead India&rsquo;s highest court to issue two contempt<!-- CHANGED: curly apostrophe -->
 					notices against the Assam government, one in <a
 						href="https://www.deccanchronicle.com/nation/assam-govt-gets-contempt-notice-from-supreme-court-for-bulldozer-action-1827032"
 						target="_blank"
@@ -1079,7 +1081,7 @@
 						target="_blank"
 						rel="noopener">order</a
 					>
-					twice to stop demolitions in Delhi's Jahangirpuri neighbourhood, as
+					twice to stop demolitions in Delhi&rsquo;s Jahangirpuri neighbourhood,<!-- CHANGED: curly apostrophe --> as
 					<a
 						href="https://www.ndtv.com/india-news/supreme-court-halts-demolition-in-delhis-violence-hit-jahangirpuri-orders-status-quo-hearing-tomorrow-2902922"
 						target="_blank"
@@ -1095,11 +1097,11 @@
 
 				<p>
 					In Gujarat, for instance, thousands of homes in Muslim-majority settlements around
-					Ahmedabad's Chandola Lake were <a
+					Ahmedabad&rsquo;s Chandola Lake were<!-- CHANGED: curly apostrophe --> <a
 						href="https://article-14.com/post/the-hunt-for-bangladeshis-thousands-of-muslims-homeless-2-months-after-vast-gujarat-demolition-688fd625e41f6"
 						target="_blank"
 						rel="noopener">demolished in 2025</a
-					> in a campaign framed as a crackdown on "illegal Bangladeshis", leaving families homeless
+					> in a campaign framed as a crackdown on &ldquo;illegal Bangladeshis&rdquo;,<!-- CHANGED: curly quotes --> leaving families homeless
 					for months.
 				</p>
 
@@ -1141,7 +1143,7 @@
 	<!-- Content Section: The Violence -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Violence</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The violence</h2>
 
 			<div class="prose-content">
 				<p>
@@ -1154,7 +1156,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2016</span>
-							<span class="vt-date">September 19</span>
+							<span class="vt-date">19 September</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://www.ndtv.com/guwahati-news/two-dead-as-eviction-drive-near-kaziranga-national-park-turns-violent-1460443"
@@ -1170,7 +1172,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2019</span>
-							<span class="vt-date">March 11</span>
+							<span class="vt-date">11 March</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://www.aljazeera.com/news/2019/3/25/in-indias-assam-muslim-families-evicted-weeks-before-elections"
@@ -1188,7 +1190,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2021</span>
-							<span class="vt-date">September 23</span>
+							<span class="vt-date">23 September</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://indianexpress.com/article/north-east-india/assam/assam-eviction-violence-two-deaths-clashes-7532641/"
@@ -1206,7 +1208,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2022</span>
-							<span class="vt-date">April 1</span>
+							<span class="vt-date">1 April</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a href="https://www.youtube.com/watch?v=t2xSk2iULO8" target="_blank" rel="noopener"
 									>Purana Bazar</a
@@ -1220,7 +1222,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2023</span>
-							<span class="vt-date">July 17&ndash;18</span>
+							<span class="vt-date">17&ndash;18 July</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://indianexpress.com/article/north-east-india/assam/woman-shot-dead-6-including-3-guards-injured-clash-assam-wildlife-sanctuary-8844594/"
@@ -1238,7 +1240,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2024</span>
-							<span class="vt-date">September 12</span>
+							<span class="vt-date">12 September</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://www.newindianexpress.com/nation/2024/Sep/12/two-muslims-killed-after-police-opened-fire-at-villagers-during-eviction-drive-in-assams-sonapur"
@@ -1247,8 +1249,8 @@
 								>, Sonapur
 							</p>
 							<p class="vt-description">
-								Haidar Ali (19) and Jubahir Ali (18) killed, 33 injured during "tribal belt
-								protection" eviction.
+								<!-- CHANGED: curly quotes -->Haidar Ali (19) and Jubahir Ali (18) killed, 33 injured during &ldquo;tribal belt
+								protection&rdquo; eviction.
 							</p>
 							<span class="vt-toll">2 killed</span>
 						</div>
@@ -1257,7 +1259,7 @@
 						<div class="vt-node"><div class="vt-node-ring"></div></div>
 						<div class="vt-content">
 							<span class="vt-year">2025</span>
-							<span class="vt-date">July 17</span>
+							<span class="vt-date">17 July</span><!-- CHANGED: date format to TNH style -->
 							<p class="vt-location">
 								<a
 									href="https://www.newindianexpress.com/nation/2025/Jul/17/eviction-drive-in-assams-goalpara-turns-violent-one-killed-in-police-firing"
@@ -1280,11 +1282,11 @@
 					under tarpaulins.
 				</p>
 
-				<blockquote>
-					"With a JCB, they dug a massive pit in the middle of the road... This road was used for
+				<!-- CHANGED: curly quotes --><blockquote>
+					&ldquo;With a JCB, they dug a massive pit in the middle of the road... This road was used for
 					organisations to help us with food, water, and tarpaulins. They beat us up. They shot us.
 					One of us died... the injured people were brought from the hospital and straight away put
-					in jail."
+					in jail.&rdquo;
 				</blockquote>
 			</div>
 		</div>
@@ -1379,7 +1381,7 @@
 	<!-- Where the Land Goes -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">Where the Land Goes</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">Where the land goes</h2>
 
 			<div class="prose-content">
 				<p>
@@ -1388,7 +1390,7 @@
 				</p>
 
 				<p>
-					The government's stated purpose: clearing land for an Adani Power Ltd thermal plant
+					The government&rsquo;s stated purpose: clearing land for an Adani Power Ltd thermal plant<!-- CHANGED: curly apostrophe -->
 					&ndash; a 3,200 megawatt facility representing an <a
 						href="https://www.reuters.com/sustainability/climate-energy/adani-group-invest-717-bln-power-projects-indias-assam-state-2025-11-14/"
 						target="_blank"
@@ -1398,12 +1400,12 @@
 						href="https://www.indiatodayne.in/assam/story/assam-makes-history-with-first-iron-ore-find-in-dhubri-unlocking-industrial-potential-1247986-2025-07-21"
 						target="_blank"
 						rel="noopener">18.29 million tonnes of iron</a
-					> ore in the same area. Adani Group &ndash; one of India's most powerful conglomerates, with
+					> ore in the same area. Adani Group &ndash; one of India&rsquo;s most powerful conglomerates, with
 					interests spanning energy, ports, mining, and infrastructure &ndash; has expanded rapidly over
-					the past decade alongside the country's infrastructure push. Opposition parties and critics
+					the past decade alongside the country&rsquo;s infrastructure push.<!-- CHANGED: curly apostrophes --> Opposition parties and critics
 					have repeatedly questioned Gautam Adani, the founder of the Adani Group, about his proximity
 					to Modi, though both the company and the government deny any preferential treatment. Adani
-					is India's second-wealthiest person.
+					is India&rsquo;s second-wealthiest person.<!-- CHANGED: curly apostrophe -->
 				</p>
 
 				<p>
@@ -1415,7 +1417,7 @@
 					Reliance Industries, and Vedanta for industrial and agricultural projects.
 				</p>
 
-				<h3 class="prose-subheading">Corporate Allocations</h3>
+				<!-- CHANGED: sentence case --><h3 class="prose-subheading">Corporate allocations</h3>
 
 				<p>
 					In <a
@@ -1423,9 +1425,9 @@
 						target="_blank"
 						rel="noopener">Karbi Anglong and Dima Hasao</a
 					>, tribal organisations say more than 11,000 acres have been transferred for industrial
-					projects, threatening 20,000&ndash;25,000 tribal families. Similar patterns emerged after
+					projects, threatening 20,000-25,000 tribal families. Similar patterns emerged after
 					the 2021 Gorukhuti evictions displaced 1,400 families, where land cleared for
-					"agriculture" later fell within
+					&ldquo;agriculture&rdquo;<!-- CHANGED: curly quotes --> later fell within
 					<a
 						href="https://assamtribune.com/north-east/northeast-identified-as-new-hotspots-for-rare-earth-critical-minerals-gsi-1582932"
 						target="_blank"
@@ -1440,25 +1442,25 @@
 					]} />
 				</div>
 
-				<h3 class="prose-subheading">The Eighteen Acres</h3>
+				<!-- CHANGED: sentence case --><h3 class="prose-subheading">The eighteen acres</h3>
 
 				<p>
 					Questions about where cleared land ultimately goes are not new. A 2021 <a
 						href="https://thewire.in/government/assam-government-land-himanta-biswa-sarma-rbs-realtors"
 						target="_blank"
 						rel="noopener">joint investigation</a
-					> by The Wire and The Crosscurrent reported that between 2006 and 2009, a real estate company
-					co-founded by the chief minister's wife acquired at least 18 acres of government land in and
-					around Guwahati through a series of transactions that appeared to contravene state land regulations.
+					> by The Wire and The Crosscurrent reported that a real estate company
+					co-founded by the chief minister&rsquo;s wife acquired at least 18 acres of government land in and<!-- CHANGED: curly apostrophe -->
+					around Guwahati through a series of transactions between 2006 and 2009 that appeared to contravene state land regulations.
 					The parcels reportedly included ceiling-surplus land meant for redistribution to landless families,
 					tribal belt land with transfer restrictions, and plots reserved for public or institutional
 					use.
 				</p>
 
 				<div class="pull-quote">
-					<p>
-						"At least 18 acres of government land acquired through transactions that appeared to
-						contravene state land regulations."
+					<!-- CHANGED: curly quotes --><p>
+						&ldquo;At least 18 acres of government land acquired through transactions that appeared to
+						contravene state land regulations.&rdquo;
 					</p>
 					<span class="pull-quote-source">The Wire / The Crosscurrent, 2021</span>
 				</div>
@@ -1506,7 +1508,7 @@
 					through direct allotments during a period when Himanta Biswa Sarma was serving as a senior
 					cabinet minister in the Assam government. Land records cited in the report suggested
 					irregularities in classification changes and eligibility criteria. The company &ndash;
-					since renamed Vasistha Realtors &ndash; lists the chief minister's son as a shareholder.
+					since renamed Vasistha Realtors &ndash; lists the chief minister&rsquo;s son as a shareholder.<!-- CHANGED: curly apostrophe -->
 					Sarma has denied any wrongdoing.
 				</p>
 			</div>
@@ -1522,7 +1524,7 @@
 					{ src: '/images/cleared/displaced/camp-woman-cooking.jpg', alt: 'A woman prepares food outside a tarpaulin tent in a displacement camp', caption: 'A woman prepares a meal outside her tarpaulin shelter.' }
 				]} />
 			</div>
-			<h2 class="content-heading">The Displaced</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The displaced</h2>
 
 			<div class="prose-content">
 				<p>Where do 20,000 families go?</p>
@@ -1531,24 +1533,24 @@
 					We saw families living in makeshift shelters constructed from tarpaulin and bamboo along
 					roadsides, on the banks of the river and at the edges of forests, sometimes dependent on
 					NGO assistance for basic necessities. Many received no government rehabilitation, despite
-					Assam's stated policy of providing support to the landless.
+					Assam&rsquo;s stated policy of providing support to the landless.<!-- CHANGED: curly apostrophe -->
 				</p>
 
-				<h3 class="prose-subheading">"Go Back to Bangladesh"</h3>
+				<!-- CHANGED: sentence case + curly quotes --><h3 class="prose-subheading">&ldquo;Go back to Bangladesh&rdquo;</h3>
 
 				<p>
-					Despite Zain-ul-Abaadin and his family and neighbours possessing NRC documents and valid
+					Despite Zain-ul-Abadin and his family and neighbours possessing NRC documents and valid
 					voter IDs, they were met with a familiar xenophobic taunt during the drive.
 				</p>
 
-				<blockquote>
-					"The police harassed us at the riverbanks and told us to 'go back to Bangladesh.' But we
+				<!-- CHANGED: curly quotes (outer double + inner single) --><blockquote>
+					&ldquo;The police harassed us at the riverbanks and told us to &lsquo;go back to Bangladesh.&rsquo; But we
 					are not Bangladeshis. We are from Assam. We vote here. Our ancestors are from here. How do
-					we go back to a place we have never known?"
+					we go back to a place we have never known?&rdquo;
 				</blockquote>
 
 				<p>
-					Zain describes a terrifying atmosphere where the displaced are being systematically cut
+					Zain-ul-Abadin describes a terrifying atmosphere where the displaced are being systematically cut
 					off from the local economy. The eviction drives reflect layered systemic marginalisation.
 					Economically, families lose land, livelihoods, and access to welfare, pushing them into
 					deeper precarity. Politically and socially, even documented citizens face recurring
@@ -1557,29 +1559,29 @@
 				</p>
 
 				<p>
-					The most harrowing aspect of Barik's testimony was the apparent defiance of the judiciary
+					<!-- CHANGED: curly apostrophes -->The most harrowing aspect of Barik&rsquo;s testimony was the apparent defiance of the judiciary
 					by executive forces. Just two days before the demolition, the residents believed they had
-					secured a lifeline from the state's highest court. For Barik, the violence and the
+					secured a lifeline from the state&rsquo;s highest court. For Barik, the violence and the
 					disregard for the High Court&rsquo;s stay orders are symptoms of a larger ideological
 					shift in the region.
 				</p>
 
-				<blockquote>
-					"We received an order from the High Court on 10 July. It said if it is necessary to evict
+				<!-- CHANGED: curly quotes + apostrophes --><blockquote>
+					&ldquo;We received an order from the High Court on 10 July. It said if it is necessary to evict
 					them, the government must first arrange for their accommodation and food. The government
-					didn't accept the court's order. They are lying to the court again and again."
+					didn&rsquo;t accept the court&rsquo;s order. They are lying to the court again and again.&rdquo;
 				</blockquote>
 
 				<p>
-					This reflects a broader pattern in Assam's eviction drives, where the category of
-					"indigenous" functions as a shifting benchmark, often used to undermine the land claims of
+					This reflects a broader pattern in Assam&rsquo;s eviction drives, where the category of
+					&ldquo;indigenous&rdquo;<!-- CHANGED: curly quotes + apostrophe --> functions as a shifting benchmark, often used to undermine the land claims of
 					Bengali-origin Muslims regardless of decades of residence or tax records.
 				</p>
 
-				<blockquote>
-					"The current government refuses to follow the Constitution of India. <ExpandableInfobox
+				<!-- CHANGED: curly quotes --><blockquote>
+					&ldquo;The current government refuses to follow the Constitution of India. <ExpandableInfobox
 						data={infoboxData.rss}
-					/> wants to make India a Hindu state. There is no place for Muslims here."
+					/> wants to make India a Hindu state. There is no place for Muslims here.&rdquo;
 				</blockquote>
 			</div>
 		</div>
@@ -1600,7 +1602,7 @@
 	<!-- Content Section: The Pattern -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">The Pattern</h2>
+			<!-- CHANGED: sentence case --><h2 class="content-heading">The pattern</h2>
 
 			<div class="prose-content">
 				<p>
@@ -1612,8 +1614,8 @@
 					<a
 						href="https://www.amnesty.org/en/latest/news/2024/02/india-authorities-must-immediately-stop-unjust-targeted-demolition-of-muslim-properties/"
 						target="_blank"
-						rel="noopener">Amnesty's February 2024 report</a
-					> documented that evictions in Assam constitute "forced evictions" prohibited under international
+						rel="noopener">Amnesty&rsquo;s February 2024 report<!-- CHANGED: curly apostrophe --></a
+					> documented that evictions in Assam constitute &ldquo;forced evictions&rdquo;<!-- CHANGED: curly quotes --> prohibited under international
 					human rights law, finding violations of the right to adequate housing, fair trial, and non-discrimination.
 				</p>
 
@@ -1622,7 +1624,7 @@
 						href="https://www.ohchr.org/en/press-releases/2025/06/india-must-halt-arbitrary-demolitions-targeting-minorities-and-marginalised"
 						target="_blank"
 						rel="noopener">UN experts</a
-					> called on India to "halt arbitrary demolitions targeting minorities and marginalised communities."
+					> called on India to &ldquo;halt arbitrary demolitions targeting minorities and marginalised communities.&rdquo;<!-- CHANGED: curly quotes -->
 				</p>
 
 				<p>
@@ -1630,10 +1632,10 @@
 						href="https://maktoobmedia.com/india/un-rights-body-flags-discrimination-against-bengali-speaking-muslims-in-assam-seeks-answers-from-india/"
 						target="_blank"
 						rel="noopener">UN rights experts</a
-					> flagged systematic bias and "forced displacement" of Bengali Muslims in Assam.
+					> flagged systematic bias and &ldquo;forced displacement&rdquo;<!-- CHANGED: curly quotes --> of Bengali Muslims in Assam.
 				</p>
 
-				<h3 class="prose-subheading">A Global Pattern</h3>
+				<!-- CHANGED: sentence case --><h3 class="prose-subheading">A global pattern</h3>
 
 				<p>
 					The bulldozer has emerged as a global weapon of state oppression. In Israel-Palestine,
@@ -1655,26 +1657,26 @@
 					UN Special Rapporteur Balakrishnan Rajagopal noted an <a
 						href="https://thepolisproject.com/research/un-rapporteur-balakrishnan-rajagopal-demolitions/"
 						target="_blank"
-						rel="noopener">"uncanny similarity"</a
-					> between India's methods and Israel's conduct in Palestine, explaining both use bulldozers
-					to create "chilling effects" and punish entire communities.
+					rel="noopener">&ldquo;uncanny similarity&rdquo;</a
+				> between India&rsquo;s methods and Israel&rsquo;s conduct in Palestine, explaining both use bulldozers
+					to create &ldquo;chilling effects&rdquo;<!-- CHANGED: curly quotes + apostrophes --> and punish entire communities.
 				</p>
 
 				<div class="pull-quote">
-					<p>"Uncanny similarity" between India's methods and Israel's conduct in Palestine.</p>
+					<!-- CHANGED: curly quotes + apostrophes --><p>&ldquo;Uncanny similarity&rdquo; between India&rsquo;s methods and Israel&rsquo;s conduct in Palestine.</p>
 					<span class="pull-quote-source">UN Special Rapporteur Balakrishnan Rajagopal</span>
 				</div>
 
 				<p>
 					From Assam to Gaza, from Kashmir to the Andes, the bulldozer has become more than a piece
 					of machinery. It is a tool of displacement, used to erase marginalised communities under
-					the guise of "development," "security," and "legality." Its practical purpose may be to
+					the guise of &ldquo;development&rdquo;, &ldquo;security&rdquo;, and &ldquo;legality&rdquo;.<!-- CHANGED: curly quotes --> Its practical purpose may be to
 					clear land, but its political function is to send a message about power, belonging, and
 					whose homes are considered disposable.
 				</p>
 			</div>
 
-			<h2 class="content-heading">The Chief Minister's Words</h2>
+			<!-- CHANGED: sentence case + curly apostrophe --><h2 class="content-heading">The chief minister&rsquo;s words</h2>
 
 			<div class="prose-content">
 				<p>
@@ -1683,13 +1685,13 @@
 					&ldquo;Bangladeshi encroachers&rdquo;.
 				</p>
 
-				<blockquote>
-					"My job is to make the <a
+				<!-- CHANGED: curly quotes --><blockquote>
+					&ldquo;My job is to make the <a
 						href="https://scroll.in/article/1090396/himanta-sarmas-remarks-about-miyas-make-a-mockery-of-constitution"
 						target="_blank"
 						rel="noopener">Miya people suffer</a
-					>."
-					<footer>&mdash; Himanta Biswa Sarma, January 27</footer>
+					>.&rdquo;
+					<footer>&mdash; Himanta Biswa Sarma, 27 January</footer><!-- CHANGED: date format to TNH style -->
 				</blockquote>
 			</div>
 		</div>
