@@ -215,6 +215,9 @@
 	// Map narrative steps (7 steps: intro, investigation, 4 villages, conclusion)
 	const mapSteps = [
 		{
+			text: 'Each dot represents families who lost their homes, their livelihoods, their communities.'
+		},
+		{
 			text: 'Since 2021, the Assam government has conducted <span class="highlight-dev">33 documented eviction operations</span> across the state.'
 		},
 		{
@@ -239,9 +242,6 @@
 			title: 'Ashudubi, Goalpara',
 			text: '900 homes demolished. 1,500 people displaced.',
 			image: '/images/cleared/villages/ashudubi.jpg'
-		},
-		{
-			text: 'Each dot represents families who lost their homes, their livelihoods, their communities.'
 		}
 	];
 

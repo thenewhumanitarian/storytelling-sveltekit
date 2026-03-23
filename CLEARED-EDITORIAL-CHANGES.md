@@ -139,3 +139,4 @@ All section headings changed from Title Case to sentence case (only first letter
 - **Typo fix:** "Zain-ul-Abaadin" → "Zain-ul-Abadin" (removed extra "a")
 - **Full name:** "Zain describes" → "Zain-ul-Abadin describes"
 - **Spelling:** "traveled" → "travelled" (British English, DemolitionGallery)
+- **Map scrolly reorder:** Moved "Each dot represents families who lost their homes, their livelihoods, their communities." from last step to first step, so it serves as an introduction to the map graphic
