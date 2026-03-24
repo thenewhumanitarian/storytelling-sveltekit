@@ -7,6 +7,7 @@
 	 * multi-layer overlay system (cream fade, dark veil, warm tint,
 	 * vignette, grain, fade-to-cream).
 	 */
+	import { onMount } from 'svelte';
 
 	interface Props {
 		currentStep: number;
@@ -20,6 +21,35 @@
 	}
 
 	let { currentStep, fadeProgress = 0, fadeInProgress = 0, scrollProgress = 0, videoSrc, overlayConfig, showCreamOverlay = true, caption }: Props = $props();
+
+	let videoEl: HTMLVideoElement | undefined = $state();
+
+	onMount(() => {
+		if (!videoEl) return;
+
+		const tryPlay = () => {
+			if (!videoEl) return;
+			const p = videoEl.play();
+			if (p) p.catch(() => {});
+		};
+
+		// Attempt immediate play in case autoplay attribute was ignored
+		tryPlay();
+
+		// Re-attempt on user's first interaction (covers Low Power Mode / data saver)
+		const onInteraction = () => {
+			tryPlay();
+			window.removeEventListener('touchstart', onInteraction);
+			window.removeEventListener('click', onInteraction);
+		};
+		window.addEventListener('touchstart', onInteraction, { once: true, passive: true });
+		window.addEventListener('click', onInteraction, { once: true });
+
+		return () => {
+			window.removeEventListener('touchstart', onInteraction);
+			window.removeEventListener('click', onInteraction);
+		};
+	});
 
 	// Caption fades in once the cream overlay has faded (step 1+)
 	let captionOpacity = $derived(currentStep >= 1 ? 1 : 0);
@@ -57,7 +87,10 @@
 
 <div class="hero-visualization">
 	<!-- Background video -->
+	<!-- svelte-ignore a11y_media_has_caption -->
 	<video
+		bind:this={videoEl}
+		src={videoSrc}
 		autoplay
 		muted
 		loop
@@ -65,9 +98,7 @@
 		preload="auto"
 		class="hero-video"
 		aria-hidden="true"
-	>
-		<source src={videoSrc} type="video/mp4" />
-	</video>
+	></video>
 
 	<!-- Cream overlay: light wash over video on step 0, fades on scroll (hero only) -->
 	{#if showCreamOverlay && creamOpacity > 0}

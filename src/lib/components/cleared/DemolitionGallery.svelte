@@ -74,6 +74,12 @@
 		padding: 3.5rem 1.5rem;
 	}
 
+	@media screen and (max-width: 500px) {
+		.gallery-section {
+			padding: 1.5rem;
+		}
+	}
+
 	.gallery-content {
 		max-width: 42rem;
 		margin: 0 auto;

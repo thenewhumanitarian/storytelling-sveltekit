@@ -124,7 +124,7 @@
 			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
 		},
 		{
-			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 more than enough to fill the Narendra Modi Stadium \u2014 the largest cricket stadium in the world.'
+			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 almost enough to fill the Narendra Modi Stadium \u2014 the largest cricket stadium in the world.'
 		},
 		{
 			text: ''
@@ -1177,8 +1177,8 @@
 								<a
 									href="https://www.aljazeera.com/news/2019/3/25/in-indias-assam-muslim-families-evicted-weeks-before-elections"
 									target="_blank"
-									rel="noopener">Hojai district</a
-								>
+									rel="noopener">Sarkebasti</a
+								>, Hojai district
 							</p>
 							<p class="vt-description">
 								Heavily pregnant Kulsuma Begum succumbed to her injuries.
@@ -1691,7 +1691,7 @@
 						target="_blank"
 						rel="noopener">Miya people suffer</a
 					>.&rdquo;
-					<footer>&mdash; Himanta Biswa Sarma, 27 January</footer><!-- CHANGED: date format to TNH style -->
+					<footer>&mdash; Himanta Biswa Sarma, 27 January 2026</footer><!-- CHANGED: date format to TNH style -->
 				</blockquote>
 			</div>
 		</div>
@@ -2020,6 +2020,12 @@
 		position: relative;
 		background: #f5f0eb;
 		padding: 3.5rem 1.5rem;
+	}
+
+	@media screen and (max-width: 500px) {
+		.content-section {
+			padding: 1.5rem;
+		}
 	}
 
 	/* Bridge block between video hero and stadium scrolly —
