@@ -94,7 +94,7 @@
 				<p class="hero-desc">How Assam demolished the homes of 20,000 families</p>
 				<div class="hero-byline">
 					<p class="byline-label">By</p>
-					<p class="byline-authors">Ahmer Khan and Tom Vaillant</p>
+					<p class="byline-authors"><a href="https://www.thenewhumanitarian.org/authors/ahmer-khan">Ahmer Khan</a> and Tom Vaillant</p>
 					<p class="byline-date">24 March 2026</p>
 				</div>
 				<div class="scroll-indicator">
@@ -1705,7 +1705,7 @@
 				<div class="credits-column">
 					<div class="credit-entry">
 						<span class="credit-label">Reporting & Investigation</span>
-						<span class="credit-value">Ahmer Khan and Tom Vaillant</span>
+						<span class="credit-value"><a href="https://www.thenewhumanitarian.org/authors/ahmer-khan">Ahmer Khan</a> and Tom Vaillant</span>
 					</div>
 					<div class="credit-entry">
 						<span class="credit-label">Edited by</span>
@@ -1953,6 +1953,15 @@
 		font-weight: 500;
 		font-size: 1.125rem;
 		margin: 0;
+	}
+
+	:global(.byline-authors a) {
+		color: #9f3e52;
+		text-decoration: none;
+	}
+
+	:global(.byline-authors a:hover) {
+		text-decoration: underline;
 	}
 
 	:global(.byline-date) {
@@ -2253,6 +2262,15 @@
 		font-family: 'Roboto', 'Open Sans', sans-serif;
 		font-size: 0.95rem;
 		color: #2d2d2d;
+	}
+
+	.credit-value a {
+		color: #9f3e52;
+		text-decoration: none;
+	}
+
+	.credit-value a:hover {
+		text-decoration: underline;
 	}
 
 	.credits-source-list {
