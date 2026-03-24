@@ -10,9 +10,11 @@
 	const lang = getContext('lang');
 	const isRtl = lang === 'ar';
 
+	const baseUrl = (PUBLIC_BASE_URL || '').replace(/\/$/, '');
+
 	const aboutLink = isRtl
-		? `${PUBLIC_BASE_URL}${PUBLIC_LDD_AR_BASE_PATH}/home/#about`
-		: `${PUBLIC_BASE_URL}${PUBLIC_LDD_EN_BASE_PATH}/home/#about`;
+		? `${baseUrl}${PUBLIC_LDD_AR_BASE_PATH}/home/#about`
+		: `${baseUrl}${PUBLIC_LDD_EN_BASE_PATH}/home/#about`;
 
 	import FadeIn from '$lib/components/animations/FadeIn.svelte';
 </script>

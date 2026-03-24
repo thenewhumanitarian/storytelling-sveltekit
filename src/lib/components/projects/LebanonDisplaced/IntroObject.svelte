@@ -8,7 +8,7 @@
 	import { isArabic } from '$lib/utils/storyblok'; // Function to detect Storyblok language
 	let isRtl = $derived(isArabic());
 
-	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
+	let baseUrl = (PUBLIC_BASE_URL || 'https://localhost:5173').replace(/\/$/, '');
 </script>
 
 <div

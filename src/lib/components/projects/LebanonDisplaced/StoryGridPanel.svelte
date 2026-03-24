@@ -11,7 +11,7 @@
 
 	let { blok = {}, i = 0 }: Props = $props();
 
-	let baseUrl = PUBLIC_BASE_URL || 'https://localhost:5173';
+	let baseUrl = (PUBLIC_BASE_URL || 'https://localhost:5173').replace(/\/$/, '');
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
