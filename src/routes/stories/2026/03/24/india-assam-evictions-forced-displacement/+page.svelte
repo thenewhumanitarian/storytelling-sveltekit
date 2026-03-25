@@ -150,7 +150,7 @@
 			text: 'The government cited various legal grounds for these evictions. We\u2019ve grouped them into <strong>four categories</strong>.' // CHANGED: curly apostrophe
 		},
 		{
-			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from Haseela Beel and Paikan Reserve Forest. One killed, 15 injured.'
+			text: 'The largest category: <span class="highlight-env">Environmental Protection</span> \u2014 forest clearances, wildlife sanctuaries, elephant corridors. Twelve operations are conducted. These operations affected more than 60,000 people. In July 2025, in Goalpara district, over 1,080 families were evicted from <a href="https://www.landconflictwatch.org/conflicts/eviction-violence-and-140-hectare-land-reclamation-in-assam-s-paikan-reserve-forest" target="_blank" rel="noopener">Haseela Beel and Paikan Reserve Forest</a>. One killed, 15 injured.'
 		},
 		{
 			text: '<span class="highlight-dev">Development Projects</span> cleared land for corporate investment, including the <a href="https://www.reuters.com/sustainability/climate-energy/adani-group-invest-717-bln-power-projects-indias-assam-state-2025-11-14/" target="_blank" rel="noopener">approximately $5.5 billion</a> allocated to an Adani thermal power plant in Dhubri.'
@@ -293,7 +293,7 @@
 			text: '<blockquote>\u201cThis has been going on for 80 or 90 years. We grew up in poverty and built our houses with hard labour.\u201d</blockquote>'
 		},
 		{
-			text: 'For Zain, the eviction represents more than the loss of a home. The Assam-Nagaland border has been contested since Nagaland was carved out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the Disputed Area Belt.'
+			text: 'For Zain, the eviction represents more than the loss of a home. The Assam-Nagaland border has been contested since Nagaland was <a href="https://scroll.in/article/769840/at-camp-hebron-an-ambitious-project-is-under-way-a-peace-accord-to-settle-the-naga-question" target="_blank" rel="noopener">carved</a> out of Assam in 1963, with both states claiming ownership of a stretch of reserved forests known as the <a href="https://www.landconflictwatch.org/conflicts/tensions-rise-over-assam-nagaland-border-dispute-in-sivasagar-neighbouring-areas" target="_blank" rel="noopener">Disputed Area Belt</a>.'
 		}
 	];
 
@@ -733,15 +733,15 @@
 				</p>
 
 				<p>
-					The Assam government frames these evictions as action against &ldquo;illegal
+					The Assam government <a href="https://www.bbc.com/news/articles/cqj78v79z9do" target="_blank" rel="noopener">frames</a> these evictions as action against &ldquo;illegal
 					immigrants&rdquo;<!-- CHANGED: curly quotes --> from Bangladesh. But the story is more complicated.
 					Many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947,
 					when <ExpandableInfobox data={infoboxData.partition} suffix="." />
 				</p>
 
 				<p>
-					Some came with official permission from the government of what is now India. Others were
-					given land by the Indian state itself, often unproductive char lands that the government
+					Some came with <a href="https://pragyata.com/immigrants-were-once-welcomed-in-assam-part-2/" target="_blank" rel="noopener">official permission</a> from the government of what is now India. Others were
+					<a href="https://scroll.in/article/1085263/behind-wave-of-assam-evictions-a-hungry-river-and-a-land-policy-loaded-against-miya-muslims" target="_blank" rel="noopener">given land by the Indian state itself</a>, often unproductive char lands that the government
 					was eager to have cultivated. By the time the evictions began, many had been living in
 					Assam for 50 to 70 years.
 				</p>
@@ -767,7 +767,7 @@
 			<h2 class="content-heading">After Partition</h2>
 			<div class="prose-content">
 				<p>
-					More than one third of Assam&rsquo;s 31 million people are Muslim &ndash; one of the
+					More than one third of Assam&rsquo;s <a href="https://timesofindia.indiatimes.com/city/guwahati/assam-cabinet-approves-census-of-native-muslims/articleshow/105849216.cms" target="_blank" rel="noopener">31 million people</a> are Muslim &ndash; one of the
 					highest proportions of any Indian state. That demographic reality has made Assam a focal
 					point of a broader national shift. In recent years, Modi&rsquo;s BJP-led government has
 					faced repeated accusations of enacting laws and policies that specifically target
@@ -816,14 +816,14 @@
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					What makes these evictions particularly troubling is that many families held Patta &ndash;
+					What makes these evictions particularly troubling is that many <a href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf" target="_blank" rel="noopener">families held Patta</a> &ndash;
 					official land titles issued by the Assam government &ndash; along with ration cards and
 					voter IDs, documents that under Indian law establish legal residence and citizenship.
 				</p>
 
 				<p>
 					Some Pattas dated back decades, proof that the state itself had recognised their right to
-					the land. Yet documented cases show Patta-holders being evicted without warning, without
+					the land. Yet <a href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf" target="_blank" rel="noopener">documented cases</a> show Patta-holders being evicted without warning, without
 					due process, their legal papers rendered meaningless overnight.
 				</p>
 			</div>
@@ -918,10 +918,10 @@
 			<div class="prose-content">
 				<p>
 					The <ExpandableInfobox data={infoboxData.nagaland} /> has triggered repeated bouts of violent
-					clashes over the decades. Two major confrontations in 1979 and 1985 left more than 100 people
-					dead. In the 1970s, the Assam government settled landless communities in this zone as part
+					clashes over the decades. Two major confrontations in 1979 and 1985 left more than <a href="https://scroll.in/article/676175/what-you-need-to-know-about-the-five-decade-border-conflict-between-assam-and-nagaland" target="_blank" rel="noopener">100 people
+					dead</a>. In the 1970s, the Assam government settled landless communities in this zone as part
 					of a strategy to strengthen its territorial claims. According to Zain, his family was part
-					of that policy. Now, decades later, the same government is demolishing the settlement it once
+					of that policy. Now, decades later, the same government is <a href="https://timesofindia.indiatimes.com/city/guwahati/3k-bighas-freed-in-uriamghat-278-houses-razed-betel-nut-unit-demolished/articleshow/123003623.cms" target="_blank" rel="noopener">demolishing the settlement</a> it once
 					built.
 				</p>
 
@@ -1028,7 +1028,7 @@
 			<div class="prose-content">
 				<p>
 					The language driving these evictions in Assam has been sharply polarising. Chief Minister
-					Himanta Biswa Sarma has a long record of Islamophobic rhetoric, frequently framing
+					Himanta Biswa Sarma has a long record of Islamophobic rhetoric, <a href="https://frontline.thehindu.com/news/assam-election-2026-bjp-congress-polarisation-analysis/article70753671.ece/amp/" target="_blank" rel="noopener">frequently framing</a>
 					Bengali-speaking Muslims as &ldquo;Bangladeshi encroachers&rdquo; and a demographic threat
 					to justify the state&rsquo;s aggressive displacement policies.<!-- CHANGED: curly quotes + apostrophe -->
 				</p>
@@ -1098,7 +1098,7 @@
 			<div class="prose-content">
 				<p>
 					<!-- CHANGED: curly quotes + apostrophe -->
-					In November 2024, India&rsquo;s top court issued landmark directives to curb arbitrary demolitions.
+					In November 2024, India&rsquo;s top court <a href="https://timesofindia.indiatimes.com/india/15-day-notice-videography-of-demolition-supreme-court-issues-guidelines-on-bulldozer-justice/articleshow/115244333.cms" target="_blank" rel="noopener">issued</a> landmark directives to curb arbitrary demolitions.
 					The ruling established strict safeguards: 15-day mandatory notices before any demolition, videographed
 					proceedings, written reasons for action, and the right to be heard. The Court declared that
 					the &ldquo;executive cannot become the Judge&rdquo;, calling such demolitions unconstitutional
@@ -1453,7 +1453,7 @@
 
 			<div class="prose-content">
 				<p>
-					On 8 July 2025, 1,400 families were evicted from villages in Dhubri district. Three people
+					On 8 July 2025, 1,400 families were <a href="https://www.telegraphindia.com/north-east/villages-razed-for-power-plant-in-assam-protests-erupt-over-eviction-of-1400-families-prnt/cid/2112102" target="_blank" rel="noopener">evicted</a> from villages in Dhubri district. Three people
 					were injured.
 				</p>
 
@@ -1762,7 +1762,7 @@
 				<p>Similar patterns have been observed in parts of India and Latin America.</p>
 
 				<p>
-					Paraguay has forcibly evicted 3,000 people from Indigenous communities since September
+					Paraguay has forcibly <a href="https://www.fian.org/en/paraguay-stop-the-wave-of-forced-evictions-and-criminalization-of-peasant-and-indigenous-communities-2/" target="_blank" rel="noopener">evicted 3,000 people</a> from Indigenous communities since September
 					2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
 				</p>
 

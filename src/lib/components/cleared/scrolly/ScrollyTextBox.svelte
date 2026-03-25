@@ -160,6 +160,17 @@
 		margin-top: 1em;
 	}
 
+	.box-content :global(a) {
+		color: #9f3e52;
+		font-weight: 500;
+		text-decoration: none;
+		transition: text-decoration 0.2s ease;
+	}
+
+	.box-content :global(a:hover) {
+		text-decoration: underline;
+	}
+
 	.box-content :global(blockquote) {
 		border-left: none;
 		padding-left: 0;
