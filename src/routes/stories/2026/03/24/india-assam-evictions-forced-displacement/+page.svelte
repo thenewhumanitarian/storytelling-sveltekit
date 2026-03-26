@@ -592,7 +592,7 @@
 			<h2 class="content-heading">The eviction machine</h2>
 			<div class="prose-content">
 				<p>
-					One eviction every three minutes, 24 hours a day, for an entire year. The vast majority of
+					One person displaced every 25 minutes, 24 hours a day, for nearly five years. The vast majority of
 					those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s
 					Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the
 					agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata
