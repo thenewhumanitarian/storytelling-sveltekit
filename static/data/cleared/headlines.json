@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "source": "VICE NEWS",
+    "date": "September 24, 2021",
+    "title": "Shocking Video Shows Police Firing and Killing Protestors in India",
+    "author": "Shamani Joshi",
+    "url": "https://www.vice.com/en/article/shocking-video-shows-police-firing-and-killing-protestors-in-india/"
+  },
+  {
+    "id": "2",
+    "source": "THE INDIAN EXPRESS",
+    "date": "September 25, 2024",
+    "title": "At village that saw deadly eviction drive in Assam, bulldozers are back",
+    "description": "Over the next three days, 151 families were evicted and 237 structures demolished.",
+    "author": "Sukrita Baruah",
+    "url": "https://indianexpress.com/article/india/at-village-that-saw-deadly-eviction-drive-in-assam-bulldozers-are-back-9586329/"
+  },
+  {
+    "id": "3",
+    "source": "THE INDIAN EXPRESS",
+    "date": "July 8, 2025",
+    "title": "Mega eviction drive across 3 Assam villages sees stone pelting and lathi charge; 1,400 families displaced",
+    "description": "3,500 bighas of government khas land in Dhubri district primarily occupied by Bengali-speaking Muslims.",
+    "author": "Sukrita Baruah",
+    "url": "https://indianexpress.com/article/india/mega-eviction-drive-3-assam-villages-stone-pelting-lathi-charge-1400-families-10114482/"
+  },
+  {
+    "id": "4",
+    "source": "THE WIRE",
+    "date": "August 23, 2025",
+    "title": "Supreme Court Halts Eviction Drive in Assam's Golaghat District",
+    "description": "The petition challenged concurrent orders of the high court refusing relief to petitioners.",
+    "author": "The Wire Staff",
+    "url": "https://thewire.in/law/supreme-court-halts-eviction-drive-in-assams-golaghat-district"
+  }
+]
