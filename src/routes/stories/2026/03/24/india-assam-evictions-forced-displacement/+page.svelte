@@ -123,7 +123,7 @@
 			}
 		},
 		{
-			text: 'As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that will reshape hundreds of thousands of lives.'
+			text: 'As Haque lay dying, a government photographer was filmed stomping on his body. Again. And again. The video went viral and became the image of a campaign that would reshape the lives of hundreds of thousands.'
 		}
 	];
 
@@ -131,7 +131,7 @@
 	const stadiumSteps = [
 		{
 			title: 'A campaign of displacement', // CHANGED: sentence case
-			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 homes have been demolished.'
+			text: 'This was not an isolated incident. Between May 2021 and 2026, the government in Assam, in far northeastern India, conducted at least 33 documented eviction operations. More than 22,000 structures, mostly homes, have been demolished, and 20,387 families were evicted.'
 		},
 		{
 			text: 'That\u2019s the equivalent of more than 100,000 people \u2013 almost enough to fill the Narendra Modi Stadium \u2014 the largest cricket stadium in the world.'
@@ -764,7 +764,7 @@
 	<!-- After Partition -->
 	<section class="content-section">
 		<div class="content-container">
-			<h2 class="content-heading">After Partition</h2>
+			<h2 class="content-heading">After partition</h2>
 			<div class="prose-content">
 				<p>
 					More than one third of Assam&rsquo;s <a href="https://timesofindia.indiatimes.com/city/guwahati/assam-cabinet-approves-census-of-native-muslims/articleshow/105849216.cms" target="_blank" rel="noopener">31 million people</a> are Muslim &ndash; one of the
@@ -1007,13 +1007,13 @@
 					>
 					often draw parallels between India&rsquo;s &ldquo;bulldozer justice&rdquo; and Israel&rsquo;s
 					long-standing practice<!-- CHANGED: curly quotes + apostrophes -->
-					of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home
-					demolitions as a central tool of displacement against Palestinians, demolishing more than
-					<a
-						href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/"
-						target="_blank"
-						rel="noopener">55,000 structures since 1967</a
-					> alone. The justification is almost always the same: illegal construction, encroachment, or
+				of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home
+				demolitions as a central tool of displacement against Palestinians, demolishing more than
+				<a
+					href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/"
+					target="_blank"
+					rel="noopener">55,000 homes since 1967</a
+				> alone. The justification is almost always the same: illegal construction, encroachment, or
 					a bureaucratic infraction.
 				</p>
 			</div>
@@ -1484,8 +1484,7 @@
 						href="https://www.business-standard.com/economy/news/biz-summit-day-1-assam-receives-rs-2-5-trillion-investment-proposals-125022501400_1.html"
 						target="_blank"
 						rel="noopener">Advantage Assam 2.0 investment summit</a
-					>. Since then, land has been allocated to major corporations including Adani, Patanjali,
-					Reliance Industries, and Vedanta for industrial and agricultural projects.
+				>. Since then, major corporations including Adani, Reliance Industries, and Vedanta have signed investment agreements or expressed interest in industrial and agricultural projects.
 				</p>
 
 				<!-- CHANGED: sentence case -->
@@ -1756,7 +1755,7 @@
 						href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/"
 						target="_blank"
 						rel="noopener">55,000 Palestinian structures</a
-					> have been demolished since 1967 for systematic home destruction.
+					> have been demolished since 1967.
 				</p>
 
 				<p>Similar patterns have been observed in parts of India and Latin America.</p>
