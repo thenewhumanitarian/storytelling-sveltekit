@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1210"/>
+      <stop offset="50%" stop-color="#3d1f28"/>
+      <stop offset="100%" stop-color="#1a1210"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b2942"/>
+      <stop offset="100%" stop-color="#c4a882"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="80" y="80" width="180" height="110" rx="4" fill="none" stroke="#c4a882" stroke-width="2" opacity="0.4" transform="rotate(-8 170 135)"/>
+  <rect x="920" y="420" width="200" height="120" rx="4" fill="none" stroke="#8b2942" stroke-width="2" opacity="0.5" transform="rotate(6 1020 480)"/>
+  <text x="80" y="280" fill="#c4a882" font-family="Georgia, serif" font-size="22" letter-spacing="6">THE NEW HUMANITARIAN</text>
+  <text x="80" y="360" fill="#f5f0eb" font-family="Georgia, serif" font-size="64" font-weight="bold">Who owns the</text>
+  <text x="80" y="440" fill="#f5f0eb" font-family="Georgia, serif" font-size="64" font-weight="bold">narrative?</text>
+  <text x="80" y="520" fill="#c4a882" font-family="Arial, sans-serif" font-size="24">8 June 2026 - New York</text>
+  <rect x="80" y="550" width="120" height="4" fill="url(#accent)"/>
+</svg>

@@ -8,6 +8,12 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		EBWidgets?: {
+			createWidget: (config: Record<string, unknown>) => void;
+		};
+	}
 }
 
 export {};

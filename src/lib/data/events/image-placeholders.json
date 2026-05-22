@@ -1,0 +1,104 @@
+{
+	"/images/events/who-owns-the-narrative/film-poster.png": {
+		"placeholder": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACQAwCdASoUAAsAPzmEuVOvKKWisAgB4CcJYwDCgBQehATCyMjAAP66gOz+KGxVa/YffSy1i/qUbU1jR7gmj6OIxE3uIAAA",
+		"width": 1024,
+		"height": 574,
+		"srcset": "480w, 640w, 800w, 1024w"
+	},
+	"/images/events/who-owns-the-narrative/og.jpg": {
+		"placeholder": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAgCdASoUAAoAPzmGuVOvKSWoMAgB4CcJZQAAfj4AAP7sgl6ikfDtxxNyvd4CIOIW4AAA",
+		"width": 1200,
+		"height": 630,
+		"srcset": "480w, 640w, 800w, 1200w"
+	},
+	"/images/events/who-owns-the-narrative/patterns/dot-pattern.png": {
+		"placeholder": "data:image/webp;base64,UklGRkgBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSNUAAAANgBiAbdsGIKWs7v5/5a4tEui+ISImYMIgLOG/cWxDQKj/cRKNUTYt/XELK2GDvUf3L6c0zFZaSS39SIWp4cUhByUAdwejV/NUbyE2ZeBRY4tT9/IoKIq7cEUEKivLga4QhHnoYQHiqlFphPVIBOrtfi+jvY/Y4Ct6Ltw+bWdySyyw+/pArbVfqWbHR1baGLdiKJ/P9b6CFYowXyPz4qpTn9+PWzYWkrTmkZtO72QY4uphUnPW7jx0ySCadkATPTbuwQxnKmAHxWwHDEPeCABDiRmhdNkAVlA4IEwAAACQAwCdASoUABQAPzmCtlOvKCSisAgB4CcJZACyzCmPNzxeEirAAP7eHWdg8jnybBqO+JqJCPIKu+fqCJbA/jyHaLOL+RKfDxTnHfwA",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/share/event-share-1200x630.webp": {
+		"placeholder": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAACwAwCdASoUAAoAPzmIulQvKSWjMAgB4CcJZwAAUqvFSPaCqP1MAAD+5zlvYzKZ30eur8PDeo0n2Ksv/P3wwv1DgxpqUFAA",
+		"width": 1200,
+		"height": 630,
+		"srcset": "480w, 640w, 800w, 1200w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/annie-slemrod.png": {
+		"placeholder": "data:image/webp;base64,UklGRpoBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSNoAAAABgKNtm6nnmzmxbZu1bZZGldrp8y8g6FSytLEBZwNmbScz8/4+WUJETADjnDlQ2ODU5l49MUaWTi7OLpR5CaUAA2PMwsXd3SHmDL9/QggMkxVPP382gl8AUFK2ESeikNjwxFtIC0hcJxAjCk8K7oSEdYFpd2KUkZO2AmFD4SWLOOWW1txB2oDEvBux0uIBAWVL4SuNeGPHHhTsLibe1b1kl8JvHWndhlMdPw3Eh8YfdHwUaNrYwo2OnwpyPHn7hN0SlzGkoFdg2l8pPRK3NdCt8NanDxL7/6DwCFZQOCCaAAAAsAQAnQEqFAAUAD85lMBZryomo6gIAeAnCWMAACrPxmp+Me2qc4AssH+ac2vGAAD+Fkz4R3qYk6QVvawB8u9TsXkhy0+uFrU/oakepUbzESBbe/ZfvUP4dxP5ew9w5dFoO36hFHJ4UJMsunf9A2w1cJglQMbMpi+6iaMg7LzBendDcsrvAlJPhDnEIVR4yBfBvoqc867beEAAAA==",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/annie-slemrod.webp": {
+		"placeholder": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAACwBACdASoUABQAPzmUwVmvKicjqAgB4CcJaQAAKdz+q4ZuZQd/LagKyWbevAYgAP7nLmeWmQyJyEMr0gzwdF+5hhsGg3ho6nfzxInPNRVHwyY0KqaqiHsoYAS2UNIziQCw3HBtRParcWSWoFLBs5ecmZl1TgQA",
+		"width": 270,
+		"height": 270,
+		"srcset": "270w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/arian-moayed.png": {
+		"placeholder": "data:image/webp;base64,UklGRrgBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSAcBAAANgJtt27Hnft73t/8/to0yKW2nywapOYGW8AZJZbRW5aSzzQ9P8GOFiJgAk2RdKsZoxfj4QAy/Jkn8mdFbbGKsd98Q/3Op8ts3+KQJOOuS+/yRUbx3QmUGoX1nlxiATX6k5UEAEFpU25DQAbiMn83QjABAaFi+IwY8bMgA4b/Qc3InTd8MkyAVQXY4Jk6IzYbvzcIgbGtZELpb0pFP+CPkaVPON90qYIcu/GnSohg01Ww27D/k6OIfS+w5oMNqMdwt5zuZAIA+yf5kNUiNHedLRfFMAMEybphbOJHfii3fq4Lg11lUV36qhuVGghGYdVhLRBWYQYFIAEoiNEmE4GU0CKGrBqbQAABWUDggigAAANADAJ0BKhQAFAA/OYq7Va8pJiMoDVHgJwlAGbCB+g7xkm37ncrokAD9Ib6eDRUa8EI9QlbXB2RdnjaaGlbfsPPd7cdFRzYiUen+agLPa3spr3E/+3YwcMcZPA4WLMOafirtIkeSfhO6N947WcxIKh2nK8c4VC0yySTqW82Ctyafw9Hum5wrHprAAA==",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/arian-moayed.webp": {
+		"placeholder": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACQBACdASoUABQAPzmMuVavKSUjqA1R4CcJZwAAMAhq7YYh04L5W7d9oogV0BAA/tOZrqDMMl/0ObC1Gs50CBsvFuX9opYhz93v971h0+MJMc2bGaKC/PDa80GRzm2191rIl6BbMZiqifNKtmTracvuJLvnCsKRjCAAAA==",
+		"width": 270,
+		"height": 270,
+		"srcset": "270w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/bridgit-evans.png": {
+		"placeholder": "data:image/webp;base64,UklGRs4BAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSCMBAAANkGNb27E913W/+G3bNpOUf53OVq8BZATJCJwB2HaZtO5U2XzxPFc8hoiYgGJ5AmGaiYJJABCEEvOkrH166vblnIEDUJwRSf2apYXQ4rq9V15RQKHx67KdEITC6W0tu684oDxMWjYiNxolP7bn+GHzxZauR14AACTyaOupNyx3xe0w/DP0SzZsV+h7Cf4LQN+TvNJFKf6/Mvta5sv0X0Rt8LJcCXzwH167EEQV915OO9rfXPz5cexK6c/Xj0n8iyVHOit+xFGYXf441SoC4tlDDY3FnoEL+fD5ggGy74c6er57z++hc7WvP7SI3q739X8pCMSa78X9jZaCMMxue3jpLoLljh4gABCNHSMLT17caVehJJAAIKlqbfusNxmIv9OgHBUAVlA4IIQAAADQBACdASoUABQAPzmSv1mvKaYjqAgB4CcJbAAAJcmEwOSiIMQsCg++9MLXI2+qAAD+FlV53s7fdsa+87/8oNT+CUwLw21kH/H4tKnFyTAq4nr2RB2PQAzwETOLBz94KX/+be79iF1aYmAV45BZj5QSfGHubtJcgiwRBiknwpMjiEAAAAA=",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/bridgit-evans.webp": {
+		"placeholder": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBQCdASoUABQAPzmQvFgvKaWjqAqp4CcJYwAAKhNNr+nHnkX/sfJIDLwlI9E/GKmAAP7eoFA5Geqv+IIJ09WJZOXCYe/pxL7CEnX1RrCU5V9tANgazsMn0H3Ex+h/YGYx6Gq1h3dT2H7As7vsxCWqIyoMJV+Up929JcZ8AAAAAA==",
+		"width": 270,
+		"height": 270,
+		"srcset": "270w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/mazin-sidahmed.png": {
+		"placeholder": "data:image/webp;base64,UklGRsoBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSBEBAAANgGPb2rHn3vd9Y9tWa6vKP5KocpUuK709gXQeRDpWtipbH54fScYQEROgCdGuHVkSc37hKBEAMAAdaesC0h+nFtRvilbULAQSXNp3M0ABEE5+jsDSJFxn8HVeO4DSr550NxgAFNAz/0FBIqQBogJA5IXuUWAU0/AnnYjkSwpSXe2Av0GYeEdBCOXd4E/iAxREa/cs/i9hyDchyS72kv5SsEC6xujD+AhhgGvWTNg7kfYZfrlT+Yvo17FkOK6EGDtyMyVCCABh2RsRSpSyVMj9Q04AJWjydtgO+RHDz9gQEAAo0V013Sda2V/JLRAVANL2DI0tfkXlFcBR8guorazZ9dZkATT+qW0W6t0fEP9mpAYAVlA4IJIAAADQBACdASoUABQAPzmMv1evKSajqAqp4CcJagDIXA+B5MMJ82jRalAUACYydmtNAAD+FlTaDlMIoJY/4W9xsl4oSsxZJ70/LCijsMA3ZKeymJz0zPAyab8LkLNPAyUcusWEKBKMAnh/I1oWWs1+YI7Q48lvly41uVavnt1tF0tMArDyZi+ndZ4tdIsmH6WWrJpwAA==",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/mazin-sidahmed.webp": {
+		"placeholder": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoUABQAPzmSwFmvKaajqAgB4CcJZQAAGZKqrncVSoeDJ5fSNCBkAP7e7qVs0q0qBvR79LjbFNWPohERdRRzGVa5DHOOeuQKXKrnQuYfcmAN5LlyplJj71vEQca7lfBvXQWJrytIMcNBvBMeJfV6uMoPpJHpZCYgzyjdTS3S9kgAAA==",
+		"width": 270,
+		"height": 270,
+		"srcset": "270w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/photos/annie-slemrod-photo.png": {
+		"placeholder": "data:image/webp;base64,UklGRnwBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSL8AAAABgJpt27Llfr73P0hOck9Ud6sOE+gAjGDdG5nGGEQnk9zd7X2eG/mEESJiAvBXBC6zPAeBIFqQM7e9/7w3DJEIQe4alUabSYlErfLDq3nPSQQhDu1UI0m1924EYcv0DPXcLYAAgux9ahiVs2kAHIaojDQeVCKAwzJ9FJWzDgK3RY1hPM9DgN5PWqynKiDVdZXgoQFw40xw2wSkL1EZ67IaKJ2hxVEe5aFmZf2LsZWreGZi44R5TaJcVyY2HvA/FQBWUDgglgAAALAEAJ0BKhQAFAA/OZTBWa8qJyOoCAHgJwlpAAPmAF6n8da2w7UhAceI42QPTAAA2/bZ+trytUKA6MbOcFRwEyOLAmAdv2mqqFd5TfbgNaJcow0UyBqFu6tVwIgYDDyrK5ctFqHAjUOMuRa8qZiO6yUXXoNm8ilKlB4zl3QZylMlfm/ZIjkYI77hb+E1+WDSp6odJ0AAAA==",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/photos/arian-moayed-photo.png": {
+		"placeholder": "data:image/webp;base64,UklGRooBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSNwAAAABgGNte2LlSwZ3d+noHGoqzq1Yg3e+AyqX1m0J7k5FSevu7s4kH5I7sISImAAAEPCMDI3ygIBDgZyR2+O7lSo4lEjfvCI1mQ/LJOA5ww+t9DvHIUwSeYqKpNZ0wTIIjNDm70+2mQRiTqgNmudxEAAkkm/cULGv1BMABKZom2x2u7x/Wahxp3iQCgFAop+fJs33dEhD+g6VQXE/CB4CgIUS2gabywAgIS2Jsntq/larrbl+EAJhBQuaDvVhNVJqj6jpXn1+ciT7hVopB6TNgQa+KTq3ObxExb9tU/8DVlA4IIgAAAAwBACdASoUABQAPzmOuFavKaUjqA1R4CcJZwAAI4OoaeJGrO5DKJbq0PAA/swwIaKGu5gbvwJkOlu4GzTMl/wygtJaiL53O7wKUW/HmB6/faT6pCMxVTyTgkU+PHN4IB6wZ9/qDbiOfH98V7vJNGtRTGIuaS1nhxLRUTrYTein+XHWdHNm48AA",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/photos/bridgit-evans-photo.png": {
+		"placeholder": "data:image/webp;base64,UklGRpoBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSO8AAAABkGttmyFbX1Vt27gB27aRGqF3xFTHmR2fO7AZ2Sc6uW101f8dDG4hIiYAAIwCVEGWhtbwqxDSvevy85f766G08hUycJVCCt+fL4YPgzGKs07Ec/y8NRSAQtJ9/hb+Lx7fV0LDYJKW/i2vJEApHKMLgJZTMAi/HZjjCAxi7gbm8TAMEp4FJPw6CI3oE/TE328eh4ZC6k068SWOa9CARs7ZHyL/CR/MRkEBUApV7ymk5ZlQKADGGK2xm5Z0HEGEgc+IqpJtFArfNGcqQOnVxYUbFPoUvr/YCAWSFOd8UMhvT691eJ5n6V+cdeRXBi3OOgBWUDgghAAAANAEAJ0BKhQAFAA/OZTCWa8qJyOoCAHgJwlnF4AAAHDuXhRGv9RHyuEu2LF4suWAAP6pV2TzVSGouja6IWRp9mCX7IzHZYh2fJIqWEsVO5cMO+aLQqjK6sz44rIYlRQlxsEBmcTemp9TZmGwidnM2Hdqi3tTgVy92O5+mChuTsmOIQAAAA==",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/speakers/photos/mazin-sidahmed-photo.png": {
+		"placeholder": "data:image/webp;base64,UklGRoQBAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSMgAAAABgKJtm3LlnW/Q5FpJDisgSbMICyD5CjSxBJcEkROBTVg8F/HQ3eebecP//bOGiJgAFMWhrqUBEIdyQefOXe3xbAJSJpisMZGJe85ZgukfBo0alLuQgkPTIwOLkV9DEAAeM1TagcvwxmaGcr/kIOsWYpxk3ZTsZF3BG/NZ1xAAgv4XJityAx4ABOdUQ3kBB2vgk8laRL0BwSW1EPk0DpFCA5YsJuquwMN7DFQZDSZlpQ9wmHpmYmkKrC00z1X+kzJXU6iSMTI/KlZQOCCWAAAA8AQAnQEqFAAUAD85lMFZryonI6gIAeAnCWkACBAB9+aRSIXQ6G9wxnBkknlf8sqAAP65LqPAD2kng3hoBAtrCeYmMksKqYqxA2rtqrgeENqxXGpLXFWUlFlfaoGXRZO92dke0+qvtiq5FAdOEfdLELH1andWRrH07y7UU8vX0FclG7x8Kk9pl2DAgwdgqc1yszrFAigA",
+		"width": 388,
+		"height": 388,
+		"srcset": "388w"
+	},
+	"/images/events/who-owns-the-narrative/title/event-title.png": {
+		"placeholder": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACQAwCdASoUAAcAPzmIulQvKSWjMAgB4CcJaQAAW5AsyFOJ/kAAAP6ztY4xzTRHqemAPYEpYWD2r2mNqpf2cQJZ93ZBwWSr0vmuAAAA",
+		"width": 1402,
+		"height": 460,
+		"srcset": "480w, 640w, 800w, 1200w, 1402w"
+	}
+}
