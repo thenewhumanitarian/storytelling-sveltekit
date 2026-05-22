@@ -131,6 +131,7 @@ Create a `.env` file in the project root:
 ```env
 # Public (exposed to client)
 PUBLIC_BASE_URL=https://interactive.thenewhumanitarian.org
+PUBLIC_MAPBOX_TOKEN=pk.your_mapbox_public_token
 PUBLIC_GA4_ID=G-XXXXXXXXXX
 
 # Private (server-side only)

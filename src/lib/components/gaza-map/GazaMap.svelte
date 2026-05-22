@@ -7,7 +7,6 @@
 	import GazaOverlay from './GazaOverlay.svelte';
 	import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 	import { PUBLIC_MAPBOX_TOKEN } from '$env/static/public';
-
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
 	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
