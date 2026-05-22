@@ -4,6 +4,9 @@
 	import SyriaMap from '$lib/components/projects/SyriaMap/Map.svelte';
 	import { MAP_DATA } from '$lib/components/projects/SyriaMap/data.js';
 
+	let { data } = $props();
+	const { mapboxToken } = data;
+
 	// Reactive state for selected marker ID
 	let selectedMarkerId = -1;
 
@@ -84,7 +87,12 @@
 <section class="relative w-full" data-iframe-height={true}>
 	<!-- Pass selectedMarkerId to SyriaMap as a prop -->
 	<!-- <div class="max-w-[700px] mx-auto"> -->
-	<SyriaMap data={MAP_DATA as MapData} markerClickHandler={handleMarkerClick} {selectedMarkerId} />
+	<SyriaMap
+		data={MAP_DATA as MapData}
+		markerClickHandler={handleMarkerClick}
+		{selectedMarkerId}
+		{mapboxToken}
+	/>
 	<!-- </div> -->
 	<!-- Display the selected marker information or a default message -->
 	{#if getSelectedMarker()}

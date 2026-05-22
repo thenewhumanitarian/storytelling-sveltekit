@@ -6,7 +6,6 @@
 	import type { IncidentData } from './types';
 	import GazaOverlay from './GazaOverlay.svelte';
 	import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
-	import { PUBLIC_MAPBOX_TOKEN } from '$env/static/public';
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
 	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
@@ -16,7 +15,8 @@
 		highlightedMarkerId,
 		setSelectedMarkerId,
 		setHighlightedMarkerId,
-		incidentsData
+		incidentsData,
+		mapboxToken
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
@@ -24,6 +24,7 @@
 		setHighlightedMarkerId: (id: number | null) => void;
 		incidentsData: IncidentData[];
 		selectedWeekStartDate: Date | null;
+		mapboxToken: string;
 	} = $props();
 
 	let mapContainer: HTMLElement | undefined = $state();
@@ -39,6 +40,7 @@
 	let isMobile = $state(false);
 	let mounted = $state(false);
 	let isEmbedded = $state(false);
+	let mapInitError = $state<string | null>(null);
 
 	export function setSelectionOriginToClick() {
 		selectionOrigin = 'click';
@@ -209,7 +211,16 @@
 		document.addEventListener('fullscreenchange', updateFullscreenState);
 		document.addEventListener('webkitfullscreenchange', updateFullscreenState);
 
-		mapboxgl.accessToken = PUBLIC_MAPBOX_TOKEN;
+		if (!mapboxToken) {
+			mapInitError = 'Map unavailable: Mapbox access token is not configured.';
+			return () => {
+				window.removeEventListener('resize', updateIsMobile);
+				document.removeEventListener('fullscreenchange', updateFullscreenState);
+				document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
+			};
+		}
+
+		mapboxgl.accessToken = mapboxToken;
 		const mapInstance = new mapboxgl.Map({
 			container: mapContainer!,
 			style: MAPBOX_STYLE,
@@ -493,6 +504,14 @@
 		{/if}
 	{/if}
 	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
+	{#if mapInitError}
+		<div
+			class="absolute inset-0 flex items-center justify-center bg-burgundy/10 px-6 text-center text-sm text-burgundy"
+			role="alert"
+		>
+			{mapInitError}
+		</div>
+	{/if}
 	{#if showEventOverlay()}
 		<GazaOverlay event={selectedEvent()} />
 	{/if}
