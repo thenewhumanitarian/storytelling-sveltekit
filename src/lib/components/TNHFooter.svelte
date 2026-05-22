@@ -8,60 +8,143 @@
 </script>
 
 {#if showNewsletter}
-<section class="signup-cta">
-	<div class="signup-cta__content">
-		<h2 class="signup-cta__title">
-			<img class="signup-cta__icon" src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-newsletter.svg" alt="" width="72" height="32" />
-			Get the latest humanitarian news, direct to your inbox
-		</h2>
-		<p class="signup-cta__description">
-			Sign up to receive our original, on-the-ground coverage that informs policymakers, practitioners, donors, and others who want to make the world more humane.
-		</p>
-		<a href="https://www.thenewhumanitarian.org/subscribe" target="_blank" rel="noopener noreferrer" class="signup-cta__button">Sign up</a>
-	</div>
-</section>
+	<section class="signup-cta">
+		<div class="signup-cta__content">
+			<h2 class="signup-cta__title">
+				<img
+					class="signup-cta__icon"
+					src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-newsletter.svg"
+					alt=""
+					width="72"
+					height="32"
+				/>
+				Get the latest humanitarian news, direct to your inbox
+			</h2>
+			<p class="signup-cta__description">
+				Sign up to receive our original, on-the-ground coverage that informs policymakers,
+				practitioners, donors, and others who want to make the world more humane.
+			</p>
+			<a
+				href="https://www.thenewhumanitarian.org/subscribe"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="signup-cta__button">Sign up</a
+			>
+		</div>
+	</section>
 {/if}
 
 {#if showMembership}
-<section class="support-cta">
-	<div class="support-inner">
-		<div class="support-content">
-			<h2 class="support-heading">Become a member of The New Humanitarian</h2>
-			<p class="support-text">
-				Support our journalism and become more involved in our community. Help us deliver informative, accessible, independent journalism that you can trust and provides accountability to the millions of people affected by crises worldwide.
-			</p>
+	<section class="support-cta">
+		<div class="support-inner">
+			<div class="support-content">
+				<h2 class="support-heading">Become a member of The New Humanitarian</h2>
+				<p class="support-text">
+					Support our journalism and become more involved in our community. Help us deliver
+					informative, accessible, independent journalism that you can trust and provides
+					accountability to the millions of people affected by crises worldwide.
+				</p>
+			</div>
+			<a
+				href="https://www.thenewhumanitarian.org/membership"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="support-button">Join</a
+			>
 		</div>
-		<a href="https://www.thenewhumanitarian.org/membership" target="_blank" rel="noopener noreferrer" class="support-button">Join</a>
-	</div>
-</section>
+	</section>
 {/if}
 
 <footer class="site-footer">
 	<div class="footer-inner">
 		<p class="footer-tagline">Journalism from the heart of crises</p>
 		<nav class="footer-nav">
-			<a href="https://www.thenewhumanitarian.org/about-us" target="_blank" rel="noopener noreferrer">About us</a>
-			<a href="https://www.thenewhumanitarian.org/careers" target="_blank" rel="noopener noreferrer">Careers</a>
-			<a href="https://www.thenewhumanitarian.org/contact-us" target="_blank" rel="noopener noreferrer">Contact Us</a>
-			<a href="https://www.thenewhumanitarian.org/pitch-us-a-story" target="_blank" rel="noopener noreferrer">Pitch us a story</a>
-			<a href="https://www.thenewhumanitarian.org/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>
-			<a href="https://www.thenewhumanitarian.org/syndication" target="_blank" rel="noopener noreferrer">Syndication</a>
+			<a
+				href="https://www.thenewhumanitarian.org/about-us"
+				target="_blank"
+				rel="noopener noreferrer">About us</a
+			>
+			<a href="https://www.thenewhumanitarian.org/careers" target="_blank" rel="noopener noreferrer"
+				>Careers</a
+			>
+			<a
+				href="https://www.thenewhumanitarian.org/contact-us"
+				target="_blank"
+				rel="noopener noreferrer">Contact Us</a
+			>
+			<a
+				href="https://www.thenewhumanitarian.org/pitch-us-a-story"
+				target="_blank"
+				rel="noopener noreferrer">Pitch us a story</a
+			>
+			<a href="https://www.thenewhumanitarian.org/privacy" target="_blank" rel="noopener noreferrer"
+				>Privacy</a
+			>
+			<a
+				href="https://www.thenewhumanitarian.org/syndication"
+				target="_blank"
+				rel="noopener noreferrer">Syndication</a
+			>
 		</nav>
 		<div class="footer-logo">
-			<img src="https://thenewhumanitarian.org/themes/custom/tnh/images/logo.svg" alt="The New Humanitarian" class="footer-logo__img" />
+			<img
+				src="https://thenewhumanitarian.org/themes/custom/tnh/images/logo.svg"
+				alt="The New Humanitarian"
+				class="footer-logo__img"
+			/>
 		</div>
 		<div class="footer-social">
-			<a href="https://bsky.app/profile/thenewhumanitarian.org" target="_blank" rel="noopener noreferrer" aria-label="Bluesky">
-				<img src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-bluesky.svg" alt="Bluesky" width="20" height="20" />
+			<a
+				href="https://bsky.app/profile/thenewhumanitarian.org"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Bluesky"
+			>
+				<img
+					src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-bluesky.svg"
+					alt="Bluesky"
+					width="20"
+					height="20"
+				/>
 			</a>
-			<a href="https://www.facebook.com/TheNewHumanitarian" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-				<img src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-facebook.svg" alt="Facebook" width="20" height="20" />
+			<a
+				href="https://www.facebook.com/TheNewHumanitarian"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Facebook"
+			>
+				<img
+					src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-facebook.svg"
+					alt="Facebook"
+					width="20"
+					height="20"
+				/>
 			</a>
-			<a href="https://www.linkedin.com/company/the-new-humanitarian" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-				<img src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-linkedin.svg" alt="LinkedIn" width="20" height="20" />
+			<a
+				href="https://www.linkedin.com/company/the-new-humanitarian"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="LinkedIn"
+			>
+				<img
+					src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-linkedin.svg"
+					alt="LinkedIn"
+					width="20"
+					height="20"
+				/>
 			</a>
-			<a href="https://www.youtube.com/c/TheNewHumanitarian" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-				<img src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-youtube.svg" alt="YouTube" width="20" height="20" />
+			<a
+				href="https://www.youtube.com/c/TheNewHumanitarian"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="YouTube"
+			>
+				<img
+					src="https://thenewhumanitarian.org/themes/custom/tnh/images/icon-youtube.svg"
+					alt="YouTube"
+					width="20"
+					height="20"
+				/>
 			</a>
 		</div>
 		<p class="footer-copyright">&copy; All rights reserved {new Date().getFullYear()}</p>

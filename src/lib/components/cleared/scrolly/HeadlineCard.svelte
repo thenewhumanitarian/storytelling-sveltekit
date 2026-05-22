@@ -45,8 +45,19 @@
 			<span class="author">By {headline.author}</span>
 			<span class="read-link">
 				Read
-				<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+				<svg
+					class="arrow-icon"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					aria-hidden="true"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+					/>
 				</svg>
 			</span>
 		</div>
@@ -65,11 +76,11 @@
 		color: inherit;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 		transition:
-		transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
-		box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
-		border-color 0.3s ease,
-		opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s),
-		translate 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s);
+			transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+			box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+			border-color 0.3s ease,
+			opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s),
+			translate 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) calc(var(--delay) * 0.15s);
 		opacity: 0;
 		translate: 0 30px;
 		/* Marc's note: This is to remove the border radius from the headline card so it matches TNH design pattern */

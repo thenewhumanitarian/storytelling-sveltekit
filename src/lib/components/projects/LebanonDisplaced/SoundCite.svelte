@@ -82,8 +82,6 @@
 		}
 	}
 
-
-
 	:global(*:not(.arabic) .soundcite-pause:before) {
 		border-left: 0.75em double #9f3e52;
 		padding-left: 0;

@@ -48,7 +48,7 @@
 				data-lightbox-height={height}
 			>
 				{#if blok.bgColor === 'bg-scrap-paper'}
-					<ScrapBookPaper mouseOver={false} maxWidthMobile={'150px'}>
+					<ScrapBookPaper mouseOver={false} maxWidthMobile="150px">
 						<div class="h-full w-full p-10">
 							{#if isVideo}
 								<video src={blok.media.filename} autoplay loop muted playsinline />
@@ -72,7 +72,7 @@
 					/>
 				{:else}
 					<img
-						class={`inline-image`}
+						class="inline-image"
 						src={`${blok.media.filename}/m/480x0`}
 						alt={blok.caption || 'Photo alt text is missing.'}
 					/>
@@ -100,7 +100,7 @@
 			</button>
 
 			{#if blok.caption}
-				<figcaption class={`font-amman`}>{blok.caption}</figcaption>
+				<figcaption class="font-amman">{blok.caption}</figcaption>
 			{/if}
 
 			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'bg-scrap-paper'}

@@ -241,7 +241,9 @@
 										class="max-h-full w-full object-contain"
 										loading="lazy"
 										onload={() => (state.imagesLoaded[i] = true)}
-										style={item.width && item.height ? `width: 100%; aspect-ratio: ${item.width} / ${item.height};` : 'width: 100%;'}
+										style={item.width && item.height
+											? `width: 100%; aspect-ratio: ${item.width} / ${item.height};`
+											: 'width: 100%;'}
 									/>
 								</div>
 								{#if !state.isZoomed && state.imagesLoaded[i]}
@@ -249,7 +251,7 @@
 										class={`absolute top-0.5 flex items-center justify-center gap-1 ${isRtl ? 'right-2' : 'left-2'}`}
 									>
 										<button
-											class={`caption-toggle transition:all pb-[2px] text-lg text-white opacity-90 duration-500 hover:text-burgundy hover:opacity-100 lg:text-2xl`}
+											class="caption-toggle transition:all pb-[2px] text-lg text-white opacity-90 duration-500 hover:text-burgundy hover:opacity-100 lg:text-2xl"
 											onclick={() => {
 												swiper?.zoom?.toggle?.();
 											}}
@@ -475,7 +477,10 @@
 		position: fixed;
 		inset: 0;
 		background: var(--lightbox-bg, #ffe0b5);
-		background-image: var(--lightbox-bg-image, url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp'));
+		background-image: var(
+			--lightbox-bg-image,
+			url('/assets/ldd/patterns/example-backgropund--repetitive--sofia--small.webp')
+		);
 		background-repeat: repeat;
 		display: flex;
 		justify-content: center;

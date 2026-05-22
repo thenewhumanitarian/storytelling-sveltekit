@@ -36,18 +36,16 @@
 	}
 </script>
 
-<button
-	class="infobox-trigger"
-	class:expanded
-	onclick={toggle}
-	aria-expanded={expanded}
->{data.label}{suffix}</button>{#if panelVisible}<span
-	class="infobox-panel"
-	class:open={panelOpen}
-><span class="infobox-content"><span class="infobox-inner"
-		>{#each data.paragraphs as paragraph}<span class="infobox-paragraph">{paragraph}</span
-			>{/each}</span
-		></span></span>{/if}
+<button class="infobox-trigger" class:expanded onclick={toggle} aria-expanded={expanded}
+	>{data.label}{suffix}</button
+>{#if panelVisible}<span class="infobox-panel" class:open={panelOpen}
+		><span class="infobox-content"
+			><span class="infobox-inner"
+				>{#each data.paragraphs as paragraph}<span class="infobox-paragraph">{paragraph}</span
+					>{/each}</span
+			></span
+		></span
+	>{/if}
 
 <style>
 	.infobox-trigger {

@@ -45,7 +45,11 @@
 						data-lightbox-caption={image.caption || ''}
 						onclick={() => openLightbox(image.src)}
 					>
-						<ResponsiveImage src={image.src} alt={image.alt} sizes="(max-width: 640px) 100vw, 400px" />
+						<ResponsiveImage
+							src={image.src}
+							alt={image.alt}
+							sizes="(max-width: 640px) 100vw, 400px"
+						/>
 					</button>
 				{/if}
 				{#if image.caption}
@@ -150,8 +154,8 @@
 		opacity: 0;
 		transform: translateY(16px);
 		transition:
-		opacity 0.6s ease,
-		transform 0.6s ease;
+			opacity 0.6s ease,
+			transform 0.6s ease;
 		transition-delay: var(--delay);
 		/* Marc's note: This is to remove the border radius from the gallery item so it matches TNH design pattern */
 		/* border-radius: 3px; */

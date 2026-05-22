@@ -8,7 +8,9 @@
 	onMount(() => {
 		const mq = window.matchMedia('(max-width: 640px)');
 		isMobile = mq.matches;
-		const handler = (e: MediaQueryListEvent) => { isMobile = e.matches; };
+		const handler = (e: MediaQueryListEvent) => {
+			isMobile = e.matches;
+		};
 		mq.addEventListener('change', handler);
 		return () => mq.removeEventListener('change', handler);
 	});

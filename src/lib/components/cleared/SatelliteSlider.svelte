@@ -10,13 +10,23 @@
 		credit?: string;
 	}
 
-	let { beforeImage, afterImage, beforeLabel = 'Before', afterLabel = 'Today', location, credit = 'Satellite imagery: Planet Labs' }: Props = $props();
+	let {
+		beforeImage,
+		afterImage,
+		beforeLabel = 'Before',
+		afterLabel = 'Today',
+		location,
+		credit = 'Satellite imagery: Planet Labs'
+	}: Props = $props();
 
 	function getSrcset(src: string): string {
 		const meta = (placeholderData as Record<string, any>)[src];
 		if (!meta) return '';
 		const base = src.replace(/\.\w+$/, '');
-		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+		return meta.srcset
+			.split(', ')
+			.map((w: string) => `${base}-${w}.webp ${w}`)
+			.join(', ');
 	}
 
 	function getPlaceholder(src: string): string {
@@ -55,67 +65,79 @@
 </script>
 
 <div class="satellite-slider" bind:this={containerRef}>
-		<div class="location-label">{location}</div>
+	<div class="location-label">{location}</div>
 
-		<div
-			class="image-container"
-			onpointerdown={handlePointerDown}
-			onpointermove={handlePointerMove}
-			onpointerup={handlePointerUp}
-			onpointercancel={handlePointerUp}
-			role="slider"
-			aria-valuenow={sliderPosition}
-			aria-valuemin={0}
-			aria-valuemax={100}
-			aria-label="Comparison slider"
-			tabindex="0"
-		>
-			<!-- After image (full width, underneath) -->
+	<div
+		class="image-container"
+		onpointerdown={handlePointerDown}
+		onpointermove={handlePointerMove}
+		onpointerup={handlePointerUp}
+		onpointercancel={handlePointerUp}
+		role="slider"
+		aria-valuenow={sliderPosition}
+		aria-valuemin={0}
+		aria-valuemax={100}
+		aria-label="Comparison slider"
+		tabindex="0"
+	>
+		<!-- After image (full width, underneath) -->
+		<img
+			src={afterImage}
+			srcset={getSrcset(afterImage)}
+			sizes="(max-width: 800px) 100vw, 800px"
+			alt="{location} - {afterLabel}"
+			class="after-image"
+			class:img-loaded={afterLoaded}
+			onload={() => (afterLoaded = true)}
+			style:background-image="url({getPlaceholder(afterImage)})"
+			style:background-size="cover"
+		/>
+
+		<!-- Before image (clipped) -->
+		<div class="before-container" style="clip-path: inset(0 {100 - sliderPosition}% 0 0);">
 			<img
-				src={afterImage}
-				srcset={getSrcset(afterImage)}
+				src={beforeImage}
+				srcset={getSrcset(beforeImage)}
 				sizes="(max-width: 800px) 100vw, 800px"
-				alt="{location} - {afterLabel}"
-				class="after-image"
-				class:img-loaded={afterLoaded}
-				onload={() => (afterLoaded = true)}
-				style:background-image="url({getPlaceholder(afterImage)})"
+				alt="{location} - {beforeLabel}"
+				class="before-image"
+				class:img-loaded={beforeLoaded}
+				onload={() => (beforeLoaded = true)}
+				style:background-image="url({getPlaceholder(beforeImage)})"
 				style:background-size="cover"
 			/>
+		</div>
 
-			<!-- Before image (clipped) -->
-			<div class="before-container" style="clip-path: inset(0 {100 - sliderPosition}% 0 0);">
-				<img
-					src={beforeImage}
-					srcset={getSrcset(beforeImage)}
-					sizes="(max-width: 800px) 100vw, 800px"
-					alt="{location} - {beforeLabel}"
-					class="before-image"
-					class:img-loaded={beforeLoaded}
-					onload={() => (beforeLoaded = true)}
-					style:background-image="url({getPlaceholder(beforeImage)})"
-					style:background-size="cover"
-				/>
-			</div>
+		<!-- Labels -->
+		<div class="label before-label" class:visible={sliderPosition > 15}>{beforeLabel}</div>
+		<div class="label after-label" class:visible={sliderPosition < 85}>{afterLabel}</div>
 
-			<!-- Labels -->
-			<div class="label before-label" class:visible={sliderPosition > 15}>{beforeLabel}</div>
-			<div class="label after-label" class:visible={sliderPosition < 85}>{afterLabel}</div>
-
-			<!-- Slider handle -->
-			<div class="slider-handle" style="left: {sliderPosition}%;">
-				<div class="handle-line"></div>
-				<div class="handle-grip">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-						<circle cx="12" cy="12" r="11" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
-						<path d="M8 12H6M18 12H16" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
-						<path d="M9 9L6 12L9 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M15 9L18 12L15 15" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-					</svg>
-				</div>
+		<!-- Slider handle -->
+		<div class="slider-handle" style="left: {sliderPosition}%;">
+			<div class="handle-line"></div>
+			<div class="handle-grip">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+					<circle cx="12" cy="12" r="11" fill="#ffffff" stroke="#1a1a1a" stroke-width="2" />
+					<path d="M8 12H6M18 12H16" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" />
+					<path
+						d="M9 9L6 12L9 15"
+						stroke="#1a1a1a"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M15 9L18 12L15 15"
+						stroke="#1a1a1a"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
 			</div>
 		</div>
-		<p class="credit">{credit}</p>
+	</div>
+	<p class="credit">{credit}</p>
 </div>
 
 <style>

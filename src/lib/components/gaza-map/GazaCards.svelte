@@ -261,7 +261,7 @@
 	class:cursor-grabbing={isDragging}
 >
 	<div
-		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 backdrop-blur sm:w-1/2"
+		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 backdrop-blur-sm sm:w-1/2"
 	>
 		<button
 			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
@@ -273,7 +273,12 @@
 		>
 	</div>
 	{#each incidentsData as incident, index (incident.chronoId)}
-		<GazaCard {incident} {selectedMarkerId} {incidentsData} isLast={index === incidentsData.length - 1} />
+		<GazaCard
+			{incident}
+			{selectedMarkerId}
+			{incidentsData}
+			isLast={index === incidentsData.length - 1}
+		/>
 	{/each}
 </div>
 
@@ -284,7 +289,7 @@
 	onscroll={handleMobileScroll}
 >
 	{#each incidentsData as incident, i (incident.chronoId)}
-		<div class="flex-shrink-0 w-full snap-center min-h-[200px] h-auto" data-id={incident.chronoId}>
+		<div class="shrink-0 w-full snap-center min-h-[200px] h-auto" data-id={incident.chronoId}>
 			<GazaCard
 				{incident}
 				{selectedMarkerId}
@@ -336,10 +341,7 @@
 		/>
 	{/if}
 	{#if sourcesOverlayOpen && sourcesIncident}
-		<GazaSourcesOverlay
-			incident={sourcesIncident!}
-			onClose={closeSourcesOverlay}
-		/>
+		<GazaSourcesOverlay incident={sourcesIncident!} onClose={closeSourcesOverlay} />
 	{/if}
 </div>
 

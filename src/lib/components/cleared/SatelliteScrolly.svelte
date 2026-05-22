@@ -6,7 +6,10 @@
 		const meta = (placeholderData as Record<string, any>)[src];
 		if (!meta) return '';
 		const base = src.replace(/\.\w+$/, '');
-		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+		return meta.srcset
+			.split(', ')
+			.map((w: string) => `${base}-${w}.webp ${w}`)
+			.join(', ');
 	}
 
 	function getPlaceholder(src: string): string {
@@ -100,7 +103,11 @@
 		<div class="label location-label">{location}</div>
 
 		<!-- Date label — top-right, single bubble with vertical slide swap -->
-		<div class="label date-label" style:transform="translateY({dateOffset}%)" style:opacity={dateOpacity}>
+		<div
+			class="label date-label"
+			style:transform="translateY({dateOffset}%)"
+			style:opacity={dateOpacity}
+		>
 			{dateText}
 		</div>
 

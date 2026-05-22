@@ -63,7 +63,7 @@
 							const span = document.createElement('span');
 							span.textContent = part;
 							span.classList.add('text-annotation');
-							if(isRtl) {
+							if (isRtl) {
 								span.classList.add('arabic');
 							}
 							tippy(span, {
@@ -136,7 +136,7 @@
 		margin: 0;
 	}
 
-	:global([data-theme="light arabic"] .tippy-content > p) {
+	:global([data-theme='light arabic'] .tippy-content > p) {
 		text-align: right !important;
 		direction: rtl;
 	}

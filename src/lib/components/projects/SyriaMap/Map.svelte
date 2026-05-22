@@ -3,6 +3,7 @@
 
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
+	import { PUBLIC_MAPBOX_TOKEN } from '$env/static/public';
 
 	interface MapData {
 		mapStyle?: string;
@@ -83,9 +84,7 @@
 		}
 	});
 
-	// Use your Mapbox token here
-	mapboxgl.accessToken =
-		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
+	mapboxgl.accessToken = PUBLIC_MAPBOX_TOKEN;
 
 	let map: mapboxgl.Map;
 	let mapLoaded = false;

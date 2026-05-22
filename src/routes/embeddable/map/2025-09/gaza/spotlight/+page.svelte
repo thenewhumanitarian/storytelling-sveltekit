@@ -30,29 +30,29 @@
 	let controlsY = $state(8);
 
 	// Typographic controls
-	let fontSizePx = $state(96) // number size
-	let labelGapPx = $state(8) // space between number and label
-	let labelFontPx = $state(16)
-	let dateFontPx = $state(12)
+	let fontSizePx = $state(96); // number size
+	let labelGapPx = $state(8); // space between number and label
+	let labelFontPx = $state(16);
+	let dateFontPx = $state(12);
 
 	// Replay control
-	let replayPending = $state(false)
-	let suppressAutoStartUntil = 0
-	let replayTimer: number | null = null
+	let replayPending = $state(false);
+	let suppressAutoStartUntil = 0;
+	let replayTimer: number | null = null;
 
 	function replayWithDelay(delayMs = 5000) {
 		if (replayTimer) {
-			clearTimeout(replayTimer)
-			replayTimer = null
+			clearTimeout(replayTimer);
+			replayTimer = null;
 		}
-		replayPending = true
-		suppressAutoStartUntil = Date.now() + delayMs + 100 // small buffer
-		resetAnimation()
+		replayPending = true;
+		suppressAutoStartUntil = Date.now() + delayMs + 100; // small buffer
+		resetAnimation();
 		replayTimer = window.setTimeout(() => {
-			startAnimation()
-			replayPending = false
-			replayTimer = null
-		}, delayMs)
+			startAnimation();
+			replayPending = false;
+			replayTimer = null;
+		}, delayMs);
 	}
 
 	function centerBox() {
@@ -145,10 +145,9 @@
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				if (entry.isIntersecting) {
-					if (Date.now() < suppressAutoStartUntil) return
-					startAnimation()
-				}
-				else resetAnimation();
+					if (Date.now() < suppressAutoStartUntil) return;
+					startAnimation();
+				} else resetAnimation();
 			},
 			{ threshold: 0.35 }
 		);
@@ -176,48 +175,113 @@
 <main class="relative m-0 h-screen w-screen bg-[#111] text-white" aria-labelledby="title">
 	<!-- Adjust controls -->
 	{#if adjustMode}
-		<div class="fixed z-50 space-y-2 rounded bg-black/70 p-3 text-sm shadow-lg backdrop-blur-sm select-none cursor-default"
+		<div
+			class="fixed z-50 space-y-2 rounded-sm bg-black/70 p-3 text-sm shadow-lg backdrop-blur-xs select-none cursor-default"
 			style={`left:${controlsX}px;top:${controlsY}px;`}
 		>
 			<div class="flex items-center justify-between gap-2">
 				<div class="font-semibold">Adjust size</div>
-				<div class="h-3 w-16 rounded bg-white/30 hover:bg-white/40 cursor-move" onpointerdown={onControlsDragStart} title="Drag panel" aria-label="Drag panel"></div>
+				<div
+					class="h-3 w-16 rounded-sm bg-white/30 hover:bg-white/40 cursor-move"
+					onpointerdown={onControlsDragStart}
+					title="Drag panel"
+					aria-label="Drag panel"
+				></div>
 			</div>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">W</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="320" max="2160" step="10" bind:value={adjustWidth} oninput={() => adjustMode && centerBox()} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="320"
+					max="2160"
+					step="10"
+					bind:value={adjustWidth}
+					oninput={() => adjustMode && centerBox()}
+				/>
 				<span class="tabular-nums">{adjustWidth}px</span>
 			</label>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">H</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="240" max="2160" step="10" bind:value={adjustHeight} oninput={() => adjustMode && centerBox()} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="240"
+					max="2160"
+					step="10"
+					bind:value={adjustHeight}
+					oninput={() => adjustMode && centerBox()}
+				/>
 				<span class="tabular-nums">{adjustHeight}px</span>
 			</label>
 			<hr class="my-1 border-white/20" />
 			<div class="font-semibold">Typography</div>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">Number</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="20" max="300" step="1" bind:value={fontSizePx} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="20"
+					max="300"
+					step="1"
+					bind:value={fontSizePx}
+				/>
 				<span class="tabular-nums">{fontSizePx}px</span>
 			</label>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">Label</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="8" max="72" step="1" bind:value={labelFontPx} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="8"
+					max="72"
+					step="1"
+					bind:value={labelFontPx}
+				/>
 				<span class="tabular-nums">{labelFontPx}px</span>
 			</label>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">Date</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="8" max="72" step="1" bind:value={dateFontPx} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="8"
+					max="72"
+					step="1"
+					bind:value={dateFontPx}
+				/>
 				<span class="tabular-nums">{dateFontPx}px</span>
 			</label>
 			<label class="grid grid-cols-[auto_1fr_auto] items-center gap-2">
 				<span class="opacity-80">Gap</span>
-				<input class="h-2 w-48 cursor-pointer accent-rose-500" type="range" min="0" max="60" step="1" bind:value={labelGapPx} />
+				<input
+					class="h-2 w-48 cursor-pointer accent-rose-500"
+					type="range"
+					min="0"
+					max="60"
+					step="1"
+					bind:value={labelGapPx}
+				/>
 				<span class="tabular-nums">{labelGapPx}px</span>
 			</label>
 			<div class="pt-2">
-				<button class="inline-flex items-center gap-2 rounded bg-white/90 px-3 py-1.5 font-semibold text-burgundy hover:bg-white disabled:cursor-not-allowed disabled:opacity-60" onclick={() => replayWithDelay(5000)} disabled={replayPending} aria-label="Replay counters after 5 seconds">
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+				<button
+					class="inline-flex items-center gap-2 rounded-sm bg-white/90 px-3 py-1.5 font-semibold text-burgundy hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+					onclick={() => replayWithDelay(5000)}
+					disabled={replayPending}
+					aria-label="Replay counters after 5 seconds"
+				>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3" /></svg
+					>
 					{replayPending ? 'Queued (5s)' : 'Play (5s)'}
 				</button>
 			</div>
@@ -228,7 +292,7 @@
 	<section
 		class={adjustMode
 			? 'absolute select-none cursor-move overflow-hidden bg-[#121214] bg-cover bg-center'
-			: 'relative w-full h-[100svh] overflow-hidden bg-[#121214] bg-cover bg-center'}
+			: 'relative w-full h-svh overflow-hidden bg-[#121214] bg-cover bg-center'}
 		bind:this={container}
 		onpointerdown={onFramePointerDown}
 		role="group"
@@ -241,7 +305,7 @@
 		></div>
 
 		<div
-			class="cq relative z-[1] grid h-full w-full grid-rows-[1fr_auto] place-items-center p-3 sm:p-4 md:p-6 lg:p-10"
+			class="cq relative z-1 grid h-full w-full grid-rows-[1fr_auto] place-items-center p-3 sm:p-4 md:p-6 lg:p-10"
 		>
 			<h1 id="title" class="sr-only">Gaza casualties spotlight</h1>
 
@@ -271,7 +335,7 @@
 				{/each}
 			</div>
 			<div
-				class="date-pill mt-2 rounded bg-black/40 px-2 py-1 text-xs text-white/95 shadow-sm backdrop-blur-sm sm:text-sm lg:mt-4"
+				class="date-pill mt-2 rounded-sm bg-black/40 px-2 py-1 text-xs text-white/95 shadow-xs backdrop-blur-xs sm:text-sm lg:mt-4"
 				aria-label="Data timeframe"
 				style={adjustMode ? `font-size:${dateFontPx}px` : ''}
 			>
@@ -297,16 +361,34 @@
 	}
 
 	/* Container query setup */
-	.cq { container-type: inline-size; }
+	.cq {
+		container-type: inline-size;
+	}
 
 	@container (max-width: 560px) {
-		.totals-grid { grid-auto-flow: row; justify-items: center; gap: 0.5rem; }
-		.num { font-size: 2.25rem; line-height: 1.1; }
-		.label { margin-top: 0.25rem; font-size: 0.75rem; }
-		.date-pill { font-size: 0.75rem; }
+		.totals-grid {
+			grid-auto-flow: row;
+			justify-items: center;
+			gap: 0.5rem;
+		}
+		.num {
+			font-size: 2.25rem;
+			line-height: 1.1;
+		}
+		.label {
+			margin-top: 0.25rem;
+			font-size: 0.75rem;
+		}
+		.date-pill {
+			font-size: 0.75rem;
+		}
 	}
 	@container (max-width: 380px) {
-		.num { font-size: 1.75rem; }
-		.label { font-size: 0.8rem; }
+		.num {
+			font-size: 1.75rem;
+		}
+		.label {
+			font-size: 0.8rem;
+		}
 	}
 </style>

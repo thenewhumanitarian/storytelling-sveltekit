@@ -78,7 +78,8 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 24px 16px;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+		font-family:
+			-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 	}
 
 	@media (max-width: 600px) {

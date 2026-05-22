@@ -19,7 +19,13 @@
 		showDataLayers?: boolean; // Whether to fetch and display eviction/village data layers
 	}
 
-	let { activeStep, fadeProgress = 0, fadeOutProgress = 0, narrativePath = '/data/cleared/map-narrative.json', showDataLayers = true }: Props = $props();
+	let {
+		activeStep,
+		fadeProgress = 0,
+		fadeOutProgress = 0,
+		narrativePath = '/data/cleared/map-narrative.json',
+		showDataLayers = true
+	}: Props = $props();
 
 	// State
 	let map: any = null;
@@ -158,9 +164,12 @@
 					'interpolate',
 					['linear'],
 					['get', 'people_evicted'],
-					100, 5,
-					5000, 12,
-					15000, 22
+					100,
+					5,
+					5000,
+					12,
+					15000,
+					22
 				],
 				'circle-color': '#9F3E52',
 				'circle-opacity': 0.6,
@@ -185,9 +194,12 @@
 					'interpolate',
 					['linear'],
 					['get', 'population_displaced'],
-					100, 8,
-					3000, 14,
-					9000, 20
+					100,
+					8,
+					3000,
+					14,
+					9000,
+					20
 				],
 				'circle-color': '#35B58B',
 				'circle-opacity': 0,
@@ -234,7 +246,9 @@
 		const step = steps[stepIndex];
 		if (!step?.customLayers) return;
 
-		for (const [layerId, layerConfig] of Object.entries(step.customLayers as Record<string, { opacity: number }>)) {
+		for (const [layerId, layerConfig] of Object.entries(
+			step.customLayers as Record<string, { opacity: number }>
+		)) {
 			const config = CUSTOM_LAYERS[layerId];
 			if (!config || !map.getLayer(layerId)) continue;
 			const opacityProp = config.type === 'fill' ? 'fill-opacity' : 'line-opacity';
@@ -259,7 +273,9 @@
 
 		// Update villages layer
 		if (step.layers.villages) {
-			const villageOpacity = step.layers.villages.visible ? (step.layers.villages.opacity ?? 1.0) : 0;
+			const villageOpacity = step.layers.villages.visible
+				? (step.layers.villages.opacity ?? 1.0)
+				: 0;
 			map.setPaintProperty('villages-circles', 'circle-opacity', villageOpacity);
 			map.setPaintProperty('villages-circles', 'circle-stroke-opacity', villageOpacity);
 			map.setPaintProperty('villages-labels', 'text-opacity', villageOpacity > 0.5 ? 1 : 0);
