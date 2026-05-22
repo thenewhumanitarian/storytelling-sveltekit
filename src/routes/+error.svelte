@@ -2,8 +2,10 @@
 	import NotFoundPage from '$lib/components/NotFoundPage.svelte';
 	import { page } from '$app/state';
 
-	let { error, status }: { error: App.Error; status: number } = $props();
+	let { error, status: statusProp }: { error: App.Error; status?: number } = $props();
 
+	// `status` prop can be undefined on SSR (SvelteKit 2.60); page.status has the real code.
+	const status = $derived(statusProp ?? page.status);
 	const is404 = $derived(status === 404);
 </script>
 
