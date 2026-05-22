@@ -84,7 +84,10 @@ pnpm install
 
 # 5. Generate local SSL certificates (see HTTPS Setup below — each developer runs this once)
 
-# 6. Start the development server
+# 6. (Optional) Cache Gaza map data for local dev — file is gitignored; Vercel builds run this automatically
+pnpm pre-fetch-gaza
+
+# 7. Start the development server
 pnpm dev
 ```
 
@@ -94,7 +97,7 @@ The dev server runs at **`https://localhost:5173`** with HTTPS enabled. If port 
 
 The dev server runs over **HTTPS** because the [Storyblok Visual Editor](https://www.storyblok.com/docs/editor/visual-editor) requires a secure connection to load your local preview. Without HTTPS, the Visual Editor iframe is blocked by the browser.
 
-Certificates are **per-developer** — they are signed by your local mkcert CA and must not be committed to git. The files in `cert/` in the repo are placeholders; regenerate them on your machine.
+Certificates are **per-developer** — they are signed by your local mkcert CA and are **gitignored** (`cert/*.pem`). Regenerate them on your machine (see `cert/README.md`).
 
 **One-time setup:**
 
