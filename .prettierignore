@@ -2,3 +2,17 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Legacy static assets (invalid CSS fragments, not maintained here)
+static/
+
+# Vendored third-party bundles and large data files
+src/lib/components/vendor/
+**/*.geojson
+
+# Svelte 5 {@const} expressions — prettier-plugin-tailwindcss cannot parse yet
+src/lib/components/cleared/evictions/EvictionBubbles.svelte
+src/lib/components/cleared/evictions/EvictionLineGraph.svelte
+src/lib/components/cleared/scrolly/NoticeMosaic.svelte
+src/lib/components/cleared/scrolly/ScrollySection.svelte
+src/lib/components/gaza-map/GazaTimeline.svelte
