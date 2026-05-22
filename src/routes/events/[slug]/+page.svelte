@@ -63,7 +63,7 @@
 		<FilmSpotlight film={content.film} />
 	{/if}
 
-	<EventDetails {meta} {content} {checkout} />
+	<EventDetails {meta} {content} />
 
 	<TNHFooter />
 </main>

@@ -137,7 +137,7 @@
 
 	.hero-title-art {
 		display: block;
-		top: clamp(9rem, 22vh, 15rem);
+		top: clamp(6rem, 14vh, 9rem);
 		right: 0;
 		width: min(64rem, 66vw);
 		max-width: none;

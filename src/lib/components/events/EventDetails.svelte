@@ -1,16 +1,13 @@
 <script lang="ts">
 	import type { EventMeta, EventContent } from '$lib/events/types';
-	import type { EventCheckoutConfig } from '$lib/events/eventbrite';
 	import RegisterCTA from '$lib/components/events/RegisterCTA.svelte';
-	import EventbriteCheckout from '$lib/components/events/EventbriteCheckout.svelte';
 
 	interface Props {
 		meta: EventMeta;
 		content: EventContent;
-		checkout: EventCheckoutConfig;
 	}
 
-	let { meta, content, checkout }: Props = $props();
+	let { meta, content }: Props = $props();
 
 	const eventDate = $derived(
 		new Date(meta.startDate).toLocaleDateString('en-US', {
@@ -31,36 +28,14 @@
 		</p>
 	</div>
 
-	{#if checkout.enabled && checkout.eventId}
-		<div class="mx-auto mt-10 max-w-2xl">
-			<EventbriteCheckout
-				eventId={checkout.eventId}
-				accentColor={meta.accentColor}
-				backgroundColor={meta.backgroundColor}
-				inkColor={meta.themeColor}
-			/>
-		</div>
-		<p class="mx-auto mt-6 max-w-2xl text-center font-sans text-xs text-[var(--event-ink-muted)]">
-			Secure checkout powered by Eventbrite. Prefer the full event page?
-			<a
-				href={meta.wwwEventUrl}
-				class="text-[var(--event-accent)] underline-offset-2 hover:underline"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				View on TNH.org
-			</a>
-		</p>
-	{:else}
-		<div class="mt-8 flex flex-wrap justify-center gap-4">
-			<RegisterCTA href={meta.registrationUrl} />
-			<RegisterCTA
-				href={meta.wwwEventUrl}
-				label="Full details on TNH.org"
-				variant="secondary"
-			/>
-		</div>
-	{/if}
+	<div class="mt-8 flex flex-wrap justify-center gap-4">
+		<RegisterCTA href={meta.registrationUrl} />
+		<RegisterCTA
+			href={meta.wwwEventUrl}
+			label="Full details on TNH.org"
+			variant="secondary"
+		/>
+	</div>
 </section>
 
 <section class="border-t border-[var(--event-ink)]/10 bg-[var(--event-bg-soft)] px-6 py-16 lg:px-10">
