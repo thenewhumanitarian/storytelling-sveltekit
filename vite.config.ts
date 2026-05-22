@@ -34,13 +34,19 @@ function serveLegacyStaticHtml(): Plugin {
 	};
 }
 
+const certKey = path.join('cert', 'localhost-key.pem');
+const certFile = path.join('cert', 'localhost.pem');
+const hasLocalCerts = fs.existsSync(certKey) && fs.existsSync(certFile);
+
 export default defineConfig({
-	server: {
-		https: {
-			key: fs.readFileSync('./cert/localhost-key.pem'),
-			cert: fs.readFileSync('./cert/localhost.pem')
-		}
-	},
+	server: hasLocalCerts
+		? {
+				https: {
+					key: fs.readFileSync(certKey),
+					cert: fs.readFileSync(certFile)
+				}
+			}
+		: {},
 	plugins: [serveLegacyStaticHtml(), tailwindcss(), sveltekit()],
 	ssr: {
 		noExternal: ['@storyblok/svelte'],
