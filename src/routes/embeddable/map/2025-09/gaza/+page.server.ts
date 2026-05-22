@@ -2,6 +2,7 @@ import { parse } from 'csv-parse/sync';
 import type { PageServerLoad } from './$types';
 import type { IncidentData } from '$lib/components/gaza-map/types';
 import { dev } from '$app/environment';
+import { env as publicEnv } from '$env/dynamic/public';
 import { PUBLIC_BASE_URL } from '$env/static/public';
 
 // Helper to calculate ISO week number + year
@@ -350,6 +351,9 @@ function shouldUseCachedData(): boolean {
 export const load: PageServerLoad = async () => {
 	console.log('🚀 Starting page load function');
 
+	// Read at request time so Vercel runtime env vars work even when missing at build time.
+	const mapboxToken = publicEnv.PUBLIC_MAPBOX_TOKEN ?? '';
+
 	// Run sheet accessibility test
 	await debugSheetAccess();
 
@@ -365,7 +369,7 @@ export const load: PageServerLoad = async () => {
 					recordCount: cachedResult.incidentsData?.length || 0,
 					lastUpdated: cachedResult.lastUpdated
 				});
-				return cachedResult;
+				return { ...cachedResult, mapboxToken };
 			} else {
 				// Cache is stale or empty, fetch fresh data
 				console.warn('⚠️ Cached data is invalid, fetching fresh data...');
@@ -379,7 +383,7 @@ export const load: PageServerLoad = async () => {
 					recordCount: result.incidentsData?.length || 0,
 					lastUpdated: result.lastUpdated
 				});
-				return result;
+				return { ...result, mapboxToken };
 			}
 		} catch (error) {
 			// Cache file not found or invalid, fetch fresh data
@@ -394,7 +398,7 @@ export const load: PageServerLoad = async () => {
 				recordCount: result.incidentsData?.length || 0,
 				lastUpdated: result.lastUpdated
 			});
-			return result;
+			return { ...result, mapboxToken };
 		}
 	} else {
 		// In development/preview, always fetch fresh data
@@ -410,7 +414,7 @@ export const load: PageServerLoad = async () => {
 				recordCount: result.incidentsData?.length || 0,
 				lastUpdated: result.lastUpdated
 			});
-			return result;
+			return { ...result, mapboxToken };
 		} catch (error) {
 			console.error('❌ Failed to fetch fresh data, falling back to cached data:', error);
 			const fallbackResult = await loadCachedData();
@@ -418,7 +422,7 @@ export const load: PageServerLoad = async () => {
 				recordCount: fallbackResult.incidentsData?.length || 0,
 				lastUpdated: fallbackResult.lastUpdated
 			});
-			return fallbackResult;
+			return { ...fallbackResult, mapboxToken };
 		}
 	}
 };

@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 
 	let { data } = $props();
-	const { incidentsData } = data;
+	const { incidentsData, mapboxToken } = data;
 
 	let selectedMarkerId = $state<number | null>(null);
 	let highlightedMarkerId = $state<number | null>(null);
@@ -92,6 +92,7 @@
 					{setHighlightedMarkerId}
 					{incidentsData}
 					{selectedWeekStartDate}
+					{mapboxToken}
 				/>
 			</div>
 			<div class="w-full shrink-0">

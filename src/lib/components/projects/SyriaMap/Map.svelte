@@ -3,7 +3,6 @@
 
 	import 'mapbox-gl/dist/mapbox-gl.css';
 	import mapboxgl from 'mapbox-gl';
-	import { PUBLIC_MAPBOX_TOKEN } from '$env/static/public';
 
 	interface MapData {
 		mapStyle?: string;
@@ -30,15 +29,19 @@
 		essential: true
 	};
 
-	const { data, markerClickHandler, selectedMarkerId } = $props() as {
+	const { data, markerClickHandler, selectedMarkerId, mapboxToken } = $props() as {
 		data: MapData;
+		mapboxToken: string;
 		markerClickHandler: (popupData: {
 			id: string;
 			name: string;
 			profession: string;
 			text: string;
 		}) => void;
+		selectedMarkerId: number;
 	};
+
+	let mapInitError = $state<string | null>(null);
 
 	let openPopupId = $state(-1);
 
@@ -84,8 +87,6 @@
 		}
 	});
 
-	mapboxgl.accessToken = PUBLIC_MAPBOX_TOKEN;
-
 	let map: mapboxgl.Map;
 	let mapLoaded = false;
 
@@ -110,6 +111,13 @@
 	const expandedSyriaBounds = expandBounds(syriaBounds, 0.015);
 
 	onMount(async () => {
+		if (!mapboxToken) {
+			mapInitError = 'Map unavailable: Mapbox access token is not configured.';
+			return;
+		}
+
+		mapboxgl.accessToken = mapboxToken;
+
 		// Wait for the DOM to update before initializing the map
 		await tick();
 
@@ -298,7 +306,17 @@
 </script>
 
 <!-- Map container -->
-<div id="map" class="map-container w-full"></div>
+<div class="relative w-full">
+	<div id="map" class="map-container w-full"></div>
+	{#if mapInitError}
+		<div
+			class="absolute inset-0 flex items-center justify-center bg-burgundy/10 px-6 text-center text-sm text-burgundy"
+			role="alert"
+		>
+			{mapInitError}
+		</div>
+	{/if}
+</div>
 
 <style>
 	.map-container {
