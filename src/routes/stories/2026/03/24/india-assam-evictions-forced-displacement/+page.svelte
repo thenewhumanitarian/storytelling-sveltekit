@@ -592,11 +592,11 @@
 			<h2 class="content-heading">The eviction machine</h2>
 			<div class="prose-content">
 				<p>
-					One person displaced every 25 minutes, 24 hours a day, for nearly five years. The vast majority of
-					those evicted are Bengali-speaking Muslims &ndash; a campaign driven by Assam&rsquo;s
-					Chief Minister Himanta Biswa Sarma, who is seen as a poster child for implementing the
-					agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian Bharatiya Janata
-					Party (BJP).
+					One person displaced every 25 minutes, 24 hours a day, for nearly five years. The vast
+					majority of those evicted are Bengali-speaking Muslims &ndash; a campaign driven by
+					Assam&rsquo;s Chief Minister Himanta Biswa Sarma, who is seen as a poster child for
+					implementing the agenda of Indian Prime Minister Narendra Modi&rsquo;s Hindu majoritarian
+					Bharatiya Janata Party (BJP).
 				</p>
 				<p>
 					Maiful*, 65, says her family received an eviction notice in November and were given a
@@ -733,17 +733,32 @@
 				</p>
 
 				<p>
-					The Assam government <a href="https://www.bbc.com/news/articles/cqj78v79z9do" target="_blank" rel="noopener">frames</a> these evictions as action against &ldquo;illegal
-					immigrants&rdquo;<!-- CHANGED: curly quotes --> from Bangladesh. But the story is more complicated.
-					Many of those being displaced are Bengali-speaking Muslims whose families arrived after 1947,
-					when <ExpandableInfobox data={infoboxData.partition} suffix="." />
+					The Assam government <a
+						href="https://www.bbc.com/news/articles/cqj78v79z9do"
+						target="_blank"
+						rel="noopener">frames</a
+					>
+					these evictions as action against &ldquo;illegal immigrants&rdquo;<!-- CHANGED: curly quotes -->
+					from Bangladesh. But the story is more complicated. Many of those being displaced are Bengali-speaking
+					Muslims whose families arrived after 1947, when <ExpandableInfobox
+						data={infoboxData.partition}
+						suffix="."
+					/>
 				</p>
 
 				<p>
-					Some came with <a href="https://pragyata.com/immigrants-were-once-welcomed-in-assam-part-2/" target="_blank" rel="noopener">official permission</a> from the government of what is now India. Others were
-					<a href="https://scroll.in/article/1085263/behind-wave-of-assam-evictions-a-hungry-river-and-a-land-policy-loaded-against-miya-muslims" target="_blank" rel="noopener">given land by the Indian state itself</a>, often unproductive char lands that the government
-					was eager to have cultivated. By the time the evictions began, many had been living in
-					Assam for 50 to 70 years.
+					Some came with <a
+						href="https://pragyata.com/immigrants-were-once-welcomed-in-assam-part-2/"
+						target="_blank"
+						rel="noopener">official permission</a
+					>
+					from the government of what is now India. Others were
+					<a
+						href="https://scroll.in/article/1085263/behind-wave-of-assam-evictions-a-hungry-river-and-a-land-policy-loaded-against-miya-muslims"
+						target="_blank"
+						rel="noopener">given land by the Indian state itself</a
+					>, often unproductive char lands that the government was eager to have cultivated. By the
+					time the evictions began, many had been living in Assam for 50 to 70 years.
 				</p>
 			</div>
 		</div>
@@ -767,11 +782,16 @@
 			<h2 class="content-heading">After partition</h2>
 			<div class="prose-content">
 				<p>
-					More than one third of Assam&rsquo;s <a href="https://timesofindia.indiatimes.com/city/guwahati/assam-cabinet-approves-census-of-native-muslims/articleshow/105849216.cms" target="_blank" rel="noopener">31 million people</a> are Muslim &ndash; one of the
-					highest proportions of any Indian state. That demographic reality has made Assam a focal
-					point of a broader national shift. In recent years, Modi&rsquo;s BJP-led government has
-					faced repeated accusations of enacting laws and policies that specifically target
-					India&rsquo;s <a
+					More than one third of Assam&rsquo;s <a
+						href="https://timesofindia.indiatimes.com/city/guwahati/assam-cabinet-approves-census-of-native-muslims/articleshow/105849216.cms"
+						target="_blank"
+						rel="noopener">31 million people</a
+					>
+					are Muslim &ndash; one of the highest proportions of any Indian state. That demographic reality
+					has made Assam a focal point of a broader national shift. In recent years, Modi&rsquo;s BJP-led
+					government has faced repeated accusations of enacting laws and policies that specifically target
+					India&rsquo;s
+					<a
 						href="https://www.aljazeera.com/news/2024/3/11/india-implements-anti-muslim-2019-citizenship-law-weeks-before-election"
 						target="_blank"
 						rel="noopener">200 million Muslims</a
@@ -816,15 +836,22 @@
 		<div class="content-container">
 			<div class="prose-content">
 				<p>
-					What makes these evictions particularly troubling is that many <a href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf" target="_blank" rel="noopener">families held Patta</a> &ndash;
-					official land titles issued by the Assam government &ndash; along with ration cards and
-					voter IDs, documents that under Indian law establish legal residence and citizenship.
+					What makes these evictions particularly troubling is that many <a
+						href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf"
+						target="_blank"
+						rel="noopener">families held Patta</a
+					> &ndash; official land titles issued by the Assam government &ndash; along with ration cards
+					and voter IDs, documents that under Indian law establish legal residence and citizenship.
 				</p>
 
 				<p>
 					Some Pattas dated back decades, proof that the state itself had recognised their right to
-					the land. Yet <a href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf" target="_blank" rel="noopener">documented cases</a> show Patta-holders being evicted without warning, without
-					due process, their legal papers rendered meaningless overnight.
+					the land. Yet <a
+						href="https://apcrindia.in/wp-content/uploads/2025/08/Assam-Eviction-Report.pdf"
+						target="_blank"
+						rel="noopener">documented cases</a
+					> show Patta-holders being evicted without warning, without due process, their legal papers
+					rendered meaningless overnight.
 				</p>
 			</div>
 		</div>
@@ -882,8 +909,7 @@
 						target="_blank"
 						rel="noopener">detention centre</a
 					> opened in Goalpara and designed to house up to 3,500 people. In some cases, children were
-					separated from their parents. For many of the evicted, there is literally nowhere legal to
-					go.
+					separated from their parents. For many of the evicted, there is literally nowhere legal to go.
 				</p>
 			</div>
 		</div>
@@ -918,11 +944,19 @@
 			<div class="prose-content">
 				<p>
 					The <ExpandableInfobox data={infoboxData.nagaland} /> has triggered repeated bouts of violent
-					clashes over the decades. Two major confrontations in 1979 and 1985 left more than <a href="https://scroll.in/article/676175/what-you-need-to-know-about-the-five-decade-border-conflict-between-assam-and-nagaland" target="_blank" rel="noopener">100 people
-					dead</a>. In the 1970s, the Assam government settled landless communities in this zone as part
-					of a strategy to strengthen its territorial claims. According to Zain, his family was part
-					of that policy. Now, decades later, the same government is <a href="https://timesofindia.indiatimes.com/city/guwahati/3k-bighas-freed-in-uriamghat-278-houses-razed-betel-nut-unit-demolished/articleshow/123003623.cms" target="_blank" rel="noopener">demolishing the settlement</a> it once
-					built.
+					clashes over the decades. Two major confrontations in 1979 and 1985 left more than
+					<a
+						href="https://scroll.in/article/676175/what-you-need-to-know-about-the-five-decade-border-conflict-between-assam-and-nagaland"
+						target="_blank"
+						rel="noopener">100 people dead</a
+					>. In the 1970s, the Assam government settled landless communities in this zone as part of
+					a strategy to strengthen its territorial claims. According to Zain, his family was part of
+					that policy. Now, decades later, the same government is
+					<a
+						href="https://timesofindia.indiatimes.com/city/guwahati/3k-bighas-freed-in-uriamghat-278-houses-razed-betel-nut-unit-demolished/articleshow/123003623.cms"
+						target="_blank"
+						rel="noopener">demolishing the settlement</a
+					> it once built.
 				</p>
 
 				<!-- CHANGED: curly quotes -->
@@ -1007,13 +1041,13 @@
 					>
 					often draw parallels between India&rsquo;s &ldquo;bulldozer justice&rdquo; and Israel&rsquo;s
 					long-standing practice<!-- CHANGED: curly quotes + apostrophes -->
-				of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home
-				demolitions as a central tool of displacement against Palestinians, demolishing more than
-				<a
-					href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/"
-					target="_blank"
-					rel="noopener">55,000 homes since 1967</a
-				> alone. The justification is almost always the same: illegal construction, encroachment, or
+					of demolishing Palestinian homes in the occupied territories. Since 1948, Israel has used home
+					demolitions as a central tool of displacement against Palestinians, demolishing more than
+					<a
+						href="https://icahd.org/2021/05/11/125-years-of-displacement-an-icahd-statement-on-the-israeli-assault-on-occupied-palestine/"
+						target="_blank"
+						rel="noopener">55,000 homes since 1967</a
+					> alone. The justification is almost always the same: illegal construction, encroachment, or
 					a bureaucratic infraction.
 				</p>
 			</div>
@@ -1028,9 +1062,13 @@
 			<div class="prose-content">
 				<p>
 					The language driving these evictions in Assam has been sharply polarising. Chief Minister
-					Himanta Biswa Sarma has a long record of Islamophobic rhetoric, <a href="https://frontline.thehindu.com/news/assam-election-2026-bjp-congress-polarisation-analysis/article70753671.ece/amp/" target="_blank" rel="noopener">frequently framing</a>
-					Bengali-speaking Muslims as &ldquo;Bangladeshi encroachers&rdquo; and a demographic threat
-					to justify the state&rsquo;s aggressive displacement policies.<!-- CHANGED: curly quotes + apostrophe -->
+					Himanta Biswa Sarma has a long record of Islamophobic rhetoric, <a
+						href="https://frontline.thehindu.com/news/assam-election-2026-bjp-congress-polarisation-analysis/article70753671.ece/amp/"
+						target="_blank"
+						rel="noopener">frequently framing</a
+					>
+					Bengali-speaking Muslims as &ldquo;Bangladeshi encroachers&rdquo; and a demographic threat to
+					justify the state&rsquo;s aggressive displacement policies.<!-- CHANGED: curly quotes + apostrophe -->
 				</p>
 
 				<p>
@@ -1042,8 +1080,8 @@
 						target="_blank"
 						rel="noopener">video</a
 					>
-					of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned &ldquo;point
-					blank shot&rdquo;.<!-- CHANGED: curly quotes -->
+					of an AI-generated Sarma aiming and firing a rifle at Muslims, captioned &ldquo;point blank
+					shot&rdquo;.<!-- CHANGED: curly quotes -->
 					It was deleted after it was met by mass outrage from the general public and opposition leaders,
 					who warned that it was a direct incitement to violence against minorities.
 				</p>
@@ -1056,8 +1094,8 @@
 						target="_blank"
 						rel="noopener">statement</a
 					>
-					condemning Sarma&rsquo;s relentless &ldquo;hateful and divisive&rdquo; remarks, warning
-					that such state-led<!-- CHANGED: curly quotes + apostrophe -->
+					condemning Sarma&rsquo;s relentless &ldquo;hateful and divisive&rdquo; remarks, warning that
+					such state-led<!-- CHANGED: curly quotes + apostrophe -->
 					rhetoric fundamentally threatens constitutional rights and the safety of minorities.
 				</p>
 			</div>
@@ -1098,11 +1136,16 @@
 			<div class="prose-content">
 				<p>
 					<!-- CHANGED: curly quotes + apostrophe -->
-					In November 2024, India&rsquo;s top court <a href="https://timesofindia.indiatimes.com/india/15-day-notice-videography-of-demolition-supreme-court-issues-guidelines-on-bulldozer-justice/articleshow/115244333.cms" target="_blank" rel="noopener">issued</a> landmark directives to curb arbitrary demolitions.
-					The ruling established strict safeguards: 15-day mandatory notices before any demolition, videographed
-					proceedings, written reasons for action, and the right to be heard. The Court declared that
-					the &ldquo;executive cannot become the Judge&rdquo;, calling such demolitions unconstitutional
-					and &ldquo;reminiscent of a lawless state of affairs&rdquo;.
+					In November 2024, India&rsquo;s top court
+					<a
+						href="https://timesofindia.indiatimes.com/india/15-day-notice-videography-of-demolition-supreme-court-issues-guidelines-on-bulldozer-justice/articleshow/115244333.cms"
+						target="_blank"
+						rel="noopener">issued</a
+					> landmark directives to curb arbitrary demolitions. The ruling established strict safeguards:
+					15-day mandatory notices before any demolition, videographed proceedings, written reasons for
+					action, and the right to be heard. The Court declared that the &ldquo;executive cannot become
+					the Judge&rdquo;, calling such demolitions unconstitutional and &ldquo;reminiscent of a lawless
+					state of affairs&rdquo;.
 				</p>
 			</div>
 
@@ -1453,8 +1496,11 @@
 
 			<div class="prose-content">
 				<p>
-					On 8 July 2025, 1,400 families were <a href="https://www.telegraphindia.com/north-east/villages-razed-for-power-plant-in-assam-protests-erupt-over-eviction-of-1400-families-prnt/cid/2112102" target="_blank" rel="noopener">evicted</a> from villages in Dhubri district. Three people
-					were injured.
+					On 8 July 2025, 1,400 families were <a
+						href="https://www.telegraphindia.com/north-east/villages-razed-for-power-plant-in-assam-protests-erupt-over-eviction-of-1400-families-prnt/cid/2112102"
+						target="_blank"
+						rel="noopener">evicted</a
+					> from villages in Dhubri district. Three people were injured.
 				</p>
 
 				<p>
@@ -1470,13 +1516,12 @@
 						target="_blank"
 						rel="noopener">18.29 million tonnes of iron</a
 					>
-					ore in the same area. Adani Group &ndash; one of India&rsquo;s most powerful
-					conglomerates, with interests spanning energy, ports, mining, and infrastructure &ndash;
-					has expanded rapidly over the past decade alongside the country&rsquo;s infrastructure
-					push.<!-- CHANGED: curly apostrophes --> Opposition parties and critics have repeatedly questioned
-					Gautam Adani, the founder of the Adani Group, about his proximity to Modi, though both the
-					company and the government deny any preferential treatment. Adani is India&rsquo;s second-wealthiest
-					person.<!-- CHANGED: curly apostrophe -->
+					ore in the same area. Adani Group &ndash; one of India&rsquo;s most powerful conglomerates,
+					with interests spanning energy, ports, mining, and infrastructure &ndash; has expanded rapidly
+					over the past decade alongside the country&rsquo;s infrastructure push.<!-- CHANGED: curly apostrophes -->
+					Opposition parties and critics have repeatedly questioned Gautam Adani, the founder of the Adani
+					Group, about his proximity to Modi, though both the company and the government deny any preferential
+					treatment. Adani is India&rsquo;s second-wealthiest person.<!-- CHANGED: curly apostrophe -->
 				</p>
 
 				<p>
@@ -1484,7 +1529,9 @@
 						href="https://www.business-standard.com/economy/news/biz-summit-day-1-assam-receives-rs-2-5-trillion-investment-proposals-125022501400_1.html"
 						target="_blank"
 						rel="noopener">Advantage Assam 2.0 investment summit</a
-				>. Since then, major corporations including Adani, Reliance Industries, and Vedanta have signed investment agreements or expressed interest in industrial and agricultural projects.
+					>. Since then, major corporations including Adani, Reliance Industries, and Vedanta have
+					signed investment agreements or expressed interest in industrial and agricultural
+					projects.
 				</p>
 
 				<!-- CHANGED: sentence case -->
@@ -1534,8 +1581,8 @@
 						target="_blank"
 						rel="noopener">joint investigation</a
 					>
-					by The Wire and The Crosscurrent reported that a real estate company co-founded by the
-					chief minister&rsquo;s wife acquired at least 18 acres of government land in and<!-- CHANGED: curly apostrophe -->
+					by The Wire and The Crosscurrent reported that a real estate company co-founded by the chief
+					minister&rsquo;s wife acquired at least 18 acres of government land in and<!-- CHANGED: curly apostrophe -->
 					around Guwahati through a series of transactions between 2006 and 2009 that appeared to contravene
 					state land regulations. The parcels reportedly included ceiling-surplus land meant for redistribution
 					to landless families, tribal belt land with transfer restrictions, and plots reserved for public
@@ -1677,8 +1724,8 @@
 				<p>
 					This reflects a broader pattern in Assam&rsquo;s eviction drives, where the category of
 					&ldquo;indigenous&rdquo;<!-- CHANGED: curly quotes + apostrophe --> functions as a shifting
-					benchmark, often used to undermine the land claims of Bengali-origin Muslims regardless of
-					decades of residence or tax records.
+					benchmark, often used to undermine the land claims of Bengali-origin Muslims regardless of decades
+					of residence or tax records.
 				</p>
 
 				<!-- CHANGED: curly quotes -->
@@ -1732,8 +1779,7 @@
 						target="_blank"
 						rel="noopener">UN experts</a
 					>
-					called on India to &ldquo;halt arbitrary demolitions targeting minorities and marginalised
-					communities.&rdquo;<!-- CHANGED: curly quotes -->
+					called on India to &ldquo;halt arbitrary demolitions targeting minorities and marginalised communities.&rdquo;<!-- CHANGED: curly quotes -->
 				</p>
 
 				<p>
@@ -1761,8 +1807,12 @@
 				<p>Similar patterns have been observed in parts of India and Latin America.</p>
 
 				<p>
-					Paraguay has forcibly <a href="https://www.fian.org/en/paraguay-stop-the-wave-of-forced-evictions-and-criminalization-of-peasant-and-indigenous-communities-2/" target="_blank" rel="noopener">evicted 3,000 people</a> from Indigenous communities since September
-					2024, while Guatemala razed indigenous settlements using tactics from its civil war era.
+					Paraguay has forcibly <a
+						href="https://www.fian.org/en/paraguay-stop-the-wave-of-forced-evictions-and-criminalization-of-peasant-and-indigenous-communities-2/"
+						target="_blank"
+						rel="noopener">evicted 3,000 people</a
+					> from Indigenous communities since September 2024, while Guatemala razed indigenous settlements
+					using tactics from its civil war era.
 				</p>
 
 				<p>
@@ -1771,8 +1821,8 @@
 						target="_blank"
 						rel="noopener">&ldquo;uncanny similarity&rdquo;</a
 					>
-					between India&rsquo;s methods and Israel&rsquo;s conduct in Palestine, explaining both use
-					bulldozers to create &ldquo;chilling effects&rdquo;<!-- CHANGED: curly quotes + apostrophes -->
+					between India&rsquo;s methods and Israel&rsquo;s conduct in Palestine, explaining both use bulldozers
+					to create &ldquo;chilling effects&rdquo;<!-- CHANGED: curly quotes + apostrophes -->
 					and punish entire communities.
 				</p>
 

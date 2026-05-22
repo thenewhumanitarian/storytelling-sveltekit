@@ -48,7 +48,7 @@
 >
 	<div
 		class={`transform transition-opacity duration-[${duration}ms] delay-[${delay}ms] ease-out
-			${isInView ? 'translate-x-0 translate-y-0 opacity-100 blur-0' : 'translate-x-[${flipX}px] translate-y-[${yOffset}px] opacity-0 blur-sm'}
+			${isInView ? 'translate-x-0 translate-y-0 opacity-100 blur-0' : 'translate-x-[${flipX}px] translate-y-[${yOffset}px] opacity-0 blur-xs'}
 			fade-in--wrapper h-full w-full ${containerClasses || 'flex flex-col items-center justify-center'}
 		`}
 		style="will-change: opacity, transform, filter;"

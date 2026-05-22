@@ -18,7 +18,7 @@
 				{#if blok.text}
 					<RichText
 						blok={blok.text}
-						className="prose-p:text-sm prose-p:lg:text-md prose-p:xl:text-xl"
+						className="prose-p:text-sm prose-p:lg:text-md xl:prose-p:text-xl"
 					/>
 				{/if}
 			</div>

@@ -28,9 +28,9 @@
  */
 
 declare global {
-  interface Window {
-    __storyblokInitialized?: boolean;
-  }
+	interface Window {
+		__storyblokInitialized?: boolean;
+	}
 }
 import { PUBLIC_ENABLE_VISUAL_EDITOR } from '$env/static/public';
 
@@ -64,216 +64,270 @@ import TextAnnotation from '$lib/components/projects/LebanonDisplaced/TextAnnota
 import MailchimpForm from '$lib/components/projects/LebanonDisplaced/MCForm.svelte';
 
 // Import Access token and region from env variables
-import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from "$env/static/public";
+import { PUBLIC_ACCESS_TOKEN, PUBLIC_REGION } from '$env/static/public';
 
 let initialized = false; // Flag to check if Storyblok is initialized
 
 // Initialize Storyblok with the provided access token and components
 export function initStoryblok() {
-  if (initialized) return;
-  initialized = true;
+	if (initialized) return;
+	initialized = true;
 
-  storyblokInit({
-    accessToken: PUBLIC_ACCESS_TOKEN,
-    use: [apiPlugin],
-    bridge: false, // disable bridge for SSR
-    apiOptions: {
-      https: true,
-      region: PUBLIC_REGION || 'eu'
-    },
-    components: {
-      page: Page,
-      detailPage: DetailPage,
-      contentWrapper: ContentWrapper,
-      introView: IntroView,
-      introObject: IntroObject,
-      horizontalScrollWrapper: HorizontalScrollWrapper,
-      storyGrid: StoryGrid,
-      storyGridPanel: StoryGridPanel,
-      fadeInWrapper: FadeIn,
-      mouseoverBox: MouseoverBox,
-      richText: RichText,
-      mediaElement: MediaElement,
-      soundCite: SoundCite,
-      inlineImage: InlineImage,
-      horizontalSpacer: HorizontalSpacer,
-      horizontalScroll: HorizontalScroll,
-      textAnnotation: TextAnnotation,
-      mailchimpForm: MailchimpForm,
-    }
-  });
+	storyblokInit({
+		accessToken: PUBLIC_ACCESS_TOKEN,
+		use: [apiPlugin],
+		bridge: false, // disable bridge for SSR
+		apiOptions: {
+			https: true,
+			region: PUBLIC_REGION || 'eu'
+		},
+		components: {
+			page: Page,
+			detailPage: DetailPage,
+			contentWrapper: ContentWrapper,
+			introView: IntroView,
+			introObject: IntroObject,
+			horizontalScrollWrapper: HorizontalScrollWrapper,
+			storyGrid: StoryGrid,
+			storyGridPanel: StoryGridPanel,
+			fadeInWrapper: FadeIn,
+			mouseoverBox: MouseoverBox,
+			richText: RichText,
+			mediaElement: MediaElement,
+			soundCite: SoundCite,
+			inlineImage: InlineImage,
+			horizontalSpacer: HorizontalSpacer,
+			horizontalScroll: HorizontalScroll,
+			textAnnotation: TextAnnotation,
+			mailchimpForm: MailchimpForm
+		}
+	});
 }
 
 export async function loadStory(slug: string, lang: string = 'en') {
-  initStoryblok(); // make sure it's initialized
-  const api = await useStoryblokApi();
+	initStoryblok(); // make sure it's initialized
+	const api = await useStoryblokApi();
 
-  // const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
-  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
-  const res = await api.get(`cdn/stories/diaries/${slug}`, {
-    version,
-    language: lang || 'en',
-  });
+	// const version = process.env.NODE_ENV === 'development' ? 'draft' : 'published';
+	const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
+	const res = await api.get(`cdn/stories/diaries/${slug}`, {
+		version,
+		language: lang || 'en'
+	});
 
-  return res.data.story;
+	return res.data.story;
 }
 
 // Function that loads all stories except the one with the given slug
 export async function loadAllStoriesExcept(slug: string, lang: string = 'en') {
-  initStoryblok(); // ensure Storyblok is initialized once
-  const api = await useStoryblokApi();
+	initStoryblok(); // ensure Storyblok is initialized once
+	const api = await useStoryblokApi();
 
-  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
-  const res = await api.get('cdn/stories', {
-    version,
-    starts_with: 'diaries/',
-    language: lang || 'en',
-  });
-  return res.data.stories.filter((story: any) => story.slug !== `${slug}`);
+	const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
+	const res = await api.get('cdn/stories', {
+		version,
+		starts_with: 'diaries/',
+		language: lang || 'en'
+	});
+	return res.data.stories.filter((story: any) => story.slug !== `${slug}`);
 }
 
 export async function loadStaticPage(slug: string, lang: string = 'en') {
-  initStoryblok(); // ensure Storyblok is initialized once
-  const api = await useStoryblokApi();
+	initStoryblok(); // ensure Storyblok is initialized once
+	const api = await useStoryblokApi();
 
-  const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
-  const res = await api.get(`cdn/stories/${slug}`, {
-    version,
-    language: lang || 'en',
-  });
+	const version = PUBLIC_ENABLE_VISUAL_EDITOR === 'true' ? 'draft' : 'published';
+	const res = await api.get(`cdn/stories/${slug}`, {
+		version,
+		language: lang || 'en'
+	});
 
-  return res.data.story;
+	return res.data.story;
 }
 
 export async function useStoryblok({ bridge = false } = {}) {
-  const isClient = typeof window !== 'undefined';
+	const isClient = typeof window !== 'undefined';
 
-  if (!isClient) {
-    storyblokInit({
-      accessToken: PUBLIC_ACCESS_TOKEN,
-      use: [apiPlugin],
-      bridge: false,
-      components: {
-        page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
-        detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,
-        contentWrapper: (await import("$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte")).default,
-        introView: (await import("$lib/components/projects/LebanonDisplaced/IntroView.svelte")).default,
-        introObject: (await import("$lib/components/projects/LebanonDisplaced/IntroObject.svelte")).default,
-        horizontalScrollWrapper: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte")).default,
-        storyGrid: (await import("$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte")).default,
-        storyGridPanel: (await import("$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte")).default,
-        fadeInWrapper: (await import("$lib/components/projects/LebanonDisplaced/FadeIn.svelte")).default,
-        mouseoverBox: (await import("$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte")).default,
-        richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
-        mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
-        soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
-        inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
-        horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
-        horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
-        textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
-        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MCForm.svelte")).default,
-      },
-      apiOptions: {
-        https: true,
-        cache: { type: "memory" },
-        region: PUBLIC_REGION || 'eu',
-      }
-    });
-  } else if (!window.__storyblokInitialized) {
-    const isEditor = window.location.search.includes('_storyblok') || window.location.search.includes('editor=true');
+	if (!isClient) {
+		storyblokInit({
+			accessToken: PUBLIC_ACCESS_TOKEN,
+			use: [apiPlugin],
+			bridge: false,
+			components: {
+				page: (await import('$lib/components/projects/LebanonDisplaced/Page.svelte')).default,
+				detailPage: (await import('$lib/components/projects/LebanonDisplaced/DetailPage.svelte'))
+					.default,
+				contentWrapper: (
+					await import('$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte')
+				).default,
+				introView: (await import('$lib/components/projects/LebanonDisplaced/IntroView.svelte'))
+					.default,
+				introObject: (await import('$lib/components/projects/LebanonDisplaced/IntroObject.svelte'))
+					.default,
+				horizontalScrollWrapper: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte')
+				).default,
+				storyGrid: (
+					await import('$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte')
+				).default,
+				storyGridPanel: (
+					await import('$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte')
+				).default,
+				fadeInWrapper: (await import('$lib/components/projects/LebanonDisplaced/FadeIn.svelte'))
+					.default,
+				mouseoverBox: (
+					await import('$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte')
+				).default,
+				richText: (await import('$lib/components/projects/LebanonDisplaced/RichText.svelte'))
+					.default,
+				mediaElement: (
+					await import('$lib/components/projects/LebanonDisplaced/MediaElement.svelte')
+				).default,
+				soundCite: (await import('$lib/components/projects/LebanonDisplaced/SoundCite.svelte'))
+					.default,
+				inlineImage: (await import('$lib/components/projects/LebanonDisplaced/InlineImage.svelte'))
+					.default,
+				horizontalSpacer: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte')
+				).default,
+				horizontalScroll: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte')
+				).default,
+				textAnnotation: (
+					await import('$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte')
+				).default,
+				mailchimpForm: (await import('$lib/components/projects/LebanonDisplaced/MCForm.svelte'))
+					.default
+			},
+			apiOptions: {
+				https: true,
+				cache: { type: 'memory' },
+				region: PUBLIC_REGION || 'eu'
+			}
+		});
+	} else if (!window.__storyblokInitialized) {
+		const isEditor =
+			window.location.search.includes('_storyblok') ||
+			window.location.search.includes('editor=true');
 
-    storyblokInit({
-      accessToken: PUBLIC_ACCESS_TOKEN,
-      use: [apiPlugin],
-      bridge: isEditor, // ✅ Only enable in visual editor context
-      components: {
-        page: (await import("$lib/components/projects/LebanonDisplaced/Page.svelte")).default,
-        detailPage: (await import("$lib/components/projects/LebanonDisplaced/DetailPage.svelte")).default,
-        contentWrapper: (await import("$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte")).default,
-        introView: (await import("$lib/components/projects/LebanonDisplaced/IntroView.svelte")).default,
-        introObject: (await import("$lib/components/projects/LebanonDisplaced/IntroObject.svelte")).default,
-        horizontalScrollWrapper: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte")).default,
-        storyGrid: (await import("$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte")).default,
-        storyGridPanel: (await import("$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte")).default,
-        fadeInWrapper: (await import("$lib/components/projects/LebanonDisplaced/FadeIn.svelte")).default,
-        mouseoverBox: (await import("$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte")).default,
-        richText: (await import("$lib/components/projects/LebanonDisplaced/RichText.svelte")).default,
-        mediaElement: (await import("$lib/components/projects/LebanonDisplaced/MediaElement.svelte")).default,
-        soundCite: (await import("$lib/components/projects/LebanonDisplaced/SoundCite.svelte")).default,
-        inlineImage: (await import("$lib/components/projects/LebanonDisplaced/InlineImage.svelte")).default,
-        horizontalSpacer: (await import("$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte")).default,
-        horizontalScroll: (await import("$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte")).default,
-        textAnnotation: (await import("$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte")).default,
-        mailchimpForm: (await import("$lib/components/projects/LebanonDisplaced/MCForm.svelte")).default,
-      },
-      apiOptions: {
-        https: true,
-        cache: { type: "memory" },
-        region: PUBLIC_REGION || 'eu',
-      }
-    });
-    window.__storyblokInitialized = true;
-  }
+		storyblokInit({
+			accessToken: PUBLIC_ACCESS_TOKEN,
+			use: [apiPlugin],
+			bridge: isEditor, // ✅ Only enable in visual editor context
+			components: {
+				page: (await import('$lib/components/projects/LebanonDisplaced/Page.svelte')).default,
+				detailPage: (await import('$lib/components/projects/LebanonDisplaced/DetailPage.svelte'))
+					.default,
+				contentWrapper: (
+					await import('$lib/components/projects/LebanonDisplaced/ContentWrapper.svelte')
+				).default,
+				introView: (await import('$lib/components/projects/LebanonDisplaced/IntroView.svelte'))
+					.default,
+				introObject: (await import('$lib/components/projects/LebanonDisplaced/IntroObject.svelte'))
+					.default,
+				horizontalScrollWrapper: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalScrollWrapper.svelte')
+				).default,
+				storyGrid: (
+					await import('$lib/components/projects/LebanonDisplaced/StoryGridWrapper.svelte')
+				).default,
+				storyGridPanel: (
+					await import('$lib/components/projects/LebanonDisplaced/StoryGridPanel.svelte')
+				).default,
+				fadeInWrapper: (await import('$lib/components/projects/LebanonDisplaced/FadeIn.svelte'))
+					.default,
+				mouseoverBox: (
+					await import('$lib/components/projects/LebanonDisplaced/MouseoverBox.svelte')
+				).default,
+				richText: (await import('$lib/components/projects/LebanonDisplaced/RichText.svelte'))
+					.default,
+				mediaElement: (
+					await import('$lib/components/projects/LebanonDisplaced/MediaElement.svelte')
+				).default,
+				soundCite: (await import('$lib/components/projects/LebanonDisplaced/SoundCite.svelte'))
+					.default,
+				inlineImage: (await import('$lib/components/projects/LebanonDisplaced/InlineImage.svelte'))
+					.default,
+				horizontalSpacer: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalSpacer.svelte')
+				).default,
+				horizontalScroll: (
+					await import('$lib/components/projects/LebanonDisplaced/HorizontalScroll.svelte')
+				).default,
+				textAnnotation: (
+					await import('$lib/components/projects/LebanonDisplaced/TextAnnotation.svelte')
+				).default,
+				mailchimpForm: (await import('$lib/components/projects/LebanonDisplaced/MCForm.svelte'))
+					.default
+			},
+			apiOptions: {
+				https: true,
+				cache: { type: 'memory' },
+				region: PUBLIC_REGION || 'eu'
+			}
+		});
+		window.__storyblokInitialized = true;
+	}
 }
 
 // Optional reinit for editor context
 export async function reinitStoryblok() {
-  if (typeof window !== 'undefined') {
-    window.__storyblokInitialized = false;
-    await useStoryblok({ bridge: true }); // <-- Force enable
-  }
+	if (typeof window !== 'undefined') {
+		window.__storyblokInitialized = false;
+		await useStoryblok({ bridge: true }); // <-- Force enable
+	}
 }
 
 export function lang() {
-  return getContext('lang') as string;
+	return getContext('lang') as string;
 }
 
 // Create a readable store from context (context is available only inside component)
 export function createLangStore() {
-  const langValue = lang();
-  return readable(langValue);
+	const langValue = lang();
+	return readable(langValue);
 }
 
 export function isArabic() {
-  return lang() === 'ar';
+	return lang() === 'ar';
 }
 
 export function isEnglish() {
-  return lang() === 'en';
+	return lang() === 'en';
 }
 
 export function createIsRtlStore() {
-  return derived(createLangStore(), ($lang) => $lang === 'ar');
+	return derived(createLangStore(), ($lang) => $lang === 'ar');
 }
 
 export function clientOnlyEditable(node: HTMLElement, blok: any) {
-  if (typeof window === 'undefined') return;
-  return storyblokEditable(node, blok);
+	if (typeof window === 'undefined') return;
+	return storyblokEditable(node, blok);
 }
 
 // This function fetches all story slugs from Storyblok
 export async function fetchAllStorySlugs(lang: string = 'en') {
-  // 🧠 Ensure Storyblok is initialized before calling useStoryblokApi
-  initStoryblok();
+	// 🧠 Ensure Storyblok is initialized before calling useStoryblokApi
+	initStoryblok();
 
-  const api = await useStoryblokApi();
-  const res = await api.get('cdn/stories', {
-    version: 'published',
-    starts_with: 'diaries/',
-    language: lang,
-    per_page: 100,
-  });
+	const api = await useStoryblokApi();
+	const res = await api.get('cdn/stories', {
+		version: 'published',
+		starts_with: 'diaries/',
+		language: lang,
+		per_page: 100
+	});
 
-  interface Story {
-    slug: string;
-  }
+	interface Story {
+		slug: string;
+	}
 
-  interface FetchAllStorySlugsResponse {
-    data: {
-      stories: Story[];
-    };
-  }
+	interface FetchAllStorySlugsResponse {
+		data: {
+			stories: Story[];
+		};
+	}
 
-  const typedRes = res as FetchAllStorySlugsResponse;
-  return typedRes.data.stories.map((story) => story.slug.replace(/^diaries\//, ''));
+	const typedRes = res as FetchAllStorySlugsResponse;
+	return typedRes.data.stories.map((story) => story.slug.replace(/^diaries\//, ''));
 }

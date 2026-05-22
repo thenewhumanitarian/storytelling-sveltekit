@@ -3,7 +3,8 @@ import { readdir, stat, writeFile } from 'fs/promises';
 import { join, parse } from 'path';
 
 const STATIC_DIR = new URL('../static/images/cleared', import.meta.url).pathname;
-const PLACEHOLDER_OUT = new URL('../src/lib/data/cleared/image-placeholders.json', import.meta.url).pathname;
+const PLACEHOLDER_OUT = new URL('../src/lib/data/cleared/image-placeholders.json', import.meta.url)
+	.pathname;
 const SKIP_DIRS = ['social'];
 const TARGET_WIDTHS = [480, 800, 1200];
 const WEBP_QUALITY = 80;
@@ -74,7 +75,8 @@ async function main() {
 	const placeholders = {};
 
 	for (const file of files) {
-		const { filePath, srcWidth, srcHeight, srcSize, results, placeholder } = await optimizeImage(file);
+		const { filePath, srcWidth, srcHeight, srcSize, results, placeholder } =
+			await optimizeImage(file);
 		const relativePath = filePath.replace(STATIC_DIR + '/', '');
 		const publicPath = `/images/cleared/${relativePath}`;
 		console.log(`${relativePath} (${srcWidth}×${srcHeight}, ${(srcSize / 1024).toFixed(0)}KB)`);
@@ -83,7 +85,7 @@ async function main() {
 			placeholder,
 			width: srcWidth,
 			height: srcHeight,
-			srcset: results.map(r => `${r.width}w`).join(', ')
+			srcset: results.map((r) => `${r.width}w`).join(', ')
 		};
 
 		totalSrcBytes += srcSize;

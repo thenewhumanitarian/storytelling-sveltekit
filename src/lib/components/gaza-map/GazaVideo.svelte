@@ -20,13 +20,12 @@
 	const isDirect = isDirectVideoUrl(videoUrl);
 </script>
 
-
 {#if videoUrl && isDirect}
 	<video
 		class={`max-h-full max-w-full shadow-lg ${rounded ? 'rounded-lg' : ''} ${mediaClass}`}
 		src={videoUrl}
 		controls
-		autoplay={autoplay}
+		{autoplay}
 		aria-label={videoCaption || title}
 	></video>
 {:else if videoUrl}
@@ -35,7 +34,7 @@
 			href={videoUrl}
 			target="_blank"
 			rel="noopener noreferrer"
-			class={`group relative block max-w-full overflow-hidden shadow-lg focus:outline-none focus:ring-2 focus:ring-burgundy ${rounded ? 'rounded-lg' : ''}`}
+			class={`group relative block max-w-full overflow-hidden shadow-lg focus:outline-hidden focus:ring-2 focus:ring-burgundy ${rounded ? 'rounded-lg' : ''}`}
 			aria-label="Open media in new window"
 		>
 			<img
@@ -46,7 +45,7 @@
 			<div class="absolute inset-0 bg-black/40 transition-colors group-hover:bg-black/50"></div>
 			<div class="absolute inset-x-0 bottom-0 m-4">
 				<span
-					class="inline-flex items-center gap-2 bg-white/95 px-3 py-2 font-semibold text-burgundy shadow"
+					class="inline-flex items-center gap-2 bg-white/95 px-3 py-2 font-semibold text-burgundy shadow-sm"
 				>
 					<svg
 						class="h-4 w-4"
@@ -72,8 +71,8 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			class={ctaCompact
-				? 'inline-flex items-center gap-2 font-semibold text-burgundy underline hover:text-burgundy/80 focus:outline-none focus:ring-2 focus:ring-burgundy'
-				: 'flex items-center gap-2 bg-white/95 px-4 py-3 font-semibold text-burgundy shadow-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy'}
+				? 'inline-flex items-center gap-2 font-semibold text-burgundy underline hover:text-burgundy/80 focus:outline-hidden focus:ring-2 focus:ring-burgundy'
+				: 'flex items-center gap-2 bg-white/95 px-4 py-3 font-semibold text-burgundy shadow-lg hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy'}
 			aria-label="Open media in new window"
 		>
 			<svg

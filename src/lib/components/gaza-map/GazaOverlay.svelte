@@ -33,7 +33,7 @@
 				/>
 				{#if event.videoCaption}
 					<p
-						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow sm:text-sm"
+						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow-sm sm:text-sm"
 					>
 						{event.videoCaption}
 					</p>
@@ -54,7 +54,7 @@
 				</a>
 				{#if event.imageCaption}
 					<p
-						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow sm:text-sm"
+						class="absolute bottom-0 left-0 right-0 m-0 bg-black/60 p-2 text-xs text-white shadow-sm sm:text-sm"
 					>
 						{event.imageCaption}
 					</p>

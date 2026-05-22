@@ -20,7 +20,16 @@
 		caption?: string;
 	}
 
-	let { currentStep, fadeProgress = 0, fadeInProgress = 0, scrollProgress = 0, videoSrc, overlayConfig, showCreamOverlay = true, caption }: Props = $props();
+	let {
+		currentStep,
+		fadeProgress = 0,
+		fadeInProgress = 0,
+		scrollProgress = 0,
+		videoSrc,
+		overlayConfig,
+		showCreamOverlay = true,
+		caption
+	}: Props = $props();
 
 	let videoEl: HTMLVideoElement | undefined = $state();
 
@@ -56,19 +65,19 @@
 
 	// Cream overlay: visible on step 0, fades to 0 as we scroll toward step 1
 	let creamOpacity = $derived(
-		currentStep === 0
-			? Math.max(0, 0.75 * (1 - scrollProgress / 0.15))
-			: 0
+		currentStep === 0 ? Math.max(0, 0.75 * (1 - scrollProgress / 0.15)) : 0
 	);
 
 	// Veil intensity per step - kept minimal so video stays visible throughout
 	const defaultVeilConfigs = [
-		{ top: 0, center: 0, bottom: 0, warm: 0 },   // Step 0: cream overlay handles this
-		{ top: 0, center: 0, bottom: 0, warm: 0 },   // Step 1: video plays behind text
-		{ top: 0, center: 0, bottom: 0, warm: 0 },   // Step 2: video plays behind text
+		{ top: 0, center: 0, bottom: 0, warm: 0 }, // Step 0: cream overlay handles this
+		{ top: 0, center: 0, bottom: 0, warm: 0 }, // Step 1: video plays behind text
+		{ top: 0, center: 0, bottom: 0, warm: 0 } // Step 2: video plays behind text
 	];
 
-	let veil = $derived((overlayConfig ?? defaultVeilConfigs)[currentStep] ?? (overlayConfig ?? defaultVeilConfigs)[0]);
+	let veil = $derived(
+		(overlayConfig ?? defaultVeilConfigs)[currentStep] ?? (overlayConfig ?? defaultVeilConfigs)[0]
+	);
 
 	// Build the overlay gradient CSS
 	let overlayGradient = $derived(
@@ -111,17 +120,11 @@
 	{/if}
 
 	<!-- Dark veil overlay (gradient, transitions between steps) -->
-	<div
-		class="hero-veil"
-		style:background={overlayGradient}
-	></div>
+	<div class="hero-veil" style:background={overlayGradient}></div>
 
 	<!-- Warm tint overlay (shifts from brown toward cream tones) -->
 	{#if warmOverlayOpacity > 0}
-		<div
-			class="hero-warm-tint"
-			style:opacity={warmOverlayOpacity}
-		></div>
+		<div class="hero-warm-tint" style:opacity={warmOverlayOpacity}></div>
 	{/if}
 
 	<!-- Subtle vignette for editorial depth -->
@@ -154,8 +157,12 @@
 	}
 
 	@keyframes heroMountFade {
-		from { opacity: 0; }
-		to { opacity: 1; }
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 
 	.hero-video {
@@ -195,8 +202,8 @@
 			to bottom,
 			rgba(62, 48, 36, 0.55) 0%,
 			rgba(80, 62, 42, 0.35) 40%,
-			rgba(100, 80, 55, 0.30) 60%,
-			rgba(62, 48, 36, 0.50) 100%
+			rgba(100, 80, 55, 0.3) 60%,
+			rgba(62, 48, 36, 0.5) 100%
 		);
 		transition: opacity 700ms ease;
 		pointer-events: none;
@@ -207,11 +214,7 @@
 		position: absolute;
 		inset: 0;
 		z-index: 5;
-		background: radial-gradient(
-			ellipse at center,
-			transparent 45%,
-			rgba(0, 0, 0, 0.18) 100%
-		);
+		background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.18) 100%);
 		pointer-events: none;
 	}
 

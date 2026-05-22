@@ -32,18 +32,17 @@
 			<p class="eyebrow">Media Coverage</p>
 			<h2 class="section-title">The World Watched</h2>
 			<p class="section-desc">
-				From the first deadly eviction in 2021 to the Supreme Court's <a href="https://m.thewire.in/article/law/supreme-court-halts-eviction-drive-in-assams-golaghat-district" target="_blank" rel="noopener">intervention</a> in 2025,
-				international and national media documented the campaign.
+				From the first deadly eviction in 2021 to the Supreme Court's <a
+					href="https://m.thewire.in/article/law/supreme-court-halts-eviction-drive-in-assams-golaghat-district"
+					target="_blank"
+					rel="noopener">intervention</a
+				> in 2025, international and national media documented the campaign.
 			</p>
 		</div>
 
 		<div class="cards-grid">
 			{#each headlines as headline, i}
-				<HeadlineCard
-					{headline}
-					index={i}
-					visible={sectionVisible}
-				/>
+				<HeadlineCard {headline} index={i} visible={sectionVisible} />
 			{/each}
 		</div>
 	</div>

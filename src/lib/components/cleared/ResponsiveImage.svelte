@@ -10,7 +10,14 @@
 		draggable?: boolean;
 	}
 
-	let { src, alt, sizes = '100vw', loading = 'lazy', class: className = '', draggable }: Props = $props();
+	let {
+		src,
+		alt,
+		sizes = '100vw',
+		loading = 'lazy',
+		class: className = '',
+		draggable
+	}: Props = $props();
 
 	let loaded = $state(false);
 
@@ -60,7 +67,9 @@
 		display: block;
 		filter: blur(20px);
 		transform: scale(1.05);
-		transition: filter 0.5s ease, transform 0.5s ease;
+		transition:
+			filter 0.5s ease,
+			transform 0.5s ease;
 	}
 
 	.responsive-image img.loaded {

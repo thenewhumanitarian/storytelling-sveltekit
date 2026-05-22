@@ -51,7 +51,7 @@
 					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : 'px-2'}`}
 					delay={30 * i + 100}
 				>
-					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+					<div class="flex h-full w-full flex-col justify-start gap-y-3 overflow-visible">
 						{#if blok?.items}
 							{#each blok.items as item (item._uid)}
 								<StoryblokComponent blok={item} />
@@ -63,7 +63,9 @@
 			<div
 				class={`${blok.textAlign === 'left' ? 'right text-right' : 'left'} read-more-tag rounded-xs -z-1 flex items-center justify-end`}
 			>
-				<h3 class="m-0 bg-lebgreen px-2 py-1 text-white text-base group-hover:underline shadow-lg">Read</h3>
+				<h3 class="m-0 bg-lebgreen px-2 py-1 text-white text-base group-hover:underline shadow-lg">
+					Read
+				</h3>
 			</div>
 		</a>
 	{:else}
@@ -74,7 +76,7 @@
 					containerClasses={`flex flex-col ${blok.textAlign === 'left' ? 'items-start' : 'items-end'} gap-y-4 ${blok.bgColor === 'note' ? 'sm:py-2 sm:px-1' : blok.bgColor === 'picture-frame-landscape' ? 'px-1 py-2' : 'px-2 py-3'}`}
 					delay={30 * i + 100}
 				>
-					<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+					<div class="flex h-full w-full flex-col justify-start gap-y-3 overflow-visible">
 						{#if blok?.items}
 							{#each blok.items as item (item._uid)}
 								<StoryblokComponent blok={item} />
@@ -102,7 +104,7 @@
 			class="font-reset"
 		>
 			{#if blok.items}
-				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+				<div class="flex h-full w-full flex-col justify-start gap-y-3 overflow-visible">
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -114,7 +116,7 @@
 	{:else}
 		<div class="font-reset">
 			{#if blok.items}
-				<div class={`flex h-full w-full flex-col justify-start gap-y-3 overflow-visible`}>
+				<div class="flex h-full w-full flex-col justify-start gap-y-3 overflow-visible">
 					{#if blok?.items}
 						{#each blok.items as item (item._uid)}
 							<StoryblokComponent blok={item} />
@@ -174,12 +176,7 @@
 		}
 	}
 
-	.story-grid--panel:not(
-			.note,
-			.placeholder,
-			.picture-frame,
-			.picture-frame-landscape
-		) {
+	.story-grid--panel:not(.note, .placeholder, .picture-frame, .picture-frame-landscape) {
 		padding: 1rem;
 		margin: 0;
 		font-size: 1rem;

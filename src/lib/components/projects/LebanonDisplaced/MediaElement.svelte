@@ -33,7 +33,7 @@
 	class={`media-element ${blok.pictureFrame ? 'picture-frame' : ''} ${blok.lightbox ? 'lightbox' : 'no-lightbox'}`}
 	bind:this={element}
 	use:storyblokEditable={blok && blok._editable ? blok : undefined}
-	onclick={() => openLightbox(blok.media?.filename.toString())}
+	onclick={() => blok.lightbox && openLightbox(blok.media?.filename.toString())}
 	data-lightbox
 	data-lightbox-src={blok.media?.filename}
 	data-lightbox-type={type}
@@ -84,12 +84,20 @@
 
 	.media-element {
 		all: unset;
-		cursor: pointer;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
 		overflow: visible;
 		transform-origin: center center;
+	}
+
+	.media-element.lightbox {
+		cursor: pointer;
+	}
+
+	.media-element.lightbox img,
+	.media-element.lightbox video {
+		cursor: pointer;
 	}
 
 	.media-element:not(.no-lightbox) .media-wrapper {

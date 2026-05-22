@@ -35,37 +35,50 @@
 	// Steps 6-8: timeline view
 	// Steps 9+: line graph
 	let vizMode = $derived<'clustered' | 'timeline' | 'linegraph'>(
-		activeStep >= 9 ? 'linegraph' :
-		activeStep >= 6 ? 'timeline' :
-		'clustered'
+		activeStep >= 9 ? 'linegraph' : activeStep >= 6 ? 'timeline' : 'clustered'
 	);
 
-	let mode = $derived<'clustered' | 'timeline'>(
-		vizMode === 'timeline' ? 'timeline' : 'clustered'
-	);
+	let mode = $derived<'clustered' | 'timeline'>(vizMode === 'timeline' ? 'timeline' : 'clustered');
 
 	let highlightCategory = $derived<string | null>(
-		activeStep === 2 ? 'Environmental Protection' :
-		activeStep === 3 ? 'Development Projects' :
-		activeStep === 4 ? 'Administrative Enforcement' :
-		activeStep === 5 ? 'Religious Land (Satra)' :
-		null
+		activeStep === 2
+			? 'Environmental Protection'
+			: activeStep === 3
+				? 'Development Projects'
+				: activeStep === 4
+					? 'Administrative Enforcement'
+					: activeStep === 5
+						? 'Religious Land (Satra)'
+						: null
 	);
 
 	let highlightYear = $derived<number | null>(
-		activeStep === 7 ? 2021 :
-		activeStep === 8 ? 2025 :
-		activeStep === 10 ? 2021 :
-		activeStep === 11 ? 2025 :
-		null
+		activeStep === 7
+			? 2021
+			: activeStep === 8
+				? 2025
+				: activeStep === 10
+					? 2021
+					: activeStep === 11
+						? 2025
+						: null
 	);
 
 	let revealedCategories = $derived<string[]>(
-		activeStep >= 5 ? ['Environmental Protection', 'Development Projects', 'Administrative Enforcement', 'Religious Land (Satra)'] :
-		activeStep >= 4 ? ['Environmental Protection', 'Development Projects', 'Administrative Enforcement'] :
-		activeStep >= 3 ? ['Environmental Protection', 'Development Projects'] :
-		activeStep >= 2 ? ['Environmental Protection'] :
-		[]
+		activeStep >= 5
+			? [
+					'Environmental Protection',
+					'Development Projects',
+					'Administrative Enforcement',
+					'Religious Land (Satra)'
+				]
+			: activeStep >= 4
+				? ['Environmental Protection', 'Development Projects', 'Administrative Enforcement']
+				: activeStep >= 3
+					? ['Environmental Protection', 'Development Projects']
+					: activeStep >= 2
+						? ['Environmental Protection']
+						: []
 	);
 
 	let showSizeLegend = $derived(activeStep < 9);
@@ -100,53 +113,67 @@
 
 	function parseYearlyCSV(text: string): any[] {
 		const lines = text.trim().split('\n');
-		const headers = lines[0].split(',').map(h => h.trim());
+		const headers = lines[0].split(',').map((h) => h.trim());
 
-		return lines.slice(1).filter(line => line.trim()).map(line => {
-			const values = line.split(',');
-			const obj: Record<string, any> = {};
-			headers.forEach((h, i) => {
-				let val: any = values[i]?.trim() || '';
-				if (h === 'Year' || h === 'Events' || h === 'Total_People_Evicted' || h === 'Deaths' || h === 'Injuries') {
-					val = parseInt(val) || 0;
-				}
-				obj[h] = val;
-			});
-			return obj;
-		}).filter(d => d.Year > 0);
+		return lines
+			.slice(1)
+			.filter((line) => line.trim())
+			.map((line) => {
+				const values = line.split(',');
+				const obj: Record<string, any> = {};
+				headers.forEach((h, i) => {
+					let val: any = values[i]?.trim() || '';
+					if (
+						h === 'Year' ||
+						h === 'Events' ||
+						h === 'Total_People_Evicted' ||
+						h === 'Deaths' ||
+						h === 'Injuries'
+					) {
+						val = parseInt(val) || 0;
+					}
+					obj[h] = val;
+				});
+				return obj;
+			})
+			.filter((d) => d.Year > 0);
 	}
 
 	function parseCSV(text: string): any[] {
 		const lines = text.trim().split('\n');
-		const headers = lines[0].split(',').map(h => h.trim());
+		const headers = lines[0].split(',').map((h) => h.trim());
 
-		return lines.slice(1).filter(line => line.trim()).map(line => {
-			const values: string[] = [];
-			let current = '';
-			let inQuotes = false;
+		return lines
+			.slice(1)
+			.filter((line) => line.trim())
+			.map((line) => {
+				const values: string[] = [];
+				let current = '';
+				let inQuotes = false;
 
-			for (const char of line) {
-				if (char === '"') {
-					inQuotes = !inQuotes;
-				} else if (char === ',' && !inQuotes) {
-					values.push(current.trim());
-					current = '';
-				} else {
-					current += char;
+				for (const char of line) {
+					if (char === '"') {
+						inQuotes = !inQuotes;
+					} else if (char === ',' && !inQuotes) {
+						values.push(current.trim());
+						current = '';
+					} else {
+						current += char;
+					}
 				}
-			}
-			values.push(current.trim());
+				values.push(current.trim());
 
-			const obj: Record<string, any> = {};
-			headers.forEach((h, i) => {
-				let val: any = values[i] || '';
-				if (h === 'People_Evicted' || h === 'Families_Evicted' || h === 'Structures_Demolished') {
-					val = parseFloat(val) || 0;
-				}
-				obj[h] = val;
-			});
-			return obj;
-		}).filter(d => d.People_Evicted > 0);
+				const obj: Record<string, any> = {};
+				headers.forEach((h, i) => {
+					let val: any = values[i] || '';
+					if (h === 'People_Evicted' || h === 'Families_Evicted' || h === 'Structures_Demolished') {
+						val = parseFloat(val) || 0;
+					}
+					obj[h] = val;
+				});
+				return obj;
+			})
+			.filter((d) => d.People_Evicted > 0);
 	}
 
 	function updateDimensions() {
@@ -160,7 +187,6 @@
 			}
 		}
 	}
-
 </script>
 
 <div class="eviction-viz" bind:this={containerEl}>
@@ -168,7 +194,11 @@
 		{#if mounted && data.length > 0}
 			{#key vizMode === 'linegraph'}
 				{#if vizMode === 'linegraph'}
-					<div class="viz-wrapper" in:fade={{ duration: 500, delay: 300 }} out:fade={{ duration: 200 }}>
+					<div
+						class="viz-wrapper"
+						in:fade={{ duration: 500, delay: 300 }}
+						out:fade={{ duration: 200 }}
+					>
 						<EvictionLineGraph
 							data={yearlyData}
 							width={containerWidth}
@@ -177,7 +207,11 @@
 						/>
 					</div>
 				{:else}
-					<div class="viz-wrapper" in:fade={{ duration: 400, delay: 100 }} out:fade={{ duration: 200 }}>
+					<div
+						class="viz-wrapper"
+						in:fade={{ duration: 400, delay: 100 }}
+						out:fade={{ duration: 200 }}
+					>
 						<EvictionBubbles
 							{data}
 							{mode}
@@ -198,24 +232,28 @@
 
 	<!-- Size Legend -->
 	{#if showSizeLegend}
-		<div class="size-legend" class:legend-highlight={legendHighlight} transition:fade={{ duration: 300 }}>
+		<div
+			class="size-legend"
+			class:legend-highlight={legendHighlight}
+			transition:fade={{ duration: 300 }}
+		>
 			<div class="legend-title">People displaced</div>
 			<div class="legend-items">
 				<div class="legend-item">
 					<svg width="20" height="20">
-						<circle cx="10" cy="10" r="8" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+						<circle cx="10" cy="10" r="8" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1" />
 					</svg>
 					<span>500</span>
 				</div>
 				<div class="legend-item">
 					<svg width="32" height="32">
-						<circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+						<circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1" />
 					</svg>
 					<span>5,000</span>
 				</div>
 				<div class="legend-item">
 					<svg width="50" height="50">
-						<circle cx="25" cy="25" r="22" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+						<circle cx="25" cy="25" r="22" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1" />
 					</svg>
 					<span>13,000</span>
 				</div>
@@ -316,7 +354,8 @@
 	}
 
 	@keyframes legendPulse {
-		0%, 100% {
+		0%,
+		100% {
 			transform: scale(1);
 			box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
 		}

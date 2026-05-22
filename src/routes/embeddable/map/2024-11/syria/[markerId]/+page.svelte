@@ -126,7 +126,9 @@
 						}}>Read more...</button
 					> -->
 					<button class="mt-5 font-bold text-burgundy">
-						<a target="_parent" href={`https://www.thenewhumanitarian.org/node/${getSelectedMarker().popup.nodeId}`}
+						<a
+							target="_parent"
+							href={`https://www.thenewhumanitarian.org/node/${getSelectedMarker().popup.nodeId}`}
 							>Go to article</a
 						></button
 					>

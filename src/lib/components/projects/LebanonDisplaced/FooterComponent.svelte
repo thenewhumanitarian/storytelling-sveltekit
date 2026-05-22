@@ -52,7 +52,7 @@
 					class="font-bold hover:underline"
 					target="_blank"
 					rel="noopener noreferrer"
-					href={'https://www.instagram.com/sasha.haddad.illustrations/'}
+					href="https://www.instagram.com/sasha.haddad.illustrations/"
 					>ساشا حداد
 				</a>
 			</p>
@@ -62,7 +62,7 @@
 					class="font-bold hover:underline"
 					target="_blank"
 					rel="noopener noreferrer"
-					href={'https://www.instagram.com/sasha.haddad.illustrations/'}>Sasha Haddad</a
+					href="https://www.instagram.com/sasha.haddad.illustrations/">Sasha Haddad</a
 				>
 			</p>
 		{/if}

@@ -75,7 +75,7 @@
 	>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
-				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
+				<FadeIn yOffset={50} containerClasses="flex flex-col items-center gap-y-4">
 					<h3
 						class={`pb-0 text-center font-amman text-2xl font-bold ${blok.textColor || 'text-lebblack'}`}
 					>
@@ -101,7 +101,7 @@
 	<div class={`story-grid--container mobile flex items-center justify-center ${blok.size}`}>
 		{#if blok.text && blok.text !== ''}
 			<div class={`story-grid--panel panel-title ${blok.textColor}`}>
-				<FadeIn yOffset={50} containerClasses={'flex flex-col items-center gap-y-4'}>
+				<FadeIn yOffset={50} containerClasses="flex flex-col items-center gap-y-4">
 					<h3 class={`pb-0 text-center font-amman text-2xl font-bold ${blok.textColor}`}>
 						{blok.text}
 					</h3>

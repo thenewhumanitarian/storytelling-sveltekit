@@ -25,7 +25,7 @@
 	<label for="lang-switcher" class="sr-only">Language selector</label>
 	<select
 		id="lang-switcher"
-		class="appearance-none bg-transparent px-3 py-2 pr-6 text-xs text-lebblack focus:border-burgundy focus:outline-none focus:ring-2 focus:ring-burgundy sm:pr-8 sm:text-base cursor-pointer"
+		class="appearance-none bg-transparent px-3 py-2 pr-6 text-xs text-lebblack focus:border-burgundy focus:outline-hidden focus:ring-2 focus:ring-burgundy sm:pr-8 sm:text-base cursor-pointer"
 		onchange={handleChange}
 	>
 		<option value={englishUrl} selected={currentPath === englishUrl}>English</option>

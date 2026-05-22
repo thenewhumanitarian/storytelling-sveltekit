@@ -2,7 +2,7 @@
 	import GazaSourcesOverlay from './GazaSourcesOverlay.svelte';
 	import moment from 'moment';
 	import GazaVideo from './GazaVideo.svelte';
-    import type { IncidentData } from './types';
+	import type { IncidentData } from './types';
 
 	let {
 		incident,
@@ -33,7 +33,8 @@
 		const shouldAutoOpen =
 			debug === 'sources' &&
 			incident?.type === 'incident' &&
-			incident?.sources && incident.sources.trim() !== '' &&
+			incident?.sources &&
+			incident.sources.trim() !== '' &&
 			incident?.chronoId === selectedMarkerId;
 
 		if (!hasAutoOpened && shouldAutoOpen) {
@@ -50,7 +51,10 @@
 				(otherIncident: IncidentData) =>
 					otherIncident.type === 'incident' && new Date(otherIncident.date) <= currentDate
 			)
-			.reduce((sum: number, otherIncident: IncidentData) => sum + (otherIncident.killedOrWounded || 0), 0);
+			.reduce(
+				(sum: number, otherIncident: IncidentData) => sum + (otherIncident.killedOrWounded || 0),
+				0
+			);
 	});
 </script>
 
@@ -106,7 +110,7 @@
 			class={`${incident.chronoId === selectedMarkerId ? '' : 'sm:opacity-30'} flex h-full flex-col`}
 		>
 			<!-- Top content area - grows to fill available space -->
-			<div class="flex-grow">
+			<div class="grow">
 				<div class="flex items-center justify-between gap-2 sm:gap-2">
 					<div class="flex items-center gap-2">
 						<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">Incident</span>
@@ -150,7 +154,9 @@
 									d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
 								></path>
 							</svg>
-							{incident.killedOrWounded} killed/wounded, {cumulativeKilledWounded().toLocaleString('en-GB')} total
+							{incident.killedOrWounded} killed/wounded, {cumulativeKilledWounded().toLocaleString(
+								'en-GB'
+							)} total
 						</span>
 					</div>
 				</div>

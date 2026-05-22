@@ -29,7 +29,7 @@
 	});
 </script>
 
-<header class={'torn-paper torn-paper--top bg-brown'}>
+<header class="torn-paper torn-paper--top bg-brown">
 	<div class="flex w-full flex-row items-center justify-between sm:px-2">
 		<div class="flex h-6 w-auto gap-2">
 			<ShareIcons />
@@ -46,7 +46,7 @@
 					data-sveltekit-preload-data
 					data-sveltekit-preload
 					href={backLinkHref}
-					class="relative flex items-center gap-1 px-2 py-0 focus:outline-none focus:ring-2 focus:ring-burgundy"
+					class="relative flex items-center gap-1 px-2 py-0 focus:outline-hidden focus:ring-2 focus:ring-burgundy"
 					aria-label="Back"
 					title="Back to home"
 				>

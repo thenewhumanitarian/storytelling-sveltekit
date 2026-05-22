@@ -5,10 +5,8 @@
 	import GazaCards from '$lib/components/gaza-map/GazaCards.svelte';
 	import type { IncidentData } from './types';
 	import GazaOverlay from './GazaOverlay.svelte';
-import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
-
-	const MAPBOX_TOKEN =
-		'pk.eyJ1IjoidG5oLXN0b3J5dGVsbGluZyIsImEiOiJjbTJ6eTUxY3owZGRnMnhzamxsZ204aTJoIn0.ICvZ1B2TsaGmXj02wQ0apw';
+	import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
+	import { PUBLIC_MAPBOX_TOKEN } from '$env/static/public';
 	const DEFAULT_MAP_ZOOM = 10;
 	const ZOOM_ZOOM = 13;
 	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
@@ -77,7 +75,10 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 	async function exitFullscreen() {
 		const doc = document as FullscreenDocument;
 		const exit =
-			doc.exitFullscreen || doc.webkitExitFullscreen || doc.webkitCancelFullScreen || doc.msExitFullscreen;
+			doc.exitFullscreen ||
+			doc.webkitExitFullscreen ||
+			doc.webkitCancelFullScreen ||
+			doc.msExitFullscreen;
 		if (exit) {
 			await exit.call(doc);
 			return;
@@ -208,7 +209,7 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 		document.addEventListener('fullscreenchange', updateFullscreenState);
 		document.addEventListener('webkitfullscreenchange', updateFullscreenState);
 
-		mapboxgl.accessToken = MAPBOX_TOKEN;
+		mapboxgl.accessToken = PUBLIC_MAPBOX_TOKEN;
 		const mapInstance = new mapboxgl.Map({
 			container: mapContainer!,
 			style: MAPBOX_STYLE,
@@ -439,20 +440,29 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 	});
 </script>
 
-
 <div bind:this={hostContainer} class="map-container relative w-full sm:w-1/2">
 	{#if mounted}
 		{#if isMobile}
 			<!-- No fullscreen control on mobile -->
 		{:else}
 			<button
-				class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-burgundy"
+				class="absolute left-2 top-2 z-30 flex items-center gap-1 bg-white/90 px-2 py-1 text-xs font-medium text-burgundy shadow-sm hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
 				onclick={toggleFullscreen}
 				aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
 			>
 				{#if !isFullscreen}
 					<!-- Enter fullscreen icon -->
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
 						<path d="M9 3H5a2 2 0 0 0-2 2v4" />
 						<path d="M15 3h4a2 2 0 0 1 2 2v4" />
 						<path d="M9 21H5a2 2 0 0 1-2-2v-4" />
@@ -461,7 +471,17 @@ import gazaBoundariesUrl from '$lib/data/gaza-map/gaza-boundaries.geojson?url';
 					<span>Fullscreen</span>
 				{:else}
 					<!-- Exit fullscreen icon -->
-					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
 						<path d="M15 9V5h4" />
 						<path d="M9 9H5V5" />
 						<path d="M15 15h4v4" />

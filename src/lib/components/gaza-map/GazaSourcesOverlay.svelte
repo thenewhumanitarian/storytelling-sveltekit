@@ -9,7 +9,9 @@
 <div
 	class="absolute inset-0 z-40 flex items-center justify-center overflow-hidden bg-zinc-700 p-3 sources-overlay sm:bg-zinc-200"
 >
-	<div class="relative max-h-[90vh] w-full max-w-md overflow-y-auto bg-white p-4 sm:flex sm:h-full sm:w-full sm:max-w-none sm:bg-transparent sm:p-0 flex-col">
+	<div
+		class="relative max-h-[90vh] w-full max-w-md overflow-y-auto bg-white p-4 sm:flex sm:h-full sm:w-full sm:max-w-none sm:bg-transparent sm:p-0 flex-col"
+	>
 		<button
 			class="absolute right-[12px] top-1 z-10 text-3xl text-zinc-400 hover:text-burgundy sm:-top-2 sm:right-0 sm:text-burgundy sm:hover:text-burgundy/80"
 			onclick={onClose}

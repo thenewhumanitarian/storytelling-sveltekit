@@ -1,132 +1,193 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'); */
 /* purgecss start ignore */
-@tailwind base;
+@import 'tailwindcss';
 
-@layer base {
-  @font-face {
-    font-family: 'Pacifico';
-    src: url('/fonts/Pacifico-Regular.woff2') format('woff2'),
-      url('/fonts/Pacifico-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
 
-  @font-face {
-    font-family: 'Geeza Pro';
-    src: url('/fonts/geeza-pro-bold-webfont.woff2') format('woff2'),
-      url('/fonts/geeza-pro-bold-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
+/* Storyblok CMS uses dynamic bg-* / text-* class strings — safelist multi-segment utilities */
+@source inline('bg-{brown,grass,burgundy,lebgreen,sun,transparent,white}');
+@source inline('bg-stone-50');
+@source inline('text-{lebblack,burgundy,white,lebgreen}');
+@source inline('font-{amman,sans,serif,default,pacifico}');
+@source inline('text-right');
+@source inline('font-sans');
+@source inline('font-serif');
+@source inline('font-pacifico');
 
-  @font-face {
-    font-family: 'GT Sectra Bold';
-    font-weight: 700;
-    src: url('/fonts/GT-Sectra-Fine-Bold.woff') format('woff');
-  }
+@theme {
+	--breakpoint-xs: 360px;
 
-  @font-face {
-    font-family: 'GT Sectra Medium';
-    font-weight: 500;
-    src: url('/fonts/GT-Sectra-Fine-Medium.woff') format('woff');
-  }
+	--spacing-1/3: 33%;
+	--spacing-1/2: 50%;
+	--spacing-16/9: 56.25%;
 
-  @font-face {
-    font-family: 'GT Sectra Regular';
-    font-weight: 400;
-    src: url('/fonts/GT-Sectra-Fine-Regular.woff') format('woff');
-  }
+	--color-burgundy: #9f3e52;
+	--color-brown: #ffe0b5;
+	--color-sun: #ede580;
+	--color-grass: #afb87e;
+	--color-lebgreen: #636845;
+	--color-lebblack: #282828;
 
-  @font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Bold.woff2') format('woff2'),
-      url('/fonts/Roboto-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Medium.woff2') format('woff2'),
-      url('/fonts/Roboto-Medium.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Regular.woff2') format('woff2'),
-      url('/fonts/Roboto-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'Roboto';
-    src: url('/fonts/Roboto-Italic.woff2') format('woff2'),
-      url('/fonts/Roboto-Italic.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-  }
-
-  h1 {
-    @apply font-serif font-extrabold text-3xl mb-2;
-  }
-
-  h2 {
-    @apply font-serif font-normal text-3xl sm:text-2xl mb-3;
-  }
-
-  h3 {
-    @apply font-serif font-normal text-xl mb-2;
-  }
-
-  h4 {
-    @apply font-amman text-lg sm:text-xl;
-  }
-
-  h6 {
-    @apply text-burgundy;
-  }
-
-  html, body {
-    overflow-x: hidden;
-    max-width: 100%;
-  }
-
-  body {
-    @apply font-body text-base;
-  }
-
-  a:not('.font-reset') {
-    /* @apply no-underline font-medium text-burgundy; */
-    @apply no-underline font-medium text-burgundy;
-  }
-
-  a:not('.font-reset'):hover {
-    @apply underline;
-  }
-
-  a:not('.font-reset'):active,
-  a:not('.font-reset'):focus {
-    @apply bg-transparent text-burgundy;
-  }
-
-  iframe {
-    @apply w-full top-0 left-0 absolute h-full;
-  }
-
-  b,
-  strong {
-    font-weight: bold;
-  }
+	--font-body: Roboto, 'Open Sans', ui-sans-serif;
+	--font-title: 'GT Sectra Bold', ui-serif;
+	--font-serif: 'GT Sectra Bold', ui-serif;
+	--font-amman: 'ff-amman-serif-pro', serif;
 }
 
-@tailwind components;
+@utility container {
+	width: 100%;
+	max-width: 100%;
+	margin-inline: auto;
+	padding-inline: 0;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
+}
+
+@layer base {
+	@font-face {
+		font-family: 'Pacifico';
+		src:
+			url('/fonts/Pacifico-Regular.woff2') format('woff2'),
+			url('/fonts/Pacifico-Regular.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Geeza Pro';
+		src:
+			url('/fonts/geeza-pro-bold-webfont.woff2') format('woff2'),
+			url('/fonts/geeza-pro-bold-webfont.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'GT Sectra Bold';
+		font-weight: 700;
+		src: url('/fonts/GT-Sectra-Fine-Bold.woff') format('woff');
+	}
+
+	@font-face {
+		font-family: 'GT Sectra Medium';
+		font-weight: 500;
+		src: url('/fonts/GT-Sectra-Fine-Medium.woff') format('woff');
+	}
+
+	@font-face {
+		font-family: 'GT Sectra Regular';
+		font-weight: 400;
+		src: url('/fonts/GT-Sectra-Fine-Regular.woff') format('woff');
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src:
+			url('/fonts/Roboto-Bold.woff2') format('woff2'),
+			url('/fonts/Roboto-Bold.woff') format('woff');
+		font-weight: bold;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src:
+			url('/fonts/Roboto-Medium.woff2') format('woff2'),
+			url('/fonts/Roboto-Medium.woff') format('woff');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src:
+			url('/fonts/Roboto-Regular.woff2') format('woff2'),
+			url('/fonts/Roboto-Regular.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src:
+			url('/fonts/Roboto-Italic.woff2') format('woff2'),
+			url('/fonts/Roboto-Italic.woff') format('woff');
+		font-weight: normal;
+		font-style: italic;
+		font-display: swap;
+	}
+
+	h1 {
+		@apply mb-2 font-serif text-3xl font-extrabold;
+	}
+
+	h2 {
+		@apply mb-3 font-serif text-3xl font-normal sm:text-2xl;
+	}
+
+	h3 {
+		@apply mb-2 font-serif text-xl font-normal;
+	}
+
+	h4 {
+		@apply font-amman text-lg sm:text-xl;
+	}
+
+	h6 {
+		@apply text-burgundy;
+	}
+
+	html,
+	body {
+		overflow-x: hidden;
+		max-width: 100%;
+	}
+
+	body {
+		@apply font-body text-base;
+	}
+
+	a:not('.font-reset') {
+		@apply text-burgundy font-medium no-underline;
+	}
+
+	a:not('.font-reset'):hover {
+		@apply underline;
+	}
+
+	a:not('.font-reset'):active,
+	a:not('.font-reset'):focus {
+		@apply text-burgundy bg-transparent;
+	}
+
+	iframe {
+		@apply absolute top-0 left-0 h-full w-full;
+	}
+
+	b,
+	strong {
+		font-weight: bold;
+	}
+}
 /* purgecss end ignore */
-@tailwind utilities;

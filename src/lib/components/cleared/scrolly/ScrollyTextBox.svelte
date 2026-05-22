@@ -258,7 +258,7 @@
 		font-weight: 500;
 		color: #9f3e52;
 
-		&:hover {	
+		&:hover {
 			/* Marc's note: This is to remove the hover color from the source link so it matches TNH design pattern */
 			/* color: rgba(0, 0, 0, 0.8); */
 			text-decoration: underline;

@@ -14,7 +14,10 @@
 		const meta = (placeholderData as Record<string, any>)[src];
 		if (!meta) return '';
 		const base = src.replace(/\.\w+$/, '');
-		return meta.srcset.split(', ').map((w: string) => `${base}-${w}.webp ${w}`).join(', ');
+		return meta.srcset
+			.split(', ')
+			.map((w: string) => `${base}-${w}.webp ${w}`)
+			.join(', ');
 	}
 
 	function getPlaceholder(src: string): string {
@@ -57,9 +60,9 @@
 
 	// Veil configs per step
 	const veilConfigs = [
-		{ top: 0.55, center: 0.38, bottom: 0.55, warm: 0 },     // Step 0: shelter image
-		{ top: 0.48, center: 0.32, bottom: 0.50, warm: 0.12 },   // Step 1: full Modi Stadium
-		{ top: 0.30, center: 0.18, bottom: 0.38, warm: 0.25 },   // Step 2: wipe to empty
+		{ top: 0.55, center: 0.38, bottom: 0.55, warm: 0 }, // Step 0: shelter image
+		{ top: 0.48, center: 0.32, bottom: 0.5, warm: 0.12 }, // Step 1: full Modi Stadium
+		{ top: 0.3, center: 0.18, bottom: 0.38, warm: 0.25 } // Step 2: wipe to empty
 	];
 
 	let veil = $derived(veilConfigs[activeStep] ?? veilConfigs[0]);
@@ -137,10 +140,7 @@
 		/>
 
 		<!-- Dark veil overlay -->
-		<div
-			class="stadium-veil"
-			style:background={overlayGradient}
-		></div>
+		<div class="stadium-veil" style:background={overlayGradient}></div>
 
 		<!-- Vignette -->
 		<div class="stadium-vignette"></div>
@@ -230,7 +230,9 @@
 	.stadium-shelter {
 		z-index: 3;
 		opacity: 1;
-		transition: opacity 900ms ease, filter 0.5s ease;
+		transition:
+			opacity 900ms ease,
+			filter 0.5s ease;
 	}
 
 	.stadium-shelter.faded {
@@ -251,11 +253,7 @@
 		position: absolute;
 		inset: 0;
 		z-index: 5;
-		background: radial-gradient(
-			ellipse at center,
-			transparent 45%,
-			rgba(0, 0, 0, 0.18) 100%
-		);
+		background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.18) 100%);
 		pointer-events: none;
 	}
 

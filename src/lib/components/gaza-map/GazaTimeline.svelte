@@ -528,7 +528,7 @@
 
 <div
 	bind:this={timelineContainer}
-	class="box-border flex w-full flex-col overflow-hidden bg-gradient-to-t from-white via-white to-white/60 backdrop-blur sm:border-t sm:border-gray-200"
+	class="box-border flex w-full flex-col overflow-hidden bg-linear-to-t from-white via-white to-white/60 backdrop-blur-sm sm:border-t sm:border-gray-200"
 	style="height: {svgHeight + dateLabelsHeight + toggleHeight}px;"
 >
 	<!-- Chart Container -->
@@ -580,7 +580,7 @@
 					{@const hasData = periodData.hasData && periodData.totalKilledOrWounded > 0}
 
 					<g
-						class="period-bar-group group cursor-pointer focus:outline-none"
+						class="period-bar-group group cursor-pointer focus:outline-hidden"
 						onclick={() =>
 							handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
 						onkeydown={(e) =>
@@ -703,7 +703,7 @@
 						{#if hasData && !isSelected}
 							<rect
 								class:group-hover:fill-[#2db487]={true}
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+								class="group-focus-visible:outline-solid group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 								x={xPos -
 									(groupingMode === 'monthly'
 										? Math.min(
@@ -784,7 +784,7 @@
 						{@const barHeight = heightScale(selectedPeriod.totalKilledOrWounded)}
 						{@const yPos = axisY - barHeight - barPaddingBottom}
 						<g
-							class="period-bar period-bar--active group cursor-pointer focus:outline-none"
+							class="period-bar period-bar--active group cursor-pointer focus:outline-hidden"
 							onclick={() =>
 								handleBarClick(selectedPeriod.periodStartDate, selectedPeriod.firstChronoId)}
 							onkeydown={(e) =>
@@ -818,7 +818,7 @@
 							</text>
 							<rect
 								class:group-hover:fill-[#2db487]={true}
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+								class="group-focus-visible:outline-solid group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 								x={xPos -
 									(groupingMode === 'monthly'
 										? Math.min(
@@ -874,7 +874,7 @@
 						{@const size = 8}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
-							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-none"
+							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
@@ -890,7 +890,7 @@
 								stroke="#1F2937"
 								stroke-width={0}
 								style:transition="all 0.2s"
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+								class="group-focus-visible:outline-solid group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 							/>
 							<title>{event.title || 'Untitled Event'}</title>
 
@@ -931,7 +931,7 @@
 						{@const size = 8}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
-							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-none"
+							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
@@ -947,7 +947,7 @@
 								stroke="#1F2937"
 								stroke-width={0}
 								style:transition="all 0.2s"
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+								class="group-focus-visible:outline-solid group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 							/>
 							<title>{event.title || 'Untitled Event'}</title>
 
@@ -987,7 +987,7 @@
 						{@const size = 10}
 						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
 						<g
-							class="event-symbol event-symbol--active group cursor-pointer focus:outline-none"
+							class="event-symbol event-symbol--active group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
@@ -1003,7 +1003,7 @@
 								stroke="#374151"
 								stroke-width={3}
 								style:transition="all 0.2s"
-								class="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
+								class="group-focus-visible:outline-solid group-focus-visible:outline-2 group-focus-visible:outline-offset-1"
 							/>
 							<title>{event.title || 'Untitled Event'}</title>
 

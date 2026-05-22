@@ -66,7 +66,7 @@
 				<div class="relative mt-1">
 					<button
 						type="button"
-						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow hover:bg-white"
+						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded-sm bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow-sm hover:bg-white"
 						onclick={copyEmbed}
 						aria-label="Copy code"
 					>
@@ -85,7 +85,11 @@
 						>
 						{copied ? 'Copied' : 'Copy'}
 					</button>
-					<pre id="tnh-embed-code" class="overflow-auto rounded bg-gray-100 p-2 text-[12px] text-gray-900"><code>{@html displaySnippet}</code></pre>
+					<pre
+						id="tnh-embed-code"
+						class="overflow-auto rounded-sm bg-gray-100 p-2 text-[12px] text-gray-900"><code
+							>{@html displaySnippet}</code
+						></pre>
 				</div>
 			</li>
 			<li>
@@ -93,7 +97,8 @@
 				aspect ratio for different screen sizes.
 			</li>
 			<li>
-				<strong>Optional:</strong> You can change the target container id by adding <code>data-target="your-id"</code>
+				<strong>Optional:</strong> You can change the target container id by adding
+				<code>data-target="your-id"</code>
 				and the source via <code>data-src="..."</code> to the script tag; then use
 				<code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
 			</li>

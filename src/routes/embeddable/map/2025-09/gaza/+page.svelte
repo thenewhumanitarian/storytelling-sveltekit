@@ -82,8 +82,8 @@
 
 <main class="h-screen bg-white">
 	<section class="flex h-full min-h-0 w-full flex-col">
-		<div class="flex flex-grow flex-col">
-			<div class="min-h-[120px] flex-grow">
+		<div class="flex grow flex-col">
+			<div class="min-h-[120px] grow">
 				<GazaMap
 					bind:this={gazaMapRef}
 					{selectedMarkerId}
@@ -94,7 +94,7 @@
 					{selectedWeekStartDate}
 				/>
 			</div>
-			<div class="w-full flex-shrink-0">
+			<div class="w-full shrink-0">
 				<GazaCards
 					bind:this={gazaCardsRef}
 					{incidentsData}
@@ -103,7 +103,7 @@
 				/>
 			</div>
 		</div>
-		<div class="z-30 w-full flex-shrink-0">
+		<div class="z-30 w-full shrink-0">
 			<Timeline
 				{setHighlightedMarkerId}
 				{highlightedMarkerId}
