@@ -37,17 +37,21 @@ This SvelteKit application serves as TNH's platform for:
 
 ## Tech Stack
 
-| Category        | Technology                                            |
-| --------------- | ----------------------------------------------------- |
-| Framework       | [SvelteKit](https://kit.svelte.dev/) with Svelte 5    |
-| Styling         | [Tailwind CSS](https://tailwindcss.com/)              |
-| Maps            | [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) |
-| Charts/Data     | [D3.js](https://d3js.org/)                            |
-| Animations      | [GSAP](https://greensock.com/gsap/)                   |
-| CMS             | [Storyblok](https://www.storyblok.com/)               |
-| Hosting         | [Vercel](https://vercel.com/)                         |
-| Node Version    | 24.x LTS (via NVM)                                    |
-| Package Manager | pnpm (via Corepack)                                   |
+| Category | Technology | Version |
+| -------- | ---------- | ------- |
+| Framework | [SvelteKit](https://kit.svelte.dev/) | 2.x |
+| UI | [Svelte](https://svelte.dev/) | 5.x |
+| Bundler | [Vite](https://vite.dev/) | 7.x |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) | 4.x (CSS-first via `@tailwindcss/vite`) |
+| Maps | [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) | 3.x |
+| Charts/Data | [D3.js](https://d3js.org/) | 3.x / 4.x |
+| Animations | [GSAP](https://greensock.com/gsap/) | 3.15 |
+| CMS | [Storyblok](https://www.storyblok.com/) (`@storyblok/svelte`) | 4.x |
+| Component docs | [Storybook](https://storybook.js.org/) | 10.x |
+| Linting | ESLint + Prettier | 10.x / 3.x |
+| Hosting | [Vercel](https://vercel.com/) (`@sveltejs/adapter-vercel`) | Node 24.x |
+| Runtime | Node.js LTS | **24.x** (see `.nvmrc`) |
+| Package manager | [pnpm](https://pnpm.io/) via [Corepack](https://nodejs.org/api/corepack.html) | **11.x** (pinned in `package.json`) |
 
 ---
 
@@ -55,9 +59,10 @@ This SvelteKit application serves as TNH's platform for:
 
 ### Prerequisites
 
-- [NVM](https://github.com/nvm-sh/nvm) — Node Version Manager (Node 24 LTS)
-- [Corepack](https://nodejs.org/api/corepack.html) — bundled with Node 24, manages pnpm version
-- Local SSL certificates (for HTTPS dev server)
+- **[NVM](https://github.com/nvm-sh/nvm)** — install Node **24 LTS** (`nvm install 24`)
+- **[Corepack](https://nodejs.org/api/corepack.html)** — bundled with Node 24; activates the pinned pnpm version
+- **[mkcert](https://github.com/FiloSottile/mkcert)** — trusted local HTTPS certificates (required for Storyblok Visual Editor)
+- **`.env`** — create in project root with required tokens (see [Environment Variables](#environment-variables))
 
 ### Installation
 
@@ -66,49 +71,58 @@ This SvelteKit application serves as TNH's platform for:
 git clone <repository-url>
 cd tnh-storytelling-sveltekit
 
-# 2. Use the correct Node version (reads .nvmrc => 24)
+# 2. Use Node 24 LTS (.nvmrc => 24)
+nvm install    # first time only
 nvm use
 
-# 3. Activate the pinned pnpm version (reads packageManager from package.json)
+# 3. Enable Corepack and activate the pinned pnpm version (packageManager in package.json => pnpm@11.2.2)
 corepack enable
+corepack prepare pnpm@11.2.2 --activate
 
 # 4. Install dependencies
 pnpm install
 
-# 5. Set up local SSL certificates (see HTTPS Setup below)
+# 5. Generate local SSL certificates (see HTTPS Setup below — each developer runs this once)
 
-# 6. Start development server
+# 6. Start the development server
 pnpm dev
 ```
 
-The dev server runs at `https://localhost:5173` with HTTPS enabled.
+The dev server runs at **`https://localhost:5173`** with HTTPS enabled. If port 5173 is in use, Vite picks the next available port (e.g. `5174`).
 
-### HTTPS Setup (Required)
+### HTTPS Setup (mkcert)
 
-The development server runs over **HTTPS** because the [Storyblok Visual Editor](https://www.storyblok.com/docs/editor/visual-editor) requires a secure connection to load your local preview. Without HTTPS, the Visual Editor iframe will be blocked by the browser.
+The dev server runs over **HTTPS** because the [Storyblok Visual Editor](https://www.storyblok.com/docs/editor/visual-editor) requires a secure connection to load your local preview. Without HTTPS, the Visual Editor iframe is blocked by the browser.
 
-**Generate certificates with mkcert:**
+Certificates are **per-developer** — they are signed by your local mkcert CA and must not be committed to git. The files in `cert/` in the repo are placeholders; regenerate them on your machine.
+
+**One-time setup:**
 
 ```bash
-# 1. Install mkcert (macOS)
+# macOS
 brew install mkcert
-mkcert -install
+mkcert -install          # adds mkcert's local CA to your system trust store
 
-# 2. Generate certificates for localhost
-cd cert/
-mkcert localhost
-
-# 3. Rename to match expected filenames
-mv localhost.pem localhost.pem
-mv localhost-key.pem localhost-key.pem
+# Generate certs (from project root)
+cd cert
+mkcert -key-file localhost-key.pem -cert-file localhost.pem localhost 127.0.0.1 ::1
+cd ..
 ```
 
-The Vite config (`vite.config.ts`) expects these files at:
+Vite reads these files from `vite.config.ts`:
 
-- `cert/localhost.pem`
-- `cert/localhost-key.pem`
+- `cert/localhost.pem` — certificate
+- `cert/localhost-key.pem` — private key
 
-> 💡 **Tip**: If you see browser warnings about untrusted certificates, run `mkcert -install` to add the local CA to your system trust store.
+**Troubleshooting**
+
+| Symptom | Fix |
+| ------- | --- |
+| Browser shows **"Not Secure"** with a red strikethrough on `https` | Certs were likely generated on another machine. Re-run the `mkcert` commands above on your Mac, restart `pnpm dev`, hard-refresh the browser. |
+| Storyblok Visual Editor won't load localhost | Confirm you're using `https://` (not `http://`) and that mkcert CA is installed (`mkcert -install`). |
+| Certificate expired | Re-run `mkcert` in `cert/` — new certs are valid for ~2 years. |
+
+> **Note:** HTTPS is only required for local dev. Production and staging on Vercel use Vercel's own TLS — no mkcert needed there.
 
 ### Environment Variables
 
@@ -156,8 +170,9 @@ tnh-storytelling-sveltekit/
 ├── static/                  # Static assets & legacy projects
 │   └── scripts/             # Embeddable scripts
 ├── scripts/                 # Build-time data fetching
-├── cert/                    # Local SSL certificates
-└── .nvmrc                   # Node version (24)
+├── cert/                    # Local mkcert SSL certs (regenerate per developer — see HTTPS Setup)
+├── pnpm-lock.yaml           # Lockfile (commit changes; use --frozen-lockfile on CI/Vercel)
+└── .nvmrc                   # Node version pin (24)
 ```
 
 ---
@@ -169,6 +184,7 @@ tnh-storytelling-sveltekit/
 | `pnpm dev`             | Start development server with HTTPS     |
 | `pnpm build`           | Pre-fetch data and build for production |
 | `pnpm preview`         | Preview production build locally        |
+| `pnpm install --frozen-lockfile` | CI/Vercel-style install (no lockfile changes) |
 | `pnpm pre-fetch-data`  | Fetch all project data (orchestrator)   |
 | `pnpm pre-fetch-gaza`  | Fetch Gaza map data only                |
 | `pnpm check`           | Run Svelte type checking                |
@@ -234,18 +250,30 @@ These include older interactive pieces that were migrated to preserve their func
 
 The project is hosted on **Vercel** with automatic deployments:
 
-| Branch           | Environment | URL                                                                              |
-| ---------------- | ----------- | -------------------------------------------------------------------------------- |
-| `main`           | Production  | [interactive.thenewhumanitarian.org](https://interactive.thenewhumanitarian.org) |
-| `preview`        | Staging     | [preview.thenewhumanitarian.org](https://preview.thenewhumanitarian.org)         |
-| Feature branches | Preview     | Auto-generated Vercel preview URLs                                               |
+| Branch | Environment | URL |
+| ------ | ----------- | --- |
+| `main` | Production | [interactive.thenewhumanitarian.org](https://interactive.thenewhumanitarian.org) |
+| `preview` | Staging | [preview.thenewhumanitarian.org](https://preview.thenewhumanitarian.org) |
+| Feature branches | Preview | Auto-generated Vercel preview URLs |
 
-### Deployment Flow
+### Vercel project settings
 
-1. Push to `main` or `preview` branch
-2. Vercel triggers build automatically
+Configure these in the Vercel dashboard (Project → Settings → General / Build):
+
+| Setting | Value |
+| ------- | ----- |
+| **Node.js Version** | `24.x` |
+| **Install Command** | `pnpm install --frozen-lockfile` |
+| **Build Command** | `pnpm build` (default) |
+
+Corepack reads the pinned pnpm version from `packageManager` in `package.json` (`pnpm@11.2.2`).
+
+### Deployment flow
+
+1. Push to `main` or `preview`
+2. Vercel runs `pnpm install --frozen-lockfile` on Node 24
 3. Build script runs `pre-fetch-data.js` to cache external data
-4. SvelteKit builds with `adapter-vercel`
+4. SvelteKit builds with `@sveltejs/adapter-vercel`
 5. Deployment goes live
 
 ---
@@ -352,11 +380,12 @@ Opens at `http://localhost:6006`
 
 ## Contributing
 
-1. Create a feature branch from `preview`
-2. Make changes and test locally
-3. Push to trigger preview deployment
-4. Merge to `preview` for staging
-5. Merge to `main` for production
+1. `nvm use` — ensure Node 24 is active
+2. Create a feature branch from `preview`
+3. `pnpm install` && `pnpm dev` — test locally (regenerate mkcert certs if needed)
+4. Push to trigger a Vercel preview deployment
+5. Merge to `preview` for staging ([preview.thenewhumanitarian.org](https://preview.thenewhumanitarian.org))
+6. Merge to `main` for production (release candidate after staging is verified)
 
 ---
 
