@@ -24,52 +24,16 @@
 	const fileName = blok.media?.filename?.split('/').pop();
 	const fileExtension = fileName?.split('.').pop();
 	const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension?.toLowerCase() || '');
+
+	const mediaShellClass = `inline-image-media relative flex h-full w-full items-center justify-center ${hasLightbox ? 'lightbox-trigger' : ''} ${isStartPage ? 'no-lightbox' : ''}`;
 </script>
 
-<div class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}>
-	{#if blok?.media?.filename}
-		<figure
-			bind:this={figureEl}
-			class={`relative cursor-pointer ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'p-2'}`}
-			style={`--rotation-angle: ${blok.rotation || 0}deg`}
-			use:storyblokEditable={blok}
-		>
-			<button
-				type="button"
-				class={`relative flex h-full w-full items-center justify-center ${isStartPage ? 'no-lightbox' : ''}`}
-				onclick={() => openLightbox(blok.media?.filename.toString())}
-				aria-label={blok.lightbox ? 'Open lightbox' : 'Image'}
-				data-lightbox={blok.lightbox ? 'true' : 'false'}
-				data-lightbox-src={blok.lightbox ? blok.media?.filename : ''}
-				data-lightbox-type={isVideo ? 'video' : 'image'}
-				data-lightbox-caption={blok.caption || ''}
-				data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
-				data-lightbox-width={width}
-				data-lightbox-height={height}
-			>
-				{#if blok.bgColor === 'bg-scrap-paper'}
-					<ScrapBookPaper mouseOver={false} maxWidthMobile="150px">
-						<div class="h-full w-full p-10">
-							{#if isVideo}
-								<video src={blok.media.filename} autoplay loop muted playsinline />
-							{:else}
-								<img
-									class="inline-image"
-									src={`${blok.media.filename}/m/480x0`}
-									alt={blok.caption || 'Photo alt text is missing.'}
-								/>
-							{/if}
-						</div>
-					</ScrapBookPaper>
-				{:else if isVideo}
-					<video
-						class={`inline-video inline-image max-h-[80vh] ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
-						src={blok.media.filename}
-						autoplay
-						loop
-						muted
-						playsinline
-					/>
+{#snippet imageContent()}
+	{#if blok.bgColor === 'bg-scrap-paper'}
+		<ScrapBookPaper mouseOver={false} maxWidthMobile="150px">
+			<div class="h-full w-full p-10">
+				{#if isVideo}
+					<video src={blok.media.filename} autoplay loop muted playsinline></video>
 				{:else}
 					<img
 						class="inline-image"
@@ -77,30 +41,88 @@
 						alt={blok.caption || 'Photo alt text is missing.'}
 					/>
 				{/if}
-				{#if blok.bgColor === 'bg-transparent'}
-					{#if blok.tape?.includes('tl')}
-						<span class={`tape tape-tl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-					{#if blok.tape?.includes('tr')}
-						<span class={`tape tape-tr ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-					{#if blok.tape?.includes('tc')}
-						<span class={`tape tape-tc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-					{#if blok.tape?.includes('bl')}
-						<span class={`tape tape-bl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-					{#if blok.tape?.includes('br')}
-						<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-					{#if blok.tape?.includes('bc')}
-						<span class={`tape tape-bc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
-					{/if}
-				{/if}
-			</button>
+			</div>
+		</ScrapBookPaper>
+	{:else if isVideo}
+		<video
+			class={`inline-video inline-image max-h-[80vh] ${blok.bgColor === 'bg-transparent' ? 'no-lightbox' : ''}`}
+			src={blok.media.filename}
+			autoplay
+			loop
+			muted
+			playsinline
+		></video>
+	{:else}
+		<img
+			class="inline-image"
+			src={`${blok.media.filename}/m/480x0`}
+			alt={blok.caption || 'Photo alt text is missing.'}
+		/>
+	{/if}
+	{#if blok.bgColor === 'bg-transparent'}
+		{#if blok.tape?.includes('tl')}
+			<span class={`tape tape-tl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('tr')}
+			<span class={`tape tape-tr ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('tc')}
+			<span class={`tape tape-tc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('bl')}
+			<span class={`tape tape-bl ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('br')}
+			<span class={`tape tape-br ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+		{#if blok.tape?.includes('bc')}
+			<span class={`tape tape-bc ${blok.pictureFrame ? 'picture-frame' : ''}`}></span>
+		{/if}
+	{/if}
+{/snippet}
+
+<div class={`inline-image-wrapper ${hasLightbox ? 'lightbox' : 'no-lightbox'}`}>
+	{#if blok?.media?.filename}
+		<figure
+			bind:this={figureEl}
+			class={`relative ${alignClass} ${blok.marginY ? '' : 'no-margin-y'} ${blok.bgColor} ${hasLightbox ? 'lightbox' : 'no-lightbox'} ${blok.bgColor === 'bg-transparent' ? '' : 'p-2'}`}
+			style={`--rotation-angle: ${blok.rotation || 0}deg`}
+			use:storyblokEditable={blok}
+		>
+			{#if hasLightbox}
+				<button
+					type="button"
+					class={mediaShellClass}
+					onclick={() => openLightbox(blok.media?.filename.toString())}
+					aria-label="Open lightbox"
+					data-lightbox="true"
+					data-lightbox-src={blok.media?.filename}
+					data-lightbox-type={isVideo ? 'video' : 'image'}
+					data-lightbox-caption={blok.caption || ''}
+					data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
+					data-lightbox-width={width}
+					data-lightbox-height={height}
+				>
+					{@render imageContent()}
+				</button>
+			{:else}
+				<div
+					class={mediaShellClass}
+					aria-hidden="true"
+					data-lightbox="false"
+					data-lightbox-src=""
+					data-lightbox-type={isVideo ? 'video' : 'image'}
+					data-lightbox-caption={blok.caption || ''}
+					data-lightbox-alt={blok.media?.alt || 'Alt text for this photo is missing.'}
+					data-lightbox-width={width}
+					data-lightbox-height={height}
+				>
+					{@render imageContent()}
+				</div>
+			{/if}
 
 			{#if blok.caption}
-				<figcaption class="font-amman">{blok.caption}</figcaption>
+				<figcaption class="font-amman inline-image-caption">{blok.caption}</figcaption>
 			{/if}
 
 			{#if blok.tape && blok.bgColor !== 'bg-transparent' && blok.bgColor !== 'bg-scrap-paper'}
@@ -132,6 +154,22 @@
 		clear: both;
 	}
 
+	.inline-image-wrapper.lightbox .lightbox-trigger,
+	.inline-image-wrapper.lightbox .inline-image,
+	.inline-image-wrapper.lightbox .inline-video {
+		cursor: pointer;
+	}
+
+	/* Story grid / intro cards: images inside panel links inherit click affordance */
+	:global(a .inline-image-wrapper .inline-image-media),
+	:global(a .inline-image-wrapper .inline-image),
+	:global(a .inline-image-wrapper .inline-video),
+	:global(.story-grid--panel.has-link .inline-image-wrapper .inline-image-media),
+	:global(.story-grid--panel.has-link .inline-image-wrapper .inline-image),
+	:global(.story-grid--panel.has-link .inline-image-wrapper .inline-video) {
+		cursor: pointer;
+	}
+
 	figure {
 		display: flex;
 		flex-direction: column;
@@ -152,10 +190,16 @@
 		box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
 	}
 
-	figcaption {
-		margin: 0.25rem 0;
-		color: #282828;
+	.inline-image-caption {
+		margin: 0.5rem 0 0;
 		padding: 0;
+		color: #282828;
+	}
+
+	/* Taped / transparent figures have no frame fill — caption needs its own backing */
+	figure:global(.bg-transparent) .inline-image-caption {
+		padding: 0.35rem 0.5rem;
+		background-color: #ffe0b5;
 	}
 
 	.align-left,

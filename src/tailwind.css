@@ -5,9 +5,11 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-@source inline('bg-{*}');
-@source inline('text-{*}');
-@source inline('font-{*}');
+/* Storyblok CMS uses dynamic bg-* / text-* class strings — safelist multi-segment utilities */
+@source inline('bg-{brown,grass,burgundy,lebgreen,sun,transparent,white}');
+@source inline('bg-stone-50');
+@source inline('text-{lebblack,burgundy,white,lebgreen}');
+@source inline('font-{amman,sans,serif,default,pacifico}');
 @source inline('text-right');
 @source inline('font-sans');
 @source inline('font-serif');

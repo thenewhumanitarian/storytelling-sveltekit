@@ -577,14 +577,25 @@
 		background: black;
 	}
 
+	.caption-toggle {
+		cursor: pointer;
+	}
+
 	.lightbox-close {
-		position: fixed;
-		top: 1rem;
+		position: absolute;
+		top: 0.5rem;
 		right: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 3.5rem;
+		height: 3.5rem;
+		padding: 0;
 		background: none;
 		border: none;
 		color: white;
-		font-size: 5rem;
+		font-size: 3.5rem;
+		line-height: 1;
 		z-index: 1001;
 		cursor: pointer;
 		will-change: color;
@@ -593,9 +604,11 @@
 
 	@media screen and (max-width: 640px) {
 		.lightbox-close {
-			font-size: 3.5rem;
-			top: 0.75rem;
-			right: 0.5rem;
+			top: 0.375rem;
+			right: 0.375rem;
+			width: 2.75rem;
+			height: 2.75rem;
+			font-size: 2.75rem;
 		}
 	}
 
