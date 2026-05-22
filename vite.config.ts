@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin } from 'vite';
 
 function serveStaticStories(): Plugin {
@@ -28,7 +29,7 @@ export default defineConfig({
 			cert: fs.readFileSync('./cert/localhost.pem')
 		}
 	},
-	plugins: [serveStaticStories(), sveltekit()],
+	plugins: [serveStaticStories(), tailwindcss(), sveltekit()],
 	ssr: {
 		noExternal: [],
 		// Exclude Node.js built-in modules from client bundling
