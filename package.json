@@ -17,6 +17,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
+		"check:urls": "node scripts/check-urls.mjs",
+		"check:playwright": "node scripts/playwright-compare.mjs",
 		"optimize:images": "node scripts/optimize-cleared-images.js",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build"
@@ -47,6 +49,7 @@
 		"globals": "^17.6.0",
 		"less": "^4.6.4",
 		"mdsvex": "^0.12.7",
+		"playwright": "1.52.0",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.0.0",
 		"prettier-plugin-tailwindcss": "^0.8.0",
