@@ -68,7 +68,7 @@
 
 	<div
 		id={containerId}
-		class="eventbrite-checkout relative min-h-[425px] w-full overflow-hidden border border-[var(--event-ink)]/10 bg-white shadow-sm"
+		class="eventbrite-checkout min-h-[425px] w-full overflow-hidden border border-[var(--event-ink)]/10 bg-white shadow-sm"
 		aria-label="Event registration checkout"
 	></div>
 </div>
@@ -89,9 +89,8 @@
 
 <style>
 	:global(.eventbrite-checkout > iframe[src*='checkout-external']) {
-		position: absolute !important;
-		inset: 0 !important;
 		width: 100% !important;
-		height: 100% !important;
+		display: block !important;
+		border: 0 !important;
 	}
 </style>

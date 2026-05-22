@@ -20,7 +20,7 @@ export const content: EventContent = {
 			name: 'Arian Moayed',
 			role: 'Actor, writer, and director; co-founder of Waterwell',
 			bio: 'Arian Moayed is an actor, writer, and director whose work spans stage and screen. As co-founder of Waterwell, he champions stories that centre immigrant and diaspora experiences.',
-			image: '/images/events/who-owns-the-narrative/speakers/photos/arian-moayed-photo.png',
+			image: '/images/events/who-owns-the-narrative/speakers/photos/event--arian--only-photo.png',
 			imageAlt: 'Portrait of Arian Moayed'
 		},
 		{

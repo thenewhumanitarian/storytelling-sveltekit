@@ -2,7 +2,6 @@
 	import type { EventChapter, EventSpeaker, EventProgrammeItem } from '$lib/events/types';
 	import Scrolly from '$lib/components/events/scrolly/Scrolly.svelte';
 	import Step from '$lib/components/events/scrolly/Step.svelte';
-	import SpeakerCard from '$lib/components/events/SpeakerCard.svelte';
 	import SpeakerPortrait from '$lib/components/events/SpeakerPortrait.svelte';
 	import ProgrammeTimeline from '$lib/components/events/ProgrammeTimeline.svelte';
 	import { cn } from '$lib/utils/cn';
@@ -17,6 +16,7 @@
 	let { chapter, speakers, programme, index }: Props = $props();
 
 	const isProgrammeChapter = $derived(chapter.steps.some((step) => step.viz?.type === 'programme'));
+	const vizSide = $derived(isProgrammeChapter ? 'left' : (chapter.vizSide ?? 'left'));
 
 	const accentBg = $derived(
 		{
@@ -87,6 +87,10 @@
 			(hasStepViz(chapter.steps[stepIndex + 1]) && stepVizKey(chapter.steps[stepIndex + 1]) === key)
 		);
 	}
+
+	function shouldShowMobileSpeakerFirst(step: EventChapter['steps'][number] | undefined): boolean {
+		return step?.viz?.type === 'speaker' && !!getSpeaker(step.viz.speakerId);
+	}
 </script>
 
 <section
@@ -118,7 +122,7 @@
 	</header>
 
 	<div class="mx-auto w-full max-w-6xl">
-		<Scrolly vizSide="left">
+		<Scrolly {vizSide}>
 			{#snippet viz({ activeStep })}
 				<div class="flex h-full w-full items-center justify-center p-4 lg:justify-center">
 					<div class="event-viz-frame w-full max-w-xl lg:max-w-[26rem]">
@@ -147,8 +151,17 @@
 					<Step
 						isActive={activeStep === stepIndex}
 						id={`${chapter.id}-${step.id}`}
-						class={isProgrammeChapter ? 'programme-mobile-step' : undefined}
+						class={cn(
+							isProgrammeChapter && 'programme-mobile-step',
+							isProgrammeChapter && stepIndex === 0 && 'programme-first-step'
+						)}
 					>
+						{#if shouldShowMobileSpeakerFirst(step) && step.viz?.type === 'speaker'}
+							<div data-scrolly-mobile-viz class="mb-8 lg:hidden">
+								<SpeakerPortrait speaker={getSpeaker(step.viz.speakerId)} />
+							</div>
+						{/if}
+
 						{#if isProgrammeChapter && getStepProgrammeId(stepIndex)}
 							<div class="programme-mobile-entry lg:hidden">
 								<div class="programme-mobile-marker" aria-hidden="true">
@@ -237,13 +250,9 @@
 						{/if}
 
 						<!-- Mobile inline viz -->
-						{#if step.viz && hasStepViz(step) && !sharesAdjacentViz(stepIndex) && !(isProgrammeChapter && step.viz.type === 'programme')}
+						{#if step.viz && hasStepViz(step) && !sharesAdjacentViz(stepIndex) && step.viz.type !== 'speaker' && !(isProgrammeChapter && step.viz.type === 'programme')}
 							<div data-scrolly-mobile-viz class="mt-8 lg:hidden">
-								{#if step.viz.type === 'speaker'}
-									{#if getSpeaker(step.viz.speakerId)}
-										<SpeakerCard speaker={getSpeaker(step.viz.speakerId)!} />
-									{/if}
-								{:else if step.viz.type === 'programme'}
+								{#if step.viz.type === 'programme'}
 									<ProgrammeTimeline
 										items={programme}
 										activeId={step.viz.programmeId}
@@ -360,8 +369,14 @@
 		}
 
 		:global(.programme-mobile-step) {
+			align-items: center;
 			padding-bottom: 6svh;
-			padding-top: clamp(8rem, 20svh, 12rem);
+			padding-top: 6svh;
+			scroll-margin-top: 0;
+		}
+
+		:global(.programme-first-step) {
+			scroll-margin-top: 0;
 		}
 
 		:global(.programme-mobile-step [data-scrolly-step-content]) {

@@ -53,7 +53,7 @@
 			modules: [FreeMode, A11y],
 			loop: true,
 			spaceBetween: 10,
-			slidesPerView: 3,
+			slidesPerView: 4,
 			freeMode: true,
 			watchSlidesProgress: true,
 			slideToClickedSlide: true,
@@ -216,7 +216,7 @@
 	}
 
 	.film-gallery-thumbs :global(.swiper-slide) {
-		width: 33.333%;
+		width: 25%;
 		cursor: pointer;
 		opacity: 0.34;
 		transition:

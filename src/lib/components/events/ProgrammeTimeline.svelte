@@ -62,7 +62,7 @@
 		const content = target.querySelector<HTMLElement>('[data-scrolly-step-content]') ?? target;
 		const contentRect = content.getBoundingClientRect();
 		const availableHeight = window.innerHeight - navHeight;
-		const desiredTop = navHeight + availableHeight * 0.5;
+		const desiredTop = navHeight + (availableHeight - contentRect.height) * 0.5;
 		const top = contentRect.top + window.scrollY - desiredTop;
 
 		window.history.replaceState(null, '', href);
@@ -70,14 +70,11 @@
 	}
 </script>
 
-<ol class={cn('programme-timeline relative w-full', compact ? 'space-y-5' : 'space-y-7')}>
+<ol class={cn('programme-timeline relative w-full p-1', compact ? 'space-y-5' : 'space-y-7')}>
 	{#each items as item, index (item.id)}
 		<li class="relative grid grid-cols-[1.35rem_minmax(0,1fr)] gap-4">
 			<div class="flex flex-col items-center pt-3">
 				<div class={dotClass(item)}></div>
-				{#if index < items.length - 1}
-					<div class="mt-1 w-px flex-1 bg-[var(--event-accent)]/25"></div>
-				{/if}
 			</div>
 
 			{#if getHref(item)}
@@ -121,9 +118,9 @@
 	.programme-timeline::before {
 		content: '';
 		position: absolute;
-		top: 1.25rem;
-		bottom: 1.25rem;
-		left: 0.64rem;
+		top: 1.5rem;
+		bottom: 1.5rem;
+		left: calc(0.25rem + 0.675rem);
 		width: 1px;
 		background: linear-gradient(
 			to bottom,
