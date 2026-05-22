@@ -4,14 +4,26 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin } from 'vite';
 
-function serveStaticStories(): Plugin {
+/** Serve legacy Gatsby HTML from /static in dev (Vercel does this in production). */
+function serveLegacyStaticHtml(): Plugin {
 	return {
-		name: 'serve-static-stories',
+		name: 'serve-legacy-static-html',
 		configureServer(server) {
 			server.middlewares.use((req, res, next) => {
-				if (!req.url?.startsWith('/stories/')) return next();
-				const htmlPath = path.join('static', req.url, 'index.html');
-				if (fs.existsSync(htmlPath)) {
+				const pathname = req.url?.split('?')[0] ?? '';
+				let htmlPath: string | null = null;
+
+				if (
+					pathname === '/404' ||
+					pathname === '/404/' ||
+					pathname === '/404.html'
+				) {
+					htmlPath = path.join('static', '404.html');
+				} else if (pathname.startsWith('/stories/') || pathname.startsWith('/reports/')) {
+					htmlPath = path.join('static', pathname, 'index.html');
+				}
+
+				if (htmlPath && fs.existsSync(htmlPath)) {
 					res.setHeader('Content-Type', 'text/html');
 					fs.createReadStream(htmlPath).pipe(res);
 					return;
@@ -29,16 +41,16 @@ export default defineConfig({
 			cert: fs.readFileSync('./cert/localhost.pem')
 		}
 	},
-	plugins: [serveStaticStories(), tailwindcss(), sveltekit()],
+	plugins: [serveLegacyStaticHtml(), tailwindcss(), sveltekit()],
 	ssr: {
-		noExternal: [],
+		noExternal: ['@storyblok/svelte'],
 		// Exclude Node.js built-in modules from client bundling
 		resolve: {
 			conditions: ['node']
 		}
 	},
 	optimizeDeps: {
-		exclude: ['fs', 'path']
+		exclude: ['fs', 'path', '@storyblok/svelte']
 	},
 	build: {
 		rollupOptions: {
