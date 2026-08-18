@@ -143,7 +143,7 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 						return value;
 				}
 			}
-		});
+		}) as unknown as IncidentData[];
 	} catch (parseError) {
 		console.error('❌ CSV parsing failed:', parseError);
 		throw new Error(`CSV parsing failed: ${parseError}`, { cause: parseError });

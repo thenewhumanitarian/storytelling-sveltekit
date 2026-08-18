@@ -32,6 +32,7 @@
 
 	let showSources = $state(false);
 	let hasAutoOpened = $state(false);
+	const text = $derived(copy[lang === 'fr' ? 'fr' : 'en']);
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
@@ -74,7 +75,7 @@
 	{#if incident.type === 'event'}
 		<div class="flex items-center justify-between gap-2 sm:gap-2">
 			<div class="flex items-center gap-2">
-				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{copy[lang].event}</span>
+				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.event}</span>
 				<span class="text-sm text-zinc-700">
 					{moment(incident.date).format('DD MMMM YYYY')}
 				</span>
@@ -85,7 +86,7 @@
 					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToPrevCard}
 					disabled={!hasPrev}
-					aria-label={copy[lang].previous}
+					aria-label={text.previous}
 				>
 					←
 				</button>
@@ -93,7 +94,7 @@
 					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToNextCard}
 					disabled={!hasNext}
-					aria-label={copy[lang].next}
+					aria-label={text.next}
 				>
 					→
 				</button>
@@ -116,9 +117,7 @@
 			<div class="grow">
 				<div class="flex items-center justify-between gap-2 sm:gap-2">
 					<div class="flex items-center gap-2">
-						<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white"
-							>{copy[lang].incident}</span
-						>
+						<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.incident}</span>
 						<span class="text-sm text-zinc-700">
 							{moment(incident.date).format('DD MMMM YYYY')}
 						</span>
@@ -129,7 +128,7 @@
 							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToPrevCard}
 							disabled={!hasPrev}
-							aria-label={copy[lang].previous}
+							aria-label={text.previous}
 						>
 							←
 						</button>
@@ -137,7 +136,7 @@
 							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToNextCard}
 							disabled={!hasNext}
-							aria-label={copy[lang].next}
+							aria-label={text.next}
 						>
 							→
 						</button>
@@ -170,7 +169,7 @@
 							<span
 								class="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-500"
 							>
-								{copy[lang].casualtiesUnknown}
+								{text.casualtiesUnknown}
 							</span>
 						{/if}
 					</div>
@@ -235,7 +234,7 @@
 							class="bg-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-700 hover:text-zinc-50"
 							onclick={() => (showSources = true)}
 						>
-							{copy[lang].showSources}
+							{text.showSources}
 						</button>
 					</div>
 

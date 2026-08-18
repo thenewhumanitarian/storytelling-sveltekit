@@ -6,7 +6,7 @@
 		// data-target: id of the container element to mount into (default: 'haiti-drone-map')
 		// data-src:    URL of the iframe source (defaults to the same host as this script)
 		// data-track:  Optional override for the tracking endpoint; if omitted we derive it
-		var scriptEl = document.currentScript;
+		var scriptEl = /** @type {HTMLScriptElement | null} */ (document.currentScript);
 		var targetId = (scriptEl && scriptEl.getAttribute('data-target')) || 'haiti-drone-map';
 		var derivedSrc = '';
 		if (scriptEl && scriptEl.src) {

@@ -226,7 +226,7 @@
 		}
 	}
 
-	let isDragging = false;
+	let isDragging = $state(false);
 	let dragStartX = 0;
 	let dragStartScrollLeft = 0;
 

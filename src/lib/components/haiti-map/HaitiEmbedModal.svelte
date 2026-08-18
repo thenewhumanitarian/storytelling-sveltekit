@@ -4,6 +4,7 @@
 	import { copy } from './copy';
 	let { onClose, lang = 'en' } = $props<{ onClose: () => void; lang?: HaitiLang }>();
 	let copied = $state(false);
+	const text = $derived(copy[lang === 'fr' ? 'fr' : 'en']);
 	// Build base URL from env and ensure no trailing slash
 	const BASE = (PUBLIC_BASE_URL || '').replace(/\/$/, '');
 	// Script-based embed (served by endpoint)
@@ -43,28 +44,28 @@
 	<div
 		role="dialog"
 		aria-modal="true"
-		aria-label={copy[lang].embedDialogLabel}
+		aria-label={text.embedDialogLabel}
 		class="relative w-full max-w-2xl bg-white p-4 text-gray-800 shadow-lg"
 		onclick={(e) => e.stopPropagation()}
 	>
 		<button
 			class="absolute right-3 top-1 text-3xl leading-none text-gray-500 hover:text-gray-800"
 			onclick={onClose}
-			aria-label={copy[lang].close}>×</button
+			aria-label={text.close}>×</button
 		>
-		<h2 class="mb-2 text-lg font-semibold text-gray-900">{copy[lang].embedTitle}</h2>
+		<h2 class="mb-2 text-lg font-semibold text-gray-900">{text.embedTitle}</h2>
 		<p class="mb-3 text-sm text-gray-700">
-			{copy[lang].embedIntro}
+			{text.embedIntro}
 		</p>
 		<ol class="list-decimal space-y-3 pl-5 text-sm">
 			<li>
-				<strong>{copy[lang].embedHtml}</strong>
+				<strong>{text.embedHtml}</strong>
 				<div class="relative mt-1">
 					<button
 						type="button"
 						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded-sm bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow-sm hover:bg-white"
 						onclick={copyEmbed}
-						aria-label={copy[lang].copyCode}
+						aria-label={text.copyCode}
 					>
 						<svg
 							class="h-3 w-3"
@@ -79,7 +80,7 @@
 								d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
 							></path></svg
 						>
-						{copied ? copy[lang].copied : copy[lang].copy}
+						{copied ? text.copied : text.copy}
 					</button>
 					<pre
 						id="tnh-embed-code"
@@ -89,12 +90,12 @@
 				</div>
 			</li>
 			<li>
-				<strong>{copy[lang].embedWhatLabel}</strong>
-				{copy[lang].embedWhat}
+				<strong>{text.embedWhatLabel}</strong>
+				{text.embedWhat}
 			</li>
 			<li>
-				<strong>{copy[lang].embedOptional}</strong>
-				{copy[lang].embedOptionalHelp}
+				<strong>{text.embedOptional}</strong>
+				{text.embedOptionalHelp}
 			</li>
 		</ol>
 	</div>

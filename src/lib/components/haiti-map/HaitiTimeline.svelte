@@ -102,7 +102,7 @@
 			.map((d) => ({
 				...d,
 				dateObj: new Date(d.date),
-				title: d.title || 'Untitled Event' // Ensure title is never empty
+				title: d.title || copy[lang].untitledEvent // Ensure title is never empty
 			}))
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
@@ -201,31 +201,31 @@
 	// Intensity-based color scale
 	const intensityColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear<string>().domain([0, 1]).range(['#fef2f2', '#dc2626']);
 		}
 		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
 		const maxIntensity = Math.max(...intensities, 1);
-		return scaleLinear().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626']);
+		return scaleLinear<string>().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626']);
 	});
 
 	// Geographic spread color scale
 	const spreadColorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#1e40af', '#dc2626']);
+			return scaleLinear<string>().domain([0, 1]).range(['#1e40af', '#dc2626']);
 		}
 		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
 		const maxSpread = Math.max(...spreads, 1);
-		return scaleLinear().domain([0, maxSpread]).range(['#1e40af', '#dc2626']); // Blue to red
+		return scaleLinear<string>().domain([0, maxSpread]).range(['#1e40af', '#dc2626']); // Blue to red
 	});
 
 	// Enhanced color and opacity scales
 	const colorScale = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range(['#fef2f2', '#dc2626']);
+			return scaleLinear<string>().domain([0, 1]).range(['#fef2f2', '#dc2626']);
 		}
 		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalDrones);
 		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626']); // Light red to dark red
+		return scaleLinear<string>().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626']); // Light red to dark red
 	});
 
 	const opacityScale = $derived.by(() => {
