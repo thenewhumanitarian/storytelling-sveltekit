@@ -1,0 +1,667 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import mapboxgl from 'mapbox-gl';
+	import 'mapbox-gl/dist/mapbox-gl.css';
+	import HaitiCards from '$lib/components/haiti-map/HaitiCards.svelte';
+	import type { IncidentData } from './types';
+	import HaitiOverlay from './HaitiOverlay.svelte';
+	import HaitiLanguagePopover from './HaitiLanguagePopover.svelte';
+	import type { HaitiLang } from './copy';
+	import { copy } from './copy';
+	const DEFAULT_MAP_ZOOM = 11;
+	const ZOOM_ZOOM = 14;
+	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
+
+	let {
+		selectedMarkerId,
+		highlightedMarkerId,
+		setSelectedMarkerId,
+		setHighlightedMarkerId,
+		incidentsData,
+		mapboxToken,
+		lang = 'en',
+		setLang
+	}: {
+		selectedMarkerId: number | null;
+		highlightedMarkerId: number | null;
+		setSelectedMarkerId: (id: number | null) => void;
+		setHighlightedMarkerId: (id: number | null) => void;
+		incidentsData: IncidentData[];
+		selectedWeekStartDate: Date | null;
+		mapboxToken: string;
+		lang?: HaitiLang;
+		setLang: (lang: HaitiLang) => void;
+	} = $props();
+
+	let mapContainer: HTMLElement | undefined = $state();
+	let hostContainer: HTMLElement | undefined = $state();
+	let map: mapboxgl.Map | null = $state(null);
+	let markers = $state<{ id: number; markerInstance: mapboxgl.Marker }[]>([]);
+	let clickedCoordinates: mapboxgl.LngLat | null = $state(null);
+	let cardsComponent: HaitiCards | null = null;
+	let selectionOrigin: 'click' | 'scroll' | null = null;
+	let lastMapCenter: { lng: number; lat: number } | null = $state(null);
+
+	let isFullscreen = $state(false);
+	let isMobile = $state(false);
+	let mounted = $state(false);
+	let isEmbedded = $state(false);
+	let mapInitError = $state<string | null>(null);
+
+	export function setSelectionOriginToClick() {
+		selectionOrigin = 'click';
+	}
+
+	// Extended types for cross-browser fullscreen API support
+	interface FullscreenElement extends HTMLElement {
+		webkitRequestFullscreen?: () => Promise<void>;
+		webkitRequestFullScreen?: () => Promise<void>;
+		msRequestFullscreen?: () => Promise<void>;
+	}
+
+	interface FullscreenDocument extends Document {
+		webkitExitFullscreen?: () => Promise<void>;
+		webkitCancelFullScreen?: () => Promise<void>;
+		msExitFullscreen?: () => Promise<void>;
+		webkitFullscreenElement?: Element | null;
+	}
+
+	async function enterFullscreen() {
+		const el = document.documentElement as FullscreenElement;
+		const request =
+			el.requestFullscreen ||
+			el.webkitRequestFullscreen ||
+			el.webkitRequestFullScreen ||
+			el.msRequestFullscreen;
+		if (request) {
+			await request.call(el);
+			return;
+		}
+		throw new Error('Fullscreen API not available');
+	}
+
+	async function exitFullscreen() {
+		const doc = document as FullscreenDocument;
+		const exit =
+			doc.exitFullscreen ||
+			doc.webkitExitFullscreen ||
+			doc.webkitCancelFullScreen ||
+			doc.msExitFullscreen;
+		if (exit) {
+			await exit.call(doc);
+			return;
+		}
+		throw new Error('Fullscreen exit API not available');
+	}
+
+	async function toggleFullscreen() {
+		try {
+			if (!isFullscreen) {
+				await enterFullscreen();
+			} else {
+				await exitFullscreen();
+			}
+		} catch (err) {
+			try {
+				window.parent?.postMessage(
+					{ type: 'tnh:request-fullscreen', action: isFullscreen ? 'exit' : 'enter' },
+					'*'
+				);
+			} catch (e) {}
+			console.error('Fullscreen toggle failed', err);
+		}
+	}
+
+	function closeAllPopups(exceptId: number | null = null) {
+		markers.forEach(({ id, markerInstance }) => {
+			const popup = markerInstance.getPopup();
+			if (popup?.isOpen() && id !== exceptId) {
+				popup.remove();
+			}
+		});
+	}
+
+	function scrollToIncidentCard(id: number) {
+		cardsComponent?.scrollToCard(id);
+	}
+
+	// Add derived for selected event
+	const selectedEvent = $derived(() => {
+		const selected = incidentsData.find((i) => i.chronoId === selectedMarkerId);
+		return selected && selected.type === 'event' ? selected : null;
+	});
+
+	// Only show overlay if the selected card is an event and is the top visible card
+	const showEventOverlay = $derived(() => {
+		const selected = incidentsData.find((i) => i.chronoId === selectedMarkerId);
+		return selected && selected.type === 'event';
+	});
+
+	export function flyToMarkerByChronoId(id: number) {
+		const incident = incidentsData.find((i) => i.chronoId === id);
+		if (
+			incident &&
+			incident.type === 'incident' &&
+			typeof incident.latitude === 'number' &&
+			typeof incident.longitude === 'number' &&
+			!isNaN(incident.latitude) &&
+			!isNaN(incident.longitude) &&
+			map
+		) {
+			const newCenter = { lng: incident.longitude, lat: incident.latitude };
+
+			// Check if we're going to the same location as before
+			const isSameLocation =
+				lastMapCenter &&
+				Math.abs(lastMapCenter.lng - newCenter.lng) < 0.0001 &&
+				Math.abs(lastMapCenter.lat - newCenter.lat) < 0.0001;
+
+			if (isSameLocation) {
+				// Same location - do a brief zoom out and back in for visual feedback
+				map.flyTo({
+					center: [newCenter.lng, newCenter.lat],
+					zoom: ZOOM_ZOOM - 0.5,
+					pitch: 45,
+					bearing: -17.6,
+					duration: 500
+				});
+
+				// Zoom back in after a short delay
+				setTimeout(() => {
+					if (map) {
+						map.flyTo({
+							center: [newCenter.lng, newCenter.lat],
+							zoom: ZOOM_ZOOM,
+							pitch: 45,
+							bearing: -17.6,
+							duration: 400
+						});
+					}
+				}, 350);
+			} else {
+				// Different location - normal flyTo
+				map.flyTo({
+					center: [newCenter.lng, newCenter.lat],
+					zoom: ZOOM_ZOOM,
+					pitch: 45,
+					bearing: -17.6
+				});
+			}
+
+			// Update the last center position
+			lastMapCenter = newCenter;
+		}
+	}
+
+	onMount(() => {
+		const updateIsMobile = () => {
+			isMobile = window.innerWidth <= 640;
+		};
+		updateIsMobile();
+		window.addEventListener('resize', updateIsMobile);
+		mounted = true;
+		try {
+			isEmbedded = window.self !== window.top;
+		} catch (e) {
+			// Cross-origin access throws; assume embedded
+			isEmbedded = true;
+		}
+
+		const updateFullscreenState = () => {
+			const doc = document as FullscreenDocument;
+			isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
+			setTimeout(() => {
+				map?.resize();
+			}, 0);
+		};
+		document.addEventListener('fullscreenchange', updateFullscreenState);
+		document.addEventListener('webkitfullscreenchange', updateFullscreenState);
+
+		if (!mapboxToken) {
+			mapInitError = copy[lang].mapUnavailable;
+			return () => {
+				window.removeEventListener('resize', updateIsMobile);
+				document.removeEventListener('fullscreenchange', updateFullscreenState);
+				document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
+			};
+		}
+
+		mapboxgl.accessToken = mapboxToken;
+		const mapInstance = new mapboxgl.Map({
+			container: mapContainer!,
+			style: MAPBOX_STYLE,
+			center: [-72.335, 18.54],
+			zoom: DEFAULT_MAP_ZOOM,
+			pitch: 45, // Tilt the map for 3D effect (0-85 degrees)
+			bearing: -17.6, // Rotate the map slightly for better perspective
+			attributionControl: false
+		});
+		map = mapInstance;
+
+		// --- SOLUTION: PREVENT SCROLL TRAP ON MOBILE ---
+		// Check for mobile screen size (matches your CSS breakpoint)
+		if (window.innerWidth <= 640) {
+			// Disables one-finger map panning, allowing page scrolling.
+			map.dragPan.disable();
+			// Disables map zooming via scroll gestures.
+			map.scrollZoom.disable();
+		}
+		// Note: Two-finger gestures (pinch-to-zoom/pan) are handled by
+		// `touchZoomRotate`, which remains enabled by default.
+
+		map.on('load', () => {
+			map?.resize();
+			map?.addControl(new mapboxgl.NavigationControl());
+
+			map?.addSource('countries', {
+				type: 'vector',
+				url: 'mapbox://mapbox.country-boundaries-v1'
+			});
+			map?.addSource('satellite', {
+				type: 'raster',
+				url: 'mapbox://mapbox.satellite',
+				tileSize: 256
+			});
+			map?.addLayer({
+				id: 'haiti-satellite',
+				type: 'raster',
+				source: 'satellite',
+				paint: { 'raster-opacity': 0.5 }
+			});
+			map?.addLayer({
+				id: 'country-mask',
+				type: 'fill',
+				source: 'countries',
+				'source-layer': 'country_boundaries',
+				filter: ['!=', ['get', 'iso_3166_1'], 'HT'],
+				paint: { 'fill-color': '#000', 'fill-opacity': 0.5 }
+			});
+
+			const newMarkers: { id: number; markerInstance: mapboxgl.Marker }[] = [];
+			incidentsData.forEach((incident, idx) => {
+				// Only render markers for incidents with valid coordinates
+				if (
+					incident.type !== 'incident' ||
+					typeof incident.latitude !== 'number' ||
+					typeof incident.longitude !== 'number' ||
+					isNaN(incident.latitude) ||
+					isNaN(incident.longitude)
+				) {
+					return;
+				}
+				const { chronoId, latitude, longitude, title, description, killedOrWounded } = incident;
+				const lat = latitude as number;
+				const lng = longitude as number;
+				const el = document.createElement('div');
+				el.className = `custom-marker marker-${idx}`;
+
+				const marker = new mapboxgl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map!);
+
+				el.addEventListener('mouseenter', () => setHighlightedMarkerId(chronoId));
+				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
+				el.addEventListener('click', () => {
+					selectionOrigin = 'click';
+					setSelectedMarkerId(chronoId);
+					scrollToIncidentCard(chronoId);
+					map?.flyTo({
+						center: [lng, lat],
+						zoom: ZOOM_ZOOM,
+						pitch: 45,
+						bearing: -17.6
+					});
+				});
+
+				newMarkers.push({ id: chronoId, markerInstance: marker });
+			});
+			markers = newMarkers;
+
+			// --- Heat map layer --- //
+			const heatmapGeoJSON = {
+				type: 'FeatureCollection',
+				features: incidentsData
+					.filter(
+						(incident) =>
+							incident.type === 'incident' &&
+							typeof incident.latitude === 'number' &&
+							typeof incident.longitude === 'number' &&
+							!isNaN(incident.latitude) &&
+							!isNaN(incident.longitude)
+					)
+					.map((incident) => ({
+						type: 'Feature',
+						properties: {
+							droneCount: Math.max(incident.droneCount || 1, 1)
+						},
+						geometry: {
+							type: 'Point',
+							coordinates: [incident.longitude as number, incident.latitude as number]
+						}
+					}))
+			};
+
+			map?.addSource('incidents-heatmap', {
+				type: 'geojson',
+				data: heatmapGeoJSON as GeoJSON.FeatureCollection
+			});
+
+			map?.addLayer({
+				id: 'incidents-heatmap-layer',
+				type: 'heatmap',
+				source: 'incidents-heatmap',
+				paint: {
+					// Haiti incidents are concentrated at the low end: median 2 drones,
+					// 90th percentile 4, maximum 17 in the current 2025–2026 dataset.
+					'heatmap-weight': [
+						'interpolate',
+						['linear'],
+						['get', 'droneCount'],
+						1,
+						0.3,
+						2,
+						0.42,
+						4,
+						0.62,
+						17,
+						1
+					],
+					'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 5, 20, 10, 50, 15, 80],
+					'heatmap-color': [
+						'interpolate',
+						['linear'],
+						['heatmap-density'],
+						0,
+						'rgba(255, 255, 255, 0)',
+						0.02,
+						'rgba(240, 120, 30, 0.12)',
+						0.08,
+						'rgba(240, 120, 30, 0.35)',
+						0.2,
+						'rgba(240, 120, 30, 0.55)',
+						0.45,
+						'rgba(240, 120, 30, 0.75)',
+						0.7,
+						'rgba(160, 60, 80, 0.85)',
+						1,
+						'rgba(160, 60, 80, 1)'
+					],
+					'heatmap-opacity': 0.6
+				}
+			});
+		});
+
+		map.on('click', (event) => {
+			let targetElement = event.originalEvent.target as HTMLElement;
+			let isMarkerClick = false;
+			while (targetElement && targetElement !== map?.getContainer()) {
+				if (targetElement.classList.contains('custom-marker')) {
+					isMarkerClick = true;
+					break;
+				}
+				targetElement = targetElement.parentElement!;
+			}
+
+			if (!isMarkerClick) {
+				clickedCoordinates = event.lngLat;
+				map?.flyTo({
+					zoom: DEFAULT_MAP_ZOOM,
+					pitch: 45,
+					bearing: -17.6
+				});
+				setSelectedMarkerId(null);
+			}
+		});
+
+		return () => {
+			window.removeEventListener('resize', updateIsMobile);
+			document.removeEventListener('fullscreenchange', updateFullscreenState);
+			document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
+			map?.remove();
+			map = null;
+			markers = [];
+		};
+	});
+
+	$effect(() => {
+		const currentSelectedId = selectedMarkerId;
+		const currentHighlightId = highlightedMarkerId;
+
+		markers.forEach(({ id, markerInstance }) => {
+			const element = markerInstance.getElement();
+			if (!element) return;
+
+			if (id === currentSelectedId) {
+				element.style.display = 'block';
+			} else {
+				element.style.display = 'none';
+			}
+
+			if (id === currentSelectedId) {
+				if (selectionOrigin === 'click') {
+					scrollToIncidentCard(id);
+				}
+				selectionOrigin = null;
+			}
+
+			if (id === currentHighlightId) {
+				element.classList.add('highlighted');
+			} else {
+				element.classList.remove('highlighted');
+			}
+		});
+	});
+</script>
+
+<div bind:this={hostContainer} class="map-container relative w-full sm:w-1/2">
+	{#if mounted}
+		<div class="absolute left-2 top-2 z-30 flex items-start gap-2">
+			{#if !isMobile}
+				<button
+					class="flex h-8 items-center gap-1 bg-white/90 px-2 text-xs font-medium text-burgundy shadow-sm backdrop-blur-sm hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
+					onclick={toggleFullscreen}
+					aria-label={isFullscreen ? copy[lang].exit : copy[lang].fullscreen}
+				>
+					{#if !isFullscreen}
+						<!-- Enter fullscreen icon -->
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M9 3H5a2 2 0 0 0-2 2v4" />
+							<path d="M15 3h4a2 2 0 0 1 2 2v4" />
+							<path d="M9 21H5a2 2 0 0 1-2-2v-4" />
+							<path d="M15 21h4a2 2 0 0 0 2-2v-4" />
+						</svg>
+						<span>{copy[lang].fullscreen}</span>
+					{:else}
+						<!-- Exit fullscreen icon -->
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M15 9V5h4" />
+							<path d="M9 9H5V5" />
+							<path d="M15 15h4v4" />
+							<path d="M9 15H5v4" />
+						</svg>
+						<span>{copy[lang].exit}</span>
+					{/if}
+				</button>
+			{/if}
+			<HaitiLanguagePopover {lang} {setLang} />
+		</div>
+	{/if}
+	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
+	{#if mapInitError}
+		<div
+			class="absolute inset-0 flex items-center justify-center bg-burgundy/10 px-6 text-center text-sm text-burgundy"
+			role="alert"
+		>
+			{mapInitError}
+		</div>
+	{/if}
+	{#if showEventOverlay()}
+		<HaitiOverlay event={selectedEvent()} />
+	{/if}
+</div>
+
+<style>
+	.map-container {
+		width: 50%;
+		height: 100%;
+		min-height: 120px;
+		max-height: 100svh;
+		flex-grow: 1;
+	}
+
+	@media (max-width: 640px) {
+		.map-container {
+			min-height: 120px;
+			max-height: 100svh;
+			height: 100%;
+			width: 100%;
+			flex-grow: 1;
+			aspect-ratio: unset;
+		}
+	}
+
+	:global(.mapbox-popup-custom .mapboxgl-popup-content) {
+		display: none;
+		padding: 0;
+		background-color: white;
+		border-radius: 0px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	@media (width <= 640px) {
+		:global(.mapbox-popup-custom) {
+			display: none;
+		}
+	}
+
+	:global(.custom-marker) {
+		display: block;
+		background-size: cover;
+		background-position: center;
+		border-radius: 50%;
+		border: 0.3rem solid white;
+		width: 1rem;
+		height: 1rem;
+		cursor: pointer;
+		animation: borderPulse 5s ease-in-out infinite;
+		will-change: border-color;
+	}
+
+	:global(.custom-marker.highlighted) {
+		box-shadow: 0 0 0 3px rgba(242, 176, 184, 0.8);
+		z-index: 1000 !important;
+		animation: none;
+	}
+
+	@media (max-width: 640px) {
+		:global(.custom-marker) {
+			width: 1.5rem;
+			height: 1.5rem;
+			border-width: 0.2rem;
+		}
+	}
+
+	:global(.custom-marker:hover) {
+		animation: none;
+		z-index: 999;
+	}
+
+	:global(.marker-0) {
+		animation-delay: 0.5s;
+	}
+	:global(.marker-1) {
+		animation-delay: 0.2s;
+	}
+	:global(.marker-2) {
+		animation-delay: 0.1s;
+	}
+	:global(.marker-3) {
+		animation-delay: 0.34s;
+	}
+	:global(.marker-4) {
+		animation-delay: 0.3s;
+	}
+
+	@keyframes borderPulse {
+		0% {
+			border-color: #fff;
+		}
+		50% {
+			border-color: #f2b0b8;
+		}
+		100% {
+			border-color: #fff;
+		}
+	}
+
+	:global(.mapboxgl-popup-close-button) {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		font-size: 1.5rem;
+		line-height: 1;
+		color: #9f3e52;
+		top: 0.25rem;
+		right: 0.25rem;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+	:global(.mapboxgl-popup-close-button:hover) {
+		color: black;
+	}
+	:global(.mapboxgl-popup-close-button:focus-visible) {
+		outline: 1px solid blue;
+		outline-offset: 1px;
+	}
+
+	:global(.mapbox-popup-custom .mapboxgl-popup-tip) {
+		display: none;
+	}
+
+	/* Modern gradient background for map container */
+	.map-background {
+		background: linear-gradient(
+			135deg,
+			#c4677a 0%,
+			#d47284 25%,
+			#b85d70 50%,
+			#cc6b7e 75%,
+			#a55468 100%
+		);
+		background-size: 200% 200%;
+		animation: gradientShift 12s ease-in-out infinite;
+	}
+
+	@keyframes gradientShift {
+		0%,
+		100% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+	}
+</style>

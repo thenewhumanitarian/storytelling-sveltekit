@@ -2,7 +2,7 @@
 	"name": "tnh-storytelling-sveltekit",
 	"version": "0.0.1",
 	"type": "module",
-	"packageManager": "pnpm@11.2.2",
+	"packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621",
 	"engines": {
 		"node": "24.x",
 		"pnpm": ">=10"
@@ -13,6 +13,7 @@
 		"preview": "vite preview",
 		"pre-fetch-data": "node scripts/pre-fetch-data.js",
 		"pre-fetch-gaza": "node scripts/pre-fetch-gaza-data.js",
+		"pre-fetch-haiti": "node scripts/pre-fetch-haiti-data.js",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
@@ -66,8 +67,10 @@
 	"dependencies": {
 		"@iframe-resizer/child": "^5.5.9",
 		"@knight-lab/timelinejs": "^3.9.11",
+		"@lucide/svelte": "^1.31.0",
 		"@storyblok/richtext": "^3.8.2",
 		"@storyblok/svelte": "^4.0.11",
+		"bits-ui": "^2.18.1",
 		"bsky-embed": "^0.2.7",
 		"cookie": "^1.1.1",
 		"csv-parse": "^6.2.1",

@@ -13,11 +13,7 @@ function serveLegacyStaticHtml(): Plugin {
 				const pathname = req.url?.split('?')[0] ?? '';
 				let htmlPath: string | null = null;
 
-				if (
-					pathname === '/404' ||
-					pathname === '/404/' ||
-					pathname === '/404.html'
-				) {
+				if (pathname === '/404' || pathname === '/404/' || pathname === '/404.html') {
 					htmlPath = path.join('static', '404.html');
 				} else if (pathname.startsWith('/stories/') || pathname.startsWith('/reports/')) {
 					htmlPath = path.join('static', pathname, 'index.html');
@@ -56,7 +52,7 @@ export default defineConfig({
 		}
 	},
 	optimizeDeps: {
-		exclude: ['fs', 'path', '@storyblok/svelte']
+		exclude: ['fs', 'path', '@storyblok/svelte', '@lucide/svelte', 'bits-ui']
 	},
 	build: {
 		rollupOptions: {
