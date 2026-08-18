@@ -281,6 +281,7 @@ async function processDataSource(sourceKey, sourceConfig) {
 
 		// Fetch the data (with fallback support)
 		const rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath);
+		const normalizedRawData = rawData.replace(/\r\n/g, '\n');
 
 		// Save raw CSV to fallback file if fallbackPath is specified and we successfully fetched fresh data
 		// This ensures the fallback CSV is always up-to-date during build
@@ -293,7 +294,7 @@ async function processDataSource(sourceKey, sourceConfig) {
 			try {
 				const fallbackDir = path.dirname(sourceConfig.fallbackPath);
 				await fs.mkdir(fallbackDir, { recursive: true });
-				await fs.writeFile(sourceConfig.fallbackPath, rawData, 'utf-8');
+				await fs.writeFile(sourceConfig.fallbackPath, normalizedRawData, 'utf-8');
 				console.log(`💾 Updated fallback CSV file: ${sourceConfig.fallbackPath}`);
 			} catch (fallbackSaveError) {
 				console.warn(`⚠️  Failed to save fallback CSV file: ${fallbackSaveError.message}`);
@@ -302,7 +303,7 @@ async function processDataSource(sourceKey, sourceConfig) {
 		}
 
 		// Process the data
-		const processedData = await sourceConfig.processor(rawData);
+		const processedData = await sourceConfig.processor(normalizedRawData);
 
 		// Validate processed data before saving
 		const recordCount =
