@@ -25,6 +25,11 @@ const PROJECTS = [
 		name: 'Gaza Map',
 		script: './pre-fetch-gaza-data.js',
 		fetchFunction: 'fetchGazaData'
+	},
+	{
+		name: 'Haiti Map',
+		script: './pre-fetch-haiti-data.js',
+		fetchFunction: 'fetchHaitiData'
 	}
 	// Add more projects here:
 	// {

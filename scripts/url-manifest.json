@@ -70,13 +70,29 @@
 		},
 
 		{
+			"path": "/embeddable/map/2026-08/haiti",
+			"group": "haiti",
+			"name": "Haiti drone map dashboard"
+		},
+		{
+			"path": "/embeddable/map/2026-08/haiti/embed",
+			"group": "haiti",
+			"name": "Haiti embed script",
+			"expectContentType": "javascript"
+		},
+
+		{
 			"path": "/embeddable/map/2024-11/syria",
 			"group": "syria",
 			"name": "Syria map base (expected 404)",
 			"expectStatus": 404
 		},
 
-		{ "path": "/embeddable/sharepoint/bluesky", "group": "embeds", "name": "Bluesky SharePoint embed" },
+		{
+			"path": "/embeddable/sharepoint/bluesky",
+			"group": "embeds",
+			"name": "Bluesky SharePoint embed"
+		},
 
 		{
 			"path": "/stories/2020/bangladesh-amphan-hidden-climate-costs",
