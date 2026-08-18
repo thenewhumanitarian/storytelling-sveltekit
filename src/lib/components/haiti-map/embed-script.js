@@ -33,9 +33,9 @@
 		var css =
 			'' +
 			// Wrapper fills available width
-			'.tnh-haiti-embed { position: relative; width: 100%; }\n' +
+			'.tnh-haiti-embed { position: relative; width: 100%; overflow: hidden; line-height: 0; }\n' +
 			// Iframe keeps a responsive aspect ratio and has no chrome
-			'.tnh-haiti-dashboard { width: 100%; aspect-ratio: 4 / 3; border: none; outline-solid: none; box-shadow: none; }\n' +
+			'.tnh-haiti-dashboard { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; border: 0; outline: 0; box-shadow: none; }\n' +
 			// Tweak aspect ratios for narrower viewports
 			'@media screen and (max-width: 980px) { .tnh-haiti-dashboard { aspect-ratio: 1; } }\n' +
 			'@media screen and (max-width: 640px) { .tnh-haiti-dashboard { aspect-ratio: 1 / 1.6; } }\n' +

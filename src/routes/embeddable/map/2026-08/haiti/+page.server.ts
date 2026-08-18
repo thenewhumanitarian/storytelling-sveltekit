@@ -5,6 +5,7 @@ import { dev } from '$app/environment';
 import { env as privateEnv } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
 import { PUBLIC_BASE_URL } from '$env/static/public';
+import { normaliseHaitiDate } from '$lib/components/haiti-map/dates';
 
 // Helper to calculate ISO week number + year
 function getISOWeekYearString(date: Date): string {
@@ -129,6 +130,7 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 					case 'killed':
 					case 'wounded':
 					case 'droneCount':
+					case 'explosiveDroneCount':
 						return value === '' ? undefined : parseInt(value, 10);
 					case 'latitude':
 					case 'longitude':
@@ -164,6 +166,7 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 					case 'killed':
 					case 'wounded':
 					case 'droneCount':
+					case 'explosiveDroneCount':
 						return value === '' ? undefined : parseInt(value, 10);
 					case 'latitude':
 					case 'longitude':
@@ -179,15 +182,26 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 
 	const usableRecords = records.filter((r) => typeof r.latitude !== 'number' || r.latitude < 25);
 
-	const normalized = usableRecords.map((record) => ({
-		...record,
-		title: record.titleEN || record.title || 'Untitled',
-		description: record.descriptionEN || record.description || '',
-		imageCaption: record.imageCaptionEN || record.imageCaption,
-		droneCount: record.droneCount ?? 0,
-		killed: record.killed ?? 0,
-		wounded: record.wounded ?? 0
-	}));
+	const normalized = usableRecords.flatMap((record) => {
+		const date = normaliseHaitiDate(record.date);
+		if (!date) {
+			console.warn(`Skipping Haiti ${record.type} ${record.id}: invalid date "${record.date}"`);
+			return [];
+		}
+
+		return [
+			{
+				...record,
+				date,
+				title: record.titleEN || record.title || 'Untitled',
+				description: record.descriptionEN || record.description || '',
+				imageCaption: record.imageCaptionEN || record.imageCaption,
+				droneCount: record.droneCount ?? 0,
+				killed: record.killed ?? 0,
+				wounded: record.wounded ?? 0
+			}
+		];
+	});
 
 	const sorted = [...normalized].sort(
 		(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()

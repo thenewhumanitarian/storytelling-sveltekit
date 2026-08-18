@@ -273,22 +273,16 @@
 		class="fixed top-0 right-0 z-50 flex items-center justify-between w-full h-10 px-4 shadow-lg bg-white/80 backdrop-blur-sm sm:w-1/2"
 	>
 		<button
-			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
+			class={`text-sm text-zinc-600 transition-opacity duration-500 hover:cursor-pointer ${selectedMarkerId === 0 ? 'pointer-events-none opacity-50' : ''}`}
 			onclick={goToPrevCard}>{copy[lang].up}</button
 		>
 		<button
-			class={`text-sm text-zinc-600 transition-opacity duration-500 ${selectedMarkerId && selectedMarkerId === incidentsData.length - 1 ? 'pointer-events-none opacity-50' : ''}`}
+			class={`text-sm text-zinc-600 transition-opacity duration-500 hover:cursor-pointer ${selectedMarkerId && selectedMarkerId === incidentsData.length - 1 ? 'pointer-events-none opacity-50' : ''}`}
 			onclick={goToNextCard}>{copy[lang].down}</button
 		>
 	</div>
 	{#each incidentsData as incident, index (incident.chronoId)}
-		<HaitiCard
-			{incident}
-			{selectedMarkerId}
-			{incidentsData}
-			{lang}
-			isLast={index === incidentsData.length - 1}
-		/>
+		<HaitiCard {incident} {selectedMarkerId} {lang} isLast={index === incidentsData.length - 1} />
 	{/each}
 </div>
 
@@ -303,7 +297,6 @@
 			<HaitiCard
 				{incident}
 				{selectedMarkerId}
-				{incidentsData}
 				{lang}
 				isLast={i === incidentsData.length - 1}
 				goToPrevCard={() => (i > 0 ? scrollToCard(incidentsData[i - 1].chronoId) : null)}
@@ -316,13 +309,13 @@
 					{#if incident.sources && incident.sources.trim() !== ''}
 						<div class="flex gap-2">
 							<button
-								class="flex-1 py-2 text-sm font-semibold text-white bg-burgundy"
+								class="flex-1 bg-burgundy py-2 text-sm font-semibold text-white hover:cursor-pointer"
 								onclick={() => openModal(incident)}
 							>
 								{copy[lang].readMore}
 							</button>
 							<button
-								class="flex-1 py-2 text-sm font-semibold text-white bg-zinc-600"
+								class="flex-1 bg-zinc-600 py-2 text-sm font-semibold text-white hover:cursor-pointer"
 								onclick={() => openSourcesOverlay(incident)}
 							>
 								{copy[lang].showSources}
@@ -330,7 +323,7 @@
 						</div>
 					{:else}
 						<button
-							class="block w-full py-2 text-sm font-semibold text-white bg-burgundy"
+							class="block w-full bg-burgundy py-2 text-sm font-semibold text-white hover:cursor-pointer"
 							onclick={() => openModal(incident)}
 						>
 							{copy[lang].readMore}

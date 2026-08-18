@@ -18,6 +18,7 @@ export interface IncidentData {
 	killed?: number;
 	wounded?: number;
 	droneCount?: number;
+	explosiveDroneCount?: number;
 	casualtyKnown?: boolean;
 	department?: string;
 	commune?: string;

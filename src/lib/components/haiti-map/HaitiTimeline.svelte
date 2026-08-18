@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { scaleLinear, scaleTime } from 'd3-scale';
+	import { scaleLinear, scaleUtc } from 'd3-scale';
 	import { extent, rollup, sum } from 'd3-array';
-	import { timeWeek, timeMonth } from 'd3-time';
+	import { utcWeek, utcMonth } from 'd3-time';
 	import type { IncidentData } from './types';
-	import moment from 'moment';
-	import 'moment/locale/fr';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import HaitiEmbedModal from '$lib/components/haiti-map/HaitiEmbedModal.svelte';
 	import Logo from '$lib/components/icons/Logo.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy, explosiveDroneLabel } from './copy';
+	import { formatHaitiDate, formatHaitiShortDate, parseHaitiDate } from './dates';
 
 	// --- Component Properties ---
 	let {
@@ -47,6 +46,11 @@
 		incidentCount: number;
 		periodStartDate: Date;
 	} | null>(null);
+	let tooltipHideTimer: ReturnType<typeof setTimeout> | undefined;
+
+	onDestroy(() => {
+		if (tooltipHideTimer) clearTimeout(tooltipHideTimer);
+	});
 
 	// Embed modal
 	let showEmbed = $state(false);
@@ -99,11 +103,12 @@
 	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
 		incidentsData
-			.map((d) => ({
-				...d,
-				dateObj: new Date(d.date),
-				title: d.title || copy[lang].untitledEvent // Ensure title is never empty
-			}))
+			.flatMap((d) => {
+				const dateObj = parseHaitiDate(d.date);
+				return dateObj
+					? [{ ...d, dateObj, title: d.title || copy[lang].untitledEvent }]
+					: [];
+			})
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
 
@@ -111,8 +116,9 @@
 		if (selectedMarkerId === null) return null;
 		const activeIncident = incidentsData.find((i) => i.chronoId === selectedMarkerId);
 		if (!activeIncident) return null;
-		const date = new Date(activeIncident.date);
-		return groupingMode === 'weekly' ? timeWeek.floor(date) : timeMonth.floor(date);
+		const date = parseHaitiDate(activeIncident.date);
+		if (!date) return null;
+		return groupingMode === 'weekly' ? utcWeek.floor(date) : utcMonth.floor(date);
 	});
 
 	// Enhanced aggregation with incident count
@@ -120,17 +126,17 @@
 		if (parsedIncidents.length === 0) return [];
 
 		const incidentsOnly = parsedIncidents.filter((d) => d.type === 'incident');
-		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
+		const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor;
 
 		const rolledUp = rollup(
 			incidentsOnly,
 			(v) => ({
-				totalDrones: sum(v, (d) => d.droneCount || 0),
+				totalDrones: sum(v, (d) => d.explosiveDroneCount ?? d.droneCount ?? 0),
 				incidentCount: v.length,
 				firstChronoId: v[0].chronoId,
 				// Calculate geographic spread (distance between incidents)
 				geographicSpread: calculateGeographicSpread(v),
-				intensity: sum(v, (d) => d.droneCount || 0) / v.length
+				intensity: sum(v, (d) => d.explosiveDroneCount ?? d.droneCount ?? 0) / v.length
 			}),
 			(d) => timeFloor(d.dateObj)
 		);
@@ -241,8 +247,7 @@
 	const enhancedCompleteTimeline = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) return [];
 
-		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
-		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
+		const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor;
 
 		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
 		const minDate = timeFloor(dateDomain[0]!);
@@ -254,8 +259,8 @@
 			allPeriods.push(currentDate);
 			currentDate =
 				groupingMode === 'weekly'
-					? timeWeek.offset(currentDate, 1)
-					: timeMonth.offset(currentDate, 1);
+					? utcWeek.offset(currentDate, 1)
+					: utcMonth.offset(currentDate, 1);
 		}
 
 		return allPeriods.map((periodStartDate) => {
@@ -279,17 +284,17 @@
 
 	const timeScale = $derived.by(() => {
 		if (!containerWidth || enhancedAggregatedData.length === 0) {
-			return scaleTime().domain([new Date(), new Date()]).range([0, 0]);
+			return scaleUtc().domain([new Date(), new Date()]).range([0, 0]);
 		}
 		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
-		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
+		const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor;
 		const minDate = timeFloor(dateDomain[0]!);
 		const maxDate = timeFloor(dateDomain[1]!);
 
 		// Calculate bar width for this scale
 		let barWidthForScale = barWidth;
 		if (groupingMode === 'monthly') {
-			const totalMonths = timeMonth.count(minDate, maxDate) + 1;
+			const totalMonths = utcMonth.count(minDate, maxDate) + 1;
 			const availableWidth = containerWidth - 24;
 			const widthPerMonth = availableWidth / totalMonths;
 			// On mobile, use smaller multiplier to prevent overlapping
@@ -297,7 +302,7 @@
 			barWidthForScale = Math.min(Math.max(widthPerMonth * multiplier, 20), 60);
 		} else if (groupingMode === 'weekly') {
 			// For weekly mode, also adjust bar width on mobile
-			const totalWeeks = timeWeek.count(minDate, maxDate) + 1;
+			const totalWeeks = utcWeek.count(minDate, maxDate) + 1;
 			const availableWidth = containerWidth - 24;
 			const widthPerWeek = availableWidth / totalWeeks;
 			// On mobile, use smaller multiplier to prevent overlapping
@@ -305,7 +310,7 @@
 			barWidthForScale = Math.min(Math.max(widthPerWeek * multiplier, 8), 20);
 		}
 
-		return scaleTime()
+		return scaleUtc()
 			.domain([minDate, maxDate])
 			.range([barWidthForScale / 2, containerWidth - barWidthForScale / 2]);
 	});
@@ -346,8 +351,7 @@
 	const completeTimeline = $derived.by(() => {
 		if (enhancedAggregatedData.length === 0) return [];
 
-		const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor;
-		const timeCount = groupingMode === 'weekly' ? timeWeek.count : timeMonth.count;
+		const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor;
 
 		// Get the full date range
 		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
@@ -361,8 +365,8 @@
 			allPeriods.push(currentDate);
 			currentDate =
 				groupingMode === 'weekly'
-					? timeWeek.offset(currentDate, 1)
-					: timeMonth.offset(currentDate, 1);
+					? utcWeek.offset(currentDate, 1)
+					: utcMonth.offset(currentDate, 1);
 		}
 
 		// Map each period to data (0 for empty periods)
@@ -496,7 +500,8 @@
 				tooltipVisible = true;
 
 				// Hide tooltip after 2 seconds on mobile
-				setTimeout(() => {
+				if (tooltipHideTimer) clearTimeout(tooltipHideTimer);
+				tooltipHideTimer = setTimeout(() => {
 					tooltipVisible = false;
 				}, 2000);
 			}
@@ -526,7 +531,7 @@
 	}
 
 	function formatDate(date: Date): string {
-		return moment(date).format('DD MMMM YYYY');
+		return formatHaitiDate(date, lang);
 	}
 
 	function formatPeriod(date: Date, qualifier: 'starting' | 'of'): string {
@@ -538,9 +543,6 @@
 		return `${period} ${qualifier} ${formatDate(date)}`;
 	}
 
-	$effect(() => {
-		moment.locale(lang === 'fr' ? 'fr' : 'en-gb');
-	});
 </script>
 
 <div
@@ -595,19 +597,30 @@
 					{@const isSelected =
 						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
 					{@const hasData = periodData.hasData && periodData.totalDrones > 0}
+					{@const isInteractive = hasData && periodData.firstChronoId !== null}
 
 					<g
-						class="period-bar-group group cursor-pointer focus:outline-hidden"
-						onclick={() =>
-							handleBarClick(periodData.periodStartDate, periodData.firstChronoId || 0)}
-						onkeydown={(e) =>
-							handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId || 0)}
-						onmouseenter={() => handleMouseEnter(periodData.periodStartDate)}
-						onmouseleave={handleMouseLeave}
-						onfocusin={() => handleMouseEnter(periodData.periodStartDate)}
-						onfocusout={handleMouseLeave}
-						tabindex="0"
-						role="button"
+						class={`period-bar-group group focus:outline-hidden ${isInteractive ? 'cursor-pointer' : ''}`}
+						aria-label={isInteractive
+							? `${formatPeriod(periodData.periodStartDate, 'of')}: ${explosiveDroneLabel(periodData.totalDrones, lang)}, ${periodData.incidentCount} ${periodData.incidentCount === 1 ? copy[lang].incidentSingular : copy[lang].incidents}`
+							: undefined}
+						onclick={isInteractive
+							? () => handleBarClick(periodData.periodStartDate, periodData.firstChronoId as number)
+							: undefined}
+						onkeydown={isInteractive
+							? (e) =>
+									handleKeyDown(e, periodData.periodStartDate, periodData.firstChronoId as number)
+							: undefined}
+						onmouseenter={isInteractive
+							? () => handleMouseEnter(periodData.periodStartDate)
+							: undefined}
+						onmouseleave={isInteractive ? handleMouseLeave : undefined}
+						onfocusin={isInteractive
+							? () => handleMouseEnter(periodData.periodStartDate)
+							: undefined}
+						onfocusout={isInteractive ? handleMouseLeave : undefined}
+						tabindex={isInteractive ? 0 : undefined}
+						role={isInteractive ? 'button' : undefined}
 					>
 						<!-- Invisible hover area (covers entire period space) -->
 						<rect
@@ -757,14 +770,7 @@
 								height={barHeight}
 								fill="#9f3e52"
 								style:stroke="none"
-							>
-								<title>
-									{formatPeriod(periodData.periodStartDate, 'starting')} - {explosiveDroneLabel(
-										periodData.totalDrones,
-										lang
-									)}
-								</title>
-							</rect>
+							></rect>
 						{/if}
 
 						<!-- Date Label (for all periods) -->
@@ -869,29 +875,22 @@
 								height={barHeight}
 								fill="#2db487"
 								style:stroke="none"
-							>
-								<title>
-									{formatPeriod(selectedPeriod.periodStartDate, 'starting')} - {explosiveDroneLabel(
-										selectedPeriod.totalDrones,
-										lang
-									)}
-								</title>
-							</rect>
+							></rect>
 						</g>
 					{/if}
 				{/if}
 
 				<!-- Inactive Event Symbols (render after bars to be on top) -->
 				{#each events as event (event.chronoId)}
-					{@const xPos = timeScale(new Date(event.date))}
+					{@const xPos = timeScale(event.dateObj)}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{@const isHighlighted = highlightedMarkerId === event.chronoId}
 					{#if !isActive && !isHighlighted}
 						{@const size = 8}
-						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						{@const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor}
 						<g
 							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-hidden"
-							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
 							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
@@ -921,7 +920,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="0"
 									class="transition-opacity duration-300 group-hover:opacity-90"
 								/>
@@ -940,15 +938,15 @@
 
 				<!-- Highlighted Event Symbols (render before active to be on top of inactive but below active) -->
 				{#each events as event (event.chronoId)}
-					{@const xPos = timeScale(new Date(event.date))}
+					{@const xPos = timeScale(event.dateObj)}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{@const isHighlighted = highlightedMarkerId === event.chronoId}
 					{#if !isActive && isHighlighted}
 						{@const size = 8}
-						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						{@const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor}
 						<g
 							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-hidden"
-							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
 							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
@@ -978,7 +976,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="90"
 									class="transition-opacity duration-300"
 								/>
@@ -997,14 +994,14 @@
 
 				<!-- Active Event Symbols (render last, on top) -->
 				{#each events as event (event.chronoId)}
-					{@const xPos = timeScale(new Date(event.date))}
+					{@const xPos = timeScale(event.dateObj)}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{#if isActive}
 						{@const size = 10}
-						{@const timeFloor = groupingMode === 'weekly' ? timeWeek.floor : timeMonth.floor}
+						{@const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor}
 						<g
 							class="event-symbol event-symbol--active group cursor-pointer focus:outline-hidden"
-							onclick={() => handleClick(timeFloor(new Date(event.date)), event.chronoId)}
+							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
 							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
 							onmouseleave={handleMouseLeave}
 							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
@@ -1034,7 +1031,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="0"
 									class="transition-opacity duration-300 group-hover:opacity-90"
 								/>
@@ -1092,7 +1088,6 @@
 						fill="white"
 						stroke="#9f3e52"
 						stroke-width="1"
-						rx="2"
 						opacity="0.9"
 						class="pointer-events-none"
 					/>
@@ -1162,23 +1157,22 @@
 
 				<!-- Tooltip -->
 				{#if tooltipVisible && tooltipData}
-					{@const periodType = groupingMode === 'weekly' ? copy[lang].weekly : copy[lang].monthly}
-					{@const periodDate = moment(tooltipData.periodStartDate).locale(lang === 'fr' ? 'fr' : 'en-gb').format('D MMM YYYY')}
-					{@const casualtiesNumber = `${tooltipData.value} ${lang === 'fr' ? 'drones' : 'drones'}`}
-					{@const casualtiesType = lang === 'fr' ? 'explosifs' : 'explosive'}
+					{@const periodDate = formatHaitiShortDate(tooltipData.periodStartDate, lang)}
+					{@const periodType = groupingMode === 'weekly' ? (lang === 'fr' ? 'Semaine' : 'Week') : lang === 'fr' ? 'Mois' : 'Month'}
+					{@const periodLabel = `${periodType} ${lang === 'fr' ? 'du' : 'of'} ${periodDate}`}
+					{@const dronesText = explosiveDroneLabel(tooltipData.value, lang)}
 					{@const incidentsText = `${tooltipData.incidentCount} ${tooltipData.incidentCount !== 1 ? copy[lang].incidents : copy[lang].incidentSingular}`}
 
 					{@const maxTextWidth = Math.max(
-						`${periodType} of ${periodDate}`.length * 6,
-						casualtiesNumber.length * 6,
-						casualtiesType.length * 6,
-						incidentsText.length * 6
+						periodLabel.length * 6.5,
+						dronesText.length * 8.5,
+						incidentsText.length * 6.5
 					)}
 					{@const textHeight = 12}
 					{@const lineHeight = 8}
-					{@const padding = 8}
-					{@const bgWidth = maxTextWidth + padding * 2}
-					{@const bgHeight = textHeight * 4 + lineHeight * 3 + padding * 2}
+					{@const padding = 10}
+					{@const bgWidth = Math.min(Math.max(maxTextWidth + padding * 2, 180), containerWidth - 16)}
+					{@const bgHeight = textHeight * 3 + lineHeight * 2 + padding * 2}
 
 					// Calculate tooltip position with edge case handling
 					{@const tooltipMargin = 8} // Minimum margin from container edges
@@ -1208,7 +1202,6 @@
 							width={bgWidth}
 							height={bgHeight}
 							fill="rgba(0,0,0,0.1)"
-							rx="4"
 							class="pointer-events-none"
 						/>
 
@@ -1221,7 +1214,6 @@
 							fill="white"
 							stroke="#9f3e52"
 							stroke-width="1"
-							rx="4"
 							opacity="0.95"
 							class="pointer-events-none z-50 bg-white"
 						/>
@@ -1234,10 +1226,10 @@
 							class="fill-gray-600 font-sans text-xs font-medium"
 							style="pointer-events: none;"
 						>
-							{periodType} of {periodDate}
+							{periodLabel}
 						</text>
 
-						<!-- Casualties number -->
+						<!-- Explosive drone count -->
 						<text
 							x={centeredTextX}
 							y={bgY + textHeight * 2 + lineHeight * 1 + padding}
@@ -1245,24 +1237,13 @@
 							class="fill-burgundy font-sans text-sm font-bold"
 							style="pointer-events: none;"
 						>
-							{casualtiesNumber}
-						</text>
-
-						<!-- Casualties type -->
-						<text
-							x={centeredTextX}
-							y={bgY + textHeight * 2 + lineHeight * 2.5 + padding + 5}
-							text-anchor="middle"
-							class="fill-burgundy font-sans text-xs font-medium"
-							style="pointer-events: none;"
-						>
-							{casualtiesType}
+							{dronesText}
 						</text>
 
 						<!-- Incidents count -->
 						<text
 							x={centeredTextX}
-							y={bgY + textHeight * 3 + lineHeight * 3 + padding * 2}
+							y={bgY + textHeight * 3 + lineHeight * 2 + padding}
 							text-anchor="middle"
 							class="fill-gray-700 font-sans text-xs"
 							style="pointer-events: none;"
@@ -1296,7 +1277,7 @@
 		<div class="flex items-center gap-2">
 			<span class="text-sm font-medium text-gray-600">{copy[lang].groupBy}</span>
 			<button
-				class="rounded-full px-3 py-1 text-sm font-medium transition-colors {groupingMode ===
+				class="rounded-full px-3 py-1 text-sm font-medium transition-colors hover:cursor-pointer {groupingMode ===
 				'weekly'
 					? 'bg-burgundy text-white'
 					: 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
@@ -1305,7 +1286,7 @@
 				{copy[lang].weekly}
 			</button>
 			<button
-				class="rounded-full px-3 py-1 text-sm font-medium transition-colors {groupingMode ===
+				class="rounded-full px-3 py-1 text-sm font-medium transition-colors hover:cursor-pointer {groupingMode ===
 				'monthly'
 					? 'bg-burgundy text-white'
 					: 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
@@ -1335,7 +1316,7 @@
 			</a>
 			<button
 				type="button"
-				class="ml-2 inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800"
+				class="ml-2 inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-200 hover:text-gray-800"
 				onclick={openEmbed}
 			>
 				<svg

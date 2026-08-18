@@ -1,17 +1,15 @@
 <script lang="ts">
 	import HaitiSourcesOverlay from './HaitiSourcesOverlay.svelte';
-	import moment from 'moment';
-	import 'moment/locale/fr';
 	import HaitiVideo from './HaitiVideo.svelte';
 	import type { IncidentData } from './types';
 	import type { HaitiLang } from './copy';
 	import { casualtyLabel, copy, explosiveDroneLabel, totalDroneLabel } from './copy';
 	import { Drone } from '@lucide/svelte';
+	import { formatHaitiDate } from './dates';
 
 	let {
 		incident,
 		selectedMarkerId,
-		incidentsData,
 		lang = 'en',
 		isLast = false,
 		goToPrevCard = null,
@@ -21,7 +19,6 @@
 	} = $props<{
 		incident: IncidentData;
 		selectedMarkerId: number | null;
-		incidentsData: IncidentData[];
 		lang?: HaitiLang;
 		isLast?: boolean;
 		goToPrevCard?: (() => void) | null;
@@ -33,6 +30,8 @@
 	let showSources = $state(false);
 	let hasAutoOpened = $state(false);
 	const text = $derived(copy[lang === 'fr' ? 'fr' : 'en']);
+	const explosiveDroneCount = $derived(incident.explosiveDroneCount ?? incident.droneCount ?? 0);
+	const totalDroneCount = $derived(incident.droneCount ?? 0);
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
@@ -49,23 +48,6 @@
 			hasAutoOpened = true;
 		}
 	});
-
-	$effect(() => {
-		moment.locale(lang === 'fr' ? 'fr' : 'en-gb');
-	});
-
-	const cumulativeDrones = $derived(() => {
-		const currentDate = new Date(incident.date);
-		return incidentsData
-			.filter(
-				(otherIncident: IncidentData) =>
-					otherIncident.type === 'incident' && new Date(otherIncident.date) <= currentDate
-			)
-			.reduce(
-				(sum: number, otherIncident: IncidentData) => sum + (otherIncident.droneCount || 0),
-				0
-			);
-	});
 </script>
 
 <div
@@ -77,13 +59,13 @@
 			<div class="flex items-center gap-2">
 				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.event}</span>
 				<span class="text-sm text-zinc-700">
-					{moment(incident.date).format('DD MMMM YYYY')}
+					{formatHaitiDate(incident.date, lang)}
 				</span>
 			</div>
 			<!-- Mobile arrows -->
 			<div class="flex gap-1 sm:hidden">
 				<button
-					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
+					class="px-2 py-1 text-lg text-zinc-500 hover:cursor-pointer hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToPrevCard}
 					disabled={!hasPrev}
 					aria-label={text.previous}
@@ -91,7 +73,7 @@
 					←
 				</button>
 				<button
-					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
+					class="px-2 py-1 text-lg text-zinc-500 hover:cursor-pointer hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToNextCard}
 					disabled={!hasNext}
 					aria-label={text.next}
@@ -119,13 +101,13 @@
 					<div class="flex items-center gap-2">
 						<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.incident}</span>
 						<span class="text-sm text-zinc-700">
-							{moment(incident.date).format('DD MMMM YYYY')}
+							{formatHaitiDate(incident.date, lang)}
 						</span>
 					</div>
 					<!-- Mobile arrows -->
 					<div class="flex gap-1 sm:hidden">
 						<button
-							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
+							class="px-2 py-1 text-lg text-zinc-500 hover:cursor-pointer hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToPrevCard}
 							disabled={!hasPrev}
 							aria-label={text.previous}
@@ -133,7 +115,7 @@
 							←
 						</button>
 						<button
-							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
+							class="px-2 py-1 text-lg text-zinc-500 hover:cursor-pointer hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToNextCard}
 							disabled={!hasNext}
 							aria-label={text.next}
@@ -151,14 +133,16 @@
 							class="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-900"
 						>
 							<Drone size={14} strokeWidth={2} aria-hidden="true" />
-							{explosiveDroneLabel(incident.droneCount || 0, lang)}
+							{explosiveDroneLabel(explosiveDroneCount, lang)}
 						</span>
-						<span
-							class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700"
-						>
-							<Drone size={14} strokeWidth={2} aria-hidden="true" />
-							{totalDroneLabel(cumulativeDrones(), lang)}
-						</span>
+						{#if totalDroneCount !== explosiveDroneCount}
+							<span
+								class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700"
+							>
+								<Drone size={14} strokeWidth={2} aria-hidden="true" />
+								{totalDroneLabel(totalDroneCount, lang)}
+							</span>
+						{/if}
 						{#if incident.casualtyKnown && (incident.killed || incident.wounded)}
 							<span
 								class="inline-flex items-center gap-1 rounded-full bg-burgundy/10 px-2 py-1 text-xs font-medium text-burgundy"
@@ -231,7 +215,7 @@
 					<!-- Desktop Show sources button -->
 					<div class="sm:mt-4 sm:flex sm:justify-start">
 						<button
-							class="bg-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-700 hover:text-zinc-50"
+							class="bg-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:cursor-pointer hover:bg-zinc-700 hover:text-zinc-50"
 							onclick={() => (showSources = true)}
 						>
 							{text.showSources}

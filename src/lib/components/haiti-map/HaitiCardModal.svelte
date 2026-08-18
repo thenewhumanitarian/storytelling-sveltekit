@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { IncidentData } from './types';
 	import type { HaitiLang } from './copy';
-	import { copy } from './copy';
-	import { createEventDispatcher, onMount } from 'svelte';
-	import moment from 'moment';
-	import 'moment/locale/fr';
+	import { copy, explosiveDroneLabel, totalDroneLabel } from './copy';
+	import { onMount } from 'svelte';
+	import { Drone } from '@lucide/svelte';
+	import { formatHaitiDate } from './dates';
 
 	export let incident: IncidentData;
 	export let onClose: () => void;
@@ -14,7 +14,8 @@
 	export let hasNext: boolean;
 	export let lang: HaitiLang = 'en';
 
-	const dispatch = createEventDispatcher();
+	$: explosiveDroneCount = incident.explosiveDroneCount ?? incident.droneCount ?? 0;
+	$: totalDroneCount = incident.droneCount ?? 0;
 
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
@@ -31,8 +32,6 @@
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
-
-	$: moment.locale(lang === 'fr' ? 'fr' : 'en-gb');
 
 	let touchStartX = 0;
 	let touchEndX = 0;
@@ -67,13 +66,26 @@
 			<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white"
 				>{incident.type === 'event' ? copy[lang].event : copy[lang].incident}</span
 			>
-			<span class="text-sm text-gray-700">{moment(incident.date).format('DD MMMM YYYY')}</span>
+			<span class="text-sm text-gray-700">{formatHaitiDate(incident.date, lang)}</span>
 		</div>
 		<h3 class="mb-2 text-lg font-bold leading-tight sm:text-xl">{incident.title}</h3>
-		{#if incident.droneCount}
-			<h5 class="mb-2 text-sm italic text-gray-600 sm:text-base">
-				{incident.droneCount} drones
-			</h5>
+		{#if incident.type === 'incident'}
+			<div class="mb-2 flex flex-wrap gap-1">
+				<span
+					class="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-900"
+				>
+					<Drone size={14} strokeWidth={2} aria-hidden="true" />
+					{explosiveDroneLabel(explosiveDroneCount, lang)}
+				</span>
+				{#if totalDroneCount !== explosiveDroneCount}
+					<span
+						class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700"
+					>
+						<Drone size={14} strokeWidth={2} aria-hidden="true" />
+						{totalDroneLabel(totalDroneCount, lang)}
+					</span>
+				{/if}
+			</div>
 		{/if}
 		{#if incident.videoUrl}
 			<video
@@ -94,13 +106,13 @@
 			<p class="pt-1 text-sm text-zinc-500">{incident.videoCaption}</p>
 		{/if}
 		<button
-			class="absolute right-[12px] top-1 text-3xl text-zinc-400 hover:text-burgundy"
+			class="absolute right-[12px] top-1 text-3xl text-zinc-400 hover:cursor-pointer hover:text-burgundy"
 			onclick={onClose}
 			aria-label={copy[lang].close}>×</button
 		>
 		<div class="mt-3 flex items-center justify-between">
 			<button
-				class="text-2xl font-bold text-zinc-500 hover:text-burgundy"
+				class="text-2xl font-bold text-zinc-500 hover:cursor-pointer hover:text-burgundy"
 				onclick={onPrev}
 				disabled={!hasPrev}
 				aria-label={copy[lang].previous}
@@ -109,7 +121,7 @@
 				class:pointer-events-none={!hasPrev}>←</button
 			>
 			<button
-				class="text-2xl font-bold text-zinc-500 hover:text-burgundy"
+				class="text-2xl font-bold text-zinc-500 hover:cursor-pointer hover:text-burgundy"
 				onclick={onNext}
 				disabled={!hasNext}
 				aria-label={copy[lang].next}

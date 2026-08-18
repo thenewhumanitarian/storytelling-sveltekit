@@ -20,6 +20,7 @@
 		"lint": "prettier --check . && eslint .",
 		"check:urls": "node scripts/check-urls.mjs",
 		"check:playwright": "node scripts/playwright-compare.mjs",
+		"test:haiti-dates": "node --test tests/haiti-dates.test.mjs",
 		"optimize:images": "node scripts/optimize-cleared-images.js",
 		"optimize:event-images": "node scripts/optimize-event-images.js",
 		"storybook": "storybook dev -p 6006",

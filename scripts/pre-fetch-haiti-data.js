@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 // Polyfill fetch for Node.js (using built-in https module)
 import https from 'https';
 import http from 'http';
+import { normaliseHaitiDate } from '../src/lib/components/haiti-map/dates.ts';
 
 function fetch(url) {
 	return new Promise((resolve, reject) => {
@@ -157,6 +158,7 @@ async function processHaitiData(csvText) {
 				case 'killed':
 				case 'wounded':
 				case 'droneCount':
+				case 'explosiveDroneCount':
 					return value === '' ? undefined : parseInt(value, 10);
 				case 'latitude':
 				case 'longitude':
@@ -175,15 +177,26 @@ async function processHaitiData(csvText) {
 
 	const sorted = [...records]
 		.filter((r) => typeof r.latitude !== 'number' || r.latitude < 25)
-		.map((record) => ({
-			...record,
-			title: record.titleEN || record.title || 'Untitled',
-			description: record.descriptionEN || record.description || '',
-			imageCaption: record.imageCaptionEN || record.imageCaption,
-			droneCount: record.droneCount ?? 0,
-			killed: record.killed ?? 0,
-			wounded: record.wounded ?? 0
-		}))
+		.flatMap((record) => {
+			const date = normaliseHaitiDate(record.date);
+			if (!date) {
+				console.warn(`Skipping Haiti ${record.type} ${record.id}: invalid date "${record.date}"`);
+				return [];
+			}
+
+			return [
+				{
+					...record,
+					date,
+					title: record.titleEN || record.title || 'Untitled',
+					description: record.descriptionEN || record.description || '',
+					imageCaption: record.imageCaptionEN || record.imageCaption,
+					droneCount: record.droneCount ?? 0,
+					killed: record.killed ?? 0,
+					wounded: record.wounded ?? 0
+				}
+			];
+		})
 		.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 	sorted.forEach((item, index) => {

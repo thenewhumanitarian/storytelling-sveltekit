@@ -6,6 +6,7 @@
 	import type { IncidentData } from './types';
 	import HaitiOverlay from './HaitiOverlay.svelte';
 	import HaitiLanguagePopover from './HaitiLanguagePopover.svelte';
+	import HaitiDroneTally from './HaitiDroneTally.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy } from './copy';
 	const DEFAULT_MAP_ZOOM = 11;
@@ -456,7 +457,7 @@
 		<div class="absolute left-2 top-2 z-30 flex items-start gap-2">
 			{#if !isMobile}
 				<button
-					class="flex h-8 items-center gap-1 bg-white/90 px-2 text-xs font-medium text-burgundy shadow-sm backdrop-blur-sm hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
+					class="flex h-8 items-center gap-1 bg-white/90 px-2 text-xs font-medium text-burgundy shadow-sm backdrop-blur-sm hover:cursor-pointer hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
 					onclick={toggleFullscreen}
 					aria-label={isFullscreen ? copy[lang].exit : copy[lang].fullscreen}
 				>
@@ -503,6 +504,7 @@
 			{/if}
 			<HaitiLanguagePopover {lang} {setLang} />
 		</div>
+		<HaitiDroneTally {incidentsData} {selectedMarkerId} {lang} />
 	{/if}
 	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
 	{#if mapInitError}

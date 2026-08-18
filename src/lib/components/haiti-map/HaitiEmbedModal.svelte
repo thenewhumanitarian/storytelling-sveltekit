@@ -49,7 +49,7 @@
 		onclick={(e) => e.stopPropagation()}
 	>
 		<button
-			class="absolute right-3 top-1 text-3xl leading-none text-gray-500 hover:text-gray-800"
+			class="absolute right-3 top-1 text-3xl leading-none text-gray-500 hover:cursor-pointer hover:text-gray-800"
 			onclick={onClose}
 			aria-label={text.close}>×</button
 		>
@@ -63,7 +63,7 @@
 				<div class="relative mt-1">
 					<button
 						type="button"
-						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded-sm bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow-sm hover:bg-white"
+						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded-sm bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow-sm hover:cursor-pointer hover:bg-white"
 						onclick={copyEmbed}
 						aria-label={text.copyCode}
 					>

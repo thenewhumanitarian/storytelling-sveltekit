@@ -2,8 +2,7 @@
 	import type { IncidentData } from './types';
 	import type { HaitiLang } from './copy';
 	import { copy } from './copy';
-	import moment from 'moment';
-	import 'moment/locale/fr';
+	import { formatHaitiDate } from './dates';
 
 	// Props (Svelte 5 runes)
 	let {
@@ -11,10 +10,6 @@
 		onClose,
 		lang = 'en'
 	}: { incident: IncidentData; onClose: () => void; lang?: HaitiLang } = $props();
-
-	$effect(() => {
-		moment.locale(lang === 'fr' ? 'fr' : 'en-gb');
-	});
 </script>
 
 <div
@@ -24,7 +19,7 @@
 		class="relative max-h-[90vh] w-full max-w-md overflow-y-auto bg-white p-4 sm:flex sm:h-full sm:w-full sm:max-w-none sm:bg-transparent sm:p-0 flex-col"
 	>
 		<button
-			class="absolute right-[12px] top-1 z-10 text-3xl text-zinc-400 hover:text-burgundy sm:-top-2 sm:right-0 sm:text-burgundy sm:hover:text-burgundy/80"
+			class="absolute right-[12px] top-1 z-10 text-3xl text-zinc-400 hover:cursor-pointer hover:text-burgundy sm:-top-2 sm:right-0 sm:text-burgundy sm:hover:text-burgundy/80"
 			onclick={onClose}
 			aria-label={copy[lang].close}>×</button
 		>
@@ -37,7 +32,7 @@
 						{incident.type === 'event' ? copy[lang].event : copy[lang].incident}
 					</span>
 					<span class="text-sm text-gray-700 sm:text-zinc-700">
-						{moment(incident.date).format('DD MMMM YYYY')}
+						{formatHaitiDate(incident.date, lang)}
 					</span>
 				</div>
 			</div>

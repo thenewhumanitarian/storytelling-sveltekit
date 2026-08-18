@@ -905,7 +905,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="0"
 									class="transition-opacity duration-300 group-hover:opacity-90"
 								/>
@@ -962,7 +961,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="90"
 									class="transition-opacity duration-300"
 								/>
@@ -1018,7 +1016,6 @@
 									fill="white"
 									stroke="black"
 									stroke-width="1"
-									rx="2"
 									opacity="0"
 									class="transition-opacity duration-300 group-hover:opacity-90"
 								/>
@@ -1076,7 +1073,6 @@
 						fill="white"
 						stroke="#9f3e52"
 						stroke-width="1"
-						rx="2"
 						opacity="0.9"
 						class="pointer-events-none"
 					/>
@@ -1192,7 +1188,6 @@
 							width={bgWidth}
 							height={bgHeight}
 							fill="rgba(0,0,0,0.1)"
-							rx="4"
 							class="pointer-events-none"
 						/>
 
@@ -1205,7 +1200,6 @@
 							fill="white"
 							stroke="#9f3e52"
 							stroke-width="1"
-							rx="4"
 							opacity="0.95"
 							class="pointer-events-none z-50 bg-white"
 						/>
