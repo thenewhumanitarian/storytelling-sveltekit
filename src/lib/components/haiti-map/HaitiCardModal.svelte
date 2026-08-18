@@ -89,11 +89,7 @@
 				alt={incident.imageCaption || incident.title}
 			/>
 		{/if}
-		{#if incident.description && incident.description.includes('<')}
-			<div class="mb-2 text-sm text-gray-700">{@html incident.description}</div>
-		{:else}
-			<p class="mb-2 text-sm text-gray-700">{incident.description}</p>
-		{/if}
+		<p class="mb-2 text-sm text-gray-700">{incident.description}</p>
 		{#if incident.videoCaption}
 			<p class="pt-1 text-sm text-zinc-500">{incident.videoCaption}</p>
 		{/if}

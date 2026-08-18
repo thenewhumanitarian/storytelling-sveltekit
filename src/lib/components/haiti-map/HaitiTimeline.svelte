@@ -9,7 +9,7 @@
 	import HaitiEmbedModal from '$lib/components/haiti-map/HaitiEmbedModal.svelte';
 	import Logo from '$lib/components/icons/Logo.svelte';
 	import type { HaitiLang } from './copy';
-	import { copy } from './copy';
+	import { copy, explosiveDroneLabel } from './copy';
 
 	// --- Component Properties ---
 	let {
@@ -528,6 +528,19 @@
 	function formatDate(date: Date): string {
 		return moment(date).format('DD MMMM YYYY');
 	}
+
+	function formatPeriod(date: Date, qualifier: 'starting' | 'of'): string {
+		const period =
+			groupingMode === 'weekly' ? (lang === 'fr' ? 'Semaine' : 'Week') : lang === 'fr' ? 'Mois' : 'Month';
+		if (lang === 'fr') {
+			return `${period} ${qualifier === 'starting' ? 'à partir du' : 'du'} ${formatDate(date)}`;
+		}
+		return `${period} ${qualifier} ${formatDate(date)}`;
+	}
+
+	$effect(() => {
+		moment.locale(lang === 'fr' ? 'fr' : 'en-gb');
+	});
 </script>
 
 <div
@@ -538,7 +551,7 @@
 	<!-- Chart Container -->
 	<div class="flex w-full items-center h-{svgHeight}px">
 		{#if containerWidth > 0 && enhancedAggregatedData.length > 0}
-			<svg width="100%" height={svgHeight} aria-label="Incident Timeline" class="block">
+			<svg width="100%" height={svgHeight} aria-label={copy[lang].incidentTimeline} class="block">
 				<!-- Events timeline label (rendered first to appear behind everything) -->
 				<text
 					x={timeScale.range()[0] + 67.5}
@@ -696,9 +709,10 @@
 								opacity="0.5"
 							>
 								<!-- <title>
-									{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(
-										periodData.periodStartDate
-									)} - {periodData.totalDrones} killed/wounded
+									{formatPeriod(periodData.periodStartDate, 'starting')} - {explosiveDroneLabel(
+										periodData.totalDrones,
+										lang
+									)}
 								</title> -->
 							</rect>
 						{/if}
@@ -745,9 +759,10 @@
 								style:stroke="none"
 							>
 								<title>
-									{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(
-										periodData.periodStartDate
-									)} - {periodData.totalDrones} killed/wounded
+									{formatPeriod(periodData.periodStartDate, 'starting')} - {explosiveDroneLabel(
+										periodData.totalDrones,
+										lang
+									)}
 								</title>
 							</rect>
 						{/if}
@@ -768,9 +783,7 @@
 							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 							style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 						>
-							{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
-								periodData.periodStartDate
-							).format('D MMMM Y')}
+								{formatPeriod(periodData.periodStartDate, 'of')}
 						</text>
 					</g>
 				{/each}
@@ -798,7 +811,7 @@
 							onfocusin={() => handleMouseEnter(selectedPeriod.periodStartDate)}
 							onfocusout={handleMouseLeave}
 							tabindex="0"
-							aria-label={`${groupingMode === 'weekly' ? copy[lang].weekly : copy[lang].monthly} ${formatDate(selectedPeriod.periodStartDate)}: ${selectedPeriod.totalDrones} drones`}
+							aria-label={`${formatPeriod(selectedPeriod.periodStartDate, 'of')}: ${explosiveDroneLabel(selectedPeriod.totalDrones, lang)}`}
 							role="button"
 						>
 							<text
@@ -816,9 +829,7 @@
 								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 							>
-								{groupingMode === 'weekly' ? 'Week' : 'Month'} of {moment(
-									selectedPeriod.periodStartDate
-								).format('D MMMM Y')}
+									{formatPeriod(selectedPeriod.periodStartDate, 'of')}
 							</text>
 							<rect
 								class:group-hover:fill-[#2db487]={true}
@@ -860,9 +871,10 @@
 								style:stroke="none"
 							>
 								<title>
-									{groupingMode === 'weekly' ? 'Week' : 'Month'} starting {formatDate(
-										selectedPeriod.periodStartDate
-									)} - {selectedPeriod.totalDrones} killed/wounded
+									{formatPeriod(selectedPeriod.periodStartDate, 'starting')} - {explosiveDroneLabel(
+										selectedPeriod.totalDrones,
+										lang
+									)}
 								</title>
 							</rect>
 						</g>
@@ -1450,7 +1462,7 @@
 </div>
 
 {#if showEmbed}
-	<HaitiEmbedModal onClose={closeEmbed} />
+	<HaitiEmbedModal onClose={closeEmbed} {lang} />
 {/if}
 
 <style lang="postcss">

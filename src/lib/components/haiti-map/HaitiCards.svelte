@@ -181,6 +181,11 @@
 		);
 
 		cards.forEach((card) => observer.observe(card));
+
+		return () => {
+			observer.disconnect();
+			if (debounceTimer) clearTimeout(debounceTimer);
+		};
 	});
 
 	let modalOpen = $state(false);

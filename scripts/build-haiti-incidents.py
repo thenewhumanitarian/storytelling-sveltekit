@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import csv
-import json
 import re
 from datetime import datetime
 from pathlib import Path
@@ -12,7 +11,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "src/lib/data/haiti-map/haiti-drones-source.tsv"
 OUTPUT = ROOT / "src/lib/data/haiti-map/haiti-incidents-fallback.csv"
-SHEETS_COPY = ROOT / "src/lib/data/haiti-map/haiti-drone-incidents-for-google-sheets.csv"
 
 HEADERS = [
 	"id",
@@ -628,6 +626,14 @@ def title_pair(locality: str, drones: int, killed: int, wounded: int, known: boo
 	return (f"{drones} {en_drone} in {locality}", f"{drones} {fr_drone} à {locality}")
 
 
+def read_existing_events() -> list[dict[str, str]]:
+	"""Keep editorial event rows when rebuilding incident rows from the source TSV."""
+	if not OUTPUT.exists():
+		return []
+	with OUTPUT.open(newline="", encoding="utf-8") as handle:
+		return [row for row in csv.DictReader(handle) if row.get("type") == "event"]
+
+
 def main() -> None:
 	with SOURCE.open(newline="", encoding="utf-8") as handle:
 		rows = list(csv.DictReader(handle, delimiter="\t"))
@@ -674,73 +680,19 @@ def main() -> None:
 	for index, row in enumerate(out_rows, start=1):
 		row["id"] = index
 
-	for path in (OUTPUT, SHEETS_COPY):
-		with path.open("w", newline="", encoding="utf-8") as handle:
-			writer = csv.DictWriter(handle, fieldnames=HEADERS, extrasaction="ignore")
-			writer.writeheader()
-			writer.writerows(out_rows)
+	events = read_existing_events()
+	for index, row in enumerate(events, start=len(out_rows) + 1):
+		row["id"] = index
+	out_rows.extend(events)
 
-	cached = []
-	for index, row in enumerate(out_rows):
-		date_obj = datetime.strptime(row["date"], "%Y-%m-%d")
-		iso = date_obj.isocalendar()
-		cached.append(
-			{
-				"id": row["id"],
-				"type": "incident",
-				"titleEN": row["titleEN"],
-				"titleFR": row["titleFR"],
-				"descriptionEN": row["descriptionEN"],
-				"descriptionFR": row["descriptionFR"],
-				"title": row["titleEN"],
-				"description": row["descriptionEN"],
-				"latitude": float(row["latitude"]),
-				"longitude": float(row["longitude"]),
-				"date": row["date"],
-				"killedOrWounded": row["killedOrWounded"],
-				"killed": row["killed"],
-				"wounded": row["wounded"],
-				"droneCount": row["droneCount"],
-				"casualtyKnown": row["casualtyKnown"] == "TRUE",
-				"department": row["department"],
-				"commune": row["commune"],
-				"sectionCommunale": row["sectionCommunale"],
-				"locality": row["locality"],
-				"identifiant": row["identifiant"],
-				"chronoId": index,
-				"weekYear": f"{iso.week:02d}-{iso.year}",
-				"imageUrl": "",
-				"imageCaptionEN": "",
-				"imageCaptionFR": "",
-				"imageCaption": "",
-				"videoUrl": "",
-				"videoCaption": "",
-				"sources": "",
-			}
+	with OUTPUT.open("w", newline="", encoding="utf-8") as handle:
+		writer = csv.DictWriter(
+			handle, fieldnames=HEADERS, extrasaction="ignore", lineterminator="\n"
 		)
-
-	cache_path = ROOT / "src/lib/data/haiti-map/cached-incidents.json"
-	cache_path.write_text(
-		json.dumps(
-			{
-				"incidentsData": cached,
-				"lastUpdated": datetime.utcnow().isoformat() + "Z",
-				"buildTime": datetime.utcnow().isoformat() + "Z",
-				"metadata": {
-					"totalRecords": len(cached),
-					"incidents": len(cached),
-					"events": 0,
-					"dateRange": {"start": cached[0]["date"], "end": cached[-1]["date"]},
-				},
-			},
-			ensure_ascii=False,
-			indent=2,
-		)
-		+ "\n"
-	)
+		writer.writeheader()
+		writer.writerows(out_rows)
 
 	print(f"Wrote {len(out_rows)} rows to {OUTPUT.relative_to(ROOT)}")
-	print(f"Drive copy: {SHEETS_COPY.relative_to(ROOT)}")
 	print("Date range:", out_rows[0]["date"], "→", out_rows[-1]["date"])
 	print("Known casualty rows:", sum(1 for r in out_rows if r["casualtyKnown"] == "TRUE"))
 	print("Sample EN:", out_rows[0]["titleEN"])

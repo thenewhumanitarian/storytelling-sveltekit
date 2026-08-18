@@ -61,12 +61,8 @@
 						{copy[lang].sources}
 					</h4>
 				</div>
-				<div class="overflow-y-auto">
-					{#if incident.sources && incident.sources.includes('<')}
-						<div class="text-base text-gray-700">{@html incident.sources}</div>
-					{:else if incident.sources}
-						<div class="text-sm text-gray-700 sm:text-base">{incident.sources}</div>
-					{/if}
+				<div class="overflow-y-auto break-words text-sm text-gray-700 sm:text-base">
+					{incident.sources}
 				</div>
 			</div>
 		{/if}

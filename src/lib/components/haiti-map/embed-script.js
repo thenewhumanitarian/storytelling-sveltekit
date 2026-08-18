@@ -4,12 +4,21 @@
 		// 1) Resolve the current <script> element and read optional data-attributes
 		//
 		// data-target: id of the container element to mount into (default: 'haiti-drone-map')
-		// data-src:    URL of the iframe source (defaults to the production Haiti dashboard)
+		// data-src:    URL of the iframe source (defaults to the same host as this script)
 		// data-track:  Optional override for the tracking endpoint; if omitted we derive it
 		var scriptEl = document.currentScript;
 		var targetId = (scriptEl && scriptEl.getAttribute('data-target')) || 'haiti-drone-map';
+		var derivedSrc = '';
+		if (scriptEl && scriptEl.src) {
+			var scriptUrl = new URL(scriptEl.src, document.baseURI);
+			scriptUrl.pathname = scriptUrl.pathname.replace(/\/embed\/?$/, '');
+			scriptUrl.search = '';
+			scriptUrl.hash = '';
+			derivedSrc = scriptUrl.toString().replace(/\/$/, '');
+		}
 		var src =
 			(scriptEl && scriptEl.getAttribute('data-src')) ||
+			derivedSrc ||
 			'https://interactive.thenewhumanitarian.org/embeddable/map/2026-08/haiti';
 
 		// Ensure the target container exists (create one if it doesn't)
@@ -62,9 +71,14 @@
 		//    Prefer navigator.sendBeacon (non-blocking, reliable). Fallback to a GET image ping.
 		try {
 			// Derive tracker endpoint if not explicitly provided via data-track
-			var trackUrl =
-				(scriptEl && scriptEl.getAttribute('data-track')) ||
-				src.replace(/\/haiti$/, '') + '/haiti/track';
+			var trackUrl = scriptEl && scriptEl.getAttribute('data-track');
+			if (!trackUrl) {
+				var trackUrlObject = new URL(src, document.baseURI);
+				trackUrlObject.pathname = trackUrlObject.pathname.replace(/\/$/, '') + '/track';
+				trackUrlObject.search = '';
+				trackUrlObject.hash = '';
+				trackUrl = trackUrlObject.toString();
+			}
 
 			// Minimal payload — GA event wiring happens server-side
 			var payload = {
@@ -84,7 +98,7 @@
 				var ts = Date.now();
 				img.src = trackUrl + '?v=1&ts=' + ts + '&referrer=' + encodeURIComponent(payload.referrer);
 			}
-		} catch (e) {
+		} catch {
 			// Tracking failures should never break the embed
 			/* ignore tracking errors */
 		}

@@ -41,32 +41,11 @@ async function readFallbackCsv(): Promise<string> {
 	return readFileSync(path, 'utf-8');
 }
 
-// Debug function to test sheet accessibility
-async function debugSheetAccess() {
-	console.log('🔍 Testing sheet accessibility...');
-	try {
-		const response = await fetch(PUBLISHED_SHEET_URL, { method: 'HEAD' });
-		console.log('📡 HEAD request result:', {
-			status: response.status,
-			statusText: response.statusText,
-			contentType: response.headers.get('content-type'),
-			contentLength: response.headers.get('content-length')
-		});
-	} catch (error) {
-		console.error('❌ HEAD request failed:', error);
-	}
-}
-
 async function fetchAndParseData(): Promise<IncidentData[]> {
-	console.log('🔍 Starting data fetch from:', PUBLISHED_SHEET_URL);
-
 	let csvText: string;
 
 	try {
 		const response = await fetch(PUBLISHED_SHEET_URL);
-		console.log('📡 Fetch response status:', response.status, response.statusText);
-		console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
-
 		if (!response.ok) {
 			throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
 		}
@@ -77,13 +56,13 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 		if (csvText.trim().startsWith('<HTML>') || csvText.trim().startsWith('<!DOCTYPE')) {
 			throw new Error('Received HTML instead of CSV - likely a redirect or error page');
 		}
+		if (csvText.includes('\uFFFD')) {
+			throw new Error('Received CSV with invalid UTF-8 replacement characters');
+		}
 	} catch (fetchError) {
 		console.error('❌ Fetch failed, trying fallback CSV file:', fetchError);
 		try {
-			const fallbackPath = await getFallbackCsvPath();
-			console.log('📦 Attempting to load fallback CSV from:', fallbackPath);
 			csvText = await readFallbackCsv();
-			console.log('✅ Successfully loaded fallback CSV file');
 		} catch (fileError) {
 			console.error('❌ Fallback CSV file also failed:', fileError);
 			throw new Error(
@@ -92,26 +71,6 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 			);
 		}
 	}
-	console.log('📄 CSV text length:', csvText.length);
-	console.log('📄 First 500 characters of CSV:', csvText.substring(0, 500));
-	console.log(
-		'📄 Last 200 characters of CSV:',
-		csvText.substring(Math.max(0, csvText.length - 200))
-	);
-
-	// Check for potential CSV parsing issues
-	const lines = csvText.split('\n');
-	console.log('📄 CSV line count:', lines.length);
-	console.log('📄 First line (headers):', lines[0]);
-	console.log('📄 Second line (first data):', lines[1]);
-	console.log('📄 Last line:', lines[lines.length - 1]);
-
-	// Parse headers to understand column structure
-	const headerLine = lines[0];
-	const headers = headerLine.split(',');
-	console.log('📄 Parsed headers:', headers);
-	console.log('📄 Header count:', headers.length);
-
 	let records: IncidentData[];
 	try {
 		records = parse(csvText, {
@@ -120,21 +79,13 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 			skip_empty_lines: true,
 			// Skip empty columns to handle the extra empty columns in the sheet
 			skip_records_with_error: true,
-			on_record: (record: Record<string, string>, context) => {
-				// Debug first few records to understand structure
-				if (context.lines < 5) {
-					console.log(`📝 Record ${context.lines}:`, record);
-					console.log(`📝 Available columns:`, Object.keys(record));
-				}
-
+			on_record: (record: Record<string, string>) => {
 				// Auto-detect type if missing - assume 'incident' if not specified
 				if (!record.type || record.type.trim() === '') {
 					if (record.latitude && record.longitude) {
 						record.type = 'incident';
-						console.log(`🔧 Auto-detected type 'incident' for record ${context.lines}`);
 					} else if ((record.titleEN || record.title) && record.date) {
 						record.type = 'event';
-						console.log(`🔧 Auto-detected type 'event' for record ${context.lines}`);
 					}
 				}
 
@@ -149,42 +100,7 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 					});
 
 					if (hasMissingCritical) {
-						if (context.lines < 10) {
-							console.log(`⚠️ Incident record ${context.lines} missing critical fields:`, {
-								record,
-								missingFields: criticalFields.filter((field) => {
-									const value = record[field];
-									return (
-										value === undefined ||
-										value === null ||
-										(typeof value === 'string' && value.trim() === '')
-									);
-								})
-							});
-						}
 						return undefined;
-					}
-
-					// Log warnings for missing optional fields but still process the record
-					const optionalFields = ['latitude', 'longitude', 'killedOrWounded'];
-					const missingOptional = optionalFields.filter((field) => {
-						const value = record[field];
-						return (
-							value === undefined ||
-							value === null ||
-							(typeof value === 'string' && value.trim() === '')
-						);
-					});
-
-					if (missingOptional.length > 0 && context.lines < 20) {
-						console.log(
-							`⚠️ Incident record ${context.lines} missing optional fields (will still process):`,
-							{
-								id: record.id,
-								date: record.date,
-								missingOptional
-							}
-						);
 					}
 
 					return record;
@@ -198,33 +114,12 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 					});
 
 					if (hasMissingRequired) {
-						if (context.lines < 10) {
-							console.log(`⚠️ Event record ${context.lines} missing required fields:`, {
-								record,
-								missingFields: requiredFields.filter((field) => {
-									const value = record[field];
-									return (
-										value === undefined ||
-										value === null ||
-										(typeof value === 'string' && value.trim() === '')
-									);
-								})
-							});
-						}
 						return undefined;
 					}
 
 					return record;
 				}
 
-				if (context.lines < 10) {
-					console.log(
-						`⚠️ Unknown record type ${context.lines}:`,
-						record.type,
-						'for record:',
-						record
-					);
-				}
 				return undefined;
 			},
 			cast: (value, context) => {
@@ -251,17 +146,8 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 		});
 	} catch (parseError) {
 		console.error('❌ CSV parsing failed:', parseError);
-		console.error('❌ CSV content that failed to parse:', csvText.substring(0, 1000));
 		throw new Error(`CSV parsing failed: ${parseError}`, { cause: parseError });
 	}
-
-	console.log('📊 Total records parsed:', records.length);
-	console.log('📊 First 3 parsed records:', records.slice(0, 3));
-	console.log('📊 Record types breakdown:', {
-		incidents: records.filter((r) => r.type === 'incident').length,
-		events: records.filter((r) => r.type === 'event').length,
-		other: records.filter((r) => r.type !== 'incident' && r.type !== 'event').length
-	});
 
 	const haitiRecords = records.filter((r) => typeof r.latitude !== 'number' || r.latitude < 25);
 	if (haitiRecords.length === 0 || haitiRecords.length < records.length / 2) {
@@ -307,17 +193,11 @@ async function fetchAndParseData(): Promise<IncidentData[]> {
 		(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 	);
 
-	console.log('📅 Date range:', {
-		earliest: sorted[0]?.date,
-		latest: sorted[sorted.length - 1]?.date
-	});
-
 	sorted.forEach((item, index) => {
 		item.chronoId = index;
 		item.weekYear = getISOWeekYearString(new Date(item.date));
 	});
 
-	console.log('✅ Data processing complete. Returning', sorted.length, 'records');
 	return sorted;
 }
 
@@ -328,13 +208,7 @@ async function loadCachedData(): Promise<{
 	metadata?: Record<string, unknown>;
 }> {
 	try {
-		console.log('📦 Attempting to load cached data...');
 		const cachedData = await import('$lib/data/haiti-map/cached-incidents.json');
-		console.log('📦 Cached data loaded successfully:', {
-			recordCount: cachedData.default.incidentsData?.length || 0,
-			lastUpdated: cachedData.default.lastUpdated,
-			buildTime: cachedData.default.buildTime
-		});
 		return cachedData.default;
 	} catch (error) {
 		console.warn('⚠️ Cache file not found:', error);
@@ -361,7 +235,6 @@ function hasUsableCachedData(cachedData: {
 function shouldUseCachedData(): boolean {
 	// Always fetch fresh data in development
 	if (dev) {
-		console.log('🔧 Development mode detected - will fetch fresh data');
 		return false;
 	}
 
@@ -371,43 +244,23 @@ function shouldUseCachedData(): boolean {
 	const isProduction = vercelEnvironment
 		? vercelEnvironment === 'production'
 		: PUBLIC_BASE_URL.includes('interactive.thenewhumanitarian.org');
-	console.log('🌐 Environment check:', {
-		vercelEnvironment: vercelEnvironment || 'not-vercel',
-		PUBLIC_BASE_URL,
-		isProduction,
-		willUseCached: isProduction
-	});
-
 	// Use cached data only in production
 	return isProduction;
 }
 
 export const load: PageServerLoad = async () => {
-	console.log('🚀 Starting page load function');
-
 	// Read at request time so Vercel runtime env vars work even when missing at build time.
 	const mapboxToken = publicEnv.PUBLIC_MAPBOX_TOKEN ?? '';
 
 	const useCachedData = shouldUseCachedData();
 
-	// Normal production requests stay independent of Google Sheets. Preview and
-	// local development verify and read the published CSV on every request.
-	if (!useCachedData) {
-		await debugSheetAccess();
-	}
-
 	if (useCachedData) {
 		// In production, use cached data (pre-loaded during build)
-		console.log('📦 Using cached data for production');
 		try {
 			const cachedResult = await loadCachedData();
 
 			// Confirm the build-time export contains usable data.
 			if (hasUsableCachedData(cachedResult)) {
-				console.log('✅ Using valid cached data:', {
-					recordCount: cachedResult.incidentsData?.length || 0,
-					lastUpdated: cachedResult.lastUpdated
-				});
 				return { ...cachedResult, mapboxToken };
 			} else {
 				// An empty cache is a build failure; keep the map available as a fallback.
@@ -418,10 +271,6 @@ export const load: PageServerLoad = async () => {
 					lastUpdated: new Date().toISOString(),
 					buildTime: new Date().toISOString()
 				};
-				console.log('✅ Fresh data fetch successful:', {
-					recordCount: result.incidentsData?.length || 0,
-					lastUpdated: result.lastUpdated
-				});
 				return { ...result, mapboxToken };
 			}
 		} catch (error) {
@@ -433,15 +282,10 @@ export const load: PageServerLoad = async () => {
 				lastUpdated: new Date().toISOString(),
 				buildTime: new Date().toISOString()
 			};
-			console.log('✅ Fresh data fetch successful:', {
-				recordCount: result.incidentsData?.length || 0,
-				lastUpdated: result.lastUpdated
-			});
 			return { ...result, mapboxToken };
 		}
 	} else {
 		// In development/preview, always fetch fresh data
-		console.log('🔄 Fetching fresh data for development/preview');
 		try {
 			const incidentsData = await fetchAndParseData();
 			const result = {
@@ -449,18 +293,10 @@ export const load: PageServerLoad = async () => {
 				lastUpdated: new Date().toISOString(),
 				buildTime: new Date().toISOString()
 			};
-			console.log('✅ Fresh data fetch successful:', {
-				recordCount: result.incidentsData?.length || 0,
-				lastUpdated: result.lastUpdated
-			});
 			return { ...result, mapboxToken };
 		} catch (error) {
 			console.error('❌ Failed to fetch fresh data, falling back to cached data:', error);
 			const fallbackResult = await loadCachedData();
-			console.log('🔄 Fallback to cached data result:', {
-				recordCount: fallbackResult.incidentsData?.length || 0,
-				lastUpdated: fallbackResult.lastUpdated
-			});
 			return { ...fallbackResult, mapboxToken };
 		}
 	}

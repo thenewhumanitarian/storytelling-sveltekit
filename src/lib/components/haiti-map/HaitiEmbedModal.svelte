@@ -1,21 +1,13 @@
 <script lang="ts">
 	import { PUBLIC_BASE_URL } from '$env/static/public';
-	let { onClose } = $props<{ onClose: () => void }>();
+	import type { HaitiLang } from './copy';
+	import { copy } from './copy';
+	let { onClose, lang = 'en' } = $props<{ onClose: () => void; lang?: HaitiLang }>();
 	let copied = $state(false);
 	// Build base URL from env and ensure no trailing slash
 	const BASE = (PUBLIC_BASE_URL || '').replace(/\/$/, '');
 	// Script-based embed (served by endpoint)
-	const embedSnippet = `<div id="haiti-drone-map"></div>\n<script src="${BASE}/embeddable/map/2026-08/haiti/embed" defer><\/script>`;
-
-	function escapeHtml(s: string): string {
-		return s
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#39;');
-	}
-	const displaySnippet = $derived(escapeHtml(embedSnippet));
+	const embedSnippet = `<div id="haiti-drone-map"></div>\n<script src="${BASE}/embeddable/map/2026-08/haiti/embed" defer></${'script'}>`;
 
 	async function copyEmbed() {
 		if (typeof window === 'undefined') return;
@@ -26,7 +18,9 @@
 				setTimeout(() => (copied = false), 1500);
 				return;
 			}
-		} catch {}
+		} catch {
+			// Fall through to the selection-based clipboard fallback.
+		}
 		try {
 			const el = document.getElementById('tnh-embed-code');
 			if (!el) return;
@@ -39,7 +33,9 @@
 			sel?.removeAllRanges();
 			copied = true;
 			setTimeout(() => (copied = false), 1500);
-		} catch {}
+		} catch {
+			// Copy support is optional; leave the snippet selectable on failure.
+		}
 	}
 </script>
 
@@ -47,28 +43,28 @@
 	<div
 		role="dialog"
 		aria-modal="true"
-		aria-label="Embed options"
+		aria-label={copy[lang].embedDialogLabel}
 		class="relative w-full max-w-2xl bg-white p-4 text-gray-800 shadow-lg"
 		onclick={(e) => e.stopPropagation()}
 	>
 		<button
 			class="absolute right-3 top-1 text-3xl leading-none text-gray-500 hover:text-gray-800"
 			onclick={onClose}
-			aria-label="Close">×</button
+			aria-label={copy[lang].close}>×</button
 		>
-		<h2 class="mb-2 text-lg font-semibold text-gray-900">Embed this dashboard</h2>
+		<h2 class="mb-2 text-lg font-semibold text-gray-900">{copy[lang].embedTitle}</h2>
 		<p class="mb-3 text-sm text-gray-700">
-			Copy and paste the following into your CMS or HTML page.
+			{copy[lang].embedIntro}
 		</p>
 		<ol class="list-decimal space-y-3 pl-5 text-sm">
 			<li>
-				<strong>HTML:</strong>
+				<strong>{copy[lang].embedHtml}</strong>
 				<div class="relative mt-1">
 					<button
 						type="button"
 						class="absolute right-2 top-2 inline-flex items-center gap-1 rounded-sm bg-white/90 px-2 py-1 text-[12px] font-medium text-gray-700 shadow-sm hover:bg-white"
 						onclick={copyEmbed}
-						aria-label="Copy code"
+						aria-label={copy[lang].copyCode}
 					>
 						<svg
 							class="h-3 w-3"
@@ -83,24 +79,22 @@
 								d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
 							></path></svg
 						>
-						{copied ? 'Copied' : 'Copy'}
+						{copied ? copy[lang].copied : copy[lang].copy}
 					</button>
 					<pre
 						id="tnh-embed-code"
 						class="overflow-auto rounded-sm bg-gray-100 p-2 text-[12px] text-gray-900"><code
-							>{@html displaySnippet}</code
+							>{embedSnippet}</code
 						></pre>
 				</div>
 			</li>
 			<li>
-				<strong>What it does:</strong> injects a responsive iframe with a loading shimmer and the correct
-				aspect ratio for different screen sizes.
+				<strong>{copy[lang].embedWhatLabel}</strong>
+				{copy[lang].embedWhat}
 			</li>
 			<li>
-				<strong>Optional:</strong> You can change the target container id by adding
-				<code>data-target="your-id"</code>
-				and the source via <code>data-src="..."</code> to the script tag; then use
-				<code>&lt;div id="your-id"&gt;&lt;/div&gt;</code>.
+				<strong>{copy[lang].embedOptional}</strong>
+				{copy[lang].embedOptionalHelp}
 			</li>
 		</ol>
 	</div>

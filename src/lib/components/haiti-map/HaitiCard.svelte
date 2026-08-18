@@ -85,7 +85,7 @@
 					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToPrevCard}
 					disabled={!hasPrev}
-					aria-label="Previous"
+					aria-label={copy[lang].previous}
 				>
 					←
 				</button>
@@ -93,7 +93,7 @@
 					class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 					onclick={goToNextCard}
 					disabled={!hasNext}
-					aria-label="Next"
+					aria-label={copy[lang].next}
 				>
 					→
 				</button>
@@ -103,15 +103,9 @@
 			<h3 class="mt-2 line-clamp-2 text-lg font-bold leading-tight sm:text-xl">
 				{incident.title}
 			</h3>
-			{#if incident.description && incident.description.includes('<')}
-				<div class="hidden text-xs text-zinc-700 sm:block sm:text-base lg:text-lg">
-					{@html incident.description}
-				</div>
-			{:else}
-				<p class="hidden text-xs text-zinc-700 sm:block sm:text-base lg:text-lg">
-					{incident.description}
-				</p>
-			{/if}
+			<p class="hidden text-xs text-zinc-700 sm:block sm:text-base lg:text-lg">
+				{incident.description}
+			</p>
 		</div>
 		<slot name="readmore"></slot>
 	{:else}
@@ -135,7 +129,7 @@
 							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToPrevCard}
 							disabled={!hasPrev}
-							aria-label="Previous"
+							aria-label={copy[lang].previous}
 						>
 							←
 						</button>
@@ -143,7 +137,7 @@
 							class="px-2 py-1 text-lg text-zinc-500 hover:text-burgundy disabled:pointer-events-none disabled:opacity-50"
 							onclick={goToNextCard}
 							disabled={!hasNext}
-							aria-label="Next"
+							aria-label={copy[lang].next}
 						>
 							→
 						</button>
@@ -225,19 +219,11 @@
 						{/if}
 					</div>
 				{/if}
-				{#if incident.description && incident.description.includes('<')}
-					<div
-						class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
-					>
-						{@html incident.description}
-					</div>
-				{:else}
-					<p
-						class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
-					>
-						{incident.description}
-					</p>
-				{/if}
+				<p
+					class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
+				>
+					{incident.description}
+				</p>
 			</div>
 
 			<!-- Bottom area - stays at bottom -->

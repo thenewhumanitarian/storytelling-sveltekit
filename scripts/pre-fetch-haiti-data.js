@@ -225,6 +225,9 @@ async function fetchData(url, sourceName, fallbackPath = null) {
 		}
 
 		const data = await response.text();
+		if (data.includes('\uFFFD')) {
+			throw new Error('CSV response contains invalid UTF-8 replacement characters');
+		}
 		console.log(`✅ Successfully fetched ${sourceName} (${data.length} characters)`);
 
 		// Debug: Show first 200 characters to help diagnose issues
@@ -281,7 +284,7 @@ async function processDataSource(sourceKey, sourceConfig) {
 
 		// Fetch the data (with fallback support)
 		const rawData = await fetchData(sourceConfig.url, sourceConfig.name, sourceConfig.fallbackPath);
-		const normalizedRawData = rawData.replace(/\r\n/g, '\n');
+		const normalizedRawData = `${rawData.replace(/\r\n/g, '\n').trimEnd()}\n`;
 
 		// Save raw CSV to fallback file if fallbackPath is specified and we successfully fetched fresh data
 		// This ensures the fallback CSV is always up-to-date during build

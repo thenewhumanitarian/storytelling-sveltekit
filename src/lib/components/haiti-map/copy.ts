@@ -6,6 +6,7 @@ type Copy = {
 	incident: string;
 	event: string;
 	eventsTimeline: string;
+	incidentTimeline: string;
 	untitledEvent: string;
 	showSources: string;
 	sources: string;
@@ -24,9 +25,14 @@ type Copy = {
 	next: string;
 	language: string;
 	embedTitle: string;
+	embedDialogLabel: string;
 	embedIntro: string;
+	embedHtml: string;
+	embedWhatLabel: string;
 	embedWhat: string;
 	embedOptional: string;
+	embedOptionalHelp: string;
+	copyCode: string;
 	copied: string;
 	copy: string;
 	casualtiesUnknown: string;
@@ -42,6 +48,7 @@ export const copy: Record<HaitiLang, Copy> = {
 		incident: 'Incident',
 		event: 'Event',
 		eventsTimeline: 'Events timeline',
+		incidentTimeline: 'Incident timeline',
 		untitledEvent: 'Untitled event',
 		showSources: 'Show sources',
 		sources: 'Sources',
@@ -60,10 +67,16 @@ export const copy: Record<HaitiLang, Copy> = {
 		next: 'Next',
 		language: 'Language',
 		embedTitle: 'Embed this dashboard',
+		embedDialogLabel: 'Embed options',
 		embedIntro: 'Copy and paste the following into your CMS or HTML page.',
+		embedHtml: 'HTML:',
+		embedWhatLabel: 'What it does:',
 		embedWhat:
 			'injects a responsive iframe with a loading shimmer and the correct aspect ratio for different screen sizes.',
 		embedOptional: 'Optional:',
+		embedOptionalHelp:
+			'Change the target container id with data-target="your-id", or override the iframe source with data-src="..."; then use <div id="your-id"></div>.',
+		copyCode: 'Copy code',
 		copied: 'Copied',
 		copy: 'Copy',
 		casualtiesUnknown: 'Casualties unknown',
@@ -77,6 +90,7 @@ export const copy: Record<HaitiLang, Copy> = {
 		incident: 'Incident',
 		event: 'Événement',
 		eventsTimeline: 'Chronologie des événements',
+		incidentTimeline: 'Chronologie des incidents',
 		untitledEvent: 'Événement sans titre',
 		showSources: 'Voir les sources',
 		sources: 'Sources',
@@ -95,10 +109,16 @@ export const copy: Record<HaitiLang, Copy> = {
 		next: 'Suivant',
 		language: 'Langue',
 		embedTitle: 'Intégrer ce tableau de bord',
+		embedDialogLabel: 'Options d’intégration',
 		embedIntro: 'Copiez-collez le code suivant dans votre CMS ou page HTML.',
+		embedHtml: 'HTML :',
+		embedWhatLabel: 'Fonctionnement :',
 		embedWhat:
 			'injecte une iframe responsive avec un effet de chargement et le bon format selon la taille d’écran.',
 		embedOptional: 'Optionnel :',
+		embedOptionalHelp:
+			'Modifiez l’identifiant du conteneur avec data-target="votre-id", ou remplacez la source de l’iframe avec data-src="..." ; utilisez ensuite <div id="votre-id"></div>.',
+		copyCode: 'Copier le code',
 		copied: 'Copié',
 		copy: 'Copier',
 		casualtiesUnknown: 'Bilan humain inconnu',
