@@ -1058,7 +1058,7 @@
 						labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
 					{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
 					{@const labelYOffset = 48}
-					{@const minY = 25} // Minimum Y position to prevent overlap
+					{@const minY = 25}
 					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
 					<line
 						x1={lineStartX}
@@ -1069,15 +1069,15 @@
 						stroke-width="1"
 					/>
 					{@const textContent = `${maxBarLabel.value} ${lang === 'fr' ? 'drones' : 'drones'}`}
-					{@const textWidth = textContent.length * 6} // Approximate character width
-					{@const textHeight = 12} // Approximate text height
+					{@const textWidth = textContent.length * 6}
+					{@const textHeight = 12}
 					{@const padding = 5}
 					{@const bgWidth = textWidth + padding * 2}
 					{@const bgHeight = textHeight + padding * 2}
 					{@const bgX = textAnchor === 'end' ? labelX - bgWidth + 8 : labelX - bgWidth / 2 - 8}
-					{@const bgY = adjustedY - bgHeight + 10} // Position background above the adjusted label position
-					{@const textX = bgX + bgWidth / 2} // Center text within background
-					{@const textY = bgY + bgHeight / 2 + 4} // Center text vertically with slight adjustment
+					{@const bgY = adjustedY - bgHeight + 10}
+					{@const textX = bgX + bgWidth / 2}
+					{@const textY = bgY + bgHeight / 2 + 4}
 
 					<!-- Background rectangle -->
 					<rect
