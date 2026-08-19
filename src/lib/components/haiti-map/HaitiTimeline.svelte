@@ -338,10 +338,19 @@
 		if (!maxPeriod || !timeScale || !heightScale) return null;
 		const labelY = axisY - heightScale(maxPeriod.totalDrones) - barPaddingBottom - 6;
 		const minLabelY = 25; // Minimum Y position to prevent cutoff
+		const availableWidth = containerWidth - 24;
+		const periodWidth = availableWidth / Math.max(enhancedCompleteTimeline.length, 1);
+		const renderedBarWidth =
+			groupingMode === 'monthly'
+				? Math.min(Math.max(periodWidth * (isMobile ? 0.6 : 0.8), 20), 60)
+				: groupingMode === 'weekly'
+					? Math.min(Math.max(periodWidth * (isMobile ? 0.6 : 0.8), 8), 20)
+					: barWidth;
 		return {
 			x: timeScale(maxPeriod.periodStartDate),
 			y: Math.max(labelY, minLabelY),
-			value: maxPeriod.totalDrones
+			value: maxPeriod.totalDrones,
+			barWidth: renderedBarWidth
 		};
 	});
 
@@ -891,10 +900,6 @@
 						<g
 							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
-							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
-							onfocusout={handleMouseLeave}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
@@ -947,10 +952,6 @@
 						<g
 							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
-							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
-							onfocusout={handleMouseLeave}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
@@ -1002,10 +1003,6 @@
 						<g
 							class="event-symbol event-symbol--active group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
-							onmouseenter={() => setHighlightedMarkerId(event.chronoId)}
-							onmouseleave={handleMouseLeave}
-							onfocusin={() => setHighlightedMarkerId(event.chronoId)}
-							onfocusout={handleMouseLeave}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
@@ -1047,37 +1044,52 @@
 					{/if}
 				{/each}
 
-				<!-- Max Bar Label (render after active elements to be behind them) -->
+				<!-- Max Bar Label -->
 				{#if maxBarLabel && typeof maxBarLabel?.x === 'number'}
 					{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
 					{@const labelSide = isLeftThird ? 'left' : 'right'}
-					{@const lineLength = 40}
-					{@const lineStartX = labelSide === 'left' ? maxBarLabel.x - lineLength : maxBarLabel.x}
-					{@const lineEndX = labelSide === 'left' ? maxBarLabel.x : maxBarLabel.x + lineLength}
-					{@const labelX =
-						labelSide === 'left' ? maxBarLabel.x - lineLength - 6 : maxBarLabel.x + lineLength + 6}
-					{@const textAnchor = labelSide === 'left' ? 'end' : 'start'}
-					{@const labelYOffset = 48}
+					{@const leaderLength = 14}
+					{@const barEdgeX =
+						labelSide === 'left'
+							? maxBarLabel.x - maxBarLabel.barWidth / 2
+							: maxBarLabel.x + maxBarLabel.barWidth / 2}
+					{@const labelYOffset = 28}
 					{@const minY = 25}
 					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
-					<line
-						x1={lineStartX}
-						y1={adjustedY}
-						x2={lineEndX}
-						y2={adjustedY}
-						stroke="#9f3e52"
-						stroke-width="1"
-					/>
 					{@const textContent = `${maxBarLabel.value} ${lang === 'fr' ? 'drones' : 'drones'}`}
 					{@const textWidth = textContent.length * 6}
 					{@const textHeight = 12}
 					{@const padding = 5}
 					{@const bgWidth = textWidth + padding * 2}
 					{@const bgHeight = textHeight + padding * 2}
-					{@const bgX = textAnchor === 'end' ? labelX - bgWidth + 8 : labelX - bgWidth / 2 - 8}
+					{@const bgX =
+						labelSide === 'left'
+							? barEdgeX - leaderLength - bgWidth
+							: barEdgeX + leaderLength}
 					{@const bgY = adjustedY - bgHeight + 10}
 					{@const textX = bgX + bgWidth / 2}
 					{@const textY = bgY + bgHeight / 2 + 4}
+					{@const lineStartX = labelSide === 'left' ? bgX + bgWidth : bgX}
+
+					<!-- White underlay keeps the leader legible where it meets the burgundy bar. -->
+					<line
+						x1={lineStartX}
+						y1={adjustedY}
+						x2={barEdgeX}
+						y2={adjustedY}
+						stroke="white"
+						stroke-width="4"
+						class="pointer-events-none"
+					/>
+					<line
+						x1={lineStartX}
+						y1={adjustedY}
+						x2={barEdgeX}
+						y2={adjustedY}
+						stroke="#9f3e52"
+						stroke-width="1.5"
+						class="pointer-events-none"
+					/>
 
 					<!-- Background rectangle -->
 					<rect
@@ -1463,6 +1475,12 @@
 	/* Event diamonds should always be on top */
 	.event-symbol--inactive {
 		/* Layering handled by DOM order */
+	}
+
+	/* Keep hover/focus visual-only so Safari cannot replace the target before click. */
+	.event-symbol--inactive:hover > polygon,
+	.event-symbol--inactive:focus-visible > polygon {
+		fill: #2db487;
 	}
 
 	.event-symbol--highlighted {

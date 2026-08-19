@@ -9,9 +9,91 @@
 	import HaitiDroneTally from './HaitiDroneTally.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy } from './copy';
+	import type { FeatureCollection, Point } from 'geojson';
 	const DEFAULT_MAP_ZOOM = 11;
 	const ZOOM_ZOOM = 14;
 	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
+	type ContextualPlace = { name: string; kind: 'city' | 'hotspot'; priority: number };
+	const CONTEXTUAL_PLACES: FeatureCollection<Point, ContextualPlace> = {
+		type: 'FeatureCollection',
+		features: [
+			{
+				type: 'Feature',
+				properties: { name: 'Port-au-Prince', kind: 'city', priority: 1 },
+				geometry: { type: 'Point', coordinates: [-72.3388, 18.5425] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Delmas', kind: 'city', priority: 2 },
+				geometry: { type: 'Point', coordinates: [-72.3052, 18.5447] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Carrefour', kind: 'city', priority: 3 },
+				geometry: { type: 'Point', coordinates: [-72.3992, 18.5411] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Pétion-Ville', kind: 'city', priority: 4 },
+				geometry: { type: 'Point', coordinates: [-72.2852, 18.5125] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Cité Soleil', kind: 'city', priority: 5 },
+				geometry: { type: 'Point', coordinates: [-72.335, 18.5788] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Tabarre', kind: 'city', priority: 6 },
+				geometry: { type: 'Point', coordinates: [-72.269, 18.5832] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Village de Dieu', kind: 'hotspot', priority: 1 },
+				geometry: { type: 'Point', coordinates: [-72.3546, 18.5374] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Bas Peu de Choses', kind: 'hotspot', priority: 2 },
+				geometry: { type: 'Point', coordinates: [-72.3396, 18.5339] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Morne à Tuf', kind: 'hotspot', priority: 3 },
+				geometry: { type: 'Point', coordinates: [-72.3427, 18.5368] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Pacot', kind: 'hotspot', priority: 4 },
+				geometry: { type: 'Point', coordinates: [-72.3295, 18.5307] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Bel Air', kind: 'hotspot', priority: 5 },
+				geometry: { type: 'Point', coordinates: [-72.3367, 18.5503] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Martissant', kind: 'hotspot', priority: 6 },
+				geometry: { type: 'Point', coordinates: [-72.3572, 18.5283] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Grand Ravine', kind: 'hotspot', priority: 7 },
+				geometry: { type: 'Point', coordinates: [-72.3561, 18.5264] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Carrefour-Feuilles', kind: 'hotspot', priority: 8 },
+				geometry: { type: 'Point', coordinates: [-72.3396, 18.528] }
+			},
+			{
+				type: 'Feature',
+				properties: { name: 'Waaf Jérémie', kind: 'hotspot', priority: 9 },
+				geometry: { type: 'Point', coordinates: [-72.347, 18.5664] }
+			}
+		]
+	};
 
 	let {
 		selectedMarkerId,
@@ -342,7 +424,7 @@
 
 			map?.addSource('incidents-heatmap', {
 				type: 'geojson',
-				data: heatmapGeoJSON as GeoJSON.FeatureCollection
+				data: heatmapGeoJSON as FeatureCollection
 			});
 
 			map?.addLayer({
@@ -386,6 +468,77 @@
 						'rgba(160, 60, 80, 1)'
 					],
 					'heatmap-opacity': 0.6
+				}
+			});
+
+			// A small set of metropolitan anchors restores orientation after the
+			// satellite and heat layers soften the basemap's own place labels.
+			for (const layerId of [
+				'settlement-subdivision-label',
+				'settlement-minor-label',
+				'settlement-major-label'
+			]) {
+				if (map?.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', 'none');
+			}
+			map?.addSource('haiti-contextual-places', {
+				type: 'geojson',
+				data: CONTEXTUAL_PLACES
+			});
+			map?.addLayer({
+				id: 'haiti-contextual-place-labels',
+				type: 'symbol',
+				source: 'haiti-contextual-places',
+				filter: ['==', ['get', 'kind'], 'city'],
+				minzoom: 9,
+				maxzoom: 13.8,
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+					'text-radial-offset': 0.45,
+					'text-justify': 'auto',
+					'text-padding': 4,
+					'text-allow-overlap': true,
+					'text-ignore-placement': true,
+					'text-pitch-alignment': 'viewport',
+					'text-rotation-alignment': 'viewport'
+				},
+				paint: {
+					'text-color': '#374151',
+					'text-opacity': 0.9,
+					'text-halo-color': 'rgba(255, 255, 255, 0.95)',
+					'text-halo-width': 2,
+					'text-halo-blur': 0.5
+				}
+			});
+			map?.addLayer({
+				id: 'haiti-contextual-hotspot-labels',
+				type: 'symbol',
+				source: 'haiti-contextual-places',
+				filter: ['==', ['get', 'kind'], 'hotspot'],
+				minzoom: 13.5,
+				maxzoom: 16,
+				layout: {
+					'text-field': ['get', 'name'],
+					'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 12.5, 10, 15, 12],
+					'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+					'text-radial-offset': 0.35,
+					'text-justify': 'auto',
+					'text-padding': 5,
+					'symbol-sort-key': ['get', 'priority'],
+					'text-allow-overlap': true,
+					'text-ignore-placement': true,
+					'text-pitch-alignment': 'viewport',
+					'text-rotation-alignment': 'viewport'
+				},
+				paint: {
+					'text-color': '#374151',
+					'text-opacity': 0.88,
+					'text-halo-color': 'rgba(255, 255, 255, 0.95)',
+					'text-halo-width': 1.5,
+					'text-halo-blur': 0.5
 				}
 			});
 		});
