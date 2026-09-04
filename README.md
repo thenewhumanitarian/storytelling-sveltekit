@@ -41,7 +41,7 @@ This SvelteKit application serves as TNH's platform for:
 | --------------- | ----------------------------------------------------------------------------- | --------------------------------------- |
 | Framework       | [SvelteKit](https://kit.svelte.dev/)                                          | 2.x                                     |
 | UI              | [Svelte](https://svelte.dev/)                                                 | 5.x                                     |
-| Bundler         | [Vite](https://vite.dev/)                                                     | 7.x                                     |
+| Bundler         | [Vite](https://vite.dev/)                                                     | 8.x                                     |
 | Styling         | [Tailwind CSS](https://tailwindcss.com/)                                      | 4.x (CSS-first via `@tailwindcss/vite`) |
 | Maps            | [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/)                         | 3.x                                     |
 | Charts/Data     | [D3.js](https://d3js.org/)                                                    | 3.x / 4.x                               |
@@ -75,9 +75,9 @@ cd tnh-storytelling-sveltekit
 nvm install    # first time only
 nvm use
 
-# 3. Enable Corepack and activate the pinned pnpm version (packageManager in package.json => pnpm@11.22.0)
+# 3. Enable Corepack and activate the pinned pnpm version (packageManager in package.json => pnpm@11.25.0)
 corepack enable
-corepack prepare pnpm@11.22.0 --activate
+corepack prepare pnpm@11.25.0 --activate
 
 # 4. Install dependencies
 pnpm install
@@ -270,7 +270,7 @@ Configure these in the Vercel dashboard (Project → Settings → General / Buil
 | **Install Command** | `pnpm install --frozen-lockfile` |
 | **Build Command**   | `pnpm build` (default)           |
 
-Corepack reads the pinned pnpm version from `packageManager` in `package.json` (`pnpm@11.22.0`).
+Corepack reads the pinned pnpm version from `packageManager` in `package.json` (`pnpm@11.25.0`).
 
 ### Deployment flow
 
