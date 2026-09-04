@@ -3,6 +3,7 @@ import { getEventSlugs } from '$lib/events/registry';
 
 const STATIC_PATHS = [
 	'/',
+	'/about-us/tnh-us',
 	'/events',
 	'/stories/2026/03/24/india-assam-evictions-forced-displacement',
 	'/stories/2025/05/22/lebanon-displacement-diaries/home'

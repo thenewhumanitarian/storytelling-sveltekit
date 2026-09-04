@@ -15,6 +15,7 @@
 	"entries": [
 		{ "path": "/", "group": "root", "name": "Dev landing / legacy Gatsby root" },
 		{ "path": "/login", "group": "root", "name": "Login" },
+		{ "path": "/about-us/tnh-us", "group": "about", "name": "The New Humanitarian US" },
 
 		{
 			"path": "/stories/2025/05/22/lebanon-displacement-diaries",
