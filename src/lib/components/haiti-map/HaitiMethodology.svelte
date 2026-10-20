@@ -35,9 +35,10 @@
 		</p>
 		{#if fr}
 			<p>
-				Cette version réunit les données révisées de 2025 et les incidents provisoires de 2026. La
-				sélection finale reste à confirmer. Les textes français ont été adaptés pour l’affichage ;
-				les traductions anglaises sont des brouillons à remplacer par les versions validées.
+				Cette version utilise uniquement les incidents du jeu de données révisé de 2025. Aucun
+				incident de 2026 ni événement de contexte supplémentaire n’est inclus. Les textes français
+				ont été adaptés pour l’affichage ; les traductions anglaises sont des brouillons à remplacer
+				par les versions validées.
 			</p>
 			{#if SHOW_HAITI_TOTALS}
 				<h3>Un minimum documenté</h3>
@@ -59,8 +60,7 @@
 			{/if}
 			<p>
 				Les graphiques additionnent les nombres connus par période. Une barre hachurée signale une
-				période où certains nombres sont inconnus. Les événements de contexte ne sont pas comptés
-				comme incidents.
+				période où certains nombres sont inconnus.
 			</p>
 			<h3>Localisations et dates</h3>
 			<p>
@@ -84,9 +84,9 @@
 			</p>
 		{:else}
 			<p>
-				This version combines revised 2025 data with provisional 2026 incidents. Final selection
-				remains open. French text has been adapted for display; English translations are drafts to
-				be replaced by approved editorial versions.
+				This version uses only incidents from the revised 2025 dataset. No 2026 incidents or
+				additional context events are included. French text has been adapted for display; English
+				translations are drafts to be replaced by approved editorial versions.
 			</p>
 			{#if SHOW_HAITI_TOTALS}
 				<h3>A documented minimum</h3>
@@ -106,7 +106,7 @@
 			{/if}
 			<p>
 				Charts sum known numbers within each period. Hatching marks a period containing unknown
-				counts. Context events are excluded from incident totals.
+				counts.
 			</p>
 			<h3>Locations and dates</h3>
 			<p>

@@ -6,6 +6,7 @@ import {
 	projectPublicRecords,
 	publicCsv
 } from '../src/lib/components/haiti-map/public-data.ts';
+import { parseHaitiReview } from '../src/lib/components/haiti-map/review-data.ts';
 import { summariseIncidents } from '../src/lib/components/haiti-map/data.ts';
 const fixture = {
 	schemaVersion: 'haiti-display-v1',
@@ -65,32 +66,43 @@ test('pending date and location reports remain in overall totals without invente
 	assert.throws(() => projectPublicRecords([fixture, fixture]), /duplicate/);
 	assert.throws(() => projectPublicRecords([{ ...fixture, latitude: '18,544' }]), /coordinates/);
 });
-test('sanitised combined fixture reconciles and round trips without changing null counts or IDs', () => {
+test('selected 2025 fixture reconciles and round trips without changing null counts or IDs', () => {
 	const records = parsePublicCsv(
 		fs.readFileSync(
 			new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
 			'utf8'
 		)
 	);
-	assert.equal(records.length, 319);
+	assert.equal(records.length, 190);
 	assert.deepEqual(summariseIncidents(records), {
-		incidentCount: 314,
-		knownDrones: 646,
+		incidentCount: 190,
+		knownDrones: 392,
 		unknownCount: 20,
 		unlocatedCount: 12,
 		undatedCount: 1
 	});
 	assert.deepEqual(parsePublicCsv(publicCsv(records)), records);
-	assert.equal(
-		records.filter((r) => r.type === 'incident' && r.date.startsWith('2026')).length,
-		124
-	);
-	assert.equal(
-		summariseIncidents(records.filter((r) => r.date.startsWith('2026'))).knownDrones,
-		254
-	);
+	assert.ok(records.every((r) => r.type === 'incident' && (!r.date || r.date.startsWith('2025-'))));
 	const text = records
 		.map((r) => [r.titleEN, r.titleFR, r.descriptionEN, r.descriptionFR].join(' '))
 		.join('\n');
 	assert.doesNotMatch(text, /\b(killed|wounded|injured|tu[ée]s?|bless[ée]s?|morts?|INSO|GCO)\b/i);
+});
+
+test('review scope rejects other years and context events while retaining the undated source report', () => {
+	assert.equal(
+		parseHaitiReview(
+			publicCsv(projectPublicRecords([{ ...fixture, date: '', dateStatus: 'pending' }]))
+		).length,
+		1
+	);
+	for (const extra of [
+		{ ...fixture, date: '2026-01-01' },
+		{ ...fixture, type: 'event' }
+	]) {
+		assert.throws(
+			() => parseHaitiReview(publicCsv(projectPublicRecords([extra]))),
+			/selected 2025/
+		);
+	}
 });

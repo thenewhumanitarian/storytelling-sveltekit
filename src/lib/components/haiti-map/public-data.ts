@@ -3,8 +3,6 @@ import { normaliseHaitiDate } from './dates.ts';
 import type { IncidentData } from './types.ts';
 
 export const HAITI_PUBLIC_SCHEMA = 'haiti-display-v1';
-export const HAITI_FEED_URL =
-	'https://docs.google.com/spreadsheets/d/e/2PACX-1vT7SHGjPbXZaoyndaUg_Zax9Q2q3rTzYikzDXk8pc7GMkDhu1UsUOwk150_xMxpudr3A2vHjVndc9-x/pub?gid=0&single=true&output=csv';
 export const PUBLIC_FIELDS = [
 	'schemaVersion',
 	'id',

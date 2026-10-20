@@ -2,7 +2,8 @@
 """Build public display records from private inputs. Never reads or writes Google Sheets.
 
 Usage: python3 scripts/import-haiti-review.py --source CSV --private-dir DIR
-DIR must contain current-feed-baseline.csv and display-drafts-{2025,2026}.json.
+Only the supplied 2025 source is imported. DIR must contain current-feed-baseline.csv
+and display-drafts-2025.json.
 Keep DIR outside the checkout. The durable ID map and reconciliation stay private.
 """
 import argparse,csv,json,re,hashlib,os
@@ -35,7 +36,6 @@ def main():
     old=list(csv.DictReader((private/'current-feed-baseline.csv').open()))
     revised=list(csv.DictReader(args.source.open()))
     drafts25={d['sourceRow']:d for d in json.loads((private/'display-drafts-2025.json').read_text())}
-    drafts26={d['sourceId']:d for d in json.loads((private/'display-drafts-2026.json').read_text())}
     old_by_source={r['identifiant']:r for r in old if r['identifiant']}
     id_path=private/'public-id-map.json'
     identities=json.loads(id_path.read_text()) if id_path.exists() else {r['identifiant']:int(float(r['id'])) for r in old if r['identifiant']}
@@ -69,25 +69,14 @@ def main():
         audit.append(dict(publicId=record['id'],sourceRow=row,sourceId=source_id,original=r,
             disposition='matched' if prior else 'added',previous=prior,displayDraft=draft,
             datePending=not bool(record['date']),locationPending=record['locationStatus']=='pending'))
-    for r in old:
-        if r['type']=='incident' and r['date'].startswith('2026-'):
-            draft=drafts26[r['identifiant']]
-            if draft['sourceId']!=r['identifiant']: raise ValueError('2026 draft join mismatch')
-            record=make_record(r,draft,int(float(r['id'])),display_date(r['date']),numeric(r['latitude']),numeric(r['longitude']),int(float(r['droneCount'])) if r['droneCount'] else '')
-            public.append(record);audit.append(dict(publicId=record['id'],sourceId=r['identifiant'],original=r,displayDraft=draft,disposition='provisional-2026'))
-        elif r['type']=='event':
-            record={field:r.get(field,'') for field in FIELDS}
-            record.update(schemaVersion='haiti-display-v1',dateStatus='recorded',locationStatus='pending',languageStatus='editorial-draft',reviewStatus='provisional',droneCount='',latitude='',longitude='')
-            public.append(record)
-    omitted=[r for r in old if r['type']=='incident' and r['date'].startswith('2025-') and r['identifiant'] not in seen]
-    if len(public)!=319 or len(audit)!=314 or len(omitted)!=1: raise ValueError('Unexpected reconciliation cardinality')
+    if len(public)!=190 or len(audit)!=190: raise ValueError('Unexpected 2025 source cardinality')
     if len(set(str(r['id']) for r in public))!=len(public): raise ValueError('Duplicate public ID')
     public.sort(key=lambda r:(r['date'] or '9999',int(float(r['id']))))
     output=ROOT/'src/lib/data/haiti-map/haiti-incidents-fallback.csv'
     with output.open('w',newline='') as f:
         writer=csv.DictWriter(f,fieldnames=FIELDS,lineterminator='\n');writer.writeheader();writer.writerows(public)
     write_private(id_path,identities)
-    write_private(private/'reconciliation.json',dict(sourceSha256=hashlib.sha256(args.source.read_bytes()).hexdigest(),records=audit,omittedLegacy2025=omitted))
+    write_private(private/'reconciliation-2025-only.json',dict(sourceSha256=hashlib.sha256(args.source.read_bytes()).hexdigest(),scope='2025-source-only',records=audit))
     print(json.dumps(dict(publicRecords=len(public),incidents=len(audit),knownDrones=sum(int(r['droneCount'] or 0) for r in public),unknownCounts=sum(r['type']=='incident' and r['droneCount']=='' for r in public),unlocated=sum(r['type']=='incident' and r['locationStatus']=='pending' for r in public),undated=sum(not r['date'] for r in public))))
 
 if __name__=='__main__':main()
