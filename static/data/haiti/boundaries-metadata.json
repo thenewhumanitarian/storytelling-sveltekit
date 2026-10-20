@@ -1,0 +1,23 @@
+{
+  "dataset": "https://data.humdata.org/dataset/cod-ab-hti",
+  "resource": "https://data.humdata.org/dataset/777e8b06-337f-4295-80bc-ca1515244215/resource/1d89a0d5-897d-4c83-ab37-f363a0dca850/download/hti_admin_boundaries.geojson.zip",
+  "downloaded": "2026-10-20",
+  "sha256": "9601ebe9bf79188d852cce50e846c789b801b10778701fc20355a4e35fd0a67a",
+  "attribution": "CNIGS / OCHA, via HDX",
+  "license": "CC BY-IGO",
+  "version": "v01",
+  "toleranceDegrees": 0.00015,
+  "coordinateDecimals": 5,
+  "levels": {
+    "2": {
+      "features": 140,
+      "bytes": 763036,
+      "sha256": "1f27295852c852e05e37f60d948aadf384a4da019a1fa82c07b30146ec02c062"
+    },
+    "3": {
+      "features": 570,
+      "bytes": 1387218,
+      "sha256": "8099153d57ad7f34f752bd5db7c949808bc592d419bd28b765e4699d31400b54"
+    }
+  }
+}

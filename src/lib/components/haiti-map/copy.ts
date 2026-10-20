@@ -153,7 +153,8 @@ export function withActiveLanguage(incident: IncidentData, lang: HaitiLang): Inc
 	};
 }
 
-export function explosiveDroneLabel(count: number, lang: HaitiLang): string {
+export function explosiveDroneLabel(count: number | null, lang: HaitiLang): string {
+	if (count == null) return lang === 'fr' ? 'Nombre de drones inconnu' : 'Drone count unknown';
 	if (lang === 'fr') {
 		return count === 1 ? '1 drone explosif' : `${count} drones explosifs`;
 	}
@@ -166,17 +167,4 @@ export function totalDroneLabel(count: number, lang: HaitiLang): string {
 		return `${formattedCount} ${count === 1 ? 'drone' : 'drones'} au total`;
 	}
 	return `${formattedCount} total ${count === 1 ? 'drone' : 'drones'}`;
-}
-
-export function casualtyLabel(killed: number, wounded: number, lang: HaitiLang): string {
-	if (lang === 'fr') {
-		const parts: string[] = [];
-		if (killed > 0) parts.push(`${killed} tué${killed > 1 ? 's' : ''}`);
-		if (wounded > 0) parts.push(`${wounded} blessé${wounded > 1 ? 's' : ''}`);
-		return parts.join(', ');
-	}
-	const parts: string[] = [];
-	if (killed > 0) parts.push(`${killed} killed`);
-	if (wounded > 0) parts.push(`${wounded} wounded`);
-	return parts.join(', ');
 }

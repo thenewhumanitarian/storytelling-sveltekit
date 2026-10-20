@@ -1,21 +1,28 @@
 <script lang="ts">
 	import { scaleLinear, scaleUtc } from 'd3-scale';
-	import { extent, rollup, sum } from 'd3-array';
+	import { extent, rollup } from 'd3-array';
 	import { utcWeek, utcMonth } from 'd3-time';
 	import type { IncidentData } from './types';
 	import { onDestroy, onMount } from 'svelte';
+	import HaitiMethodology from './HaitiMethodology.svelte';
+	import { summariseIncidents } from './data';
 	import HaitiEmbedModal from '$lib/components/haiti-map/HaitiEmbedModal.svelte';
-	import Logo from '$lib/components/icons/Logo.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy, explosiveDroneLabel } from './copy';
 	import { formatHaitiDate, formatHaitiShortDate, parseHaitiDate } from './dates';
 
+	function periodDroneLabel(known: number, unknown: number): string {
+		if (!unknown) return explosiveDroneLabel(known, lang);
+		if (!known) return explosiveDroneLabel(null, lang);
+		return lang === 'fr'
+			? `${known}+ drones · ${unknown} nombre(s) inconnu(s)`
+			: `${known}+ drones · ${unknown} unknown count(s)`;
+	}
 	// --- Component Properties ---
 	let {
 		setHighlightedMarkerId,
 		highlightedMarkerId,
 		incidentsData,
-		haitiMapRef,
 		selectedWeekStartDate,
 		setSelectedWeek,
 		selectedMarkerId,
@@ -25,7 +32,6 @@
 		setHighlightedMarkerId: (id: number | null) => void;
 		highlightedMarkerId: number | null;
 		incidentsData: IncidentData[];
-		haitiMapRef: { setSelectionOriginToClick: () => void } | null;
 		selectedWeekStartDate: Date | null;
 		setSelectedWeek: (date: Date | null, firstIncidentId: number | null) => void;
 		selectedMarkerId: number | null;
@@ -44,6 +50,7 @@
 		y: number;
 		value: number;
 		incidentCount: number;
+		unknownCount: number;
 		periodStartDate: Date;
 	} | null>(null);
 	let tooltipHideTimer: ReturnType<typeof setTimeout> | undefined;
@@ -62,34 +69,6 @@
 		showEmbed = false;
 	}
 
-	// Copy to clipboard
-	const embedSnippet = `<div id="haiti-drone-map"></div>\n<script src="https://interactive.thenewhumanitarian.org/scripts/gaza-data-piece/dashboard-embed.js" defer><\/script>`;
-	let copied = $state(false);
-	async function copyEmbed() {
-		if (typeof window === 'undefined') return;
-		try {
-			if (navigator && 'clipboard' in navigator) {
-				await navigator.clipboard.writeText(embedSnippet);
-				copied = true;
-				setTimeout(() => (copied = false), 1500);
-				return;
-			}
-		} catch {}
-		// Fallback: select text in the pre element
-		try {
-			const el = document.getElementById('tnh-embed-code');
-			if (!el) return;
-			const range = document.createRange();
-			range.selectNodeContents(el);
-			const sel = window.getSelection();
-			sel?.removeAllRanges();
-			sel?.addRange(range);
-			document.execCommand('copy');
-			sel?.removeAllRanges();
-			copied = true;
-			setTimeout(() => (copied = false), 1500);
-		} catch {}
-	}
 	const svgHeight = 160; // Increased height for better spacing
 	const barWidth = 12; // Default bar width
 	const barTopPadding = 16;
@@ -97,17 +76,15 @@
 	const barPaddingBottom = 0;
 	const axisY = $derived(svgHeight - axisPaddingBottom);
 
-	const toggleHeight = 40; // Height for the toggle switch area (increased for iframe)
 	const dateLabelsHeight = 24; // Height for the date labels section (reduced)
+	const controlsHeight = 40;
 
 	// --- Derived State (Svelte 5 Runes) ---
 	const parsedIncidents = $derived(
 		incidentsData
 			.flatMap((d) => {
 				const dateObj = parseHaitiDate(d.date);
-				return dateObj
-					? [{ ...d, dateObj, title: d.title || copy[lang].untitledEvent }]
-					: [];
+				return dateObj ? [{ ...d, dateObj, title: d.title || copy[lang].untitledEvent }] : [];
 			})
 			.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())
 	);
@@ -131,12 +108,13 @@
 		const rolledUp = rollup(
 			incidentsOnly,
 			(v) => ({
-				totalDrones: sum(v, (d) => d.explosiveDroneCount ?? d.droneCount ?? 0),
+				totalDrones: summariseIncidents(v).knownDrones,
+				unknownCount: summariseIncidents(v).unknownCount,
 				incidentCount: v.length,
 				firstChronoId: v[0].chronoId,
 				// Calculate geographic spread (distance between incidents)
 				geographicSpread: calculateGeographicSpread(v),
-				intensity: sum(v, (d) => d.explosiveDroneCount ?? d.droneCount ?? 0) / v.length
+				intensity: summariseIncidents(v).knownDrones / v.length
 			}),
 			(d) => timeFloor(d.dateObj)
 		);
@@ -144,6 +122,7 @@
 		const result = Array.from(rolledUp, ([periodStartDate, values]) => ({
 			periodStartDate: periodStartDate as Date,
 			totalDrones: values.totalDrones,
+			unknownCount: values.unknownCount,
 			incidentCount: values.incidentCount,
 			firstChronoId: values.firstChronoId,
 			geographicSpread: values.geographicSpread,
@@ -154,7 +133,7 @@
 	});
 
 	// Helper function to calculate geographic spread
-	function calculateGeographicSpread(incidents: any[]): number {
+	function calculateGeographicSpread(incidents: IncidentData[]): number {
 		if (incidents.length < 2) return 0;
 
 		const validIncidents = incidents.filter((i) => i.latitude && i.longitude);
@@ -164,10 +143,10 @@
 		for (let i = 0; i < validIncidents.length; i++) {
 			for (let j = i + 1; j < validIncidents.length; j++) {
 				const distance = calculateDistance(
-					validIncidents[i].latitude,
-					validIncidents[i].longitude,
-					validIncidents[j].latitude,
-					validIncidents[j].longitude
+					validIncidents[i].latitude!,
+					validIncidents[i].longitude!,
+					validIncidents[j].latitude!,
+					validIncidents[j].longitude!
 				);
 				maxDistance = Math.max(maxDistance, distance);
 			}
@@ -189,59 +168,6 @@
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return R * c;
 	}
-
-	// Enhanced width scale based on incident count
-	const widthScale = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear()
-				.domain([0, 1])
-				.range([barWidth * 0.5, barWidth * 1.5]);
-		}
-		const incidentCounts: number[] = enhancedAggregatedData.map((d) => d.incidentCount);
-		const maxIncidentCount = Math.max(...incidentCounts, 1);
-		return scaleLinear()
-			.domain([0, maxIncidentCount])
-			.range([barWidth * 0.5, barWidth * 1.5]);
-	});
-
-	// Intensity-based color scale
-	const intensityColorScale = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear<string>().domain([0, 1]).range(['#fef2f2', '#dc2626']);
-		}
-		const intensities: number[] = enhancedAggregatedData.map((d) => d.intensity);
-		const maxIntensity = Math.max(...intensities, 1);
-		return scaleLinear<string>().domain([0, maxIntensity]).range(['#fef2f2', '#dc2626']);
-	});
-
-	// Geographic spread color scale
-	const spreadColorScale = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear<string>().domain([0, 1]).range(['#1e40af', '#dc2626']);
-		}
-		const spreads: number[] = enhancedAggregatedData.map((d) => d.geographicSpread);
-		const maxSpread = Math.max(...spreads, 1);
-		return scaleLinear<string>().domain([0, maxSpread]).range(['#1e40af', '#dc2626']); // Blue to red
-	});
-
-	// Enhanced color and opacity scales
-	const colorScale = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear<string>().domain([0, 1]).range(['#fef2f2', '#dc2626']);
-		}
-		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalDrones);
-		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear<string>().domain([0, maxPeriodKilled]).range(['#fef2f2', '#dc2626']); // Light red to dark red
-	});
-
-	const opacityScale = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) {
-			return scaleLinear().domain([0, 1]).range([0.3, 1]);
-		}
-		const killedCounts: number[] = enhancedAggregatedData.map((d) => d.totalDrones);
-		const maxPeriodKilled = Math.max(...killedCounts, 1);
-		return scaleLinear().domain([0, maxPeriodKilled]).range([0.3, 1]); // More transparent for lower values
-	});
 
 	// Enhanced complete timeline with new data
 	const enhancedCompleteTimeline = $derived.by(() => {
@@ -270,9 +196,10 @@
 
 			return {
 				periodStartDate,
-				totalDrones: existingData?.totalDrones || 0,
+				totalDrones: existingData?.totalDrones ?? 0,
+				unknownCount: existingData?.unknownCount ?? 0,
 				incidentCount: existingData?.incidentCount || 0,
-				firstChronoId: existingData?.firstChronoId || null,
+				firstChronoId: existingData?.firstChronoId ?? null,
 				geographicSpread: existingData?.geographicSpread || 0,
 				intensity: existingData?.intensity || 0,
 				hasData: !!existingData
@@ -319,10 +246,7 @@
 		if (enhancedAggregatedData.length === 0) {
 			return scaleLinear().domain([0, 1]).range([0, maxBarHeight]);
 		}
-		const maxPeriodKilled = Math.max(
-			...enhancedAggregatedData.map((d) => d.totalDrones),
-			1
-		);
+		const maxPeriodKilled = Math.max(...enhancedAggregatedData.map((d) => d.totalDrones), 1);
 		return scaleLinear().domain([0, maxPeriodKilled]).range([5, maxBarHeight]);
 	});
 
@@ -350,47 +274,27 @@
 			x: timeScale(maxPeriod.periodStartDate),
 			y: Math.max(labelY, minLabelY),
 			value: maxPeriod.totalDrones,
+			unknownCount: maxPeriod.unknownCount,
 			barWidth: renderedBarWidth
 		};
 	});
 
 	const events = $derived(parsedIncidents.filter((d) => d.type === 'event'));
-
-	// Create complete timeline with all periods (including empty ones)
-	const completeTimeline = $derived.by(() => {
-		if (enhancedAggregatedData.length === 0) return [];
-
-		const timeFloor = groupingMode === 'weekly' ? utcWeek.floor : utcMonth.floor;
-
-		// Get the full date range
-		const dateDomain = extent(enhancedAggregatedData, (d) => d.periodStartDate) as [Date, Date];
-		const minDate = timeFloor(dateDomain[0]!);
-		const maxDate = timeFloor(dateDomain[1]!);
-
-		// Generate all periods in the range
-		const allPeriods: Date[] = [];
-		let currentDate = minDate;
-		while (currentDate <= maxDate) {
-			allPeriods.push(currentDate);
-			currentDate =
-				groupingMode === 'weekly'
-					? utcWeek.offset(currentDate, 1)
-					: utcMonth.offset(currentDate, 1);
-		}
-
-		// Map each period to data (0 for empty periods)
-		return allPeriods.map((periodStartDate) => {
-			const existingData = enhancedAggregatedData.find(
-				(d) => d.periodStartDate.getTime() === periodStartDate.getTime()
-			);
-
-			return {
-				periodStartDate,
-				totalDrones: existingData?.totalDrones || 0,
-				firstChronoId: existingData?.firstChronoId || null,
-				hasData: !!existingData
-			};
-		});
+	const eventRows = $derived.by(() => {
+		const placed: { x: number; y: number }[] = [];
+		return new Map<number, number>(
+			events.map((event) => {
+				const x = timeScale(event.dateObj);
+				let y = 40;
+				// Keep date positions accurate while separating mobile tap targets.
+				if (isMobile) {
+					while (placed.some((position) => Math.abs(position.x - x) < 28 && position.y === y))
+						y += 30;
+				}
+				placed.push({ x, y });
+				return [event.chronoId, y];
+			})
+		);
 	});
 
 	// --- Lifecycle ---
@@ -474,6 +378,7 @@
 					x: xPos,
 					y: yPos - 5,
 					value: period.totalDrones,
+					unknownCount: period.unknownCount,
 					incidentCount: period.incidentCount,
 					periodStartDate: period.periodStartDate
 				};
@@ -503,6 +408,7 @@
 					x: xPos,
 					y: yPos - 5,
 					value: period.totalDrones,
+					unknownCount: period.unknownCount,
 					incidentCount: period.incidentCount,
 					periodStartDate: period.periodStartDate
 				};
@@ -521,8 +427,13 @@
 	}
 
 	function handleClick(weekStartDate: Date, firstChronoId: number) {
-		haitiMapRef?.setSelectionOriginToClick?.();
-		if (selectedWeekStartDate && selectedWeekStartDate.getTime() === weekStartDate.getTime()) {
+		const isEvent =
+			incidentsData.find((record) => record.chronoId === firstChronoId)?.type === 'event';
+		if (
+			!isEvent &&
+			selectedWeekStartDate &&
+			selectedWeekStartDate.getTime() === weekStartDate.getTime()
+		) {
 			setSelectedWeek(null, null);
 		} else {
 			setSelectedWeek(weekStartDate, firstChronoId);
@@ -545,24 +456,38 @@
 
 	function formatPeriod(date: Date, qualifier: 'starting' | 'of'): string {
 		const period =
-			groupingMode === 'weekly' ? (lang === 'fr' ? 'Semaine' : 'Week') : lang === 'fr' ? 'Mois' : 'Month';
+			groupingMode === 'weekly'
+				? lang === 'fr'
+					? 'Semaine'
+					: 'Week'
+				: lang === 'fr'
+					? 'Mois'
+					: 'Month';
 		if (lang === 'fr') {
 			return `${period} ${qualifier === 'starting' ? 'à partir du' : 'du'} ${formatDate(date)}`;
 		}
 		return `${period} ${qualifier} ${formatDate(date)}`;
 	}
-
 </script>
 
 <div
 	bind:this={timelineContainer}
 	class="box-border flex w-full flex-col overflow-hidden bg-linear-to-t from-white via-white to-white/60 backdrop-blur-sm sm:border-t sm:border-gray-200"
-	style="height: {svgHeight + dateLabelsHeight + toggleHeight}px;"
+	style="height: {svgHeight + dateLabelsHeight + controlsHeight}px;"
 >
 	<!-- Chart Container -->
 	<div class="flex w-full items-center h-{svgHeight}px">
 		{#if containerWidth > 0 && enhancedAggregatedData.length > 0}
 			<svg width="100%" height={svgHeight} aria-label={copy[lang].incidentTimeline} class="block">
+				<defs
+					><pattern id="haiti-unknown-count" patternUnits="userSpaceOnUse" width="5" height="5"
+						><rect width="5" height="5" fill="#9f3e52" /><path
+							d="M-1 1L1 -1M0 5L5 0M4 6L6 4"
+							stroke="#fff"
+							stroke-width="1"
+						/></pattern
+					></defs
+				>
 				<!-- Events timeline label (rendered first to appear behind everything) -->
 				<text
 					x={timeScale.range()[0] + 67.5}
@@ -600,18 +525,20 @@
 					{@const maxBarHeightForPeriod = heightScale(
 						Math.max(...enhancedAggregatedData.map((d) => d.totalDrones), 1)
 					)}
-					{@const barHeight = periodData.hasData ? heightScale(periodData.totalDrones) : 0}
+					{@const barHeight = periodData.hasData
+						? Math.max(heightScale(periodData.totalDrones), periodData.unknownCount ? 5 : 0)
+						: 0}
 					{@const yPos = axisY - barHeight - barPaddingBottom}
 					{@const backgroundYPos = axisY - maxBarHeightForPeriod - barPaddingBottom}
 					{@const isSelected =
 						activePeriodStartDate()?.getTime() === periodData.periodStartDate.getTime()}
-					{@const hasData = periodData.hasData && periodData.totalDrones > 0}
+					{@const hasData = periodData.hasData}
 					{@const isInteractive = hasData && periodData.firstChronoId !== null}
 
 					<g
-						class={`period-bar-group group focus:outline-hidden ${isInteractive ? 'cursor-pointer' : ''}`}
+						class={`period-bar-group ${periodData.unknownCount ? 'has-unknown' : ''} group focus:outline-hidden ${isInteractive ? 'cursor-pointer' : ''}`}
 						aria-label={isInteractive
-							? `${formatPeriod(periodData.periodStartDate, 'of')}: ${explosiveDroneLabel(periodData.totalDrones, lang)}, ${periodData.incidentCount} ${periodData.incidentCount === 1 ? copy[lang].incidentSingular : copy[lang].incidents}`
+							? `${formatPeriod(periodData.periodStartDate, 'of')}: ${periodDroneLabel(periodData.totalDrones, periodData.unknownCount)}, ${periodData.incidentCount} ${periodData.incidentCount === 1 ? copy[lang].incidentSingular : copy[lang].incidents}`
 							: undefined}
 						onclick={isInteractive
 							? () => handleBarClick(periodData.periodStartDate, periodData.firstChronoId as number)
@@ -629,7 +556,8 @@
 							: undefined}
 						onfocusout={isInteractive ? handleMouseLeave : undefined}
 						tabindex={isInteractive ? 0 : undefined}
-						role={isInteractive ? 'button' : undefined}
+						role="button"
+						aria-disabled={!isInteractive}
 					>
 						<!-- Invisible hover area (covers entire period space) -->
 						<rect
@@ -777,7 +705,7 @@
 											)
 										: barWidth}
 								height={barHeight}
-								fill="#9f3e52"
+								fill={periodData.unknownCount ? 'url(#haiti-unknown-count)' : '#9f3e52'}
 								style:stroke="none"
 							></rect>
 						{/if}
@@ -798,7 +726,7 @@
 							class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 							style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 						>
-								{formatPeriod(periodData.periodStartDate, 'of')}
+							{formatPeriod(periodData.periodStartDate, 'of')}
 						</text>
 					</g>
 				{/each}
@@ -813,7 +741,10 @@
 						: undefined}
 					{#if selectedPeriod}
 						{@const xPos = timeScale(selectedPeriod.periodStartDate)}
-						{@const barHeight = heightScale(selectedPeriod.totalDrones)}
+						{@const barHeight = Math.max(
+							heightScale(selectedPeriod.totalDrones),
+							selectedPeriod.unknownCount ? 5 : 0
+						)}
 						{@const yPos = axisY - barHeight - barPaddingBottom}
 						<g
 							class="period-bar period-bar--active group cursor-pointer focus:outline-hidden"
@@ -826,7 +757,7 @@
 							onfocusin={() => handleMouseEnter(selectedPeriod.periodStartDate)}
 							onfocusout={handleMouseLeave}
 							tabindex="0"
-							aria-label={`${formatPeriod(selectedPeriod.periodStartDate, 'of')}: ${explosiveDroneLabel(selectedPeriod.totalDrones, lang)}`}
+							aria-label={`${formatPeriod(selectedPeriod.periodStartDate, 'of')}: ${periodDroneLabel(selectedPeriod.totalDrones, selectedPeriod.unknownCount)}`}
 							role="button"
 						>
 							<text
@@ -844,7 +775,7 @@
 								class="fill-gray-500 font-sans text-[10px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 								style="paint-order: stroke; stroke: white; stroke-width: 3px; pointer-events: none;"
 							>
-									{formatPeriod(selectedPeriod.periodStartDate, 'of')}
+								{formatPeriod(selectedPeriod.periodStartDate, 'of')}
 							</text>
 							<rect
 								class:group-hover:fill-[#2db487]={true}
@@ -882,7 +813,7 @@
 											)
 										: barWidth}
 								height={barHeight}
-								fill="#2db487"
+								fill={selectedPeriod.unknownCount ? 'url(#haiti-unknown-count)' : '#2db487'}
 								style:stroke="none"
 							></rect>
 						</g>
@@ -892,6 +823,7 @@
 				<!-- Inactive Event Symbols (render after bars to be on top) -->
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(event.dateObj)}
+					{@const yPos = eventRows.get(event.chronoId) ?? 40}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{@const isHighlighted = highlightedMarkerId === event.chronoId}
 					{#if !isActive && !isHighlighted}
@@ -900,12 +832,15 @@
 						<g
 							class="event-symbol event-symbol--inactive group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
+							onkeydown={(eventKey) =>
+								handleKeyDown(eventKey, timeFloor(event.dateObj), event.chronoId)}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
 						>
+							<circle cx={xPos} cy={yPos} r={isMobile ? 14 : 10} fill="transparent" />
 							<polygon
-								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								points={`${xPos},${yPos - size} ${xPos + size},${yPos} ${xPos},${yPos + size} ${xPos - size},${yPos}`}
 								fill="#4B5563"
 								stroke="#1F2937"
 								stroke-width={0}
@@ -919,7 +854,7 @@
 								<!-- Background rectangle -->
 								<rect
 									x={xPos - 20}
-									y={40 - size - 20}
+									y={yPos - size - 20}
 									width={42}
 									height={20}
 									fill="white"
@@ -930,7 +865,7 @@
 								/>
 								<text
 									x={xPos + 1}
-									y={40 - size - 5.5}
+									y={yPos - size - 5.5}
 									text-anchor="middle"
 									class="fill-black font-sans text-xs font-bold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 								>
@@ -944,6 +879,7 @@
 				<!-- Highlighted Event Symbols (render before active to be on top of inactive but below active) -->
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(event.dateObj)}
+					{@const yPos = eventRows.get(event.chronoId) ?? 40}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{@const isHighlighted = highlightedMarkerId === event.chronoId}
 					{#if !isActive && isHighlighted}
@@ -952,12 +888,15 @@
 						<g
 							class="event-symbol event-symbol--highlighted group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
+							onkeydown={(eventKey) =>
+								handleKeyDown(eventKey, timeFloor(event.dateObj), event.chronoId)}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
 						>
+							<circle cx={xPos} cy={yPos} r={isMobile ? 14 : 10} fill="transparent" />
 							<polygon
-								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								points={`${xPos},${yPos - size} ${xPos + size},${yPos} ${xPos},${yPos + size} ${xPos - size},${yPos}`}
 								fill="#2db487"
 								stroke="#1F2937"
 								stroke-width={0}
@@ -971,7 +910,7 @@
 								<!-- Background rectangle -->
 								<rect
 									x={xPos - 20}
-									y={40 - size - 20}
+									y={yPos - size - 20}
 									width={42}
 									height={20}
 									fill="white"
@@ -982,7 +921,7 @@
 								/>
 								<text
 									x={xPos + 1}
-									y={40 - size - 5.5}
+									y={yPos - size - 5.5}
 									text-anchor="middle"
 									class="fill-black font-sans text-xs font-bold opacity-100 transition-opacity duration-300"
 								>
@@ -996,6 +935,7 @@
 				<!-- Active Event Symbols (render last, on top) -->
 				{#each events as event (event.chronoId)}
 					{@const xPos = timeScale(event.dateObj)}
+					{@const yPos = eventRows.get(event.chronoId) ?? 40}
 					{@const isActive = selectedMarkerId === event.chronoId}
 					{#if isActive}
 						{@const size = 10}
@@ -1003,12 +943,15 @@
 						<g
 							class="event-symbol event-symbol--active group cursor-pointer focus:outline-hidden"
 							onclick={() => handleClick(timeFloor(event.dateObj), event.chronoId)}
+							onkeydown={(eventKey) =>
+								handleKeyDown(eventKey, timeFloor(event.dateObj), event.chronoId)}
 							tabindex="0"
 							aria-label={`${copy[lang].event}: ${event.title || copy[lang].untitledEvent}`}
 							role="button"
 						>
+							<circle cx={xPos} cy={yPos} r={isMobile ? 14 : 10} fill="transparent" />
 							<polygon
-								points={`${xPos},${40 - size} ${xPos + size},${40} ${xPos},${40 + size} ${xPos - size},${40}`}
+								points={`${xPos},${yPos - size} ${xPos + size},${yPos} ${xPos},${yPos + size} ${xPos - size},${yPos}`}
 								fill="#2db487"
 								stroke="#374151"
 								stroke-width={3}
@@ -1022,7 +965,7 @@
 								<!-- Background rectangle -->
 								<rect
 									x={xPos - 25}
-									y={40 - size - 25}
+									y={yPos - size - 25}
 									width={50}
 									height={20}
 									fill="white"
@@ -1033,7 +976,7 @@
 								/>
 								<text
 									x={xPos}
-									y={40 - size - 12}
+									y={yPos - size - 12}
 									text-anchor="middle"
 									class="fill-black font-sans text-xs font-bold opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 								>
@@ -1046,26 +989,21 @@
 
 				<!-- Max Bar Label -->
 				{#if maxBarLabel && typeof maxBarLabel?.x === 'number'}
-					{@const isLeftThird = maxBarLabel.x > (containerWidth * 2) / 3}
-					{@const labelSide = isLeftThird ? 'left' : 'right'}
+					{@const labelSide = maxBarLabel.x > 100 ? 'left' : 'right'}
 					{@const leaderLength = 14}
 					{@const barEdgeX =
 						labelSide === 'left'
 							? maxBarLabel.x - maxBarLabel.barWidth / 2
 							: maxBarLabel.x + maxBarLabel.barWidth / 2}
-					{@const labelYOffset = 28}
-					{@const minY = 25}
-					{@const adjustedY = Math.max(maxBarLabel.y + labelYOffset, minY)}
-					{@const textContent = `${maxBarLabel.value} ${lang === 'fr' ? 'drones' : 'drones'}`}
+					{@const adjustedY = Math.max(maxBarLabel.y + 28, axisY * 0.65)}
+					{@const textContent = `${maxBarLabel.value}${maxBarLabel.unknownCount ? '+' : ''} ${lang === 'fr' ? 'drones' : 'drones'}`}
 					{@const textWidth = textContent.length * 6}
 					{@const textHeight = 12}
 					{@const padding = 5}
 					{@const bgWidth = textWidth + padding * 2}
 					{@const bgHeight = textHeight + padding * 2}
 					{@const bgX =
-						labelSide === 'left'
-							? barEdgeX - leaderLength - bgWidth
-							: barEdgeX + leaderLength}
+						labelSide === 'left' ? barEdgeX - leaderLength - bgWidth : barEdgeX + leaderLength}
 					{@const bgY = adjustedY - bgHeight + 10}
 					{@const textX = bgX + bgWidth / 2}
 					{@const textY = bgY + bgHeight / 2 + 4}
@@ -1115,11 +1053,6 @@
 
 				<!-- Date Labels & Range Lines -->
 				{#if enhancedAggregatedData.length > 0}
-					{@const [startRange, endRange] = timeScale.range()}
-					{@const firstIncidentDate = new Date(enhancedAggregatedData[0].periodStartDate)}
-					{@const lastIncidentDate = new Date(
-						enhancedAggregatedData[enhancedAggregatedData.length - 1].periodStartDate
-					)}
 					{@const firstX = timeScale(enhancedAggregatedData[0].periodStartDate) - 0.5}
 					{@const lastPeriod = enhancedAggregatedData.at(-1)}
 					{@const lastX = lastPeriod ? timeScale(lastPeriod.periodStartDate) + 0.5 : null}
@@ -1170,9 +1103,16 @@
 				<!-- Tooltip -->
 				{#if tooltipVisible && tooltipData}
 					{@const periodDate = formatHaitiShortDate(tooltipData.periodStartDate, lang)}
-					{@const periodType = groupingMode === 'weekly' ? (lang === 'fr' ? 'Semaine' : 'Week') : lang === 'fr' ? 'Mois' : 'Month'}
+					{@const periodType =
+						groupingMode === 'weekly'
+							? lang === 'fr'
+								? 'Semaine'
+								: 'Week'
+							: lang === 'fr'
+								? 'Mois'
+								: 'Month'}
 					{@const periodLabel = `${periodType} ${lang === 'fr' ? 'du' : 'of'} ${periodDate}`}
-					{@const dronesText = explosiveDroneLabel(tooltipData.value, lang)}
+					{@const dronesText = periodDroneLabel(tooltipData.value, tooltipData.unknownCount)}
 					{@const incidentsText = `${tooltipData.incidentCount} ${tooltipData.incidentCount !== 1 ? copy[lang].incidents : copy[lang].incidentSingular}`}
 
 					{@const maxTextWidth = Math.max(
@@ -1183,14 +1123,15 @@
 					{@const textHeight = 12}
 					{@const lineHeight = 8}
 					{@const padding = 10}
-					{@const bgWidth = Math.min(Math.max(maxTextWidth + padding * 2, 180), containerWidth - 16)}
+					{@const bgWidth = Math.min(
+						Math.max(maxTextWidth + padding * 2, 180),
+						containerWidth - 16
+					)}
 					{@const bgHeight = textHeight * 3 + lineHeight * 2 + padding * 2}
 
-					// Calculate tooltip position with edge case handling
-					{@const tooltipMargin = 8} // Minimum margin from container edges
+					{@const tooltipMargin = 8}
 					{@const halfWidth = bgWidth / 2}
 
-					// Determine horizontal positioning
 					{@const wouldOverflowLeft = tooltipData.x - halfWidth < tooltipMargin}
 					{@const wouldOverflowRight = tooltipData.x + halfWidth > containerWidth - tooltipMargin}
 
@@ -1200,8 +1141,7 @@
 							? containerWidth - bgWidth - tooltipMargin
 							: tooltipData.x - halfWidth}
 
-					// Always position tooltips at a consistent Y position above the bottom line
-					{@const consistentTooltipY = axisY - bgHeight - padding - 10} // 10px above the axis line
+					{@const consistentTooltipY = axisY - bgHeight - padding - 10}
 					{@const bgY = consistentTooltipY}
 
 					{@const centeredTextX = bgX + bgWidth / 2}
@@ -1284,12 +1224,12 @@
 
 	<!-- Bottom Controls -->
 	<div
-		class="flex w-full items-center justify-center sm:justify-between h-{toggleHeight}px px-2 pb-3 pt-3"
+		class="flex w-full flex-wrap items-center justify-center gap-2 px-2 py-3 sm:justify-between sm:gap-0"
 	>
-		<div class="flex items-center gap-2">
-			<span class="text-sm font-medium text-gray-600">{copy[lang].groupBy}</span>
+		<div class="flex items-center gap-1 sm:gap-2">
+			<span class="text-xs font-medium text-gray-600 sm:text-sm">{copy[lang].groupBy}</span>
 			<button
-				class="rounded-full px-3 py-1 text-sm font-medium transition-colors hover:cursor-pointer {groupingMode ===
+				class="rounded-full px-1.5 py-1 text-xs font-medium transition-colors hover:cursor-pointer sm:px-3 sm:text-sm {groupingMode ===
 				'weekly'
 					? 'bg-burgundy text-white'
 					: 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
@@ -1298,7 +1238,7 @@
 				{copy[lang].weekly}
 			</button>
 			<button
-				class="rounded-full px-3 py-1 text-sm font-medium transition-colors hover:cursor-pointer {groupingMode ===
+				class="rounded-full px-1.5 py-1 text-xs font-medium transition-colors hover:cursor-pointer sm:px-3 sm:text-sm {groupingMode ===
 				'monthly'
 					? 'bg-burgundy text-white'
 					: 'bg-gray-200 text-gray-600 hover:bg-gray-300'}"
@@ -1308,27 +1248,11 @@
 			</button>
 		</div>
 
-		<!-- Dataset Link - hidden on mobile -->
-		<div class="hidden sm:flex">
-			<a
-				href="https://docs.google.com/spreadsheets/d/1CcPylgErhl9rVLWxJcDhz_QuK4TpAMeYa1Fl9yk4Or8/edit?usp=sharing"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800"
-			>
-				<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-					></path>
-				</svg>
-				{copy[lang].viewDataset}
-			</a>
+		<div class="flex items-center border-l border-zinc-300 pl-2 sm:border-0 sm:pl-0">
+			<HaitiMethodology {incidentsData} {lang} />
 			<button
 				type="button"
-				class="ml-2 inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 transition-colors duration-200 hover:cursor-pointer hover:bg-gray-200 hover:text-gray-800"
+				class="ml-2 hidden items-center gap-1 sm:inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-burgundy transition-colors duration-200 hover:cursor-pointer hover:bg-gray-200 hover:text-burgundy"
 				onclick={openEmbed}
 			>
 				<svg
@@ -1351,7 +1275,12 @@
 				{copy[lang].embed}
 			</button>
 			{#if showBrandLogo}
-				<a class="flex" href="https://www.thenewhumanitarian.org" target="_blank" rel="noopener noreferrer">
+				<a
+					class="hidden sm:flex"
+					href="https://www.thenewhumanitarian.org"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					<span style="max-height: 28px;" class="tnh-controls-logo ml-3 inline-flex items-center">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

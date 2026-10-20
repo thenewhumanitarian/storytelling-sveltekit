@@ -75,6 +75,17 @@
 			"name": "Haiti drone map dashboard"
 		},
 		{
+			"path": "/embeddable/map/2026-08/haiti/spotlight",
+			"group": "haiti",
+			"name": "Haiti drone spotlight counter"
+		},
+		{
+			"path": "/embeddable/map/2026-08/haiti/spotlight/embed",
+			"group": "haiti",
+			"name": "Haiti drone spotlight embed script",
+			"expectContentType": "javascript"
+		},
+		{
 			"path": "/embeddable/map/2026-08/haiti/embed",
 			"group": "haiti",
 			"name": "Haiti embed script",

@@ -3,7 +3,6 @@
 	import type { IncidentData } from './types';
 	import HaitiCard from './HaitiCard.svelte';
 	import HaitiCardModal from './HaitiCardModal.svelte';
-	import HaitiSourcesOverlay from './HaitiSourcesOverlay.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy } from './copy';
 
@@ -190,8 +189,6 @@
 
 	let modalOpen = $state(false);
 	let modalIncident: IncidentData | null = $state(null);
-	let sourcesOverlayOpen = $state(false);
-	let sourcesIncident: IncidentData | null = $state(null);
 
 	function openModal(incident: IncidentData) {
 		modalIncident = incident;
@@ -199,13 +196,6 @@
 	}
 	function closeModal() {
 		modalOpen = false;
-	}
-	function openSourcesOverlay(incident: IncidentData) {
-		sourcesIncident = incident;
-		sourcesOverlayOpen = true;
-	}
-	function closeSourcesOverlay() {
-		sourcesOverlayOpen = false;
 	}
 	function goToModalPrev() {
 		if (!modalIncident) return;
@@ -305,31 +295,16 @@
 				hasPrev={i > 0}
 				hasNext={i < incidentsData.length - 1}
 			>
-				<div slot="readmore" class="sm:hidden">
-					{#if incident.sources && incident.sources.trim() !== ''}
-						<div class="flex gap-2">
-							<button
-								class="flex-1 bg-burgundy py-2 text-sm font-semibold text-white hover:cursor-pointer"
-								onclick={() => openModal(incident)}
-							>
-								{copy[lang].readMore}
-							</button>
-							<button
-								class="flex-1 bg-zinc-600 py-2 text-sm font-semibold text-white hover:cursor-pointer"
-								onclick={() => openSourcesOverlay(incident)}
-							>
-								{copy[lang].showSources}
-							</button>
-						</div>
-					{:else}
+				{#snippet readmore()}
+					<div class="sm:hidden">
 						<button
 							class="block w-full bg-burgundy py-2 text-sm font-semibold text-white hover:cursor-pointer"
 							onclick={() => openModal(incident)}
 						>
 							{copy[lang].readMore}
 						</button>
-					{/if}
-				</div>
+					</div>
+				{/snippet}
 			</HaitiCard>
 		</div>
 	{/each}
@@ -344,9 +319,6 @@
 			hasNext={incidentsData.findIndex((i) => i.chronoId === modalIncident!.chronoId) <
 				incidentsData.length - 1}
 		/>
-	{/if}
-	{#if sourcesOverlayOpen && sourcesIncident}
-		<HaitiSourcesOverlay incident={sourcesIncident!} {lang} onClose={closeSourcesOverlay} />
 	{/if}
 </div>
 

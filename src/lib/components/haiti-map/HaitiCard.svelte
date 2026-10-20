@@ -1,13 +1,14 @@
 <script lang="ts">
-	import HaitiSourcesOverlay from './HaitiSourcesOverlay.svelte';
+	import type { Snippet } from 'svelte';
 	import HaitiVideo from './HaitiVideo.svelte';
 	import type { IncidentData } from './types';
 	import type { HaitiLang } from './copy';
-	import { casualtyLabel, copy, explosiveDroneLabel, totalDroneLabel } from './copy';
+	import { copy, explosiveDroneLabel } from './copy';
 	import { Drone } from '@lucide/svelte';
 	import { formatHaitiDate } from './dates';
 
 	let {
+		readmore,
 		incident,
 		selectedMarkerId,
 		lang = 'en',
@@ -17,6 +18,7 @@
 		hasPrev = false,
 		hasNext = false
 	} = $props<{
+		readmore?: Snippet;
 		incident: IncidentData;
 		selectedMarkerId: number | null;
 		lang?: HaitiLang;
@@ -27,27 +29,7 @@
 		hasNext?: boolean;
 	}>();
 
-	let showSources = $state(false);
-	let hasAutoOpened = $state(false);
 	const text = $derived(copy[lang === 'fr' ? 'fr' : 'en']);
-	const explosiveDroneCount = $derived(incident.explosiveDroneCount ?? incident.droneCount ?? 0);
-	const totalDroneCount = $derived(incident.droneCount ?? 0);
-
-	$effect(() => {
-		if (typeof window === 'undefined') return;
-		const debug = new URLSearchParams(window.location.search).get('debug');
-		const shouldAutoOpen =
-			debug === 'sources' &&
-			incident?.type === 'incident' &&
-			incident?.sources &&
-			incident.sources.trim() !== '' &&
-			incident?.chronoId === selectedMarkerId;
-
-		if (!hasAutoOpened && shouldAutoOpen) {
-			showSources = true;
-			hasAutoOpened = true;
-		}
-	});
 </script>
 
 <div
@@ -59,7 +41,11 @@
 			<div class="flex items-center gap-2">
 				<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.event}</span>
 				<span class="text-sm text-zinc-700">
-					{formatHaitiDate(incident.date, lang)}
+					{incident.dateStatus === 'pending'
+						? lang === 'fr'
+							? 'Date à confirmer'
+							: 'Date pending confirmation'
+						: formatHaitiDate(incident.date, lang)}
 				</span>
 			</div>
 			<!-- Mobile arrows -->
@@ -90,7 +76,7 @@
 				{incident.description}
 			</p>
 		</div>
-		<slot name="readmore"></slot>
+		{@render readmore?.()}
 	{:else}
 		<div
 			class={`${incident.chronoId === selectedMarkerId ? '' : 'sm:opacity-30'} flex h-full flex-col`}
@@ -101,7 +87,11 @@
 					<div class="flex items-center gap-2">
 						<span class="bg-burgundy px-2 py-1 text-sm font-bold text-white">{text.incident}</span>
 						<span class="text-sm text-zinc-700">
-							{formatHaitiDate(incident.date, lang)}
+							{incident.dateStatus === 'pending'
+								? lang === 'fr'
+									? 'Date à confirmer'
+									: 'Date pending confirmation'
+								: formatHaitiDate(incident.date, lang)}
 						</span>
 					</div>
 					<!-- Mobile arrows -->
@@ -133,29 +123,8 @@
 							class="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-xs font-medium text-orange-900"
 						>
 							<Drone size={14} strokeWidth={2} aria-hidden="true" />
-							{explosiveDroneLabel(explosiveDroneCount, lang)}
+							{explosiveDroneLabel(incident.droneCount, lang)}
 						</span>
-						{#if totalDroneCount !== explosiveDroneCount}
-							<span
-								class="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700"
-							>
-								<Drone size={14} strokeWidth={2} aria-hidden="true" />
-								{totalDroneLabel(totalDroneCount, lang)}
-							</span>
-						{/if}
-						{#if incident.casualtyKnown && (incident.killed || incident.wounded)}
-							<span
-								class="inline-flex items-center gap-1 rounded-full bg-burgundy/10 px-2 py-1 text-xs font-medium text-burgundy"
-							>
-								{casualtyLabel(incident.killed || 0, incident.wounded || 0, lang)}
-							</span>
-						{:else if !incident.casualtyKnown}
-							<span
-								class="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-500"
-							>
-								{text.casualtiesUnknown}
-							</span>
-						{/if}
 					</div>
 				</div>
 				{#if incident.videoUrl && incident.videoUrl.trim() !== ''}
@@ -180,6 +149,7 @@
 					</div>
 				{:else if incident.imageUrl && incident.imageUrl.trim() !== ''}
 					<div class="mb-2 hidden sm:block">
+						<!-- eslint-disable svelte/no-navigation-without-resolve -->
 						<a
 							href={incident.imageUrl}
 							target="_blank"
@@ -193,6 +163,7 @@
 								alt={incident.imageCaption || incident.title}
 							/>
 						</a>
+						<!-- eslint-enable svelte/no-navigation-without-resolve -->
 						{#if incident.imageCaption}
 							<p
 								class="hidden px-2 pt-1 text-sm text-zinc-400 sm:line-clamp-none sm:block sm:text-base"
@@ -202,6 +173,13 @@
 						{/if}
 					</div>
 				{/if}
+				{#if incident.locationStatus === 'pending'}
+					<p class="mb-2 text-xs text-zinc-500">
+						{lang === 'fr'
+							? 'Localisation à confirmer — point non cartographié.'
+							: 'Location pending — no map point assigned.'}
+					</p>
+				{/if}
 				<p
 					class="hidden text-xs leading-tight text-zinc-700 sm:line-clamp-none sm:block sm:text-base lg:text-lg"
 				>
@@ -209,28 +187,8 @@
 				</p>
 			</div>
 
-			<!-- Bottom area - stays at bottom -->
-			{#if incident.sources && incident.sources.trim() !== ''}
-				<div class="mt-3 hidden border-t border-dashed border-zinc-300 sm:block">
-					<!-- Desktop Show sources button -->
-					<div class="sm:mt-4 sm:flex sm:justify-start">
-						<button
-							class="bg-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:cursor-pointer hover:bg-zinc-700 hover:text-zinc-50"
-							onclick={() => (showSources = true)}
-						>
-							{text.showSources}
-						</button>
-					</div>
-
-					<!-- Mobile buttons slot -->
-				</div>
-			{/if}
-			<slot name="readmore"></slot>
+			{@render readmore?.()}
 		</div>
-	{/if}
-
-	{#if showSources}
-		<HaitiSourcesOverlay {incident} {lang} onClose={() => (showSources = false)} />
 	{/if}
 </div>
 

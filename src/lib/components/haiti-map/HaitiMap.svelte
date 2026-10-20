@@ -2,19 +2,16 @@
 	import { onMount } from 'svelte';
 	import mapboxgl from 'mapbox-gl';
 	import 'mapbox-gl/dist/mapbox-gl.css';
-	import HaitiCards from '$lib/components/haiti-map/HaitiCards.svelte';
 	import type { IncidentData } from './types';
 	import HaitiOverlay from './HaitiOverlay.svelte';
 	import HaitiLanguagePopover from './HaitiLanguagePopover.svelte';
 	import HaitiDroneTally from './HaitiDroneTally.svelte';
 	import type { HaitiLang } from './copy';
 	import { copy } from './copy';
-	import type { FeatureCollection, Point } from 'geojson';
 	const DEFAULT_MAP_ZOOM = 11;
 	const ZOOM_ZOOM = 14;
 	const MAPBOX_STYLE = 'mapbox://styles/mapbox/light-v11';
-	type ContextualPlace = { name: string; kind: 'city' | 'hotspot'; priority: number };
-	const CONTEXTUAL_PLACES: FeatureCollection<Point, ContextualPlace> = {
+	const CONTEXTUAL_PLACES: mapboxgl.GeoJSONSourceSpecification['data'] = {
 		type: 'FeatureCollection',
 		features: [
 			{
@@ -103,7 +100,8 @@
 		incidentsData,
 		mapboxToken,
 		lang = 'en',
-		setLang
+		setLang,
+		scrollToCard
 	}: {
 		selectedMarkerId: number | null;
 		highlightedMarkerId: number | null;
@@ -114,26 +112,35 @@
 		mapboxToken: string;
 		lang?: HaitiLang;
 		setLang: (lang: HaitiLang) => void;
+		scrollToCard?: (id: number) => void;
 	} = $props();
 
 	let mapContainer: HTMLElement | undefined = $state();
 	let hostContainer: HTMLElement | undefined = $state();
 	let map: mapboxgl.Map | null = $state(null);
 	let markers = $state<{ id: number; markerInstance: mapboxgl.Marker }[]>([]);
-	let clickedCoordinates: mapboxgl.LngLat | null = $state(null);
-	let cardsComponent: HaitiCards | null = null;
-	let selectionOrigin: 'click' | 'scroll' | null = null;
+
 	let lastMapCenter: { lng: number; lat: number } | null = $state(null);
 
 	let isFullscreen = $state(false);
 	let isMobile = $state(false);
 	let mounted = $state(false);
-	let isEmbedded = $state(false);
-	let mapInitError = $state<string | null>(null);
-
-	export function setSelectionOriginToClick() {
-		selectionOrigin = 'click';
+	let boundariesVisible = $state(true);
+	function toggleBoundaries() {
+		boundariesVisible = !boundariesVisible;
+		for (const id of [
+			'haiti-communes-halo',
+			'haiti-sections-halo',
+			'haiti-communes',
+			'haiti-sections',
+			'haiti-commune-labels',
+			'haiti-section-labels'
+		]) {
+			if (map?.getLayer(id))
+				map.setLayoutProperty(id, 'visibility', boundariesVisible ? 'visible' : 'none');
+		}
 	}
+	let mapInitError = $state<string | null>(null);
 
 	// Extended types for cross-browser fullscreen API support
 	interface FullscreenElement extends HTMLElement {
@@ -190,22 +197,15 @@
 					{ type: 'tnh:request-fullscreen', action: isFullscreen ? 'exit' : 'enter' },
 					'*'
 				);
-			} catch (e) {}
+			} catch {
+				// The embedding page may also disallow fullscreen requests.
+			}
 			console.error('Fullscreen toggle failed', err);
 		}
 	}
 
-	function closeAllPopups(exceptId: number | null = null) {
-		markers.forEach(({ id, markerInstance }) => {
-			const popup = markerInstance.getPopup();
-			if (popup?.isOpen() && id !== exceptId) {
-				popup.remove();
-			}
-		});
-	}
-
 	function scrollToIncidentCard(id: number) {
-		cardsComponent?.scrollToCard(id);
+		scrollToCard?.(id);
 	}
 
 	// Add derived for selected event
@@ -283,12 +283,6 @@
 		updateIsMobile();
 		window.addEventListener('resize', updateIsMobile);
 		mounted = true;
-		try {
-			isEmbedded = window.self !== window.top;
-		} catch (e) {
-			// Cross-origin access throws; assume embedded
-			isEmbedded = true;
-		}
 
 		const updateFullscreenState = () => {
 			const doc = document as FullscreenDocument;
@@ -372,7 +366,7 @@
 				) {
 					return;
 				}
-				const { chronoId, latitude, longitude, title, description, killedOrWounded } = incident;
+				const { chronoId, latitude, longitude } = incident;
 				const lat = latitude as number;
 				const lng = longitude as number;
 				const el = document.createElement('div');
@@ -383,7 +377,6 @@
 				el.addEventListener('mouseenter', () => setHighlightedMarkerId(chronoId));
 				el.addEventListener('mouseleave', () => setHighlightedMarkerId(null));
 				el.addEventListener('click', () => {
-					selectionOrigin = 'click';
 					setSelectedMarkerId(chronoId);
 					scrollToIncidentCard(chronoId);
 					map?.flyTo({
@@ -405,6 +398,8 @@
 					.filter(
 						(incident) =>
 							incident.type === 'incident' &&
+							incident.droneCount != null &&
+							incident.droneCount > 0 &&
 							typeof incident.latitude === 'number' &&
 							typeof incident.longitude === 'number' &&
 							!isNaN(incident.latitude) &&
@@ -413,7 +408,7 @@
 					.map((incident) => ({
 						type: 'Feature',
 						properties: {
-							droneCount: Math.max(incident.droneCount || 1, 1)
+							droneCount: incident.droneCount
 						},
 						geometry: {
 							type: 'Point',
@@ -424,7 +419,7 @@
 
 			map?.addSource('incidents-heatmap', {
 				type: 'geojson',
-				data: heatmapGeoJSON as FeatureCollection
+				data: heatmapGeoJSON as mapboxgl.GeoJSONSourceSpecification['data']
 			});
 
 			map?.addLayer({
@@ -541,6 +536,56 @@
 					'text-halo-blur': 0.5
 				}
 			});
+			for (const level of [2, 3]) {
+				mapInstance.addSource(`haiti-admin${level}`, {
+					type: 'geojson',
+					data: `/data/haiti/admin${level}.geojson`,
+					attribution:
+						'<a href="https://data.humdata.org/dataset/cod-ab-hti">CNIGS / OCHA · CC BY-IGO</a>'
+				});
+				mapInstance.addLayer({
+					id: level === 2 ? 'haiti-communes-halo' : 'haiti-sections-halo',
+					type: 'line',
+					source: `haiti-admin${level}`,
+					minzoom: level === 2 ? 8 : 11,
+					layout: { visibility: boundariesVisible ? 'visible' : 'none' },
+					paint: {
+						'line-color': '#fff9f3',
+						'line-width': level === 2 ? 4.6 : 3.4,
+						'line-opacity': 0.8
+					}
+				});
+				mapInstance.addLayer({
+					id: level === 2 ? 'haiti-communes' : 'haiti-sections',
+					type: 'line',
+					source: `haiti-admin${level}`,
+					minzoom: level === 2 ? 8 : 11,
+					layout: { visibility: boundariesVisible ? 'visible' : 'none' },
+					paint: {
+						'line-color': '#9f3e52',
+						'line-width': level === 2 ? 2.6 : 1.6,
+						'line-opacity': 0.95,
+						'line-dasharray': level === 2 ? [1, 0] : [3, 2]
+					}
+				});
+				mapInstance.addSource(`haiti-admin${level}-labels`, {
+					type: 'geojson',
+					data: `/data/haiti/admin${level}-labels.geojson`
+				});
+				mapInstance.addLayer({
+					id: level === 2 ? 'haiti-commune-labels' : 'haiti-section-labels',
+					type: 'symbol',
+					source: `haiti-admin${level}-labels`,
+					minzoom: level === 2 ? 9 : 12,
+					layout: {
+						visibility: boundariesVisible ? 'visible' : 'none',
+						'text-field': ['get', 'name'],
+						'text-size': level === 2 ? 15 : 13,
+						'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular']
+					},
+					paint: { 'text-color': '#9f3e52', 'text-halo-color': '#fff', 'text-halo-width': 1.5 }
+				});
+			}
 		});
 
 		map.on('click', (event) => {
@@ -555,7 +600,6 @@
 			}
 
 			if (!isMarkerClick) {
-				clickedCoordinates = event.lngLat;
 				map?.flyTo({
 					zoom: DEFAULT_MAP_ZOOM,
 					pitch: 45,
@@ -589,13 +633,6 @@
 				element.style.display = 'none';
 			}
 
-			if (id === currentSelectedId) {
-				if (selectionOrigin === 'click') {
-					scrollToIncidentCard(id);
-				}
-				selectionOrigin = null;
-			}
-
 			if (id === currentHighlightId) {
 				element.classList.add('highlighted');
 			} else {
@@ -610,7 +647,7 @@
 		<div class="absolute left-2 top-2 z-30 flex items-start gap-2">
 			{#if !isMobile}
 				<button
-					class="flex h-8 items-center gap-1 bg-white/90 px-2 text-xs font-medium text-burgundy shadow-sm backdrop-blur-sm hover:cursor-pointer hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
+					class="flex h-8 items-center gap-1 bg-white/90 px-2 text-xs font-medium text-black shadow-sm backdrop-blur-sm hover:cursor-pointer hover:bg-white focus:outline-hidden focus:ring-2 focus:ring-burgundy"
 					onclick={toggleFullscreen}
 					aria-label={isFullscreen ? copy[lang].exit : copy[lang].fullscreen}
 				>
@@ -656,7 +693,39 @@
 				</button>
 			{/if}
 			<HaitiLanguagePopover {lang} {setLang} />
+			<button
+				type="button"
+				class="boundary-switch inline-flex h-8 items-center gap-2 bg-white/90 px-2 text-xs font-semibold text-black shadow-sm"
+				role="switch"
+				aria-checked={boundariesVisible}
+				onclick={toggleBoundaries}
+			>
+				<span>{lang === 'fr' ? 'Limites' : 'Boundaries'}</span>
+				<span class="switch-track" class:enabled={boundariesVisible} aria-hidden="true"
+					><span class="switch-thumb"></span></span
+				>
+				<span class="w-5 text-left" aria-hidden="true"
+					>{boundariesVisible
+						? lang === 'fr'
+							? 'Oui'
+							: 'On'
+						: lang === 'fr'
+							? 'Non'
+							: 'Off'}</span
+				>
+			</button>
 		</div>
+		{#if boundariesVisible}
+			<a
+				class="absolute bottom-1 left-1 z-30 max-w-[12rem] bg-white/90 px-1 text-[9px] text-burgundy"
+				href="https://data.humdata.org/dataset/cod-ab-hti"
+				target="_blank"
+				rel="noreferrer"
+				>CNIGS / OCHA · CC BY-IGO<br />{lang === 'fr'
+					? 'Communes et sections communales'
+					: 'Communes and communal sections'}</a
+			>
+		{/if}
 		<HaitiDroneTally {incidentsData} {selectedMarkerId} {lang} />
 	{/if}
 	<div bind:this={mapContainer} class="map-background h-full w-full"></div>
@@ -674,6 +743,45 @@
 </div>
 
 <style>
+	.boundary-switch {
+		cursor: pointer;
+	}
+	.boundary-switch:focus-visible {
+		outline: 2px solid #9f3e52;
+		outline-offset: 2px;
+	}
+	.switch-track {
+		display: inline-flex;
+		align-items: center;
+		width: 30px;
+		height: 18px;
+		padding: 2px;
+		border: 1px solid #18181b;
+		border-radius: 999px;
+		background: #fff;
+	}
+	.switch-track.enabled {
+		border-color: #9f3e52;
+		background: #9f3e52;
+	}
+	.switch-thumb {
+		display: block;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: #18181b;
+		transition: transform 0.15s ease;
+	}
+	.enabled .switch-thumb {
+		background: #fff;
+		transform: translateX(12px);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.switch-thumb {
+			transition: none;
+		}
+	}
+
 	.map-container {
 		width: 50%;
 		height: 100%;

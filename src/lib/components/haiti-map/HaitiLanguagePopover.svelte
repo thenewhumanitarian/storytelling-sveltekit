@@ -27,7 +27,7 @@
 
 <Popover.Root bind:open>
 	<Popover.Trigger
-		class="inline-flex h-8 items-center gap-1.5 border border-zinc-200 bg-white/90 px-2 text-xs font-semibold text-zinc-700 shadow-sm backdrop-blur-sm transition-colors hover:cursor-pointer hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-burgundy focus-visible:ring-offset-1"
+		class="inline-flex h-8 items-center gap-1.5 border border-zinc-200 bg-white/90 px-2 text-xs font-semibold text-black shadow-sm backdrop-blur-sm transition-colors hover:cursor-pointer hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-1"
 		aria-label={`${copy[lang].language}: ${lang.toUpperCase()}`}
 	>
 		<Globe size={16} strokeWidth={2} aria-hidden="true" />
@@ -49,13 +49,13 @@
 			role="menu"
 			aria-label={copy[lang].language}
 		>
-			<p class="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+			<p class="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-black">
 				{copy[lang].language}
 			</p>
 			{#each languages as language (language.code)}
 				<button
 					type="button"
-					class={`flex w-full items-center justify-between gap-4 px-2 py-2 text-left text-sm transition-colors hover:cursor-pointer hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-none ${lang === language.code ? 'font-semibold text-burgundy' : 'text-zinc-700'}`}
+					class={`flex w-full items-center justify-between gap-4 px-2 py-2 text-left text-sm transition-colors hover:cursor-pointer hover:bg-zinc-100 focus-visible:bg-zinc-100 focus-visible:outline-none text-burgundy ${lang === language.code ? 'font-bold' : 'font-normal'}`}
 					onclick={() => selectLanguage(language.code)}
 					role="menuitemradio"
 					aria-checked={lang === language.code}

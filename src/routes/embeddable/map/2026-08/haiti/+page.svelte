@@ -7,7 +7,8 @@
 	import { withActiveLanguage } from '$lib/components/haiti-map/copy';
 
 	let { data } = $props();
-	const { incidentsData, mapboxToken } = data;
+	const incidentsData = $derived(data.incidentsData);
+	const mapboxToken = $derived(data.mapboxToken);
 
 	let lang = $state<HaitiLang>('en');
 	let selectedMarkerId = $state<number | null>(null);
@@ -43,7 +44,6 @@
 	}
 
 	let haitiMapRef = $state<{
-		setSelectionOriginToClick: () => void;
 		flyToMarkerByChronoId: (id: number) => void;
 	} | null>(null);
 	let haitiCardsRef = $state<{ scrollToCard: (id: number) => void } | null>(null);
@@ -56,6 +56,13 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
+		if (
+			!localizedIncidents.length ||
+			document.querySelector('[aria-modal="true"]') ||
+			(event.target instanceof HTMLElement &&
+				event.target.closest('button, input, select, textarea, a'))
+		)
+			return;
 		if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
 			event.preventDefault();
 
@@ -64,6 +71,13 @@
 			);
 			let newIndex: number;
 
+			if (
+				!localizedIncidents.length ||
+				document.querySelector('[aria-modal="true"]') ||
+				(event.target instanceof HTMLElement &&
+					event.target.closest('button, input, select, textarea, a'))
+			)
+				return;
 			if (event.key === 'ArrowLeft') {
 				newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
 			} else {
@@ -110,6 +124,7 @@
 					{mapboxToken}
 					{lang}
 					{setLang}
+					scrollToCard={(id) => haitiCardsRef?.scrollToCard(id)}
 				/>
 			</div>
 			<div class="w-full shrink-0">
@@ -127,7 +142,6 @@
 				{setHighlightedMarkerId}
 				{highlightedMarkerId}
 				incidentsData={localizedIncidents}
-				{haitiMapRef}
 				{selectedWeekStartDate}
 				{setSelectedWeek}
 				{selectedMarkerId}

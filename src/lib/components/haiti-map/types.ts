@@ -1,6 +1,7 @@
 export type HaitiLang = 'en' | 'fr';
 
 export interface IncidentData {
+	schemaVersion: string;
 	id: number;
 	type: 'incident' | 'event';
 	titleEN: string;
@@ -14,17 +15,16 @@ export interface IncidentData {
 	latitude?: number;
 	longitude?: number;
 	date: string;
-	killedOrWounded?: number;
-	killed?: number;
-	wounded?: number;
-	droneCount?: number;
-	explosiveDroneCount?: number;
-	casualtyKnown?: boolean;
+	droneCount: number | null;
+	explosiveDroneCount?: number | null;
 	department?: string;
 	commune?: string;
 	sectionCommunale?: string;
 	locality?: string;
-	identifiant?: string;
+	dateStatus: 'recorded' | 'pending';
+	locationStatus: 'locality' | 'pending';
+	languageStatus: 'editorial-draft';
+	reviewStatus: 'provisional';
 	chronoId: number;
 	weekYear: string;
 	imageUrl?: string;
@@ -33,5 +33,4 @@ export interface IncidentData {
 	imageCaption?: string;
 	videoUrl?: string;
 	videoCaption?: string;
-	sources?: string;
 }
