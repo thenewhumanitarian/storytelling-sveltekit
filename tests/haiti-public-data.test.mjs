@@ -66,13 +66,13 @@ test('pending date and location reports remain in overall totals without invente
 	assert.throws(() => projectPublicRecords([fixture, fixture]), /duplicate/);
 	assert.throws(() => projectPublicRecords([{ ...fixture, latitude: '18,544' }]), /coordinates/);
 });
-test('selected 2025 fixture reconciles and round trips without changing null counts or IDs', () => {
+test('retained 2025 fixture reconciles and round trips without changing null counts or IDs', () => {
 	const records = parsePublicCsv(
 		fs.readFileSync(
 			new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
 			'utf8'
 		)
-	);
+	).filter((record) => !record.date || record.date.startsWith('2025-'));
 	assert.equal(records.length, 190);
 	assert.deepEqual(summariseIncidents(records), {
 		incidentCount: 190,
@@ -81,7 +81,7 @@ test('selected 2025 fixture reconciles and round trips without changing null cou
 		unlocatedCount: 12,
 		undatedCount: 1
 	});
-	assert.deepEqual(parsePublicCsv(publicCsv(records)), records);
+	assert.equal(publicCsv(parsePublicCsv(publicCsv(records))), publicCsv(records));
 	assert.ok(records.every((r) => r.type === 'incident' && (!r.date || r.date.startsWith('2025-'))));
 	const text = records
 		.map((r) => [r.titleEN, r.titleFR, r.descriptionEN, r.descriptionFR].join(' '))
@@ -89,20 +89,55 @@ test('selected 2025 fixture reconciles and round trips without changing null cou
 	assert.doesNotMatch(text, /\b(killed|wounded|injured|tu[ée]s?|bless[ée]s?|morts?|INSO|GCO)\b/i);
 });
 
-test('review scope rejects other years and context events while retaining the undated source report', () => {
+test('review scope accepts selected 2025/2026 and undated reports, rejecting context events and other years', () => {
 	assert.equal(
 		parseHaitiReview(
 			publicCsv(projectPublicRecords([{ ...fixture, date: '', dateStatus: 'pending' }]))
 		).length,
 		1
 	);
+	assert.equal(
+		parseHaitiReview(publicCsv(projectPublicRecords([{ ...fixture, date: '2026-01-01' }])))[0].date,
+		'2026-01-01'
+	);
 	for (const extra of [
-		{ ...fixture, date: '2026-01-01' },
+		{ ...fixture, date: '2027-01-01' },
 		{ ...fixture, type: 'event' }
 	]) {
 		assert.throws(
 			() => parseHaitiReview(publicCsv(projectPublicRecords([extra]))),
-			/selected 2025/
+			/selected 2025|date needs review/
 		);
 	}
+});
+
+test('selected combined snapshot contains the retained 2025 reports and non-red provisional 2026 selection only', () => {
+	const records = parseHaitiReview(
+		fs.readFileSync(
+			new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
+			'utf8'
+		)
+	);
+	assert.equal(records.length, 453);
+	assert.deepEqual(summariseIncidents(records), {
+		incidentCount: 453,
+		knownDrones: 633,
+		unknownCount: 154,
+		unlocatedCount: 35,
+		undatedCount: 1
+	});
+	assert.equal(records.filter((record) => record.date.startsWith('2026-')).length, 263);
+	assert.equal(
+		records.filter((record) => !record.date || record.date.startsWith('2025-')).length,
+		190
+	);
+	assert.ok(records.every((record) => record.type === 'incident'));
+	assert.equal(records.filter((record) => record.date).at(-1).date, '2026-08-17');
+	assert.deepEqual(parsePublicCsv(publicCsv(records)), records);
+	const text = records
+		.map((record) =>
+			[record.titleEN, record.titleFR, record.descriptionEN, record.descriptionFR].join(' ')
+		)
+		.join('\n');
+	assert.doesNotMatch(text, /\b(killed|wounded|injured|tu[ée]s?|bless[ée]s?|morts?|INSO|GCO)\b/i);
 });

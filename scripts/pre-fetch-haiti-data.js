@@ -5,7 +5,7 @@ import { parseHaitiReview } from '../src/lib/components/haiti-map/review-data.ts
 
 const fallbackPath = 'src/lib/data/haiti-map/haiti-incidents-fallback.csv';
 export async function fetchHaitiData() {
-	// The current review uses only the curated 2025 source, never the broader live feed.
+	// The current review uses only the curated 2025 and provisional 2026 selection, never the broader live feed.
 	const incidentsData = parseHaitiReview(await fs.readFile(fallbackPath, 'utf8'));
 	await fs.writeFile(
 		'src/lib/data/haiti-map/cached-incidents.json',

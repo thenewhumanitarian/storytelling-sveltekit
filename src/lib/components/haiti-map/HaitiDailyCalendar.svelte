@@ -17,9 +17,9 @@
 		onSelect: (day: CalendarDay) => void;
 	} = $props();
 	const calendar = $derived(buildDailyCalendar(incidentsData));
-	const cellSize = $derived(Math.min(20, Math.max(8, (width - 68) / Math.max(calendar.weeks, 1))));
+	const cellSize = $derived(Math.min(19, Math.max(8, (width - 68) / Math.max(calendar.weeks, 1))));
 	const selectedDate = $derived(
-		incidentsData.find((record) => record.chronoId === selectedMarkerId)?.date
+		incidentsData.find((record) => record.chronoId === selectedMarkerId)?.date || null
 	);
 	let hoveredDate = $state<string | null>(null);
 	let focusedDate = $state<string | null>(null);
@@ -65,54 +65,60 @@
 </script>
 
 <div class="daily-calendar" style:--cell="{cellSize}px" style:--weeks={calendar.weeks}>
-	<div
-		class="calendar-matrix"
-		aria-label={lang === 'fr' ? 'Calendrier quotidien des incidents' : 'Daily incident calendar'}
-	>
-		<div class="month-labels" aria-hidden="true">
-			{#each calendar.months as month (month.date)}
-				<span
-					title={new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
-						month: 'long',
-						year: 'numeric',
-						timeZone: 'UTC'
-					}).format(parseHaitiDate(month.date)!)}
-					style:left="{month.column * cellSize}px"
-					>{new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
-						month: 'short',
-						timeZone: 'UTC'
-					}).format(parseHaitiDate(month.date)!)}</span
-				>
-			{/each}
-		</div>
-		<div class="weekday-labels" aria-hidden="true">
-			{#each weekdays as weekday (weekday)}<span>{weekday}</span>{/each}
-		</div>
-		<div class="days">
-			{#each calendar.days as day (day.date)}
-				<button
-					type="button"
-					class={['day', { unknown: day.unknownCount > 0, selected: day.date === selectedDate }]}
-					style:grid-column={day.column + 1}
-					style:grid-row={day.row + 1}
-					style:background-color={palette[Math.min(day.incidentCount, 4)]}
-					data-date={day.date}
-					title={description(day)}
-					aria-label={description(day)}
-					aria-pressed={day.date === selectedDate}
-					tabindex={day.date === (focusedDate ?? selectedDate ?? calendar.days[0]?.date) ? 0 : -1}
-					onpointerenter={() => (hoveredDate = day.date)}
-					onpointerleave={() => (hoveredDate = null)}
-					onfocus={() => {
-						focusedDate = day.date;
-						hoveredDate = day.date;
-					}}
-					onblur={() => (hoveredDate = null)}
-					onclick={() => selectDay(day)}
-					onkeydown={(event) => navigate(event, day)}
-				>
-				</button>
-			{/each}
+	<div class="calendar-scroll">
+		<div
+			class="calendar-matrix"
+			aria-label={lang === 'fr' ? 'Calendrier quotidien des incidents' : 'Daily incident calendar'}
+		>
+			<div class="month-labels" aria-hidden="true">
+				{#each calendar.months as month, monthIndex (month.date)}
+					<span
+						title={new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+							month: 'long',
+							year: 'numeric',
+							timeZone: 'UTC'
+						}).format(parseHaitiDate(month.date)!)}
+						style:left="{month.column * cellSize}px"
+					>
+						{#if monthIndex === 0 || month.date.slice(5, 7) === '01'}<small
+								>{month.date.slice(0, 4)}</small
+							>{/if}
+						{new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+							month: 'short',
+							timeZone: 'UTC'
+						}).format(parseHaitiDate(month.date)!)}</span
+					>
+				{/each}
+			</div>
+			<div class="weekday-labels" aria-hidden="true">
+				{#each weekdays as weekday (weekday)}<span>{weekday}</span>{/each}
+			</div>
+			<div class="days">
+				{#each calendar.days as day (day.date)}
+					<button
+						type="button"
+						class={['day', { unknown: day.unknownCount > 0, selected: day.date === selectedDate }]}
+						style:grid-column={day.column + 1}
+						style:grid-row={day.row + 1}
+						style:background-color={palette[Math.min(day.incidentCount, 4)]}
+						data-date={day.date}
+						title={description(day)}
+						aria-label={description(day)}
+						aria-pressed={day.date === selectedDate}
+						tabindex={day.date === (focusedDate ?? selectedDate ?? calendar.days[0]?.date) ? 0 : -1}
+						onpointerenter={() => (hoveredDate = day.date)}
+						onpointerleave={() => (hoveredDate = null)}
+						onfocus={() => {
+							focusedDate = day.date;
+							hoveredDate = day.date;
+						}}
+						onblur={() => (hoveredDate = null)}
+						onclick={() => selectDay(day)}
+						onkeydown={(event) => navigate(event, day)}
+					>
+					</button>
+				{/each}
+			</div>
 		</div>
 	</div>
 	<div class="calendar-caption">
@@ -150,10 +156,17 @@
 		justify-content: space-between;
 		color: #52525b;
 	}
+	.calendar-scroll {
+		width: 100%;
+		overflow-x: auto;
+		flex-shrink: 0;
+	}
 	.calendar-matrix {
 		display: grid;
+		width: max-content;
+		margin-inline: auto;
 		grid-template-columns: 32px calc(var(--cell) * var(--weeks));
-		grid-template-rows: 18px calc(var(--cell) * 7);
+		grid-template-rows: 24px calc(var(--cell) * 7);
 		align-self: center;
 	}
 	.month-labels {
@@ -164,6 +177,16 @@
 	.month-labels span {
 		position: absolute;
 		white-space: nowrap;
+		height: 24px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		line-height: 14px;
+	}
+	.month-labels small {
+		font-size: 9px;
+		font-weight: 700;
+		line-height: 10px;
 	}
 	.weekday-labels {
 		grid-column: 1;

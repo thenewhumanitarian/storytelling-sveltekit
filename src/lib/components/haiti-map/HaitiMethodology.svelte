@@ -35,10 +35,12 @@
 		</p>
 		{#if fr}
 			<p>
-				Cette version utilise uniquement les incidents du jeu de données révisé de 2025. Aucun
-				incident de 2026 ni événement de contexte supplémentaire n’est inclus. Les textes français
-				ont été adaptés pour l’affichage ; les traductions anglaises sont des brouillons à remplacer
-				par les versions validées.
+				Cette version réunit les données révisées de 2025 et une sélection provisoire de 2026. Les
+				entrées de 2026 marquées en rouge pour exclusion ne sont pas incluses. Aucun événement de
+				contexte supplémentaire n’est ajouté. Certaines localisations et certains nombres restent à
+				confirmer. Neuf fiches de 2026 attendent encore leur récit et présentent les informations de
+				date et de localité disponibles. Les textes français ont été adaptés pour l’affichage ; les
+				traductions anglaises sont des brouillons à remplacer par les versions validées.
 			</p>
 			{#if SHOW_HAITI_TOTALS}
 				<h3>Un minimum documenté</h3>
@@ -84,9 +86,12 @@
 			</p>
 		{:else}
 			<p>
-				This version uses only incidents from the revised 2025 dataset. No 2026 incidents or
-				additional context events are included. French text has been adapted for display; English
-				translations are drafts to be replaced by approved editorial versions.
+				This preview combines the revised 2025 data with a provisional 2026 selection. The 2026
+				entries marked in red for exclusion are not included. No supplementary context events are
+				added. Some locations and counts still need confirmation. Nine 2026 reports have no
+				narrative supplied yet; their cards show the available date and locality information. French
+				text has been adapted for display; English translations are drafts to be replaced by
+				approved editorial versions.
 			</p>
 			{#if SHOW_HAITI_TOTALS}
 				<h3>A documented minimum</h3>

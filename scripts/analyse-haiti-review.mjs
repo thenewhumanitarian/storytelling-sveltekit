@@ -3,11 +3,16 @@ import fs from 'node:fs';
 import { parseHaitiReview } from '../src/lib/components/haiti-map/review-data.ts';
 import { buildDailyCalendar } from '../src/lib/components/haiti-map/daily-calendar.ts';
 import { summariseIncidents } from '../src/lib/components/haiti-map/data.ts';
-const records = parseHaitiReview(
+const allRecords = parseHaitiReview(
 	fs.readFileSync(
 		new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
 		'utf8'
 	)
+);
+const year = process.argv.find((argument) => argument.startsWith('--year='))?.slice(7);
+if (year && !['2025', '2026'].includes(year)) throw new Error('Use --year=2025 or --year=2026');
+const records = allRecords.filter(
+	(record) => !year || record.date.startsWith(year) || (year === '2025' && !record.date)
 );
 // Label aliases are for analysis only; preserve the supplied display data.
 const communeAliases = {
@@ -53,12 +58,13 @@ const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 console.log(
 	JSON.stringify(
 		{
-			scope: '2025 source only; editorial review, not publication claims',
+			scope: `${year ?? '2025 and provisional 2026'} selected reports; editorial review, not publication claims`,
 			summary: summariseIncidents(records),
 			activeDays: dayRanks.length,
 			months: aggregate((record) => record.date.slice(0, 7) || 'Undated').sort((a, b) =>
 				a.label.localeCompare(b.label)
 			),
+			departments: aggregate((record) => record.department || 'Unspecified'),
 			communes: aggregate((record) => communeAliases[record.commune] ?? record.commune),
 			localities: aggregate((record) => localityAliases[record.locality] ?? record.locality),
 			busiestDays: dayRanks.slice(0, 10),
