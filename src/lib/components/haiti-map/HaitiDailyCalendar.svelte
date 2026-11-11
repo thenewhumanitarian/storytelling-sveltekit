@@ -17,7 +17,10 @@
 		onSelect: (day: CalendarDay) => void;
 	} = $props();
 	const calendar = $derived(buildDailyCalendar(incidentsData));
-	const cellSize = $derived(Math.min(19, Math.max(8, (width - 68) / Math.max(calendar.weeks, 1))));
+	// Whole pixels keep grid tracks and label line boxes from rounding into overflow.
+	const cellSize = $derived(
+		Math.min(19, Math.max(8, Math.floor((width - 68) / Math.max(calendar.weeks, 1))))
+	);
 	const selectedDate = $derived(
 		incidentsData.find((record) => record.chronoId === selectedMarkerId)?.date || null
 	);
@@ -159,6 +162,7 @@
 	.calendar-scroll {
 		width: 100%;
 		overflow-x: auto;
+		overflow-y: hidden;
 		flex-shrink: 0;
 	}
 	.calendar-matrix {
@@ -198,6 +202,9 @@
 	.weekday-labels span {
 		display: flex;
 		align-items: center;
+		min-height: 0;
+		font-size: min(10px, calc(var(--cell) - 1px));
+		line-height: var(--cell);
 	}
 	.days {
 		grid-column: 2;
