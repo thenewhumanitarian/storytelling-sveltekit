@@ -14,6 +14,7 @@
 	let selectedMarkerId = $state<number | null>(null);
 	let highlightedMarkerId = $state<number | null>(null);
 	let selectedWeekStartDate = $state<Date | null>(null);
+	let timelineHeight = $state(224);
 
 	const localizedIncidents = $derived(incidentsData.map((item) => withActiveLanguage(item, lang)));
 
@@ -133,11 +134,12 @@
 					incidentsData={localizedIncidents}
 					{selectedMarkerId}
 					onCardInView={handleCardInView}
+					{timelineHeight}
 					{lang}
 				/>
 			</div>
 		</div>
-		<div class="z-30 w-full shrink-0">
+		<div bind:clientHeight={timelineHeight} class="z-30 w-full shrink-0">
 			<Timeline
 				{setHighlightedMarkerId}
 				{highlightedMarkerId}

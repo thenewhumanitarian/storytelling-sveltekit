@@ -314,6 +314,8 @@
 			attributionControl: false
 		});
 		map = mapInstance;
+		const mapResizeObserver = new ResizeObserver(() => mapInstance.resize());
+		if (hostContainer) mapResizeObserver.observe(hostContainer);
 
 		// --- SOLUTION: PREVENT SCROLL TRAP ON MOBILE ---
 		// Check for mobile screen size (matches your CSS breakpoint)
@@ -613,6 +615,7 @@
 			window.removeEventListener('resize', updateIsMobile);
 			document.removeEventListener('fullscreenchange', updateFullscreenState);
 			document.removeEventListener('webkitfullscreenchange', updateFullscreenState);
+			mapResizeObserver.disconnect();
 			map?.remove();
 			map = null;
 			markers = [];

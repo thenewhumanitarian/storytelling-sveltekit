@@ -482,7 +482,7 @@
 <div
 	bind:this={timelineContainer}
 	class="box-border flex w-full flex-col overflow-hidden bg-linear-to-t from-white via-white to-white/60 backdrop-blur-sm sm:border-t sm:border-gray-200"
-	style="height: {showDaily ? 236 : svgHeight + dateLabelsHeight + controlsHeight}px;"
+	style:height={showDaily ? 'auto' : `${svgHeight + dateLabelsHeight + controlsHeight}px`}
 >
 	{#if showDaily}
 		<HaitiDailyCalendar

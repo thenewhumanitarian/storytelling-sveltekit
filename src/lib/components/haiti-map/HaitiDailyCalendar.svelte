@@ -17,10 +17,23 @@
 		onSelect: (day: CalendarDay) => void;
 	} = $props();
 	const calendar = $derived(buildDailyCalendar(incidentsData));
+	const yearCalendars = $derived.by(() => {
+		const years = [...new Set(calendar.days.map((day) => day.date.slice(0, 4)))];
+		return years.map((year) => {
+			const days = calendar.days.filter((day) => day.date.startsWith(year));
+			const firstColumn = days[0].column;
+			return {
+				year,
+				days,
+				firstColumn,
+				weeks: days.at(-1)!.column - firstColumn + 1,
+				months: calendar.months.filter((month) => month.date.startsWith(year))
+			};
+		});
+	});
+	const weeksPerYear = $derived(Math.max(1, ...yearCalendars.map((year) => year.weeks)));
 	// Whole pixels keep grid tracks and label line boxes from rounding into overflow.
-	const cellSize = $derived(
-		Math.min(19, Math.max(8, Math.floor((width - 68) / Math.max(calendar.weeks, 1))))
-	);
+	const cellSize = $derived(Math.min(18, Math.max(8, Math.floor((width - 68) / weeksPerYear))));
 	const selectedDate = $derived(
 		incidentsData.find((record) => record.chronoId === selectedMarkerId)?.date || null
 	);
@@ -59,69 +72,82 @@
 		const step = steps[event.key];
 		if (step === undefined) return;
 		event.preventDefault();
-		const next = calendar.days[calendar.days.indexOf(day) + step];
+		const next = calendar.days[calendar.days.findIndex((entry) => entry.date === day.date) + step];
 		if (next && event.currentTarget instanceof HTMLElement)
-			event.currentTarget.parentElement
+			event.currentTarget
+				.closest('.daily-calendar')
 				?.querySelector<HTMLButtonElement>(`[data-date="${next.date}"]`)
 				?.focus();
 	}
 </script>
 
-<div class="daily-calendar" style:--cell="{cellSize}px" style:--weeks={calendar.weeks}>
+<div class="daily-calendar" style:--cell="{cellSize}px" style:--weeks={weeksPerYear}>
 	<div class="calendar-scroll">
-		<div
-			class="calendar-matrix"
-			aria-label={lang === 'fr' ? 'Calendrier quotidien des incidents' : 'Daily incident calendar'}
-		>
-			<div class="month-labels" aria-hidden="true">
-				{#each calendar.months as month, monthIndex (month.date)}
-					<span
-						title={new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
-							month: 'long',
-							year: 'numeric',
-							timeZone: 'UTC'
-						}).format(parseHaitiDate(month.date)!)}
-						style:left="{month.column * cellSize}px"
-					>
-						{#if monthIndex === 0 || month.date.slice(5, 7) === '01'}<small
-								>{month.date.slice(0, 4)}</small
-							>{/if}
-						{new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
-							month: 'short',
-							timeZone: 'UTC'
-						}).format(parseHaitiDate(month.date)!)}</span
-					>
-				{/each}
-			</div>
-			<div class="weekday-labels" aria-hidden="true">
-				{#each weekdays as weekday (weekday)}<span>{weekday}</span>{/each}
-			</div>
-			<div class="days">
-				{#each calendar.days as day (day.date)}
-					<button
-						type="button"
-						class={['day', { unknown: day.unknownCount > 0, selected: day.date === selectedDate }]}
-						style:grid-column={day.column + 1}
-						style:grid-row={day.row + 1}
-						style:background-color={palette[Math.min(day.incidentCount, 4)]}
-						data-date={day.date}
-						title={description(day)}
-						aria-label={description(day)}
-						aria-pressed={day.date === selectedDate}
-						tabindex={day.date === (focusedDate ?? selectedDate ?? calendar.days[0]?.date) ? 0 : -1}
-						onpointerenter={() => (hoveredDate = day.date)}
-						onpointerleave={() => (hoveredDate = null)}
-						onfocus={() => {
-							focusedDate = day.date;
-							hoveredDate = day.date;
-						}}
-						onblur={() => (hoveredDate = null)}
-						onclick={() => selectDay(day)}
-						onkeydown={(event) => navigate(event, day)}
-					>
-					</button>
-				{/each}
-			</div>
+		<div class="calendar-years">
+			{#each yearCalendars as yearCalendar (yearCalendar.year)}
+				<div
+					class="calendar-matrix"
+					style:--weeks={yearCalendar.weeks}
+					aria-label={lang === 'fr'
+						? 'Calendrier quotidien des incidents'
+						: 'Daily incident calendar'}
+				>
+					<div class="month-labels" aria-hidden="true">
+						{#each yearCalendar.months as month, monthIndex (month.date)}
+							<span
+								title={new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+									month: 'long',
+									year: 'numeric',
+									timeZone: 'UTC'
+								}).format(parseHaitiDate(month.date)!)}
+								style:left="{(month.column - yearCalendar.firstColumn) * cellSize}px"
+							>
+								{#if monthIndex === 0 || month.date.slice(5, 7) === '01'}<small
+										>{month.date.slice(0, 4)}</small
+									>{/if}
+								{new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+									month: 'short',
+									timeZone: 'UTC'
+								}).format(parseHaitiDate(month.date)!)}</span
+							>
+						{/each}
+					</div>
+					<div class="weekday-labels" aria-hidden="true">
+						{#each weekdays as weekday (weekday)}<span>{weekday}</span>{/each}
+					</div>
+					<div class="days">
+						{#each yearCalendar.days as day (day.date)}
+							<button
+								type="button"
+								class={[
+									'day',
+									{ unknown: day.unknownCount > 0, selected: day.date === selectedDate }
+								]}
+								style:grid-column={day.column - yearCalendar.firstColumn + 1}
+								style:grid-row={day.row + 1}
+								style:background-color={palette[Math.min(day.incidentCount, 4)]}
+								data-date={day.date}
+								title={description(day)}
+								aria-label={description(day)}
+								aria-pressed={day.date === selectedDate}
+								tabindex={day.date === (focusedDate ?? selectedDate ?? calendar.days[0]?.date)
+									? 0
+									: -1}
+								onpointerenter={() => (hoveredDate = day.date)}
+								onpointerleave={() => (hoveredDate = null)}
+								onfocus={() => {
+									focusedDate = day.date;
+									hoveredDate = day.date;
+								}}
+								onblur={() => (hoveredDate = null)}
+								onclick={() => selectDay(day)}
+								onkeydown={(event) => navigate(event, day)}
+							>
+							</button>
+						{/each}
+					</div>
+				</div>
+			{/each}
 		</div>
 	</div>
 	<div class="calendar-caption">
@@ -150,13 +176,12 @@
 
 <style>
 	.daily-calendar {
-		height: 184px;
 		flex-shrink: 0;
 		width: 100%;
-		padding: 4px 10px 0;
+		padding: 6px 10px 0;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		gap: 6px;
 		color: #52525b;
 	}
 	.calendar-scroll {
@@ -165,13 +190,19 @@
 		overflow-y: hidden;
 		flex-shrink: 0;
 	}
+	.calendar-years {
+		width: calc(32px + var(--cell) * var(--weeks));
+		margin-inline: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
 	.calendar-matrix {
 		display: grid;
 		width: max-content;
-		margin-inline: auto;
 		grid-template-columns: 32px calc(var(--cell) * var(--weeks));
 		grid-template-rows: 24px calc(var(--cell) * 7);
-		align-self: center;
+		align-self: start;
 	}
 	.month-labels {
 		grid-column: 2;

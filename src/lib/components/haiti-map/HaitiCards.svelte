@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import type { IncidentData } from './types';
 	import HaitiCard from './HaitiCard.svelte';
 	import HaitiCardModal from './HaitiCardModal.svelte';
@@ -11,11 +12,13 @@
 		incidentsData,
 		selectedMarkerId,
 		onCardInView,
+		timelineHeight = 224,
 		lang = 'en'
 	}: {
 		incidentsData: IncidentData[];
 		selectedMarkerId: number | null;
 		onCardInView: (id: number) => void;
+		timelineHeight?: number;
 		lang?: HaitiLang;
 	} = $props();
 
@@ -64,14 +67,16 @@
 			// Desktop: vertical stack
 			const el = container.querySelector(`[data-id="${id}"]`) as HTMLElement;
 			if (el && container) {
-				const TIMELINE_HEIGHT = 188; // px, updated to match the new timeline height (140 + 24 + 24)
 				const containerRect = container.getBoundingClientRect();
 				const elRect = el.getBoundingClientRect();
 				const containerScrollTop = container.scrollTop;
 				const elOffsetTop = elRect.top - containerRect.top + containerScrollTop;
 				const elHeight = elRect.height;
-				const containerHeight = containerRect.height - TIMELINE_HEIGHT;
-				const scrollTo = elOffsetTop - containerHeight / 2 + elHeight / 2;
+				const navigationHeight = 40;
+				const availableHeight = Math.max(0, container.clientHeight - navigationHeight);
+				const cardTop =
+					navigationHeight + Math.min(16, Math.max(0, (availableHeight - elHeight) / 2));
+				const scrollTo = Math.max(0, elOffsetTop - cardTop);
 				container.scrollTo({
 					top: scrollTo,
 					behavior: 'smooth'
@@ -140,49 +145,55 @@
 
 	onMount(() => {
 		const cards = container.querySelectorAll('.js-stack-cards__item');
+		let observer: IntersectionObserver | undefined;
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const intersecting = entries
-					.filter((e) => e.isIntersecting)
-					.map((e) => ({
-						id: Number((e.target as HTMLElement).dataset.id),
-						top: e.boundingClientRect.top
-					}))
-					.sort((a, b) => a.top - b.top);
+		function observeVisibleCards() {
+			observer?.disconnect();
+			const height = container.clientHeight;
+			if (height <= 56) return;
+			// Follow the card at the reading position, even when a card exceeds the viewport.
+			const focusTop = Math.max(56, Math.floor(height / 2));
+			const focusHeight = Math.min(2, height - focusTop);
+			const bottomMargin = height - focusTop - focusHeight;
+			const previouslyIntersecting = new SvelteSet<number>();
+			observer = new IntersectionObserver(
+				(entries) => {
+					const intersecting = entries
+						.filter((entry) => entry.isIntersecting)
+						.map((entry) => ({
+							id: Number((entry.target as HTMLElement).dataset.id),
+							top: entry.boundingClientRect.top
+						}))
+						.sort((a, b) => a.top - b.top);
 
-				entries.forEach((entry) => {
-					const id = Number((entry.target as HTMLElement).dataset.id);
-					// console.log(
-					// 	`📌 Card ${id} ${entry.isIntersecting ? 'entered' : 'left'}, top: ${entry.boundingClientRect.top.toFixed(1)}`
-					// );
-
-					if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
-						const index = incidentsData.findIndex((i) => i.chronoId === id);
-						if (index > 0) {
-							const prevId = incidentsData[index - 1].chronoId;
-							// console.log(`⬆️ Scrolled up, will trigger: ${prevId}`);
-							debounceTrigger(prevId);
+					entries.forEach((entry) => {
+						const id = Number((entry.target as HTMLElement).dataset.id);
+						if (entry.isIntersecting) {
+							previouslyIntersecting.add(id);
+						} else if (previouslyIntersecting.delete(id) && entry.boundingClientRect.top > 0) {
+							const index = incidentsData.findIndex((incident) => incident.chronoId === id);
+							if (index > 0) debounceTrigger(incidentsData[index - 1].chronoId);
 						}
-					}
-				});
+					});
 
-				if (intersecting.length > 0) {
-					const topCardId = intersecting[0].id;
-					// console.log(`👀 Top visible card: ${topCardId}`);
-					debounceTrigger(topCardId);
+					if (intersecting.length > 0) debounceTrigger(intersecting[0].id);
+				},
+				{
+					root: container,
+					rootMargin: `-${focusTop}px 0px -${bottomMargin}px 0px`,
+					threshold: 0
 				}
-			},
-			{
-				root: container,
-				threshold: 1
-			}
-		);
+			);
+			cards.forEach((card) => observer?.observe(card));
+		}
 
-		cards.forEach((card) => observer.observe(card));
+		const resizeObserver = new ResizeObserver(observeVisibleCards);
+		resizeObserver.observe(container);
+		observeVisibleCards();
 
 		return () => {
-			observer.disconnect();
+			resizeObserver.disconnect();
+			observer?.disconnect();
 			if (debounceTimer) clearTimeout(debounceTimer);
 		};
 	});
@@ -256,7 +267,8 @@
 
 <div
 	bind:this={container}
-	class="fixed top-0 right-0 z-10 hidden w-full h-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none cursor-grab pb-48 sm:block sm:w-1/2 sm:cursor-default"
+	class="fixed top-0 right-0 z-10 hidden w-full pt-10 overflow-y-scroll bg-transparent shadow-lg stack-cards js-stack-cards scrollbar-none cursor-grab pb-4 sm:block sm:w-1/2 sm:cursor-default"
+	style:height="calc(100svh - {timelineHeight}px)"
 	class:cursor-grabbing={isDragging}
 >
 	<div
