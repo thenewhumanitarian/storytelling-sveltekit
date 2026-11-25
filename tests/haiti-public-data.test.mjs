@@ -66,21 +66,26 @@ test('pending date and location reports remain in overall totals without invente
 	assert.throws(() => projectPublicRecords([fixture, fixture]), /duplicate/);
 	assert.throws(() => projectPublicRecords([{ ...fixture, latitude: '18,544' }]), /coordinates/);
 });
-test('retained 2025 fixture reconciles and round trips without changing null counts or IDs', () => {
+test('revised 2025 fixture reconciles and round trips without changing null counts or IDs', () => {
 	const records = parsePublicCsv(
 		fs.readFileSync(
 			new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
 			'utf8'
 		)
 	).filter((record) => !record.date || record.date.startsWith('2025-'));
-	assert.equal(records.length, 190);
+	assert.equal(records.length, 196);
 	assert.deepEqual(summariseIncidents(records), {
-		incidentCount: 190,
-		knownDrones: 392,
-		unknownCount: 20,
-		unlocatedCount: 12,
-		undatedCount: 1
+		incidentCount: 196,
+		knownDrones: 393,
+		unknownCount: 24,
+		unlocatedCount: 10,
+		undatedCount: 0
 	});
+	assert.equal(records.find((record) => record.id === 292).date, '2025-03-09');
+	assert.deepEqual(
+		records.filter((record) => [146, 147].includes(record.id)).map((record) => record.droneCount),
+		[2, 1]
+	);
 	assert.equal(publicCsv(parsePublicCsv(publicCsv(records))), publicCsv(records));
 	assert.ok(records.every((r) => r.type === 'incident' && (!r.date || r.date.startsWith('2025-'))));
 	const text = records
@@ -111,25 +116,25 @@ test('review scope accepts selected 2025/2026 and undated reports, rejecting con
 	}
 });
 
-test('selected combined snapshot contains the retained 2025 reports and non-red provisional 2026 selection only', () => {
+test('selected combined snapshot contains the revised 2025 reports and non-red provisional 2026 selection only', () => {
 	const records = parseHaitiReview(
 		fs.readFileSync(
 			new URL('../src/lib/data/haiti-map/haiti-incidents-fallback.csv', import.meta.url),
 			'utf8'
 		)
 	);
-	assert.equal(records.length, 453);
+	assert.equal(records.length, 459);
 	assert.deepEqual(summariseIncidents(records), {
-		incidentCount: 453,
-		knownDrones: 633,
-		unknownCount: 154,
-		unlocatedCount: 35,
-		undatedCount: 1
+		incidentCount: 459,
+		knownDrones: 634,
+		unknownCount: 158,
+		unlocatedCount: 33,
+		undatedCount: 0
 	});
 	assert.equal(records.filter((record) => record.date.startsWith('2026-')).length, 263);
 	assert.equal(
 		records.filter((record) => !record.date || record.date.startsWith('2025-')).length,
-		190
+		196
 	);
 	assert.ok(records.every((record) => record.type === 'incident'));
 	assert.equal(records.filter((record) => record.date).at(-1).date, '2026-08-17');
