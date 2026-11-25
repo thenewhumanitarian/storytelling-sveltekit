@@ -73,14 +73,15 @@ test('revised 2025 fixture reconciles and round trips without changing null coun
 			'utf8'
 		)
 	).filter((record) => !record.date || record.date.startsWith('2025-'));
-	assert.equal(records.length, 196);
+	assert.equal(records.length, 195);
 	assert.deepEqual(summariseIncidents(records), {
-		incidentCount: 196,
+		incidentCount: 195,
 		knownDrones: 393,
-		unknownCount: 24,
-		unlocatedCount: 10,
+		unknownCount: 23,
+		unlocatedCount: 9,
 		undatedCount: 0
 	});
+	assert.ok(records.every((record) => record.id !== 311));
 	assert.equal(records.find((record) => record.id === 292).date, '2025-03-09');
 	assert.deepEqual(
 		records.filter((record) => [146, 147].includes(record.id)).map((record) => record.droneCount),
@@ -123,18 +124,18 @@ test('selected combined snapshot contains the revised 2025 reports and non-red p
 			'utf8'
 		)
 	);
-	assert.equal(records.length, 459);
+	assert.equal(records.length, 458);
 	assert.deepEqual(summariseIncidents(records), {
-		incidentCount: 459,
+		incidentCount: 458,
 		knownDrones: 634,
-		unknownCount: 158,
-		unlocatedCount: 33,
+		unknownCount: 157,
+		unlocatedCount: 32,
 		undatedCount: 0
 	});
 	assert.equal(records.filter((record) => record.date.startsWith('2026-')).length, 263);
 	assert.equal(
 		records.filter((record) => !record.date || record.date.startsWith('2025-')).length,
-		196
+		195
 	);
 	assert.ok(records.every((record) => record.type === 'incident'));
 	assert.equal(records.filter((record) => record.date).at(-1).date, '2026-08-17');

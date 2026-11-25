@@ -20,16 +20,16 @@ test('daily calendar keeps consecutive dates in Monday–Sunday rows across mont
 	assert.equal(days.find((day) => day.date === '2025-03-03').row, 0);
 	assert.equal(
 		days.reduce((sum, day) => sum + day.incidentCount, 0),
-		196
+		195
 	);
 	assert.equal(days.filter((day) => day.incidentCount).length, 112);
 });
 test('busy days link to their first card and preserve unknown counts rather than treating them as zero', () => {
 	const { days } = buildDailyCalendar(records);
 	const busy = days.find((day) => day.date === '2025-08-31');
-	assert.equal(busy.incidentCount, 6);
+	assert.equal(busy.incidentCount, 5);
 	assert.equal(busy.knownDrones, 13);
-	assert.equal(busy.unknownCount, 2);
+	assert.equal(busy.unknownCount, 1);
 	assert.equal(busy.firstChronoId, records.find((record) => record.date === busy.date).chronoId);
 	const empty = days.find((day) => !day.incidentCount);
 	assert.equal(empty.firstChronoId, null);
