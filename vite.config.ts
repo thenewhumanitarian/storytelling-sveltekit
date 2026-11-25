@@ -49,14 +49,14 @@ export default defineConfig({
 		: {},
 	plugins: [serveLegacyStaticHtml(), tailwindcss(), sveltekit()],
 	ssr: {
-		noExternal: ['@storyblok/svelte'],
+		noExternal: ['@storyblok/svelte', 'bits-ui'],
 		// Exclude Node.js built-in modules from client bundling
 		resolve: {
 			conditions: ['node']
 		}
 	},
 	optimizeDeps: {
-		exclude: ['fs', 'path', '@storyblok/svelte']
+		exclude: ['fs', 'path', '@storyblok/svelte', 'bits-ui']
 	},
 	build: {
 		rollupOptions: {
