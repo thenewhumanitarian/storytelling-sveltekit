@@ -22,7 +22,8 @@ type ClimateProcedure =
 	| 'climate_react_weighted'
 	| 'climate_subscribe'
 	| 'climate_wall'
-	| 'climate_wall_with_reactions';
+	| 'climate_wall_with_reactions'
+	| 'climate_withdraw';
 
 export type ReactionWeight = 0 | 1 | 2;
 type ReactionResult = {
@@ -184,18 +185,20 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 			visibility: 'private' | 'public',
 			topic: string | null,
 			moderation: (Moderation & { publish: boolean }) | null = null
-		) {
+		): Promise<{ accepted: boolean; token: string }> {
 			const key = clientKey('contribute', address);
+			// The submission key doubles as the author's private token for withdrawing the post.
+			const token = fingerprint(['climate-question', key, body, visibility, topic ?? '']);
 			const base = {
 				p_body: body,
 				p_visibility: visibility,
 				p_topic: topic,
-				p_submission_key: fingerprint(['climate-question', key, body, visibility, topic ?? '']),
+				p_submission_key: token,
 				p_client_key: key
 			};
 			if (moderation) {
 				try {
-					return await call<boolean>('climate_contribute_moderated', {
+					const accepted = await call<boolean>('climate_contribute_moderated', {
 						...base,
 						p_verdict: moderation.verdict,
 						p_categories: moderation.categories,
@@ -204,13 +207,18 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 						p_term: moderation.term,
 						p_publish: moderation.publish
 					});
+					return { accepted, token };
 				} catch (error) {
 					// Keep accepting posts while the moderation migration rolls out.
 					if (!(error instanceof ClimateRequestError) || error.code !== 'PGRST202') throw error;
-					if (moderation.verdict === 'block') return true;
+					if (moderation.verdict === 'block') return { accepted: true, token };
 				}
 			}
-			return call<boolean>('climate_contribute', base);
+			return { accepted: await call<boolean>('climate_contribute', base), token };
+		},
+		/** Take the author's own public post off the wall; TNH keeps it privately. */
+		withdraw(token: string) {
+			return call<boolean>('climate_withdraw', { p_submission_key: token });
 		},
 		subscribe(address: string, email: string) {
 			return call<boolean>('climate_subscribe', {

@@ -62,6 +62,10 @@
 		cameraLimit?: number;
 		/** Hidden easter egg: a double-click boosts a thought to +2. */
 		onboost?: (id: string) => void;
+		/** Thoughts this browser posted. They get a remove button only their author sees. */
+		isMine?: (entry: Entry) => boolean;
+		/** Author takes their thought off the wall (TNH keeps it privately). */
+		onwithdraw?: (entry: Entry) => void;
 	}
 
 	let {
@@ -74,7 +78,9 @@
 		avoid = [],
 		oncamera,
 		cameraLimit = Infinity,
-		onboost
+		onboost,
+		isMine = () => false,
+		onwithdraw
 	}: Props = $props();
 
 	// The field is a window onto a wider canvas: panning slides every term past it.
@@ -127,6 +133,8 @@
 	let height = $state(0);
 	let active = $state<string[]>([]);
 	let fresh = $state<Record<string, true>>({});
+	// The thought whose remove button is waiting for a second, confirming click.
+	let confirming = $state<string | null>(null);
 	// Each thought keeps the size it arrived with, so a +1 never re-wraps it while it's on screen.
 	let sizeAtSpawn = $state<Record<string, number>>({});
 	let grab: Grab | null = null;
@@ -160,7 +168,7 @@
 	const sign = () => (Math.random() < 0.5 ? -1 : 1);
 
 	function tier(entry: Entry) {
-		return entry.body.length <= 26 ? 'short' : entry.body.length <= 70 ? 'mid' : 'long';
+		return entry.body.length <= 40 ? 'short' : entry.body.length <= 90 ? 'mid' : 'long';
 	}
 
 	function popularity(entry: Entry) {
@@ -1079,6 +1087,13 @@
 			data-term={id}
 			style:--pop={sizeAtSpawn[id] ?? 1}
 			use:register={id}
+			role="presentation"
+			onpointerenter={(event) => event.pointerType === 'mouse' && setHeld(id, true)}
+			onpointerleave={(event) => {
+				if (event.pointerType !== 'mouse') return;
+				setHeld(id, false);
+				if (confirming === id) confirming = null;
+			}}
 		>
 			<form method="POST" action="?/react" use:enhance={react}>
 				<input type="hidden" name="entry" value={entry.id} />
@@ -1094,8 +1109,6 @@
 					onpointermove={pointerMove}
 					onpointerup={pointerUp}
 					onpointercancel={pointerUp}
-					onpointerenter={(event) => event.pointerType === 'mouse' && setHeld(id, true)}
-					onpointerleave={(event) => event.pointerType === 'mouse' && setHeld(id, false)}
 					onfocus={() => setHeld(id, true)}
 					onblur={() => setHeld(id, false)}
 				>
@@ -1121,6 +1134,37 @@
 					<span class="text">{entry.body}</span>
 				</button>
 			</form>
+			{#if isMine(entry) && onwithdraw}
+				<!-- Only the author's browser shows this, so it doubles as the "yours" marker. -->
+				<button
+					type="button"
+					class={['remove', { confirming: confirming === id }]}
+					aria-label={confirming === id
+						? `Confirm: take “${entry.body}” off the wall`
+						: `Remove your thought “${entry.body}” from the wall`}
+					title={confirming === id
+						? 'Click again to remove'
+						: 'Your thought. Remove it from the wall'}
+					onfocus={() => setHeld(id, true)}
+					onblur={() => {
+						setHeld(id, false);
+						if (confirming === id) confirming = null;
+					}}
+					onclick={() => {
+						if (confirming === id) {
+							confirming = null;
+							onwithdraw(entry);
+						} else {
+							confirming = id;
+						}
+					}}
+				>
+					<svg viewBox="0 0 20 20" aria-hidden="true">
+						<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6M9 9v5M11 9v5" />
+					</svg>
+					{#if confirming === id}<span>Remove</span>{/if}
+				</button>
+			{/if}
 		</div>
 	{/each}
 
@@ -1165,7 +1209,7 @@
 		--fs: calc(var(--base) * var(--pop, 1));
 		--count-fs: max(1.02rem, calc(var(--fs) * 0.5));
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 0.5em;
 		padding: 0.25em 0.3em;
 		border: 0;
@@ -1233,7 +1277,75 @@
 	.word:hover .count {
 		background: #b24a60;
 	}
+	/* Remove button after the text: only the author ever sees it. */
+	.term {
+		display: flex;
+		align-items: center;
+		gap: 0.1rem;
+	}
+	.term:global([data-lines='multi']) {
+		align-items: flex-start;
+	}
+	.remove {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		height: 2.3rem;
+		min-width: 2.3rem;
+		justify-content: center;
+		margin-inline-start: 0.35rem;
+		padding: 0 0.5rem;
+		border: 0;
+		border-radius: 100vmax;
+		background: rgb(30 30 28 / 55%);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
+		color: #fff;
+		font: 700 0.85rem/1 var(--sans);
+		cursor: pointer;
+		opacity: 0.9;
+		transition:
+			opacity 160ms ease,
+			background-color 160ms ease,
+			color 160ms ease;
+	}
+	.term:hover .remove,
+	.remove:focus-visible {
+		opacity: 1;
+	}
+	.remove:hover {
+		background: rgb(30 30 28 / 70%);
+		color: #fff;
+	}
+	.remove.confirming {
+		opacity: 1;
+		padding-inline: 0.6rem 0.75rem;
+		background: #9f3e52;
+		color: #fff;
+	}
+	.remove:focus {
+		outline: none;
+		box-shadow: none;
+	}
+	.remove:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+	.remove svg {
+		width: 1.2rem;
+		height: 1.2rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
 	/* Multi-line thoughts: the counter's top edge sits on the first line's cap height. */
+	.term:global([data-lines='multi']) .word {
+		align-items: flex-start;
+	}
 	.term:global([data-lines='multi']) .count {
 		align-self: flex-start;
 		margin-top: calc(var(--cap-top, 0.17) * var(--fs));

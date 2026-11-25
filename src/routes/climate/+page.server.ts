@@ -100,7 +100,7 @@ export const actions = {
 				// Only public posts are screened by AI. Private messages never leave TNH's systems.
 				screened = { ...(await analyse(message, wall)), publish: autoPublishEnabled() };
 			}
-			const accepted = await service.contribute(
+			const { accepted, token } = await service.contribute(
 				getClientAddress(),
 				message,
 				visibility,
@@ -117,6 +117,10 @@ export const actions = {
 				kind,
 				ok: true,
 				published,
+				// Lets the browser recognise its own post on the wall once it's published, and later
+				// withdraw it. Only this browser ever sees the token.
+				term: screened ? (screened.term ?? message) : null,
+				token: visibility === 'public' ? token : null,
 				message:
 					visibility === 'private'
 						? 'Sent privately to the TNH team. Thank you.'
@@ -180,6 +184,23 @@ export const actions = {
 				ok: false,
 				message: 'Your +1 could not be updated. Please try again.'
 			});
+		}
+	},
+	withdraw: async ({ request, fetch }) => {
+		const kind = 'withdraw' as const;
+		const service = climateDataService(fetch);
+		if (!service) return fail(503, { kind, ok: false, message: unavailable });
+		const token = (await request.formData()).get('token');
+		if (typeof token !== 'string' || !/^[0-9a-f]{64}$/.test(token)) {
+			return fail(400, { kind, ok: false, message: 'This thought can’t be removed from here.' });
+		}
+		try {
+			const removed = await service.withdraw(token);
+			return removed
+				? { kind, ok: true, message: 'Removed from the wall. TNH keeps it privately.' }
+				: fail(404, { kind, ok: false, message: 'This thought is already off the wall.' });
+		} catch {
+			return fail(503, { kind, ok: false, message: unavailable });
 		}
 	},
 	subscribe: async ({ request, fetch, getClientAddress }) => {

@@ -133,11 +133,53 @@ export function normalisedTerm(text: string) {
 }
 
 export function aiConfigured() {
-	return Boolean(env.MINIMAX_API_KEY || env.OPENROUTER_API_KEY);
+	return Boolean(env.AMAZEE_AI_API_KEY || env.MINIMAX_API_KEY || env.OPENROUTER_API_KEY);
 }
 
 export function autoPublishEnabled() {
 	return env.CLIMATE_AUTO_PUBLISH === 'true';
+}
+
+async function chatCompletion(
+	baseUrl: string,
+	apiKey: string,
+	body: Record<string, unknown>,
+	label: string
+) {
+	const response = await fetch(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+		method: 'POST',
+		headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
+		body: JSON.stringify(body),
+		signal: AbortSignal.timeout(9000)
+	});
+	if (!response.ok) throw new Error(`${label} responded ${response.status}`);
+	const data: { choices?: { message?: { content?: string } }[] } = await response.json();
+	return data.choices?.[0]?.message?.content ?? '';
+}
+
+/**
+ * amazee.ai: the private LLM gateway TNH already uses for Drupal (Swiss region ch103). It speaks the
+ * OpenAI chat-completions format. Use a dedicated key for this app rather than Drupal's.
+ */
+async function completeWithAmazee(system: string, user: string) {
+	const apiKey = env.AMAZEE_AI_API_KEY;
+	if (!apiKey) return null;
+	const model = env.AMAZEE_AI_MODEL || 'claude-haiku-5-5';
+	const text = await chatCompletion(
+		env.AMAZEE_AI_BASE_URL || 'https://llm.ch103.amazee.ai',
+		apiKey,
+		{
+			model,
+			messages: [
+				{ role: 'system', content: system },
+				{ role: 'user', content: user }
+			],
+			max_tokens: 600,
+			temperature: 0
+		},
+		'amazee.ai'
+	);
+	return { text, model: `amazee:${model}` };
 }
 
 async function completeWithMiniMax(system: string, user: string) {
@@ -230,7 +272,8 @@ export async function analyse(
 		...(avoid.length ? { avoid_suggestions: avoid.slice(0, 9) } : {})
 	});
 
-	for (const provider of [completeWithMiniMax, completeWithOpenRouter]) {
+	// Private gateway first; the others are fallbacks if it's not configured or fails.
+	for (const provider of [completeWithAmazee, completeWithMiniMax, completeWithOpenRouter]) {
 		try {
 			const result = await provider(policy, user);
 			const parsed = result && parse(result.text);

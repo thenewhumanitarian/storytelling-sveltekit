@@ -182,8 +182,76 @@
 		draft: 'tnh-climate-public-draft-v1',
 		cursors: 'tnh-climate-cursors-v1',
 		motion: 'tnh-climate-motion-v1',
-		wall: 'tnh-climate-preview-wall-v2'
+		wall: 'tnh-climate-preview-wall-v2',
+		mine: 'tnh-climate-mine-v1'
 	};
+
+	// What this browser posted: preview entry ids, and the (AI-condensed) terms of live posts,
+	// which is all the browser knows about a post once an editor publishes it. Each live term
+	// keeps the private token that lets its author take it off the wall again.
+	type Mine = { ids: string[]; terms: string[]; tokens: Record<string, string> };
+	let mine = $state<Mine>({ ids: [], terms: [], tokens: {} });
+	const termKey = (text: string) =>
+		text
+			.toLowerCase()
+			.replace(/[^\p{L}\p{N}]+/gu, ' ')
+			.trim();
+	const isMine = (entry: Entry) =>
+		mine.ids.includes(entry.id) || mine.terms.includes(termKey(entry.body));
+
+	function rememberMine(update: { id?: string; term?: string; token?: string | null }) {
+		const key = update.term ? termKey(update.term) : '';
+		mine = {
+			ids: update.id ? [...mine.ids, update.id].slice(-50) : mine.ids,
+			terms: key ? [...mine.terms, key].slice(-50) : mine.terms,
+			tokens: key && update.token ? { ...mine.tokens, [key]: update.token } : mine.tokens
+		};
+	}
+
+	function forgetMine(entry: Entry) {
+		const key = termKey(entry.body);
+		const tokens = { ...mine.tokens };
+		delete tokens[key];
+		mine = {
+			ids: mine.ids.filter((id) => id !== entry.id),
+			terms: mine.terms.filter((term) => term !== key),
+			tokens
+		};
+	}
+
+	/** Take your own thought off the wall. TNH keeps it, privately. */
+	async function withdraw(entry: Entry) {
+		if (preview) {
+			previewEntries = previewEntries.filter((item) => item.id !== entry.id);
+			forgetMine(entry);
+			feedback.vote = 'Removed from the wall (preview).';
+			return;
+		}
+		const token = mine.tokens[termKey(entry.body)];
+		if (!token) {
+			feedback.vote = 'This thought can’t be removed from this browser.';
+			return;
+		}
+		const body = new FormData();
+		body.set('token', token);
+		try {
+			const response = await fetch('?/withdraw', {
+				method: 'POST',
+				body,
+				headers: { 'x-sveltekit-action': 'true' }
+			});
+			const result = deserialize(await response.text());
+			if (result.type !== 'success' || !result.data?.ok) throw new Error('Not removed');
+			snapshotVersion += 1;
+			wallSnapshot = wall.filter((item) => item.id !== entry.id);
+			forgetMine(entry);
+			feedback.vote = 'Removed from the wall. TNH keeps it privately.';
+			room?.wallChanged();
+		} catch {
+			feedback.vote = 'Couldn’t remove that thought. Try again.';
+		}
+		reloadWall?.();
+	}
 
 	function restoreWall(raw: string | null): Entry[] {
 		try {
@@ -230,6 +298,18 @@
 			showCursors = localStorage.getItem(storageKeys.cursors) !== 'off';
 			motionPaused = localStorage.getItem(storageKeys.motion) === 'paused';
 			if (preview) previewEntries = restoreWall(localStorage.getItem(storageKeys.wall));
+			const savedMine = JSON.parse(localStorage.getItem(storageKeys.mine) ?? 'null');
+			if (Array.isArray(savedMine?.ids) && Array.isArray(savedMine?.terms)) {
+				const tokens: Record<string, string> = {};
+				for (const [key, token] of Object.entries(savedMine.tokens ?? {})) {
+					if (typeof token === 'string' && /^[0-9a-f]{64}$/.test(token)) tokens[key] = token;
+				}
+				mine = {
+					ids: savedMine.ids.filter((id: unknown) => typeof id === 'string').slice(-50),
+					terms: savedMine.terms.filter((term: unknown) => typeof term === 'string').slice(-50),
+					tokens
+				};
+			}
 		} catch {
 			// The defaults support private and sandboxed browsing.
 		}
@@ -248,9 +328,16 @@
 					? viewport.height
 					: undefined;
 		}
-		viewport?.addEventListener('resize', fitComposerToKeyboard);
-		document.addEventListener('focusin', fitComposerToKeyboard);
-		document.addEventListener('focusout', fitComposerToKeyboard);
+		// focusout also fires when Svelte removes a focused element mid-update; writing state then
+		// aborts the update. Measure on the next frame instead.
+		let fitFrame = 0;
+		function scheduleFit() {
+			cancelAnimationFrame(fitFrame);
+			fitFrame = requestAnimationFrame(fitComposerToKeyboard);
+		}
+		viewport?.addEventListener('resize', scheduleFit);
+		document.addEventListener('focusin', scheduleFit);
+		document.addEventListener('focusout', scheduleFit);
 		const timer = setInterval(() => {
 			if (
 				alternateImage?.naturalWidth &&
@@ -264,9 +351,10 @@
 
 		return () => {
 			window.removeEventListener('storage', syncPreview);
-			viewport?.removeEventListener('resize', fitComposerToKeyboard);
-			document.removeEventListener('focusin', fitComposerToKeyboard);
-			document.removeEventListener('focusout', fitComposerToKeyboard);
+			cancelAnimationFrame(fitFrame);
+			viewport?.removeEventListener('resize', scheduleFit);
+			document.removeEventListener('focusin', scheduleFit);
+			document.removeEventListener('focusout', scheduleFit);
 			clearInterval(timer);
 		};
 	});
@@ -282,6 +370,9 @@
 	});
 	$effect(() => {
 		if (ready && preview) persist(storageKeys.wall, JSON.stringify(previewEntries));
+	});
+	$effect(() => {
+		if (ready) persist(storageKeys.mine, JSON.stringify(mine));
 	});
 
 	function pulse(id: string, detail: Omit<Pulse, 'n'>) {
@@ -461,6 +552,12 @@
 						drafts[submitted] === draft
 					) {
 						if (kind === 'contribute' && draft) launch(draft, submitted);
+						if (kind === 'contribute' && submitted === 'public') {
+							rememberMine({
+								term: typeof result.data?.term === 'string' ? result.data.term : (draft ?? ''),
+								token: typeof result.data?.token === 'string' ? result.data.token : null
+							});
+						}
 						if (typeof result.data?.duplicate === 'string') {
 							pulse(result.data.duplicate, { remote: false, liked: true });
 						}
@@ -742,9 +839,11 @@
 				plusOne(duplicate);
 				return;
 			}
+			const id = crypto.randomUUID();
+			rememberMine({ id });
 			previewEntries = [
 				{
-					id: crypto.randomUUID(),
+					id,
 					body: term,
 					topic: null,
 					reactions: 0,
@@ -897,6 +996,8 @@
 					{pendingEntry}
 					{pulses}
 					onboost={boost}
+					{isMine}
+					onwithdraw={withdraw}
 					paused={motionPaused}
 					avoid={[intro]}
 				/>
