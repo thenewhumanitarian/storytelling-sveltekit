@@ -121,8 +121,12 @@ export const actions = {
 					visibility === 'private'
 						? 'Sent privately to the TNH team. Thank you.'
 						: published
-							? 'Your thought is on the wall.'
-							: 'Thanks. It will float up after a quick TNH review.'
+							? screened?.term
+								? `Checked by AI. On the wall as “${screened.term}”.`
+								: 'Checked by AI. Your thought is on the wall.'
+							: screened?.term
+								? `Checked by AI. After a quick TNH review it will appear as “${screened.term}”.`
+								: 'Thanks. It will float up after a quick TNH review.'
 			};
 		} catch {
 			return fail(503, { kind, ok: false, message: unavailable });

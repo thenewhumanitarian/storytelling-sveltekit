@@ -153,6 +153,8 @@
 	let assist = $state<Assist>({ suggestions: [], matches: [], blocked: false });
 	let assistFor = $state('');
 	let assistLoading = $state(false);
+	// True while a public post is being screened and condensed by the AI on Send.
+	let checking = $state(false);
 	let assistSeen: string[] = [];
 	let assistController: AbortController | undefined;
 
@@ -448,6 +450,7 @@
 			}
 
 			pendingForm = kind;
+			checking = kind === 'contribute' && submitted === 'public';
 			return async ({ result, update }) => {
 				try {
 					await update({ reset: kind === 'subscribe', invalidateAll: false });
@@ -469,6 +472,7 @@
 					}
 				} finally {
 					pendingForm = null;
+					checking = false;
 				}
 			};
 		};
@@ -707,6 +711,7 @@
 	 */
 	async function previewPublish(body: string) {
 		pendingForm = 'contribute';
+		checking = true;
 		feedback.contribute = '';
 		try {
 			const response = await fetch(resolve('/climate/suggest'), {
@@ -750,12 +755,15 @@
 			];
 			feedback.contribute =
 				verdict.verdict === 'allow'
-					? 'Passed the AI check. Floating up now.'
+					? term !== body
+						? `Checked by AI. Shortened to “${term}”.`
+						: 'Checked by AI. Floating up now.'
 					: `An editor would review this first${verdict.reason ? ` (${verdict.reason.toLowerCase()})` : ''}. Shown here because this is a preview.`;
 		} catch {
 			feedback.contribute = 'Couldn’t check that post. Try again.';
 		} finally {
 			pendingForm = null;
+			checking = false;
 		}
 	}
 
@@ -903,7 +911,17 @@
 						autocomplete="off"
 						aria-hidden="true"
 					/>
-					{#if showAssist}
+					{#if checking}
+						<div class="assist" aria-live="polite">
+							<p class="checking">
+								<svg class="checking-leaf" viewBox="0 0 20 20" aria-hidden="true">
+									<path d="M10 1C16 5 17 13 10 19C3 13 4 5 10 1Z" />
+								</svg>
+								<span>Checking with AI and condensing your thought…</span>
+								<span class="checking-bar" aria-hidden="true"></span>
+							</p>
+						</div>
+					{:else if showAssist}
 						<div class="assist" aria-live="polite">
 							{#if assist.blocked}
 								<p class="assist-warning">
@@ -994,7 +1012,9 @@
 							type="submit"
 							disabled={!interactive || pendingForm !== null || !drafts[visibility].trim()}
 						>
-							<span class="send-label">{pendingForm === 'contribute' ? 'Sending' : 'Send'}</span>
+							<span class="send-label"
+								>{checking ? 'Checking' : pendingForm === 'contribute' ? 'Sending' : 'Send'}</span
+							>
 							<svg viewBox="0 0 20 20" aria-hidden="true">
 								<path d="M10 16V4M4.5 9.5 10 4l5.5 5.5" />
 							</svg>
@@ -1255,6 +1275,16 @@
 	:global(.about-trigger) {
 		grid-column: 3;
 		justify-self: end;
+	}
+	/* Bits UI renders this button, so the scoped focus rule above never reaches it. Without this the
+	   browser draws its own two-tone ring; use the same single white ring as everything else. */
+	:global(.climate-button:focus) {
+		outline: none;
+		box-shadow: none;
+	}
+	:global(.climate .climate-button:focus-visible) {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
 	}
 
 	/* Scene */
@@ -1645,6 +1675,60 @@
 			transform: rotate(360deg);
 		}
 	}
+	.checking {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		min-height: 2.3rem;
+		padding: 0.35rem 1rem 0.35rem 0.8rem;
+		overflow: hidden;
+		border-radius: 100vmax;
+		background:
+			linear-gradient(180deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 10%)), rgb(40 40 40 / 30%);
+		backdrop-filter: blur(16px) saturate(160%);
+		-webkit-backdrop-filter: blur(16px) saturate(160%);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 40%),
+			0 8px 24px rgb(0 0 0 / 30%);
+		color: #fff;
+		font-size: 0.9rem;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+	.checking-leaf {
+		width: 1.05rem;
+		height: 1.05rem;
+		flex: none;
+		fill: #35b58b;
+		transform-origin: 50% 90%;
+		animation: sway 1.4s ease-in-out infinite;
+	}
+	@keyframes sway {
+		50% {
+			transform: rotate(18deg) scale(1.12);
+		}
+	}
+	/* An indeterminate shimmer along the bottom edge while the model works. */
+	.checking-bar {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, #35b58b, transparent);
+		background-size: 40% 100%;
+		background-repeat: no-repeat;
+		animation: scan 1.2s linear infinite;
+	}
+	@keyframes scan {
+		from {
+			background-position: -40% 0;
+		}
+		to {
+			background-position: 140% 0;
+		}
+	}
 	.assist-warning {
 		padding: 0.5rem 0.95rem;
 		background: #9f3e52;
@@ -1829,11 +1913,16 @@
 		padding: 0;
 		list-style: none;
 	}
+	/* TNH link style (base/_forms.scss): burgundy, bold, underlined only on hover. */
 	.project-links a {
-		color: var(--brand-hover);
+		color: var(--brand);
 		font-weight: 700;
-		text-decoration: underline;
+		text-decoration: none;
 		text-underline-offset: 0.22em;
+	}
+	.project-links a:hover,
+	.project-links a:focus-visible {
+		text-decoration: underline;
 	}
 	.dialog-updates {
 		border-top: 1px solid #dcd1ca;
@@ -1977,6 +2066,8 @@
 		}
 		.presence.live .dot::after,
 		.assist,
+		.checking-leaf,
+		.checking-bar,
 		.chip.refresh.spinning svg,
 		.send:hover:not(:disabled) svg,
 		:global(.climate-overlay[data-state='open']),
