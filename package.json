@@ -70,9 +70,12 @@
 		"@iframe-resizer/child": "^5.5.9",
 		"@knight-lab/timelinejs": "^3.9.13",
 		"@lucide/svelte": "^1.40.0",
+		"@openrouter/ai-sdk-provider": "^3.1.0",
 		"@storyblok/richtext": "^3.8.2",
 		"@storyblok/svelte": "^4.0.11",
-		"bits-ui": "^2.19.0",
+		"@supabase/supabase-js": "^2.119.2",
+		"ai": "^7.0.181",
+		"bits-ui": "^2.22.0",
 		"bsky-embed": "^0.2.7",
 		"cookie": "^1.1.1",
 		"csv-parse": "^6.2.1",
@@ -88,6 +91,7 @@
 		"moment": "^2.30.1",
 		"svelte-inview": "^4.0.4",
 		"swiper": "^12.2.0",
-		"tippy.js": "^6.3.7"
+		"tippy.js": "^6.3.7",
+		"zod": "^4.6.7"
 	}
 }
