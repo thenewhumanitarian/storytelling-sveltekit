@@ -161,19 +161,34 @@
 		}
 	}
 
-	// Open the thread just below the headline block, not over it.
+	// Open the thread just below the headline block, not over it. When that leaves too little room
+	// for a conversation (shorter screens), the panel covers the headline and shout bar instead.
 	let threadTop = $state(16);
+	let threadCover = $state(false);
+	const COVER_BELOW = 544; // px of room under the headline needed to sit below it
+
+	function placeThread() {
+		const intro = avoid.find(Boolean);
+		if (!intro || !field) return;
+		const box = field.getBoundingClientRect();
+		const below = intro.getBoundingClientRect().bottom - box.top;
+		threadTop = Math.max(16, Math.round(below + 12));
+		threadCover = innerWidth > 640 && box.height - threadTop - 16 < COVER_BELOW;
+	}
 
 	function openThread(id: string) {
 		select(id);
-		const intro = avoid.find(Boolean);
-		if (intro && field) {
-			const below = intro.getBoundingClientRect().bottom - field.getBoundingClientRect().top;
-			threadTop = Math.max(16, Math.round(below + 12));
-		}
+		placeThread();
 		openId = id;
 		requestAnimationFrame(measureAvoid);
 	}
+
+	// Re-place an open thread when the window is resized.
+	$effect(() => {
+		void width;
+		void height;
+		if (untrack(() => openId)) untrack(placeThread);
+	});
 
 	function closeThread() {
 		openId = null;
@@ -1313,6 +1328,7 @@
 				onclose={closeThread}
 				{onposted}
 				top={threadTop}
+				cover={threadCover}
 				bind:panel={threadPanel}
 			/>
 		{/key}
