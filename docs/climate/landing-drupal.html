@@ -1,0 +1,359 @@
+<!--
+  The climate cost of conflict: landing page body for Drupal.
+
+  Paste into a Basic page body using a text format that allows <style>, <form> and <input>
+  (for example "Full HTML"). Everything is scoped under .tnh-ccc so it won't restyle the theme.
+  The Drupal theme supplies the header and footer; this is only the page content.
+
+  Before publishing, replace the four TODOs:
+    1. Hero photo URL (a Drupal media image, about 2000px wide).
+    2. Webinar recording link (the event page link is used until then).
+    3. Tammam's letter link (shown as "Coming soon" until then).
+    4. The tips form: swap the placeholder for a Webform block (fields listed below).
+
+  Same text, links and Mailchimp signup as the SvelteKit draft at /climate/landing.
+-->
+<style>
+	.tnh-ccc {
+		--ccc-brand: #9f3e52;
+		--ccc-brand-hover: #803244;
+		--ccc-ink: #282828;
+		--ccc-muted: #5c5550;
+		color: var(--ccc-ink);
+		font-size: 1.125rem;
+		line-height: 1.65;
+	}
+	.tnh-ccc * {
+		box-sizing: border-box;
+	}
+	.tnh-ccc h1,
+	.tnh-ccc h2,
+	.tnh-ccc p {
+		margin: 0;
+	}
+
+	/* Hero: photo, shaded, with title and two links. TODO 1: set the photo URL below. */
+	.tnh-ccc .ccc-hero {
+		position: relative;
+		display: grid;
+		align-content: end;
+		min-height: min(78vh, 46rem);
+		margin-bottom: 3rem;
+		padding: 6rem clamp(1.1rem, 5vw, 4rem) 3.2rem;
+		background:
+			linear-gradient(0deg, rgb(18 18 14 / 88%), rgb(18 18 14 / 45%) 45%, rgb(18 18 14 / 5%) 85%),
+			#1d1d1b url('TODO-hero-photo-url.jpg') center / cover no-repeat;
+		color: #fff;
+	}
+	.tnh-ccc .ccc-hero-text {
+		max-width: 46rem;
+		text-shadow: 0 1px 14px rgb(0 0 0 / 40%);
+	}
+	.tnh-ccc .ccc-eyebrow {
+		color: rgb(255 255 255 / 85%);
+		font-size: 0.85rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.tnh-ccc .ccc-hero h1 {
+		margin-top: 0.6rem;
+		font-family: 'GT Sectra Fine', 'GT Sectra', Georgia, serif;
+		font-size: clamp(2.6rem, 7vw, 5rem);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.025em;
+		color: #fff;
+	}
+	.tnh-ccc .ccc-lead {
+		max-width: 38rem;
+		margin-top: 1.1rem;
+		font-size: clamp(1.1rem, 2vw, 1.3rem);
+		line-height: 1.45;
+	}
+	.tnh-ccc .ccc-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 1.8rem;
+		text-shadow: none;
+	}
+	.tnh-ccc .ccc-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 46px;
+		padding: 0.7rem 1.2rem;
+		border: 0;
+		border-radius: 0;
+		background: var(--ccc-brand);
+		color: #fff;
+		font-size: 0.98rem;
+		font-weight: 700;
+		line-height: 1.2;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.tnh-ccc .ccc-button:hover {
+		background: var(--ccc-brand-hover);
+		color: #fff;
+	}
+	.tnh-ccc .ccc-ghost {
+		background: rgb(255 255 255 / 12%);
+		box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 75%);
+	}
+	.tnh-ccc .ccc-soon {
+		color: rgb(255 255 255 / 75%);
+		cursor: default;
+	}
+	.tnh-ccc .ccc-soon:hover {
+		background: rgb(255 255 255 / 12%);
+		color: rgb(255 255 255 / 75%);
+	}
+	.tnh-ccc .ccc-soon em {
+		padding: 0.15rem 0.4rem;
+		background: rgb(255 255 255 / 16%);
+		font-size: 0.7rem;
+		font-style: normal;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+	.tnh-ccc .ccc-credit {
+		position: absolute;
+		right: clamp(1.1rem, 5vw, 4rem);
+		bottom: 0.8rem;
+		color: rgb(255 255 255 / 70%);
+		font-size: 0.75rem;
+	}
+	.tnh-ccc .ccc-credit a {
+		color: inherit;
+	}
+
+	/* Article column. */
+	.tnh-ccc .ccc-column {
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 0 1.1rem;
+	}
+	.tnh-ccc .ccc-column > p + p {
+		margin-top: 1.1rem;
+	}
+	.tnh-ccc .ccc-column a {
+		color: var(--ccc-brand);
+		font-weight: 700;
+	}
+	.tnh-ccc h2 {
+		margin-top: 2.6rem;
+		font-family: 'GT Sectra Fine', 'GT Sectra', Georgia, serif;
+		font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+		font-weight: 700;
+		line-height: 1.15;
+	}
+	.tnh-ccc .ccc-bring {
+		display: grid;
+		gap: 1rem;
+		margin: 1.1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.tnh-ccc .ccc-bring li {
+		margin: 0;
+		padding-left: 1.1rem;
+		border-left: 4px solid var(--ccc-brand);
+	}
+	.tnh-ccc .ccc-bring strong {
+		display: block;
+	}
+
+	/* Get involved card. */
+	.tnh-ccc .ccc-involve {
+		margin-top: 3.2rem;
+		padding: clamp(1.4rem, 4vw, 2.2rem);
+		background: #f6f1ec;
+		border-top: 5px solid var(--ccc-brand);
+		font-size: 1rem;
+	}
+	.tnh-ccc .ccc-involve h2,
+	.tnh-ccc .ccc-updates h2 {
+		margin-top: 0;
+	}
+	.tnh-ccc .ccc-involve > p {
+		margin-top: 0.7rem;
+	}
+	.tnh-ccc .ccc-webform-placeholder {
+		margin-top: 1.2rem;
+		padding: 1rem;
+		border: 2px dashed #b9afa7;
+		color: var(--ccc-muted);
+		font-size: 0.95rem;
+	}
+
+	/* Newsletter (Mailchimp). Works without JavaScript: posts to Mailchimp in a new tab. */
+	.tnh-ccc .ccc-updates {
+		margin: 3.2rem 0 4rem;
+		font-size: 1rem;
+	}
+	.tnh-ccc .ccc-updates > p {
+		margin-top: 0.7rem;
+	}
+	.tnh-ccc .ccc-updates form {
+		margin-top: 1rem;
+	}
+	.tnh-ccc .ccc-updates label {
+		display: block;
+		font-size: 0.92rem;
+		font-weight: 700;
+	}
+	.tnh-ccc .ccc-email-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 0.6rem;
+		margin-top: 0.3rem;
+	}
+	.tnh-ccc .ccc-email-row input {
+		min-width: 0;
+		min-height: 46px;
+		padding: 0.6rem 0.7rem;
+		border: 1px solid #8f8984;
+		border-radius: 0;
+		background: #fff;
+		font-size: 1rem;
+	}
+	.tnh-ccc .ccc-trap {
+		position: absolute;
+		left: -5000px;
+	}
+
+	@media (max-width: 650px) {
+		.tnh-ccc .ccc-actions .ccc-button {
+			flex: 1 1 100%;
+			justify-content: center;
+		}
+		.tnh-ccc .ccc-credit {
+			left: 1.1rem;
+		}
+	}
+</style>
+
+<div class="tnh-ccc">
+	<section class="ccc-hero">
+		<div class="ccc-hero-text">
+			<p class="ccc-eyebrow">A New Humanitarian project</p>
+			<h1>The climate cost of conflict</h1>
+			<p class="ccc-lead">
+				War carries a climate cost that extends far beyond the battlefield and persists long after
+				the fighting ends.
+			</p>
+			<div class="ccc-actions">
+				<!-- TODO 2: replace with the webinar recording link when it is published. -->
+				<a
+					class="ccc-button"
+					href="https://www.thenewhumanitarian.org/events/hidden-climate-costs-militarisation-and-conflict"
+					>Watch the webinar recording</a
+				>
+				<!-- TODO 3: when Tammam's letter is published, replace this span with:
+				     <a class="ccc-button ccc-ghost" href="LETTER-URL">Read Tammam’s letter</a> -->
+				<span class="ccc-button ccc-ghost ccc-soon" aria-disabled="true"
+					>Read Tammam’s letter <em>Coming soon</em></span
+				>
+			</div>
+		</div>
+		<!-- Credit for the hero photo; update it with the photo. -->
+		<p class="ccc-credit">
+			Photo: <a href="TODO-photographer-url">Photographer</a> /
+			<a href="TODO-photo-page-url">Source</a>
+		</p>
+	</section>
+
+	<div class="ccc-column">
+		<p>
+			Researchers estimate that militaries account for
+			<a
+				href="https://www.sgr.org.uk/publications/estimating-military-s-global-greenhouse-gas-emissions"
+				>around 5.5 per cent of global greenhouse gas emissions</a
+			>, before counting the impact of fighting itself.
+		</p>
+		<p>
+			Yet emissions are only part of the picture. Before a war starts, the defence industry consumes
+			vast natural resources to manufacture weapons, build fortifications and move troops and
+			equipment. Once fighting begins, war destroys forests and other carbon stores, damages water
+			systems and farmland, disrupts climate adaptation and diverts public money from climate
+			action. When it ends, debris, unexploded munitions and toxic waste leave pollutants in soil
+			and water for years. Rebuilding then adds further emissions.
+		</p>
+		<p>
+			We often hear how climate change drives conflict. Far less is known about how conflict damages
+			the climate. The New Humanitarian is bringing this hidden toll into view. Our project combines
+			data, on-the-ground reporting and conversations among climate, humanitarian and peacebuilding
+			experts to show what conflict is doing to the planet and to the people living with the
+			consequences.
+		</p>
+
+		<h2>What we bring</h2>
+		<ul class="ccc-bring">
+			<li>
+				<strong>Data and human stories, together.</strong>
+				Bringing data and evidence together with first-hand accounts from affected communities.
+			</li>
+			<li>
+				<strong>Beyond the headline wars.</strong>
+				Most research focuses on a few high-profile conflicts. We draw on our reporting from crises
+				that rarely make the news.
+			</li>
+			<li>
+				<strong>Beyond carbon.</strong>
+				We look at the harms that outlast the fighting: poisoned water, ruined farmland,
+				displacement and land left unusable for years.
+			</li>
+			<li>
+				<strong>Convening expertise across disciplines and regions.</strong>
+				Evidence and expertise do not consistently reach across sectors, leaving the wider
+				consequences of conflict poorly understood. We bring actors together to show what we know,
+				what remains unknown and where action is most needed.
+			</li>
+		</ul>
+
+		<section class="ccc-involve" id="get-involved">
+			<h2>Get involved</h2>
+			<p>
+				The project is just getting started. If you work in this space, or have research, stories or
+				ideas to share, we’d love to hear from you.
+			</p>
+			<p>
+				As the research progresses, send us tips, leads, research topics or anything we should look
+				into.
+			</p>
+			<!-- TODO 4: replace this box with a Webform block. Suggested fields:
+			       - "Your tip, idea or lead" (textarea, required, up to ~800 characters)
+			       - "Name" (optional)
+			       - "Email" (optional, help text: "If you'd like a reply")
+			       - Submit button: "Send to TNH"
+			       - Note under the button: "Goes privately to the TNH team. It is never published."
+			     Turn on Webform's spam protection (honeypot / Antibot) and send submissions to the
+			     research team's inbox. -->
+			<div class="ccc-webform-placeholder">Tips form (Drupal Webform) goes here.</div>
+		</section>
+
+		<section class="ccc-updates">
+			<h2>Stay informed</h2>
+			<p>Get The New Humanitarian’s environment and disasters coverage in your inbox.</p>
+			<!-- TNH's Mailchimp audience, "Environment and Disasters" interest (group 157 / 256),
+			     from TNH's own embed form, without Mailchimp's jQuery scripts. -->
+			<form
+				action="https://thenewhumanitarian.us12.list-manage.com/subscribe/post?u=31c0c755a8105c17c23d89842&amp;id=d842d98289&amp;f_id=00a8c0e3f0"
+				method="post"
+				target="_blank"
+			>
+				<label for="ccc-email">Email address</label>
+				<div class="ccc-email-row">
+					<input type="email" name="EMAIL" id="ccc-email" autocomplete="email" required />
+					<button class="ccc-button" type="submit">Sign up</button>
+				</div>
+				<input type="hidden" name="group[157][256]" value="" />
+				<div class="ccc-trap" aria-hidden="true">
+					<input type="text" name="b_31c0c755a8105c17c23d89842_d842d98289" tabindex="-1" value="" />
+				</div>
+			</form>
+		</section>
+	</div>
+</div>
