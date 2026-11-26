@@ -83,7 +83,7 @@
 		const text = draft.trim();
 		if (!text || sending) return;
 		sending = true;
-		status = 'Checking your comment…';
+		status = 'Checking with ethical AI…';
 		const body = new FormData();
 		body.set('entry', entry.id);
 		body.set('message', text);

@@ -1052,7 +1052,7 @@
 								<svg class="checking-leaf" viewBox="0 0 20 20" aria-hidden="true">
 									<path d="M10 1C16 5 17 13 10 19C3 13 4 5 10 1Z" />
 								</svg>
-								<span>Checking with AI and condensing your thought…</span>
+								<span>Checking with ethical AI and condensing your thought…</span>
 								<span class="checking-bar" aria-hidden="true"></span>
 							</p>
 						</div>
@@ -1195,6 +1195,7 @@
 						{#if wallUnavailable}<span>Reconnecting…</span>{/if}
 					</div>
 					<div class="credits">
+						<Dialog.Trigger class="ethical-link">Moderated with ethical AI</Dialog.Trigger>
 						<span><span class="long-credit">AI-generated</span> aerial illustrations</span>
 						<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
 					</div>
@@ -1255,6 +1256,18 @@
 					<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch with TNH</a>
 				</li>
 			</ul>
+			<section class="dialog-ethics" aria-labelledby="ethics-title">
+				<h2 id="ethics-title">Moderated with ethical AI</h2>
+				<p>
+					Public thoughts and comments are checked by
+					<a href="https://thaura.ai" target="_blank" rel="noopener">Thaura</a>, an ethical AI. It
+					runs an open-weights model on its own servers in Finland, powered largely by renewable
+					energy, and it never trains on or keeps what you write. It only screens out hate,
+					harassment, threats and spam, and suggests shorter wording. TNH editors review anything it
+					flags.
+				</p>
+				<p>Private messages to TNH are never sent to any AI.</p>
+			</section>
 			<section class="dialog-updates" aria-labelledby="updates-title">
 				<h2 id="updates-title">Stay engaged</h2>
 				<p>Get updates on TNH’s reporting, research and events.</p>
@@ -1895,7 +1908,8 @@
 		min-width: 0;
 	}
 	.room button,
-	.credits a {
+	.credits a,
+	.credits :global(.ethical-link) {
 		display: inline-flex;
 		align-items: center;
 		min-height: 2.4rem;
@@ -2057,6 +2071,35 @@
 	}
 	.project-links a:hover,
 	.project-links a:focus-visible {
+		text-decoration: underline;
+	}
+	.credits :global(.ethical-link:focus) {
+		outline: none;
+		box-shadow: none;
+	}
+	.credits :global(.ethical-link:focus-visible) {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+	.dialog-ethics {
+		margin-bottom: 1.3rem;
+		padding: 1rem 1.1rem;
+		background: #eef8f3;
+		border-left: 4px solid #35b58b;
+	}
+	.dialog-ethics h2 {
+		margin: 0 0 0.4rem;
+		font: 700 1.25rem/1.2 var(--serif);
+	}
+	.dialog-ethics p + p {
+		margin-top: 0.5rem;
+	}
+	.dialog-ethics a {
+		color: var(--brand);
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.dialog-ethics a:hover {
 		text-decoration: underline;
 	}
 	.dialog-updates {
