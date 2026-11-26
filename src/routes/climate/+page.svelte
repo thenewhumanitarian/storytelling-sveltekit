@@ -236,6 +236,7 @@
 	};
 	// About opens by itself on every load for now. Later: only until the visitor has closed it once.
 	let aboutOpen = $state(false);
+	let aboutBox = $state<HTMLElement | null>(null);
 
 	// What this browser posted: preview entry ids, and the (AI-condensed) terms of live posts,
 	// which is all the browser knows about a post once an editor publishes it. Each live term
@@ -1383,7 +1384,16 @@
 
 	<Dialog.Portal>
 		<Dialog.Overlay class="climate-overlay" />
-		<Dialog.Content class="climate-dialog">
+		<!-- Focus the box itself on open, not the close button: no ring greets every visitor, and
+		     keyboard users still Tab straight to the close button. -->
+		<Dialog.Content
+			class="climate-dialog"
+			bind:ref={aboutBox}
+			onOpenAutoFocus={(event) => {
+				event.preventDefault();
+				aboutBox?.focus({ preventScroll: true });
+			}}
+		>
 			<Dialog.Close class="climate-close" aria-label="Close About">
 				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" /></svg>
 			</Dialog.Close>
@@ -1567,7 +1577,16 @@
 		height: var(--keyboard-viewport, 100dvh);
 		overflow: clip;
 	}
-	/* One focus treatment everywhere: a single white ring, never doubled with borders or shadows. */
+	/* One focus treatment everywhere, including the buttons Bits UI renders (scoped rules never reach
+	   them): never the browser's blue; a single white ring, only when focus came from the keyboard.
+	   Component rules can still set their own (the white share menu uses burgundy). */
+	:global(:where(.climate, .climate-dialog, .share-menu) :focus) {
+		outline: none;
+	}
+	:global(:where(.climate, .climate-dialog) :focus-visible) {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
 	.climate :where(a, button, input, textarea):focus {
 		outline: none;
 		box-shadow: none;
