@@ -495,7 +495,7 @@
 		display: grid;
 		gap: 0.35rem;
 		padding: 1.05rem 1.15rem 1.15rem;
-		border-radius: 1.1rem;
+		border-radius: 0;
 		background:
 			linear-gradient(160deg, rgb(255 255 255 / 14%), rgb(255 255 255 / 4%) 60%),
 			rgb(30 30 28 / 70%);
