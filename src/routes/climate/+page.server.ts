@@ -2,6 +2,7 @@ import { fail } from '@sveltejs/kit';
 import {
 	climateDataService,
 	climateReactor,
+	commentsOpen,
 	climateRealtimeConfig,
 	matchesBlockedClimatePhrase,
 	setClimateReactor
@@ -15,6 +16,7 @@ const entryId = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i;
 const unavailable = 'This form is temporarily unavailable. Please try again later.';
 const blockedMessage =
 	'This can’t go on the public wall. You can send it privately to the TNH team instead.';
+const blockedCommentMessage = 'This comment can’t be posted. Please keep it respectful.';
 const rateLimited = 'Too many attempts. Please wait a few minutes and try again.';
 
 export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
@@ -24,7 +26,8 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 		wall: [],
 		reactionsEnabled: false,
 		realtime,
-		formStamp: formStamp()
+		formStamp: formStamp(),
+		commentsEnabled: false
 	};
 	const service = climateDataService(fetch);
 	if (!service) return offline;
@@ -32,9 +35,12 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 
 	try {
 		const reactor = climateReactor(cookies);
-		const wallData = await service.wall(reactor);
+		const [wallData, commentsEnabled] = await Promise.all([
+			service.wall(reactor),
+			commentsOpen(service)
+		]);
 		if (!reactor && wallData.reactionsEnabled) setClimateReactor(cookies);
-		return { configured: true, realtime, formStamp: formStamp(), ...wallData };
+		return { configured: true, realtime, formStamp: formStamp(), commentsEnabled, ...wallData };
 	} catch {
 		return offline;
 	}
@@ -216,6 +222,75 @@ export const actions = {
 			});
 		}
 	},
+	comment: async ({ request, fetch, getClientAddress }) => {
+		const kind = 'comment' as const;
+		const service = climateDataService(fetch);
+		if (!service) return fail(503, { kind, ok: false, message: unavailable });
+
+		const form = await request.formData();
+		const entry = form.get('entry');
+		const body = form.get('message');
+		const message = typeof body === 'string' ? body.trim() : '';
+		if (typeof entry !== 'string' || !entryId.test(entry)) {
+			return fail(400, { kind, ok: false, message: 'Choose a thought to comment on.' });
+		}
+		if (!message || message.includes('\0') || Array.from(message).length > 300) {
+			return fail(400, { kind, ok: false, message: 'Write a comment of 1 to 300 characters.' });
+		}
+
+		// Same bot traps as posts; trapped comments get the normal thank-you.
+		const stamp = checkStamp(form.get('started'));
+		if (
+			form.get('website') ||
+			stamp === 'missing' ||
+			stamp === 'too-fast' ||
+			looksAutomated(request.headers.get('user-agent'))
+		) {
+			return { kind, ok: true, published: false, message: 'Thank you.' };
+		}
+		if (stamp === 'expired') {
+			return fail(400, {
+				kind,
+				ok: false,
+				message: 'This page has been open a long time. Reload it and try again.'
+			});
+		}
+
+		try {
+			if (matchesBlockedClimatePhrase(message)) {
+				return fail(422, { kind, ok: false, message: blockedCommentMessage });
+			}
+			if (!takeAiBudget(getClientAddress())) {
+				return fail(429, { kind, ok: false, message: rateLimited });
+			}
+			const screened = {
+				...(await analyse(message, [])),
+				publish: await autoPublishEnabled(service)
+			};
+			const outcome = await service.addComment(getClientAddress(), entry, message, screened);
+			if (outcome === 'rate_limited') return fail(429, { kind, ok: false, message: rateLimited });
+			if (outcome === 'disabled') {
+				return fail(403, { kind, ok: false, message: 'Comments are closed right now.' });
+			}
+			if (outcome === 'unavailable') {
+				return fail(404, { kind, ok: false, message: 'This thought is no longer on the wall.' });
+			}
+			if (screened.verdict === 'block') {
+				return fail(422, { kind, ok: false, message: blockedCommentMessage });
+			}
+			const published = screened.publish && screened.verdict === 'allow';
+			if (published) await service.broadcastWallChanged();
+			return {
+				kind,
+				ok: true,
+				published,
+				message: published ? 'Comment added.' : 'Thanks. It will appear after a quick TNH review.'
+			};
+		} catch {
+			return fail(503, { kind, ok: false, message: unavailable });
+		}
+	},
+
 	withdraw: async ({ request, fetch }) => {
 		const kind = 'withdraw' as const;
 		const service = climateDataService(fetch);

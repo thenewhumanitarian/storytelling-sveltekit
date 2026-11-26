@@ -20,6 +20,10 @@
 	let overrides = $state<Record<string, Entry['status'] | 'deleted'>>({});
 	let fresh = $state<Record<string, true>>({});
 	let autoOverride = $state<boolean | null>(null);
+	let commentsOverride = $state<boolean | null>(null);
+	const commentsOn = $derived(
+		commentsOverride ?? (data.state === 'ready' ? data.commentsEnabled : true)
+	);
 	let seen: Set<string> | null = null;
 
 	const serverEntries = $derived(data.state === 'ready' ? data.entries : []);
@@ -41,6 +45,8 @@
 		);
 		if (pending.length !== Object.keys(overrides).length) overrides = Object.fromEntries(pending);
 		if (data.state === 'ready' && autoOverride === data.autoPublish) autoOverride = null;
+		if (data.state === 'ready' && commentsOverride === data.commentsEnabled)
+			commentsOverride = null;
 
 		const arrivals = seen ? list.filter((entry) => !seen!.has(entry.id)) : [];
 		seen = new Set(list.map((entry) => entry.id));
@@ -108,6 +114,33 @@
 			minute: '2-digit'
 		});
 
+	const threads = $derived.by(() => {
+		const grouped: Record<string, NonNullable<typeof data.comments>> = {};
+		if (data.state !== 'ready') return grouped;
+		for (const comment of data.comments) {
+			(grouped[comment.contribution_id] ??= []).push(comment);
+		}
+		return grouped;
+	});
+	const commentStatus = { pending: 'In queue', published: 'Live', removed: 'Blocked' };
+
+	const commentAct =
+		(id: string): SubmitFunction =>
+		({ cancel, submitter }) => {
+			const value = (submitter as HTMLButtonElement | null)?.value;
+			if (value === 'delete' && !confirm('Delete this comment permanently?')) {
+				cancel();
+				return;
+			}
+			busy = id;
+			return async ({ result, update }) => {
+				await update({ reset: false, invalidateAll: false });
+				await invalidate('climate:admin');
+				busy = null;
+				if (result.type === 'success') notice = value === 'delete' ? 'Comment deleted.' : 'Saved.';
+			};
+		};
+
 	function wallText(entry: Entry) {
 		return drafts[entry.id] ?? entry.published_body ?? entry.moderation_term ?? entry.body;
 	}
@@ -143,6 +176,15 @@
 				}
 			};
 		};
+
+	const toggleComments: SubmitFunction = ({ formData }) => {
+		commentsOverride = formData.get('enabled') === 'true';
+		return async ({ result, update }) => {
+			await update({ reset: false, invalidateAll: false });
+			await invalidate('climate:admin');
+			if (result.type !== 'success') commentsOverride = null;
+		};
+	};
 
 	const toggleAuto: SubmitFunction = ({ formData }) => {
 		autoOverride = formData.get('enabled') === 'true';
@@ -229,6 +271,20 @@
 							: 'Every new post waits in the review queue until you publish it.'}
 					</span>
 				</form>
+				{#if data.commentsSetting}
+					<form method="POST" action="?/comments" use:enhance={toggleComments} class="auto">
+						<input type="hidden" name="enabled" value={commentsOn ? 'false' : 'true'} />
+						<button type="submit" class="switch" role="switch" aria-checked={commentsOn}>
+							<span class="knob" aria-hidden="true"></span>
+							Comments {commentsOn ? 'on' : 'off'}
+						</button>
+						<span class="auto-note">
+							{commentsOn
+								? 'Visitors can open threads and comment on thoughts.'
+								: 'Threads are hidden and new comments are refused. Existing comments are kept.'}
+						</span>
+					</form>
+				{/if}
 			{:else}
 				<p class="auto-note">
 					Auto-publish is {autoPublish ? 'on' : 'off'} (set by environment). Apply
@@ -344,6 +400,51 @@
 									{/if}
 								</div>
 							</form>
+						{/if}
+
+						{#if threads[entry.id]?.length}
+							<details
+								class="thread"
+								open={threads[entry.id].some((c) => c.status !== 'published')}
+							>
+								<summary>
+									{threads[entry.id].length}
+									{threads[entry.id].length === 1 ? 'comment' : 'comments'}
+									{#if threads[entry.id].some((c) => c.status === 'pending')}
+										<span class="badge">needs review</span>
+									{/if}
+								</summary>
+								<ol>
+									{#each threads[entry.id] as comment (comment.id)}
+										<li class={['comment', comment.status]} aria-busy={busy === comment.id}>
+											<div class="meta">
+												<time datetime={comment.created_at}>{when(comment.created_at)}</time>
+												<span class="badge status">{commentStatus[comment.status]}</span>
+												{#if comment.moderation_verdict}
+													<span
+														class="badge ai {comment.moderation_verdict}"
+														title={comment.moderation_reason ?? ''}
+														>AI: {comment.moderation_verdict}</span
+													>
+												{/if}
+											</div>
+											<p>{comment.body}</p>
+											<form method="POST" action="?/comment" use:enhance={commentAct(comment.id)}>
+												<input type="hidden" name="id" value={comment.id} />
+												{#if comment.status === 'published'}
+													<button class="block" name="status" value="removed">Block</button>
+												{:else if comment.status === 'removed'}
+													<button class="primary" name="status" value="published">Unblock</button>
+												{:else}
+													<button class="primary" name="status" value="published">Publish</button>
+													<button class="block" name="status" value="removed">Block</button>
+												{/if}
+												<button class="danger" name="status" value="delete">Delete</button>
+											</form>
+										</li>
+									{/each}
+								</ol>
+							</details>
 						{/if}
 
 						<form
@@ -731,6 +832,45 @@
 		font-size: 1.05rem;
 		white-space: pre-wrap;
 		overflow-wrap: anywhere;
+	}
+	details.thread {
+		border-top: 1px solid var(--line);
+		padding-top: 0.6rem;
+	}
+	details.thread summary {
+		cursor: pointer;
+		font-weight: 700;
+		font-size: 0.88rem;
+	}
+	details.thread ol {
+		display: grid;
+		gap: 0.5rem;
+		margin: 0.6rem 0 0;
+		padding: 0 0 0 0.9rem;
+		list-style: none;
+		border-left: 2px solid var(--line);
+	}
+	li.comment {
+		display: grid;
+		gap: 0.3rem;
+	}
+	li.comment.removed {
+		opacity: 0.7;
+	}
+	li.comment[aria-busy='true'] {
+		opacity: 0.5;
+	}
+	li.comment p {
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+	li.comment form {
+		display: flex;
+		gap: 0.4rem;
+		align-items: center;
+	}
+	li.comment button {
+		min-height: 2rem;
 	}
 	.reason {
 		font-size: 0.85rem;

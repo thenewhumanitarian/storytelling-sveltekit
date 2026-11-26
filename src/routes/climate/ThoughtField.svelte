@@ -8,6 +8,7 @@
 	import { onMount, untrack } from 'svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
 	import { fly } from 'svelte/transition';
+	import ThoughtThread from './ThoughtThread.svelte';
 	import type { PageData } from './$types';
 
 	type Entry = PageData['wall'][number];
@@ -36,6 +37,8 @@
 		depth: number;
 		/** Still drifting in from beyond the edge; don't retire it for being off-screen yet. */
 		entering: boolean;
+		/** Selected by a click: it stays still until deselected. */
+		pinned: boolean;
 	};
 	type Grab = {
 		id: string;
@@ -66,6 +69,11 @@
 		isMine?: (entry: Entry) => boolean;
 		/** Author takes their thought off the wall (TNH keeps it privately). */
 		onwithdraw?: (entry: Entry) => void;
+		/** Comment threads (needs the database). */
+		commentsEnabled?: boolean;
+		formStamp?: string;
+		refreshKey?: number;
+		onposted?: () => void;
 	}
 
 	let {
@@ -80,7 +88,11 @@
 		cameraLimit = Infinity,
 		onboost,
 		isMine = () => false,
-		onwithdraw
+		onwithdraw,
+		commentsEnabled = false,
+		formStamp = '',
+		refreshKey = 0,
+		onposted = () => {}
 	}: Props = $props();
 
 	// The field is a window onto a wider canvas: panning slides every term past it.
@@ -135,6 +147,54 @@
 	let fresh = $state<Record<string, true>>({});
 	// The thought whose remove button is waiting for a second, confirming click.
 	let confirming = $state<string | null>(null);
+	// Clicking a thought pins it and offers a Comment button; opening the thread pushes others aside.
+	let selectedId = $state<string | null>(null);
+	let openId = $state<string | null>(null);
+	let threadPanel = $state<HTMLElement>();
+
+	function select(id: string | null) {
+		if (selectedId && selectedId !== id) {
+			const previous = bodies.get(selectedId);
+			if (previous) previous.pinned = false;
+		}
+		selectedId = id;
+		const body = id ? bodies.get(id) : undefined;
+		if (body) {
+			body.pinned = true;
+			body.age = Math.min(body.age, body.life * 0.3);
+			if (body.state === 'out') body.state = 'live';
+		}
+	}
+
+	// Open the thread just below the headline block, not over it.
+	let threadTop = $state(16);
+
+	function openThread(id: string) {
+		select(id);
+		const intro = avoid.find(Boolean);
+		if (intro && field) {
+			const below = intro.getBoundingClientRect().bottom - field.getBoundingClientRect().top;
+			threadTop = Math.max(16, Math.round(below + 12));
+		}
+		openId = id;
+		requestAnimationFrame(measureAvoid);
+	}
+
+	function closeThread() {
+		openId = null;
+		threadPanel = undefined;
+		select(null);
+		requestAnimationFrame(measureAvoid);
+	}
+
+	// Clicking anywhere else lets the selected thought drift again and closes an open thread.
+	function outside(event: PointerEvent) {
+		const target = event.target as Element | null;
+		if (!selectedId || !target) return;
+		if (target.closest(`.term[data-term="${CSS.escape(selectedId)}"], .thread`)) return;
+		if (openId) closeThread();
+		else select(null);
+	}
 	// Each thought keeps the size it arrived with, so a +1 never re-wraps it while it's on screen.
 	let sizeAtSpawn = $state<Record<string, number>>({});
 	let grab: Grab | null = null;
@@ -178,17 +238,20 @@
 	function measureAvoid() {
 		if (!field) return;
 		const origin = field.getBoundingClientRect();
+		const zone = (node: HTMLElement, padX: number, padY: number) => {
+			const rect = node.getBoundingClientRect();
+			return {
+				x: rect.left - origin.left - padX,
+				y: rect.top - origin.top - padY,
+				w: rect.width + padX * 2,
+				h: rect.height + padY * 2
+			};
+		};
 		avoidRects = avoid
 			.filter((node): node is HTMLElement => Boolean(node))
-			.map((node) => {
-				const rect = node.getBoundingClientRect();
-				return {
-					x: rect.left - origin.left - 18,
-					y: rect.top - origin.top - 14,
-					w: rect.width + 36,
-					h: rect.height + 28
-				};
-			});
+			.map((node) => zone(node, 18, 14));
+		// An open thread clears a generous space: every other thought is pushed aside.
+		if (threadPanel) avoidRects.push(zone(threadPanel, 32, 24));
 	}
 
 	function overlapScore(x: number, y: number, w: number, h: number, ignore: string) {
@@ -268,7 +331,8 @@
 			held: false,
 			dragging: false,
 			depth: random(0.82, 1.14),
-			entering: mode === 'edge'
+			entering: mode === 'edge',
+			pinned: false
 		};
 		if (mode === 'edge') {
 			// side: +1 enters from the left heading right, -1 from the right heading left.
@@ -334,6 +398,10 @@
 		const text = node.querySelector<HTMLElement>('.text');
 		if (!text) return;
 		text.style.width = '';
+		// Where the text starts inside the term, so the action row lines up under it.
+		const ratio = node.getBoundingClientRect().width / (node.offsetWidth || 1) || 1;
+		const indent = (text.getBoundingClientRect().left - node.getBoundingClientRect().left) / ratio;
+		node.style.setProperty('--text-indent', `${Math.max(0, Math.round(indent))}px`);
 		const range = document.createRange();
 		range.selectNodeContents(text);
 		const lines = Array.from(range.getClientRects());
@@ -372,7 +440,9 @@
 		const node = nodes.get(body.id);
 		if (!node) return;
 		// Freeze the bob where it is on hover or grab, so the term never shifts under the pointer.
-		if (!still && !body.held && !body.dragging) body.bob = Math.sin(now / 1800 + body.phase) * 5;
+		if (!still && !body.held && !body.dragging && !body.pinned) {
+			body.bob = Math.sin(now / 1800 + body.phase) * 5;
+		}
 		const bob = body.bob;
 		const settle = 0.92 + 0.08 * easeOut(body.alpha);
 		node.style.transform = `translate3d(${body.x.toFixed(1)}px, ${(body.y + bob).toFixed(1)}px, 0) scale(${settle.toFixed(3)})`;
@@ -393,8 +463,8 @@
 				const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) + pad;
 				const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) + pad;
 				if (ox <= 0 || oy <= 0) continue;
-				const aFixed = a.held || a.dragging;
-				const bFixed = b.held || b.dragging;
+				const aFixed = a.held || a.dragging || a.pinned;
+				const bFixed = b.held || b.dragging || b.pinned;
 				if (aFixed && bFixed) continue;
 				const share = aFixed ? 0 : bFixed ? 1 : 0.5;
 				if (ox < oy) {
@@ -435,7 +505,7 @@
 		for (const body of bodies.values()) {
 			if (!body.placed) continue;
 			list.push(body);
-			const frozen = body.held || body.dragging;
+			const frozen = body.held || body.dragging || body.pinned;
 
 			if (body.state === 'in') {
 				body.alpha = Math.min(1, body.alpha + dt / 0.9);
@@ -619,9 +689,12 @@
 		};
 		frame = requestAnimationFrame(tickFrame);
 
+		document.addEventListener('pointerdown', outside, true);
+
 		return () => {
 			cancelAnimationFrame(frame);
 			resizeObserver?.disconnect();
+			document.removeEventListener('pointerdown', outside, true);
 		};
 	});
 
@@ -1065,6 +1138,7 @@
 			return;
 		}
 		lastClick = { id, at: now };
+		select(id);
 	}
 
 	function setHeld(id: string, held: boolean) {
@@ -1083,7 +1157,7 @@
 >
 	{#each shown as { entry, id } (id)}
 		<div
-			class={['term', tier(entry), { fresh: fresh[id] }]}
+			class={['term', tier(entry), { fresh: fresh[id], open: openId === id }]}
 			data-term={id}
 			style:--pop={sizeAtSpawn[id] ?? 1}
 			use:register={id}
@@ -1134,39 +1208,78 @@
 					<span class="text">{entry.body}</span>
 				</button>
 			</form>
-			{#if isMine(entry) && onwithdraw}
-				<!-- Only the author's browser shows this, so it doubles as the "yours" marker. -->
-				<button
-					type="button"
-					class={['remove', { confirming: confirming === id }]}
-					aria-label={confirming === id
-						? `Confirm: take “${entry.body}” off the wall`
-						: `Remove your thought “${entry.body}” from the wall`}
-					title={confirming === id
-						? 'Click again to remove'
-						: 'Your thought. Remove it from the wall'}
-					onfocus={() => setHeld(id, true)}
-					onblur={() => {
-						setHeld(id, false);
-						if (confirming === id) confirming = null;
-					}}
-					onclick={() => {
-						if (confirming === id) {
-							confirming = null;
-							onwithdraw(entry);
-						} else {
-							confirming = id;
-						}
-					}}
-				>
-					<svg viewBox="0 0 20 20" aria-hidden="true">
-						<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6M9 9v5M11 9v5" />
-					</svg>
-					{#if confirming === id}<span>Remove</span>{/if}
-				</button>
+			{#if (isMine(entry) && onwithdraw) || (commentsEnabled && (selectedId === id || entry.comments > 0))}
+				<!-- Actions sit on a row under the text, starting at the text's left edge. -->
+				<div class="actions">
+					{#if isMine(entry) && onwithdraw}
+						<!-- Only the author's browser shows this, so it doubles as the "yours" marker. -->
+						<button
+							type="button"
+							class={['remove', { confirming: confirming === id }]}
+							aria-label={confirming === id
+								? `Confirm: take “${entry.body}” off the wall`
+								: `Remove your thought “${entry.body}” from the wall`}
+							title={confirming === id
+								? 'Click again to remove'
+								: 'Your thought. Remove it from the wall'}
+							onfocus={() => setHeld(id, true)}
+							onblur={() => {
+								setHeld(id, false);
+								if (confirming === id) confirming = null;
+							}}
+							onclick={() => {
+								if (confirming === id) {
+									confirming = null;
+									onwithdraw(entry);
+								} else {
+									confirming = id;
+								}
+							}}
+						>
+							<svg viewBox="0 0 20 20" aria-hidden="true">
+								<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6M9 9v5M11 9v5" />
+							</svg>
+							{#if confirming === id}<span>Remove</span>{/if}
+						</button>
+					{/if}
+					{#if commentsEnabled && (selectedId === id || entry.comments > 0)}
+						<button
+							type="button"
+							class={['comment', { expanded: selectedId === id }]}
+							aria-label={entry.comments
+								? `Open ${entry.comments} ${entry.comments === 1 ? 'comment' : 'comments'} on “${entry.body}”`
+								: `Comment on “${entry.body}”`}
+							onfocus={() => setHeld(id, true)}
+							onblur={() => setHeld(id, false)}
+							onclick={() => openThread(id)}
+						>
+							<svg viewBox="0 0 20 20" aria-hidden="true">
+								<path
+									d="M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-4 3v-3H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5Z"
+								/>
+							</svg>
+							{#if selectedId === id}<span>Comment</span>{/if}
+							{#if entry.comments}<span class="n">{entry.comments}</span>{/if}
+						</button>
+					{/if}
+				</div>
 			{/if}
 		</div>
 	{/each}
+
+	{#if openId && byId.get(openId)}
+		{#key openId}
+			<ThoughtThread
+				entry={byId.get(openId)!}
+				{formStamp}
+				{refreshKey}
+				onclose={closeThread}
+				{onposted}
+				top={threadTop}
+				bind:panel={threadPanel}
+			/>
+		{/key}
+	{/if}
 
 	{#if !entries.length}
 		<p class="empty">Be the first to add a thought. Approved posts float up here.</p>
@@ -1277,14 +1390,86 @@
 	.word:hover .count {
 		background: #b24a60;
 	}
+	/* While its thread is open, the thought itself shows in the panel header instead. */
+	.term.open {
+		visibility: hidden;
+	}
+	/* Round Comment button: appears when a thought is selected, or as a count when it has comments. */
+	.comment {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		height: 2.3rem;
+		min-width: 2.3rem;
+		justify-content: center;
+		padding: 0 0.6rem;
+		border: 0;
+		border-radius: 100vmax;
+		background: rgb(30 30 28 / 55%);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
+		color: #fff;
+		font: 700 0.85rem/1 var(--sans);
+		cursor: pointer;
+		pointer-events: auto;
+		animation: comment-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+	.comment.expanded {
+		padding-inline: 0.75rem 0.9rem;
+		background: #fff;
+		color: #282828;
+		box-shadow: 0 8px 22px rgb(0 0 0 / 30%);
+	}
+	.comment:hover {
+		background: #fff;
+		color: #282828;
+	}
+	.comment svg {
+		width: 1.15rem;
+		height: 1.15rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		stroke-linejoin: round;
+	}
+	.comment .n {
+		min-width: 1.2rem;
+		padding: 0.15rem 0.35rem;
+		border-radius: 100vmax;
+		background: #35b58b;
+		color: #282828;
+		font-size: 0.75rem;
+	}
+	.comment:focus {
+		outline: none;
+		box-shadow: none;
+	}
+	.comment:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+	@keyframes comment-in {
+		from {
+			opacity: 0;
+			transform: scale(0.7);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.comment {
+			animation: none;
+		}
+	}
 	/* Remove button after the text: only the author ever sees it. */
 	.term {
-		display: flex;
-		align-items: center;
-		gap: 0.1rem;
+		display: grid;
+		justify-items: start;
 	}
-	.term:global([data-lines='multi']) {
-		align-items: flex-start;
+	.actions {
+		display: flex;
+		gap: 0.4rem;
+		margin: 0.1rem 0 0 var(--text-indent, 0px);
 	}
 	.remove {
 		flex: none;
@@ -1294,7 +1479,6 @@
 		height: 2.3rem;
 		min-width: 2.3rem;
 		justify-content: center;
-		margin-inline-start: 0.35rem;
 		padding: 0 0.5rem;
 		border: 0;
 		border-radius: 100vmax;
