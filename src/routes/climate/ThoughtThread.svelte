@@ -410,13 +410,13 @@
 	.bubble.own {
 		align-self: flex-end;
 		border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
-		background: #8ed9bd;
+		background: #e3f4ec;
 		color: #1c1c1a;
 		box-shadow: 0 4px 14px rgb(0 0 0 / 20%);
 	}
 	.bubble.checking,
 	.bubble.review {
-		background: rgb(142 217 189 / 82%);
+		background: rgb(227 244 236 / 78%);
 		color: #1c1c1a;
 	}
 	.bubble.blocked,
