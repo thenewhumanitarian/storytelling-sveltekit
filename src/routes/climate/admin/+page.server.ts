@@ -1,4 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { autoPublishEnabled } from '$lib/server/climate-ai';
 import { climateDataService, type AdminStatus } from '$lib/server/climate';
 import {
 	adminConfigured,
@@ -20,7 +21,8 @@ const outcomes: Record<string, string> = {
 	invalid_status: 'Choose queue, wall or hidden.'
 };
 
-export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
+export const load: PageServerLoad = async ({ cookies, fetch, setHeaders, depends }) => {
+	depends('climate:admin');
 	setHeaders({ 'cache-control': 'private, no-store', 'x-robots-tag': 'noindex, nofollow' });
 	if (!adminConfigured()) return { state: 'unconfigured' as const };
 	if (!isAdmin(cookies)) return { state: 'login' as const };
@@ -28,7 +30,14 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 	const service = climateDataService(fetch);
 	if (!service) return { state: 'no-database' as const };
 	try {
-		return { state: 'ready' as const, entries: await service.admin.entries() };
+		const [entries, settings] = await Promise.all([service.admin.entries(), service.settings()]);
+		return {
+			state: 'ready' as const,
+			entries,
+			autoPublish: await autoPublishEnabled(service),
+			// Null until the settings migration is applied; the switch is hidden until then.
+			settingsReady: settings !== null
+		};
 	} catch {
 		return { state: 'migration' as const };
 	}
@@ -78,9 +87,23 @@ export const actions = {
 		try {
 			const outcome = await service.admin.update(id, status as AdminStatus, wallText);
 			if (outcome !== 'ok') return fail(400, { message: outcomes[outcome] ?? 'Not saved.' });
+			await service.broadcastWallChanged();
 			return { ok: true, id };
 		} catch {
 			return fail(503, { message: 'Couldn’t save. Try again.' });
+		}
+	},
+
+	autopublish: async ({ request, cookies, fetch }) => {
+		if (!isAdmin(cookies)) return fail(401, { message: 'Your session has ended. Log in again.' });
+		const service = climateDataService(fetch);
+		if (!service) return fail(503, { message: 'The database isn’t configured.' });
+		const enabled = (await request.formData()).get('enabled') === 'true';
+		try {
+			await service.admin.setAutoPublish(enabled);
+			return { ok: true };
+		} catch {
+			return fail(503, { message: 'Couldn’t change auto-publish. Try again.' });
 		}
 	},
 
@@ -93,7 +116,9 @@ export const actions = {
 		if (typeof id !== 'string' || !uuid.test(id)) return fail(400, { message: 'Unknown entry.' });
 		try {
 			const removed = await service.admin.remove(id);
-			return removed ? { ok: true, deleted: id } : fail(404, { message: outcomes.not_found });
+			if (!removed) return fail(404, { message: outcomes.not_found });
+			await service.broadcastWallChanged();
+			return { ok: true, deleted: id };
 		} catch {
 			return fail(503, { message: 'Couldn’t delete. Try again.' });
 		}

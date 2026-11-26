@@ -123,12 +123,10 @@ export const actions = {
 				if (!takeAiBudget(getClientAddress())) {
 					return fail(429, { kind, ok: false, message: rateLimited });
 				}
-				screened = { ...(await analyse(message, wall)), publish: autoPublishEnabled() };
-
-				// Hate, abuse, spam and off-topic posts are refused outright and never stored.
-				if (screened.verdict === 'block') {
-					return fail(422, { kind, ok: false, message: blockedMessage });
-				}
+				screened = {
+					...(await analyse(message, wall)),
+					publish: await autoPublishEnabled(service)
+				};
 			}
 			const { accepted, token } = await service.contribute(
 				getClientAddress(),
@@ -138,6 +136,11 @@ export const actions = {
 				screened
 			);
 			if (!accepted) return fail(429, { kind, ok: false, message: rateLimited });
+			// Malicious posts are stored hidden so an editor can unblock a false positive in
+			// /climate/admin, but the poster is told it won't appear.
+			if (screened?.verdict === 'block') {
+				return fail(422, { kind, ok: false, message: blockedMessage });
+			}
 
 			const published = screened?.publish === true && screened.verdict === 'allow';
 			return {
