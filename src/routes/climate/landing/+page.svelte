@@ -14,6 +14,40 @@
 	import { backdrops as photos, backdropSizes } from '../backdrops';
 	import type { PageProps } from './$types';
 
+	// Tammam's portrait: square, black and white (made with sharp from his author photo).
+	const portraitFiles = import.meta.glob<string>(
+		'$lib/assets/climate/people/tammam-*.{avif,webp}',
+		{
+			eager: true,
+			query: '?url',
+			import: 'default'
+		}
+	);
+	const portraitSet = (format: 'avif' | 'webp') =>
+		[96, 160, 240, 300]
+			.map((w) => `${portraitFiles[`/src/lib/assets/climate/people/tammam-${w}.${format}`]} ${w}w`)
+			.join(', ');
+	const portrait = {
+		avif: portraitSet('avif'),
+		webp: portraitSet('webp'),
+		src: portraitFiles['/src/lib/assets/climate/people/tammam-160.webp'],
+		placeholder:
+			'data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQABAAA4BaJaQAApMjxvszj4AA/ulCm0RmKhDJ6Z69fq4dk1sDXD6ddwl9BbEcrXz4XGu2J1RNeWyAUUVQu471pZKTpXu16icTG+pYcrL0wAAA'
+	};
+	let portraitLoaded = $state(false);
+
+	// Calls back once an image has loaded, including one that finished before hydration.
+	function whenLoaded(img: HTMLImageElement, done: () => void) {
+		const check = () => img.naturalWidth && done();
+		if (img.complete) check();
+		img.addEventListener('load', check);
+		return { destroy: () => img.removeEventListener('load', check) };
+	}
+
+	// The cards column sticks while the text scrolls; when it's taller than the window it sticks
+	// by its bottom edge instead, so every card can still be reached.
+	let cardsHeight = $state(0);
+
 	let { data, form }: PageProps = $props();
 
 	// The webinar page. After 4 December, point the card at the recording (see the card below).
@@ -188,30 +222,52 @@
 				</div>
 			</section>
 
-			<aside class="cards" aria-label="Webinar, letter and getting involved">
+			<aside
+				class="cards"
+				aria-label="Webinar, letter and getting involved"
+				bind:clientHeight={cardsHeight}
+				style:--cards-h={`${cardsHeight}px`}
+			>
 				<!-- After the webinar: "Watch the webinar", "Recorded 4 December 2026", link to the recording. -->
-				<a class="card" href={eventUrl}>
+				<div class="card">
 					<span class="kicker">Webinar · 4 December 2026, 15:00 GMT</span>
 					<span class="card-title">The hidden climate costs of militarisation and conflict</span>
 					<span class="card-text"
 						>With Benjamin Neimark, Neta Crawford and Mohammed Usrof, moderated by Philip Kleinfeld.</span
 					>
-					<span class="card-cta">Register now <span aria-hidden="true">→</span></span>
-				</a>
+					<a class="landing-button card-button" href={eventUrl}>Register now</a>
+				</div>
 
-				{#if letterUrl}
-					<a class="card" href={letterUrl}>
-						<span class="kicker">Op-ed</span>
-						<span class="card-title">A letter from Tammam</span>
-						<span class="card-cta">Read the letter <span aria-hidden="true">→</span></span>
-					</a>
-				{:else}
-					<div class="card soon">
-						<span class="kicker">Op-ed · Coming soon</span>
-						<span class="card-title">A letter from Tammam</span>
-						<span class="card-text">His letter on the project will be published here.</span>
+				<div class="card letter" class:soon={!letterUrl}>
+					<span class="kicker">{letterUrl ? 'Op-ed' : 'Op-ed · Coming soon'}</span>
+					<div class="letter-row">
+						<div class="portrait" style:background-image={`url(${portrait.placeholder})`}>
+							<picture>
+								<source type="image/avif" srcset={portrait.avif} sizes="4.5rem" />
+								<img
+									src={portrait.src}
+									srcset={portrait.webp}
+									sizes="4.5rem"
+									alt=""
+									width="72"
+									height="72"
+									loading="lazy"
+									decoding="async"
+									class:loaded={portraitLoaded}
+									use:whenLoaded={() => (portraitLoaded = true)}
+								/>
+							</picture>
+						</div>
+						<div class="letter-text">
+							<span class="card-title">A letter from Tammam</span>
+							{#if letterUrl}
+								<a class="landing-button card-button" href={letterUrl}>Read the letter</a>
+							{:else}
+								<span class="card-text">His letter on the project will be published here.</span>
+							{/if}
+						</div>
 					</div>
-				{/if}
+				</div>
 
 				<div class="card">
 					<span class="kicker">Get involved</span>
@@ -231,20 +287,21 @@
 					<NewsletterSignup />
 				</div>
 			</aside>
-		</main>
 
-		<footer class="footer">
-			{#key current}
-				<span class="credit"
-					>Photo:
-					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-					<a href={credit.profile} target="_blank" rel="noopener">{credit.name}</a> /
-					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-					<a href={credit.page} target="_blank" rel="noopener">{credit.source}</a></span
-				>
-			{/key}
-			<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
-		</footer>
+			<!-- In the grid beside the cards, so their sticky area runs to the page end. -->
+			<footer class="footer">
+				{#key current}
+					<span class="credit"
+						>Photo:
+						<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+						<a href={credit.profile} target="_blank" rel="noopener">{credit.name}</a> /
+						<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+						<a href={credit.page} target="_blank" rel="noopener">{credit.source}</a></span
+					>
+				{/key}
+				<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
+			</footer>
+		</main>
 	</div>
 
 	<Dialog.Portal>
@@ -285,8 +342,11 @@
 		font-weight: 700;
 	}
 
+	/* The site sets overflow-x: hidden on html and body, which turns body into a scroll container
+	   that never scrolls and stops anything sticking. clip hides sideways overflow without that. */
 	:global(html:has(.landing)),
 	:global(body:has(.landing)) {
+		overflow-x: clip;
 		background: #1d1d1b;
 	}
 	.landing {
@@ -295,9 +355,10 @@
 		--serif: 'Climate Sectra', Georgia, serif;
 		--sans: 'Climate Roboto', Arial, sans-serif;
 		--pad-x: clamp(1.1rem, 5vw, 5rem);
+		--masthead-height: clamp(3.5rem, 8svh, 4.5rem);
 		position: relative;
 		display: grid;
-		grid-template-rows: auto 1fr auto;
+		grid-template-rows: auto 1fr;
 		min-height: 100vh;
 		min-height: 100svh;
 		color: #fff;
@@ -386,14 +447,16 @@
 	}
 
 	/* Masthead: the TNH dark bar. */
+	/* Stays at the top while the page scrolls. */
 	.masthead {
-		position: relative;
-		z-index: 2;
+		position: sticky;
+		top: 0;
+		z-index: 5;
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
-		height: clamp(3.5rem, 8svh, 4.5rem);
-		padding-inline: max(0.5rem, calc((clamp(3.5rem, 8svh, 4.5rem) - 2.75rem) / 2));
+		height: var(--masthead-height);
+		padding-inline: max(0.5rem, calc((var(--masthead-height) - 2.75rem) / 2));
 		background: #282828;
 	}
 	.share {
@@ -435,7 +498,7 @@
 		justify-content: space-between;
 		align-items: start;
 		gap: 2.5rem clamp(2rem, 5vw, 5rem);
-		padding: clamp(2rem, 6vh, 4.5rem) var(--pad-x) 3rem;
+		padding: clamp(2rem, 6vh, 4.5rem) var(--pad-x) 1.5rem;
 		text-shadow: 0 1px 10px rgb(0 0 0 / 35%);
 	}
 	h1 {
@@ -485,9 +548,15 @@
 	}
 
 	/* Cards: dark glass, like the wall's panels. */
+	.intro {
+		grid-column: 1;
+		grid-row: 1;
+	}
 	.cards {
+		grid-column: 2;
+		grid-row: 1 / span 2;
 		position: sticky;
-		top: 1.5rem;
+		top: min(calc(var(--masthead-height) + 1.5rem), calc(100svh - var(--cards-h, 0px) - 1.5rem));
 		display: grid;
 		gap: 0.85rem;
 	}
@@ -507,14 +576,38 @@
 		text-decoration: none;
 		text-shadow: none;
 	}
-	a.card {
-		transition: background-color 200ms ease;
+	/* Label across the top like the other cards; portrait and title side by side, top-aligned. */
+	.letter-row {
+		display: grid;
+		grid-template-columns: 4.5rem minmax(0, 1fr);
+		align-items: start;
+		gap: 1rem;
+		margin-top: 0.3rem;
 	}
-	a.card:hover {
-		background-color: rgb(40 40 38 / 80%);
+	.letter-text {
+		display: grid;
+		gap: 0.35rem;
 	}
-	a.card:hover .card-cta {
-		text-decoration: underline;
+	/* The one round element in the cards: an author portrait. */
+	.portrait {
+		position: relative;
+		width: 4.5rem;
+		height: 4.5rem;
+		overflow: hidden;
+		border-radius: 50%;
+		background-size: cover;
+		box-shadow: 0 0 0 1px rgb(255 255 255 / 25%);
+	}
+	.portrait img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transition: opacity 500ms ease;
+	}
+	.portrait img.loaded {
+		opacity: 1;
 	}
 	.kicker {
 		color: #9fe0c4;
@@ -531,16 +624,9 @@
 		font-size: 0.9rem;
 		line-height: 1.45;
 	}
-	.card-cta {
-		margin-top: 0.35rem;
-		font-weight: 700;
-		font-size: 0.93rem;
-	}
-	.soon {
+	.soon .card-title,
+	.soon .card-text {
 		opacity: 0.85;
-	}
-	.soon .kicker {
-		color: rgb(255 255 255 / 65%);
 	}
 	.landing :global(.card-button) {
 		justify-self: start;
@@ -551,13 +637,14 @@
 	}
 
 	.footer {
-		position: relative;
-		z-index: 1;
+		grid-column: 1;
+		grid-row: 2;
+		align-self: end;
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: flex-end;
 		gap: 0.4rem 1.4rem;
-		padding: 0.9rem var(--pad-x);
+		padding-top: 1rem;
+		text-shadow: none;
 		color: rgb(255 255 255 / 75%);
 		font-size: 0.8rem;
 	}
@@ -644,7 +731,14 @@
 
 	@media (max-width: 960px) {
 		.content {
-			grid-template-columns: minmax(0, 40rem);
+			grid-template-columns: minmax(0, 42rem);
+			justify-content: center;
+		}
+		.intro,
+		.cards,
+		.footer {
+			grid-column: 1;
+			grid-row: auto;
 		}
 		.cards {
 			position: static;
@@ -662,9 +756,6 @@
 		.landing :global(.masthead-cta) {
 			padding: 0.5rem 0.8rem;
 			font-size: 0.85rem;
-		}
-		.footer {
-			justify-content: flex-start;
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {
