@@ -995,7 +995,7 @@
 			goldenBoost(count, word, pulse.remote);
 		} else if (pulse.liked) {
 			// Someone else's +1: the box glows mint while it grows, then settles back to its colour.
-			if (pulse.remote) flashColour(count, '#35b58b', '#282828');
+			if (pulse.remote) flashColour(count, '#8ed9bd', '#282828');
 			// The counter springs, a seedling grows out of it and leaves lift away.
 			count.animate(
 				[
@@ -1469,7 +1469,7 @@
 		min-width: 1.2rem;
 		padding: 0.15rem 0.35rem;
 		border-radius: 100vmax;
-		background: #35b58b;
+		background: #8ed9bd;
 		color: #282828;
 		font-size: 0.75rem;
 	}
@@ -1597,7 +1597,7 @@
 		transform: scale(0.92);
 	}
 	.vote.up.active {
-		background: #35b58b;
+		background: #8ed9bd;
 		color: #282828;
 		box-shadow: none;
 	}
@@ -1678,7 +1678,7 @@
 		stroke-width: 1.2;
 	}
 	.word.reacted .count {
-		background: #35b58b;
+		background: #8ed9bd;
 		color: #282828;
 	}
 	.number {
@@ -1705,7 +1705,7 @@
 		color: #282828;
 	}
 	.count :global(.spark:not(.remote)) {
-		background: #35b58b;
+		background: #8ed9bd;
 		color: #282828;
 	}
 	.count :global(.spark.golden) {
