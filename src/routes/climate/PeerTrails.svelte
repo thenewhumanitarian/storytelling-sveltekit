@@ -2,8 +2,9 @@
 	/*
 	 * Other visitors as light on water instead of arrows. The thoughts drift differently in every
 	 * browser, so pointing at a spot means little; motion still does. Moving, a visitor draws a soft
-	 * trail of light with a small glowing drop at its head. Still for a moment, the drop sinks with
-	 * a few widening ripples and disappears. Moving again, it resurfaces with a small ripple.
+	 * trail of light, and their arrow rides its head on a small glowing drop. Still for a moment, the
+	 * arrow sinks with a few widening ripples and disappears. Moving again, it resurfaces with a
+	 * small ripple. Their name shows briefly each time they surface or sink.
 	 *
 	 * One canvas, one requestAnimationFrame loop that stops itself when nothing is moving.
 	 */
@@ -22,6 +23,7 @@
 	type Point = { x: number; y: number; t: number };
 	type Peer = {
 		id: string;
+		name: string;
 		tint: string;
 		x: number;
 		y: number;
@@ -33,6 +35,8 @@
 		sunk: boolean;
 		gone: boolean;
 		trail: Point[];
+		/** When the name tag appeared, and whether it is saying hello or goodbye. */
+		label: { born: number; leaving: boolean } | null;
 	};
 	type Ring = { x: number; y: number; born: number; life: number; radius: number; tint: string };
 
@@ -41,6 +45,11 @@
 	const tints = ['255 255 255', '120 214 178', '242 214 168', '190 210 255'];
 	const TRAIL_LIFE = 2400;
 	const STILL_AFTER = 900;
+	const LABEL_LIFE = 1700;
+	// The arrow from the original cursor layer, scaled to 22px wide; its tip is the pointer.
+	// Built in the browser: the server render has no Path2D.
+	let arrow: Path2D | null = null;
+	const ARROW_SCALE = 22 / 18;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null = null;
@@ -50,6 +59,7 @@
 	let rings: Ring[] = [];
 	let frame = 0;
 	let last = 0;
+	let fontFamily = 'sans-serif';
 
 	function tintFor(id: string) {
 		let hash = 0;
@@ -86,6 +96,7 @@
 				const tint = tintFor(cursor.id);
 				peers.set(cursor.id, {
 					id: cursor.id,
+					name: cursor.name,
 					tint,
 					x: tx,
 					y: ty,
@@ -95,7 +106,8 @@
 					alpha: 0,
 					sunk: false,
 					gone: false,
-					trail: []
+					trail: [],
+					label: { born: now, leaving: false }
 				});
 				splash(tx, ty, tint, now, 'surface');
 				continue;
@@ -107,6 +119,7 @@
 				peer.y = ty;
 				peer.trail = [];
 				peer.sunk = false;
+				peer.label = { born: now, leaving: false };
 				splash(tx, ty, peer.tint, now, 'surface');
 			}
 			peer.tx = tx;
@@ -118,7 +131,10 @@
 			if (seen.has(peer.id) || peer.gone) continue;
 			peer.gone = true;
 			if (!peer.sunk) {
+				// A cursor that sat still has already sunk and said goodbye; the room drops it a few
+				// seconds later, which needs no second goodbye.
 				peer.sunk = true;
+				peer.label = { born: now, leaving: true };
 				splash(peer.x, peer.y, peer.tint, now, 'sink');
 			}
 		}
@@ -151,14 +167,17 @@
 				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < 1;
 				if (settled && now - peer.lastMove > STILL_AFTER) {
 					peer.sunk = true;
+					peer.label = { born: now, leaving: true };
 					if (!still) splash(peer.x, peer.y, peer.tint, now, 'sink');
 				}
 			} else {
 				peer.alpha = Math.max(0, peer.alpha - dt * (still ? 60 : 2.2));
 			}
 			while (peer.trail.length && now - peer.trail[0].t > TRAIL_LIFE) peer.trail.shift();
-			if (peer.gone && peer.alpha === 0 && !peer.trail.length) peers.delete(peer.id);
-			else if (!peer.sunk || peer.alpha > 0 || peer.trail.length) busy = true;
+			if (peer.label && now - peer.label.born > LABEL_LIFE) peer.label = null;
+			const resting = peer.sunk && peer.alpha === 0 && !peer.trail.length && !peer.label;
+			if (peer.gone && resting) peers.delete(peer.id);
+			else if (!resting) busy = true;
 		}
 		rings = rings.filter((ring) => now - ring.born < ring.life);
 
@@ -223,6 +242,63 @@
 			ctx.stroke();
 		}
 		ctx.globalCompositeOperation = 'source-over';
+
+		// Arrows and names on top, in normal blending so the dark outline and the tag stay crisp.
+		for (const peer of peers.values()) {
+			if (peer.alpha > 0.01) drawArrow(ctx, peer);
+			if (peer.label) drawLabel(ctx, peer, now);
+		}
+	}
+
+	function drawArrow(ctx: CanvasRenderingContext2D, peer: Peer) {
+		arrow ??= new Path2D('M1.5 1.5 L16 12.2 L9.3 13.2 L5.6 20 Z');
+		ctx.save();
+		ctx.globalAlpha = peer.alpha;
+		ctx.translate(peer.x, peer.y);
+		ctx.scale(ARROW_SCALE, ARROW_SCALE);
+		ctx.translate(-1.5, -1.5);
+		ctx.shadowColor = 'rgb(0 0 0 / 55%)';
+		ctx.shadowBlur = 3 * ARROW_SCALE;
+		ctx.shadowOffsetY = 1;
+		ctx.fillStyle = `rgb(${peer.tint})`;
+		ctx.fill(arrow);
+		ctx.shadowColor = 'transparent';
+		ctx.strokeStyle = '#282828';
+		ctx.lineWidth = 1.4;
+		ctx.lineJoin = 'round';
+		ctx.stroke(arrow);
+		ctx.restore();
+	}
+
+	// The name tag: fades in beside the arrow, holds, then drifts up a little as it fades. Saying
+	// goodbye, it stays where they sank while the ripples spread.
+	function drawLabel(ctx: CanvasRenderingContext2D, peer: Peer, now: number) {
+		if (!peer.label) return;
+		const age = now - peer.label.born;
+		const p = age / LABEL_LIFE;
+		const fadeIn = Math.min(1, age / 220);
+		const fadeOut = Math.min(1, (LABEL_LIFE - age) / 550);
+		const alpha = Math.max(0, Math.min(fadeIn, fadeOut));
+		if (alpha <= 0) return;
+		const rise = prefersReducedMotion.current ? 0 : (1 - Math.pow(1 - p, 2)) * 8;
+		const x = peer.x + 16;
+		const y = peer.y + 22 - rise;
+		ctx.save();
+		ctx.globalAlpha = alpha;
+		ctx.font = `700 12.5px ${fontFamily}`;
+		ctx.textBaseline = 'middle';
+		const text = peer.name;
+		const w = ctx.measureText(text).width + 14;
+		const h = 20;
+		ctx.shadowColor = 'rgb(0 0 0 / 30%)';
+		ctx.shadowBlur = 14;
+		ctx.shadowOffsetY = 4;
+		ctx.fillStyle = peer.label.leaving ? 'rgb(40 40 40 / 82%)' : '#9f3e52';
+		ctx.fillRect(x, y, w, h);
+		ctx.shadowColor = 'transparent';
+		ctx.fillStyle = '#fff';
+		ctx.fillText(text, x + 7, y + h / 2 + 0.5);
+		ctx.restore();
 	}
 
 	// Size the canvas for the device's pixel density.
@@ -232,6 +308,7 @@
 		canvas.width = Math.round(width * dpr);
 		canvas.height = Math.round(height * dpr);
 		context = canvas.getContext('2d');
+		fontFamily = getComputedStyle(canvas).fontFamily || fontFamily;
 		context?.setTransform(dpr, 0, 0, dpr, 0, 0);
 		start();
 	});
@@ -245,6 +322,7 @@
 <style>
 	.trails {
 		position: absolute;
+		font-family: var(--sans);
 		inset: 0;
 		pointer-events: none;
 	}
