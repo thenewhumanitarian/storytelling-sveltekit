@@ -26,7 +26,9 @@ type ClimateProcedure =
 	| 'climate_withdraw'
 	| 'climate_admin_entries'
 	| 'climate_admin_update'
-	| 'climate_admin_delete';
+	| 'climate_admin_delete'
+	| 'climate_settings'
+	| 'climate_admin_set_auto_publish';
 
 export type AdminStatus = 'pending' | 'published' | 'removed';
 export interface AdminEntry {
@@ -70,6 +72,8 @@ export function setClimateReactor(cookies: Cookies) {
 		maxAge: 60 * 60 * 24 * 30
 	});
 }
+
+let settingsCache: { at: number; value: { auto_publish?: boolean } } | null = null;
 
 export function climateRealtimeConfig() {
 	const key = publicEnv.PUBLIC_CLIMATE_SUPABASE_PUBLISHABLE_KEY;
@@ -256,6 +260,41 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 			},
 			remove(id: string) {
 				return call<boolean>('climate_admin_delete', { p_id: id });
+			},
+			setAutoPublish(enabled: boolean) {
+				settingsCache = null;
+				return call<boolean>('climate_admin_set_auto_publish', { p_enabled: enabled });
+			}
+		},
+		/** Runtime settings from the database, cached briefly. Null before the settings migration. */
+		async settings(): Promise<{ auto_publish?: boolean } | null> {
+			if (settingsCache && Date.now() - settingsCache.at < 5000) return settingsCache.value;
+			try {
+				const value = await call<{ auto_publish?: boolean }>('climate_settings', {});
+				settingsCache = { at: Date.now(), value };
+				return value;
+			} catch (error) {
+				if (error instanceof ClimateRequestError && error.code === 'PGRST202') return null;
+				throw error;
+			}
+		},
+		/**
+		 * Tell every open wall to refresh now (after an editor publishes, blocks or deletes), via
+		 * Supabase Realtime's broadcast API on the same channel the browsers listen to. Best effort:
+		 * walls also refresh on their own every few seconds.
+		 */
+		async broadcastWallChanged() {
+			try {
+				await fetch(new URL('/realtime/v1/api/broadcast', credentials.url), {
+					method: 'POST',
+					headers: { apikey: credentials.secret, 'content-type': 'application/json' },
+					body: JSON.stringify({
+						messages: [{ topic: 'tnh-climate-cloud-v1', event: 'wall-changed', payload: {} }]
+					}),
+					signal: AbortSignal.timeout(3000)
+				});
+			} catch {
+				// The periodic refresh covers it.
 			}
 		},
 		subscribe(address: string, email: string) {

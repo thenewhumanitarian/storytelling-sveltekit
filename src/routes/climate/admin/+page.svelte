@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { invalidate } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageProps } from './$types';
@@ -15,8 +16,53 @@
 	let busy = $state<string | null>(null);
 	let notice = $state('');
 	let drafts = $state<Record<string, string>>({});
+	// Optimistic changes, shown immediately and dropped once the server agrees.
+	let overrides = $state<Record<string, Entry['status'] | 'deleted'>>({});
+	let fresh = $state<Record<string, true>>({});
+	let autoOverride = $state<boolean | null>(null);
+	let seen: Set<string> | null = null;
 
-	const entries = $derived(data.state === 'ready' ? data.entries : []);
+	const serverEntries = $derived(data.state === 'ready' ? data.entries : []);
+	const entries = $derived(
+		serverEntries.flatMap((entry) => {
+			const override = overrides[entry.id];
+			if (override === 'deleted') return [];
+			return override ? [{ ...entry, status: override }] : [entry];
+		})
+	);
+	const autoPublish = $derived(autoOverride ?? (data.state === 'ready' ? data.autoPublish : true));
+
+	// Reconcile with each refresh: drop overrides the server now reflects, and mark arrivals as new.
+	$effect(() => {
+		const list = serverEntries;
+		const byId = new Map(list.map((entry) => [entry.id, entry]));
+		const pending = Object.entries(overrides).filter(([id, value]) =>
+			value === 'deleted' ? byId.has(id) : byId.get(id)?.status !== value
+		);
+		if (pending.length !== Object.keys(overrides).length) overrides = Object.fromEntries(pending);
+		if (data.state === 'ready' && autoOverride === data.autoPublish) autoOverride = null;
+
+		const arrivals = seen ? list.filter((entry) => !seen!.has(entry.id)) : [];
+		seen = new Set(list.map((entry) => entry.id));
+		if (arrivals.length) {
+			fresh = { ...fresh, ...Object.fromEntries(arrivals.map((entry) => [entry.id, true])) };
+			setTimeout(() => {
+				const next = { ...fresh };
+				arrivals.forEach((entry) => delete next[entry.id]);
+				fresh = next;
+			}, 60_000);
+		}
+	});
+
+	// Live: new posts and changes from other editors appear without reloading.
+	onMount(() => {
+		const timer = setInterval(() => {
+			if (document.visibilityState === 'visible' && !busy && data.state === 'ready') {
+				void invalidate('climate:admin');
+			}
+		}, 4000);
+		return () => clearInterval(timer);
+	});
 	const inTab = (entry: Entry, which: Tab) =>
 		which === 'all'
 			? true
@@ -47,13 +93,13 @@
 
 	const tabs: { id: Tab; label: string }[] = [
 		{ id: 'queue', label: 'Review queue' },
-		{ id: 'wall', label: 'On the wall' },
-		{ id: 'hidden', label: 'Hidden' },
+		{ id: 'wall', label: 'Live on the wall' },
+		{ id: 'hidden', label: 'Blocked' },
 		{ id: 'private', label: 'Private messages' },
 		{ id: 'all', label: 'All' }
 	];
 
-	const statusLabel = { pending: 'In queue', published: 'On the wall', removed: 'Hidden' };
+	const statusLabel = { pending: 'In queue', published: 'Live', removed: 'Blocked' };
 	const when = (iso: string) =>
 		new Date(iso).toLocaleString('en-GB', {
 			day: 'numeric',
@@ -68,28 +114,48 @@
 
 	const act =
 		(id: string, done: string): SubmitFunction =>
-		({ cancel, action }) => {
-			if (action.search.includes('delete') && !confirm('Delete this entry permanently?')) {
+		({ cancel, action, submitter }) => {
+			const deleting = action.search.includes('delete');
+			if (deleting && !confirm('Delete this entry permanently?')) {
 				cancel();
 				return;
 			}
+			const status = (submitter as HTMLButtonElement | null)?.value as Entry['status'] | undefined;
+			const before = overrides[id];
+			// Show the change straight away; the server confirms in the background.
+			overrides = { ...overrides, [id]: deleting ? 'deleted' : (status ?? overrides[id]) };
 			busy = id;
 			notice = '';
 			return async ({ result, update }) => {
-				await update({ reset: false });
+				await update({ reset: false, invalidateAll: false });
+				await invalidate('climate:admin');
 				busy = null;
 				if (result.type === 'success') {
 					notice = done;
 					const next = { ...drafts };
 					delete next[id];
 					drafts = next;
+				} else {
+					const next = { ...overrides };
+					if (before) next[id] = before;
+					else delete next[id];
+					overrides = next;
 				}
 			};
 		};
+
+	const toggleAuto: SubmitFunction = ({ formData }) => {
+		autoOverride = formData.get('enabled') === 'true';
+		return async ({ result, update }) => {
+			await update({ reset: false, invalidateAll: false });
+			await invalidate('climate:admin');
+			if (result.type !== 'success') autoOverride = null;
+		};
+	};
 </script>
 
 <svelte:head>
-	<title>Climate wall admin | The New Humanitarian</title>
+	<title>{counts.queue ? `(${counts.queue}) ` : ''}Climate wall admin | The New Humanitarian</title>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
@@ -150,6 +216,26 @@
 				</p>
 			</section>
 		{:else}
+			{#if data.settingsReady}
+				<form method="POST" action="?/autopublish" use:enhance={toggleAuto} class="auto">
+					<input type="hidden" name="enabled" value={autoPublish ? 'false' : 'true'} />
+					<button type="submit" class="switch" role="switch" aria-checked={autoPublish}>
+						<span class="knob" aria-hidden="true"></span>
+						Auto-publish {autoPublish ? 'on' : 'off'}
+					</button>
+					<span class="auto-note">
+						{autoPublish
+							? 'Posts the AI passes go straight onto the wall. Block anything you don’t want.'
+							: 'Every new post waits in the review queue until you publish it.'}
+					</span>
+				</form>
+			{:else}
+				<p class="auto-note">
+					Auto-publish is {autoPublish ? 'on' : 'off'} (set by environment). Apply
+					<code>20261126110000_climate_settings.sql</code> to switch it here.
+				</p>
+			{/if}
+
 			<div class="toolbar">
 				<nav class="tabs" aria-label="Filter entries">
 					{#each tabs as item (item.id)}
@@ -171,7 +257,9 @@
 						placeholder="Search text, terms, AI notes…"
 						bind:value={query}
 					/>
-					<button class="ghost dark" type="button" onclick={() => invalidateAll()}>Refresh</button>
+					<span class="live" title="Updates every few seconds"
+						><span class="dot" aria-hidden="true"></span>Live</span
+					>
 				</div>
 			</div>
 
@@ -186,8 +274,12 @@
 
 			<ul class="entries">
 				{#each shown as entry (entry.id)}
-					<li class={['entry', entry.status, entry.visibility]} aria-busy={busy === entry.id}>
+					<li
+						class={['entry', entry.status, entry.visibility, { fresh: fresh[entry.id] }]}
+						aria-busy={busy === entry.id}
+					>
 						<div class="meta">
+							{#if fresh[entry.id]}<span class="badge new">New</span>{/if}
 							<time datetime={entry.created_at}>{when(entry.created_at)}</time>
 							<span class="badge {entry.visibility}"
 								>{entry.visibility === 'private' ? 'Private' : 'Public'}</span
@@ -240,41 +332,15 @@
 										oninput={(event) => (drafts[entry.id] = event.currentTarget.value)}
 									/>
 									{#if entry.status === 'published'}
-										<button
-											class="primary"
-											name="status"
-											value="published"
-											disabled={busy === entry.id}>Save text</button
-										>
-										<button
-											class="secondary"
-											name="status"
-											value="pending"
-											disabled={busy === entry.id}>Back to queue</button
-										>
+										<button class="secondary" name="status" value="published">Save text</button>
+										<button class="block" name="status" value="removed">Block</button>
+										<button class="link" name="status" value="pending">Back to queue</button>
+									{:else if entry.status === 'removed'}
+										<button class="primary" name="status" value="published">Unblock</button>
+										<button class="link" name="status" value="pending">Back to queue</button>
 									{:else}
-										<button
-											class="primary"
-											name="status"
-											value="published"
-											disabled={busy === entry.id}>Put on the wall</button
-										>
-										{#if entry.status === 'removed'}
-											<button
-												class="secondary"
-												name="status"
-												value="pending"
-												disabled={busy === entry.id}>Back to queue</button
-											>
-										{/if}
-									{/if}
-									{#if entry.status !== 'removed'}
-										<button
-											class="secondary"
-											name="status"
-											value="removed"
-											disabled={busy === entry.id}>Hide</button
-										>
+										<button class="primary" name="status" value="published">Publish</button>
+										<button class="block" name="status" value="removed">Block</button>
 									{/if}
 								</div>
 							</form>
@@ -449,6 +515,106 @@
 	}
 	.bar-actions form {
 		display: contents;
+	}
+	.auto {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.8rem;
+		margin-bottom: 1rem;
+		padding: 0.8rem 1rem;
+		background: #fff;
+	}
+	.auto-note {
+		color: #6b645e;
+		font-size: 0.88rem;
+	}
+	p.auto-note {
+		margin-bottom: 1rem !important;
+	}
+	.switch {
+		gap: 0.6rem;
+		background: none;
+		color: var(--ink);
+		padding: 0;
+	}
+	.knob {
+		position: relative;
+		width: 2.6rem;
+		height: 1.5rem;
+		border-radius: 100vmax;
+		background: #cdc7c0;
+		transition: background-color 180ms ease;
+	}
+	.knob::after {
+		content: '';
+		position: absolute;
+		top: 0.2rem;
+		left: 0.2rem;
+		width: 1.1rem;
+		height: 1.1rem;
+		border-radius: 50%;
+		background: #fff;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+		transition: transform 180ms ease;
+	}
+	.switch[aria-checked='true'] .knob {
+		background: #35b58b;
+	}
+	.switch[aria-checked='true'] .knob::after {
+		transform: translateX(1.1rem);
+	}
+	.live {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: #2a8f6d;
+	}
+	.live .dot {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: #35b58b;
+		animation: pulse 2s ease-in-out infinite;
+	}
+	@keyframes pulse {
+		50% {
+			opacity: 0.35;
+		}
+	}
+	.block {
+		background: var(--ink);
+		color: #fff;
+	}
+	.block:hover {
+		background: #000;
+	}
+	.link {
+		background: none;
+		color: var(--ink);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+		padding-inline: 0.4rem;
+	}
+	.badge.new {
+		background: #35b58b;
+		color: var(--ink);
+	}
+	.entry.fresh {
+		animation: arrive 1.2s ease-out;
+	}
+	@keyframes arrive {
+		from {
+			box-shadow: 0 0 0 3px #35b58b;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.live .dot,
+		.entry.fresh {
+			animation: none;
+		}
 	}
 	.toolbar {
 		display: flex;
