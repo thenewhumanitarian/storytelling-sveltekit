@@ -1402,6 +1402,8 @@
 	}
 	.climate {
 		--masthead-height: clamp(3.5rem, 8svh, 4.5rem);
+		/* Header and footer edge: the same as the gap above and below the 2.75rem header buttons. */
+		--edge-x: max(0.5rem, calc((var(--masthead-height) - 2.75rem) / 2));
 		--pad-x: clamp(1.05rem, 5.3vw, 6.4rem);
 		display: grid;
 		grid-template-rows: var(--masthead-height) minmax(0, 1fr);
@@ -1457,8 +1459,7 @@
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
-		/* Side inset matches the gap above and below the 2.75rem header buttons. */
-		padding-inline: max(0.5rem, calc((var(--masthead-height) - 2.75rem) / 2));
+		padding-inline: var(--edge-x);
 		gap: 0.75rem;
 		background: var(--ink);
 		color: #fff;
@@ -1498,9 +1499,10 @@
 	}
 	/* Phones: plain info icon, no box. */
 	@media (max-width: 650px) {
-		.masthead {
-			padding-inline: 1rem;
+		.climate {
+			--edge-x: 1rem;
 		}
+
 		:global(.about-trigger) {
 			width: 2.75rem;
 			min-height: 2.75rem;
@@ -1996,6 +1998,8 @@
 		align-items: center;
 		justify-content: space-between;
 		height: 2.6rem;
+		/* Reach out past the page gutter to line up with the header buttons. */
+		margin-inline: calc(var(--edge-x) - var(--pad-x));
 		border-top: 1px solid rgb(255 255 255 / 22%);
 		font-size: 0.78rem;
 		color: #fff;
