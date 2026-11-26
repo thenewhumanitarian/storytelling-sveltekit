@@ -1,0 +1,41 @@
+<!--
+  "Get involved" tips form as an iframe, for a Drupal page or block (Full HTML text format).
+
+  The form page already runs iframe-resizer's child script (v4), so the iframe grows and shrinks
+  to fit, including when the thank-you or an error message appears.
+
+  The script below uses Drupal's own iframe-resizer if the page already has it (window.iFrameResize).
+  Otherwise it loads iframe-resizer 4.3.9 from cdnjs, pinned with an integrity hash.
+  It only accepts size messages from the form's own origin (checkOrigin).
+
+  Before going live: swap the preview address for the production one, in both places
+  (the iframe src and the origin).
+-->
+<iframe
+	id="tnh-climate-get-involved"
+	src="https://preview.thenewhumanitarian.org/climate/embed/forms/get-involved"
+	title="Get involved: send a tip or idea to The New Humanitarian"
+	width="100%"
+	height="620"
+	scrolling="no"
+	loading="lazy"
+	style="display: block; width: 1px; min-width: 100%; border: 0"
+></iframe>
+<script>
+	(function () {
+		var origin = 'https://preview.thenewhumanitarian.org';
+		function size() {
+			window.iFrameResize(
+				{ checkOrigin: [origin], heightCalculationMethod: 'taggedElement' },
+				'#tnh-climate-get-involved'
+			);
+		}
+		if (window.iFrameResize) return size();
+		var script = document.createElement('script');
+		script.src = 'https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.min.js';
+		script.integrity = 'sha384-hHTwgxzjpO1G1NI0wMHWQYUxnGtpWyDjVSZrFnDrlWa5OL+DFY57qnDWw/5WSJOl';
+		script.crossOrigin = 'anonymous';
+		script.onload = size;
+		document.head.appendChild(script);
+	})();
+</script>

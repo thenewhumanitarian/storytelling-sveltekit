@@ -10,9 +10,9 @@
 	 * built in Drupal (see docs/climate/landing-drupal.html for a paste-ready version).
 	 */
 	import { untrack } from 'svelte';
-	import { enhance } from '$app/forms';
 	import SharePopover from '../SharePopover.svelte';
 	import NewsletterSignup from '../NewsletterSignup.svelte';
+	import GetInvolvedForm from '../GetInvolvedForm.svelte';
 	import { backdrops } from '../backdrops';
 	import type { PageProps } from './$types';
 
@@ -27,9 +27,6 @@
 	const photo = untrack(
 		() => backdrops[Math.min(backdrops.length - 1, Math.floor(data.photoSeed * backdrops.length))]
 	);
-
-	let sending = $state(false);
-	let sent = $state(false);
 </script>
 
 <svelte:head>
@@ -164,86 +161,7 @@
 			</ul>
 		</article>
 
-		<section id="get-involved" class="involve" aria-labelledby="involve-title">
-			<h2 id="involve-title">Get involved</h2>
-			<p>
-				The project is just getting started. If you work in this space, or have research, stories or
-				ideas to share, we’d love to hear from you.
-			</p>
-			<p>
-				As the research progresses, send us tips, leads, research topics or anything we should look
-				into.
-			</p>
-
-			{#if sent && form?.ok}
-				<p class="sent" role="status">{form.message}</p>
-				<button class="text-button" type="button" onclick={() => (sent = false)}
-					>Send another message</button
-				>
-			{:else}
-				<form
-					method="POST"
-					action="?/tip"
-					use:enhance={() => {
-						sending = true;
-						return async ({ result, update }) => {
-							await update({ reset: result.type === 'success' });
-							sending = false;
-							if (result.type === 'success') sent = true;
-						};
-					}}
-				>
-					<input type="hidden" name="started" value={data.formStamp} />
-					<div class="trap" aria-hidden="true">
-						<label for="tip-website">Website</label>
-						<input id="tip-website" name="website" type="text" tabindex="-1" autocomplete="off" />
-					</div>
-
-					<label for="tip-message">Your tip, idea or lead</label>
-					<textarea
-						id="tip-message"
-						name="message"
-						rows="5"
-						maxlength="780"
-						required
-						value={form?.values?.message ?? ''}
-					></textarea>
-
-					<div class="pair">
-						<div>
-							<label for="tip-name">Name <span>(optional)</span></label>
-							<input
-								id="tip-name"
-								name="name"
-								type="text"
-								autocomplete="name"
-								maxlength="80"
-								value={form?.values?.name ?? ''}
-							/>
-						</div>
-						<div>
-							<label for="tip-email">Email <span>(optional, if you’d like a reply)</span></label>
-							<input
-								id="tip-email"
-								name="email"
-								type="email"
-								autocomplete="email"
-								maxlength="120"
-								value={form?.values?.email ?? ''}
-							/>
-						</div>
-					</div>
-
-					<div class="send-row">
-						<button class="button" type="submit" disabled={sending}>
-							{sending ? 'Sending…' : 'Send to TNH'}
-						</button>
-						<p class="hint">Goes privately to the TNH team. It is never published.</p>
-					</div>
-					{#if form && !form.ok}<p class="error" role="alert">{form.message}</p>{/if}
-				</form>
-			{/if}
-		</section>
+		<GetInvolvedForm stamp={data.formStamp} {form} />
 
 		<section class="updates" aria-labelledby="updates-title">
 			<h2 id="updates-title">Stay informed</h2>
@@ -309,10 +227,10 @@
 	.landing :where(h1, h2, p) {
 		margin: 0;
 	}
-	.landing :where(a, button, input, textarea, [aria-disabled]):focus {
+	.landing :where(a, [aria-disabled]):focus {
 		outline: none;
 	}
-	.landing :where(a, button, input, textarea):focus-visible {
+	.landing a:focus-visible {
 		outline: 2px solid var(--brand);
 		outline-offset: 3px;
 	}
@@ -525,94 +443,6 @@
 		font-size: 1.05rem;
 	}
 
-	/* Get involved: the tips form, set off as a card. */
-	.involve {
-		padding: clamp(1.4rem, 4vw, 2.2rem);
-		background: #f6f1ec;
-		border-top: 5px solid var(--brand);
-	}
-	.involve > p {
-		margin-top: 0.7rem;
-	}
-	form {
-		display: grid;
-		gap: 0.35rem;
-		margin-top: 1.3rem;
-	}
-	label {
-		margin-top: 0.6rem;
-		font-weight: 700;
-		font-size: 0.92rem;
-	}
-	label span {
-		color: var(--muted);
-		font-weight: 400;
-	}
-	textarea,
-	input:not([type='hidden']) {
-		width: 100%;
-		min-height: 46px;
-		padding: 0.6rem 0.7rem;
-		border: 1px solid #8f8984;
-		border-radius: 0;
-		background: #fff;
-		color: var(--ink);
-		font: 400 1rem/1.45 var(--sans);
-	}
-	textarea {
-		resize: vertical;
-	}
-	textarea:focus-visible,
-	input:focus-visible {
-		outline-offset: -2px;
-	}
-	.pair {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0 1rem;
-	}
-	.pair > div {
-		display: grid;
-		gap: 0.35rem;
-	}
-	.send-row {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.6rem 1rem;
-		margin-top: 1rem;
-	}
-	.hint {
-		color: var(--muted);
-		font-size: 0.88rem;
-	}
-	.error {
-		margin-top: 0.5rem;
-		color: var(--brand);
-		font-weight: 700;
-	}
-	.sent {
-		margin-top: 1.3rem;
-		padding: 0.9rem 1rem;
-		background: #e3f4ec;
-		border-left: 4px solid #35b58b;
-		font-weight: 700;
-	}
-	.text-button {
-		margin-top: 0.7rem;
-		padding: 0;
-		border: 0;
-		background: none;
-		color: var(--brand);
-		font: 700 0.95rem/1.4 var(--sans);
-		text-decoration: underline;
-		cursor: pointer;
-	}
-	.trap {
-		position: absolute;
-		left: -5000px;
-	}
-
 	.updates > p {
 		margin-top: 0.7rem;
 	}
@@ -656,9 +486,6 @@
 		}
 		.actions .button {
 			flex: 1 1 100%;
-		}
-		.pair {
-			grid-template-columns: 1fr;
 		}
 		.credit {
 			left: var(--pad-x);
