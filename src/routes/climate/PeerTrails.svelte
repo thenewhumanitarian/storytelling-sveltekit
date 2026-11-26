@@ -243,7 +243,7 @@
 		for (const peer of peers.values()) if (peer.label) drawLabel(ctx, peer, now);
 	}
 
-	// The name tag: fades in beside the drop, holds, then drifts up a little as it fades. Saying
+	// The name: fades in beside the drop, holds, then drifts up a little as it fades. Saying
 	// goodbye, it stays where they sank while the ripples spread.
 	function drawLabel(ctx: CanvasRenderingContext2D, peer: Peer, now: number) {
 		if (!peer.label) return;
@@ -258,19 +258,19 @@
 		const y = peer.y + 10 - rise;
 		ctx.save();
 		ctx.globalAlpha = alpha;
-		ctx.font = `700 12.5px ${fontFamily}`;
+		ctx.font = `700 13px ${fontFamily}`;
 		ctx.textBaseline = 'middle';
-		const text = peer.name;
-		const w = ctx.measureText(text).width + 14;
-		const h = 20;
-		ctx.shadowColor = 'rgb(0 0 0 / 30%)';
-		ctx.shadowBlur = 14;
-		ctx.shadowOffsetY = 4;
-		ctx.fillStyle = peer.label.leaving ? 'rgb(40 40 40 / 82%)' : '#9f3e52';
-		ctx.fillRect(x, y, w, h);
-		ctx.shadowColor = 'transparent';
 		ctx.fillStyle = '#fff';
-		ctx.fillText(text, x + 7, y + h / 2 + 0.5);
+		// Just the name in white: a wide soft shadow lifts it off the photo, a tight one sharpens it.
+		// Saying goodbye, it is a little quieter.
+		if (peer.label.leaving) ctx.globalAlpha = alpha * 0.75;
+		ctx.shadowColor = 'rgb(0 0 0 / 55%)';
+		ctx.shadowBlur = 10;
+		ctx.fillText(peer.name, x, y);
+		ctx.shadowColor = 'rgb(0 0 0 / 70%)';
+		ctx.shadowBlur = 2;
+		ctx.shadowOffsetY = 1;
+		ctx.fillText(peer.name, x, y);
 		ctx.restore();
 	}
 
