@@ -9,9 +9,11 @@ import { env } from '$env/dynamic/private';
  *
  * Only public drafts and posts reach a model. Private messages never leave TNH's systems.
  *
- * Providers, in order: MiniMax directly (MINIMAX_API_KEY), then OpenRouter via the Vercel AI SDK
- * (OPENROUTER_API_KEY). With neither, screening falls back to human review and matching to a
- * local word-overlap check, so the page works without any AI at all.
+ * Provider: Thaura (THAURA_API_KEY), an "ethical AI": an open-weights model (GLM) run on Thaura's
+ * own servers in Helsinki, which says it never trains on or stores API requests. The page tells
+ * visitors this, so by default Thaura is the ONLY provider: if it fails, posts go to human review
+ * rather than to another model. CLIMATE_AI_PROVIDERS can list fallbacks explicitly
+ * (e.g. "thaura,minimax,openrouter,amazee"), but then the "ethical AI" claim no longer always holds.
  */
 
 export type ModerationVerdict = 'allow' | 'review' | 'block';
@@ -136,7 +138,65 @@ export function normalisedTerm(text: string) {
 }
 
 export function aiConfigured() {
-	return Boolean(env.AMAZEE_AI_API_KEY || env.MINIMAX_API_KEY || env.OPENROUTER_API_KEY);
+	return Boolean(
+		env.THAURA_API_KEY || env.AMAZEE_AI_API_KEY || env.MINIMAX_API_KEY || env.OPENROUTER_API_KEY
+	);
+}
+
+/** JSON schema mirroring `schema`, for providers with strict structured output (Thaura). */
+const jsonSchema = {
+	type: 'object',
+	additionalProperties: false,
+	required: ['verdict', 'categories', 'reason', 'term', 'suggestions', 'matches'],
+	properties: {
+		verdict: { type: 'string', enum: ['allow', 'review', 'block'] },
+		categories: { type: 'array', items: { type: 'string', enum: [...categories] } },
+		reason: { type: 'string' },
+		term: { type: ['string', 'null'] },
+		suggestions: { type: 'array', items: { type: 'string' } },
+		matches: { type: 'array', items: { type: 'string' } }
+	}
+};
+
+async function completeWithThaura(system: string, user: string) {
+	const apiKey = env.THAURA_API_KEY;
+	if (!apiKey) return null;
+	const response = await fetch('https://backend.thaura.ai/v1/chat/completions', {
+		method: 'POST',
+		headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
+		body: JSON.stringify({
+			model: 'thaura',
+			messages: [
+				{ role: 'system', content: system },
+				{ role: 'user', content: user }
+			],
+			response_format: {
+				type: 'json_schema',
+				json_schema: { name: 'climate_screen', strict: true, schema: jsonSchema }
+			},
+			// Caps the visible JSON only (Thaura's hidden thinking is separate and unbilled), and keeps
+			// the prepaid balance hold small.
+			max_tokens: 700
+		}),
+		signal: AbortSignal.timeout(12000)
+	});
+	if (!response.ok) throw new Error(`Thaura responded ${response.status}`);
+	const data: { choices?: { message?: { content?: string } }[] } = await response.json();
+	return { text: data.choices?.[0]?.message?.content ?? '', model: 'thaura' };
+}
+
+const providers = {
+	thaura: completeWithThaura,
+	amazee: (system: string, user: string) => completeWithAmazee(system, user),
+	minimax: (system: string, user: string) => completeWithMiniMax(system, user),
+	openrouter: (system: string, user: string) => completeWithOpenRouter(system, user)
+};
+
+function providerOrder() {
+	return (env.CLIMATE_AI_PROVIDERS || 'thaura')
+		.split(',')
+		.map((name) => name.trim().toLowerCase())
+		.flatMap((name) => (name in providers ? [providers[name as keyof typeof providers]] : []));
 }
 
 /**
@@ -288,7 +348,7 @@ export async function analyse(
 	});
 
 	// Private gateway first; the others are fallbacks if it's not configured or fails.
-	for (const provider of [completeWithAmazee, completeWithMiniMax, completeWithOpenRouter]) {
+	for (const provider of providerOrder()) {
 		try {
 			const result = await provider(policy, user);
 			const parsed = result && parse(result.text);
