@@ -155,6 +155,13 @@
 	let feedback = $state({ contribute: '', subscribe: '', vote: '' });
 	let wallUnavailable = $state(false);
 	let cursors = $state<ClimateCursor[]>([]);
+	// Local experiment: visitors as trails of light that sink with ripples when still. On for the
+	// dev server only; the preview and production builds keep the named arrows.
+	const trailCursors = dev;
+	let simulatedCursors = $state<ClimateCursor[]>([]);
+	const shownCursors = $derived(
+		simulatedCursors.length ? [...cursors, ...simulatedCursors] : cursors
+	);
 	let ripples = $state<Ripple[]>([]);
 	let launches = $state<Launch[]>([]);
 	let here = $state(0);
@@ -338,6 +345,20 @@
 			// The conversation still works when browser storage is unavailable.
 		}
 	}
+
+	// Dev only: /climate?peers=sim adds a few fake wandering visitors to try the cursor layer.
+	onMount(() => {
+		if (!dev || new URLSearchParams(location.search).get('peers') !== 'sim') return;
+		let stop: (() => void) | undefined;
+		let cancelled = false;
+		void import('./peerSimulator').then(({ simulatePeers }) => {
+			if (!cancelled) stop = simulatePeers(3, (list) => (simulatedCursors = list));
+		});
+		return () => {
+			cancelled = true;
+			stop?.();
+		};
+	});
 
 	onMount(() => {
 		try {
@@ -1331,7 +1352,13 @@
 			</div>
 
 			{#if showCursors}
-				<PeerLayer {cursors} {ripples} width={sceneWidth} height={sceneHeight} />
+				<PeerLayer
+					cursors={shownCursors}
+					{ripples}
+					width={sceneWidth}
+					height={sceneHeight}
+					trails={trailCursors}
+				/>
 			{/if}
 		</main>
 
