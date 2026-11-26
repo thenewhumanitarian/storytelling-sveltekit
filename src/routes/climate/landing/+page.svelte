@@ -98,6 +98,29 @@
 
 	// Open on load when a tip was just posted without JavaScript, so its result shows.
 	let tipsOpen = $state(untrack(() => Boolean(form)));
+
+	// While the panel is open the page behind it doesn't scroll. Done here rather than by Bits UI,
+	// whose lock hides the scrollbar and so widens the page by its width: everything jumped sideways.
+	// The scrollbar's space is always reserved (scrollbar-gutter below), so hiding overflow is enough.
+	$effect(() => {
+		if (!tipsOpen) return;
+		const root = document.documentElement;
+		root.classList.add('landing-locked');
+		return () => root.classList.remove('landing-locked');
+	});
+
+	// Whether the panel was last closed from the keyboard (Escape or Enter on a button).
+	let keyboardClose = $state(false);
+	onMount(() => {
+		const pointer = () => (keyboardClose = false);
+		const key = () => (keyboardClose = true);
+		window.addEventListener('pointerdown', pointer, true);
+		window.addEventListener('keydown', key, true);
+		return () => {
+			window.removeEventListener('pointerdown', pointer, true);
+			window.removeEventListener('keydown', key, true);
+		};
+	});
 </script>
 
 <svelte:head>
@@ -338,7 +361,15 @@
 
 	<Dialog.Portal>
 		<Dialog.Overlay class="landing-overlay" />
-		<Dialog.Content class="landing-dialog">
+		<!-- Scroll is locked by the effect above (keeps the scrollbar, so nothing shifts). Focus goes
+		     back to the button that opened it only after keyboard use, so a mouse close leaves no ring. -->
+		<Dialog.Content
+			class="landing-dialog"
+			preventScroll={false}
+			onCloseAutoFocus={(event) => {
+				if (!keyboardClose) event.preventDefault();
+			}}
+		>
 			<Dialog.Title class="visually-hidden">Get in touch</Dialog.Title>
 			<Dialog.Close class="landing-close" aria-label="Close">
 				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" /></svg>
@@ -380,6 +411,13 @@
 	:global(body:has(.landing)) {
 		overflow-x: clip;
 		background: #1d1d1b;
+	}
+	/* Always keep the scrollbar's space, so locking scroll for the panel shifts nothing. */
+	:global(html:has(.landing)) {
+		scrollbar-gutter: stable;
+	}
+	:global(html.landing-locked) {
+		overflow-y: hidden;
 	}
 	.landing {
 		--brand: #9f3e52;
