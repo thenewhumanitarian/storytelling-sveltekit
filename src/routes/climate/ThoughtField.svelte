@@ -1533,10 +1533,13 @@
 				0 0 42px rgb(159 62 82 / 90%);
 		}
 	}
+	/* The field runs edge to edge, so pad this back in line with the page margins. */
 	.empty {
 		position: absolute;
 		inset: 50% 0 auto;
 		margin: 0;
+		padding-inline: var(--pad-x, 1.25rem);
+		text-wrap: balance;
 		transform: translateY(-50%);
 		text-align: center;
 		color: #fff;

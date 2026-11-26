@@ -23,7 +23,29 @@ type ClimateProcedure =
 	| 'climate_subscribe'
 	| 'climate_wall'
 	| 'climate_wall_with_reactions'
-	| 'climate_withdraw';
+	| 'climate_withdraw'
+	| 'climate_admin_entries'
+	| 'climate_admin_update'
+	| 'climate_admin_delete';
+
+export type AdminStatus = 'pending' | 'published' | 'removed';
+export interface AdminEntry {
+	id: string;
+	created_at: string;
+	visibility: 'public' | 'private';
+	status: AdminStatus;
+	topic: string | null;
+	body: string;
+	published_body: string | null;
+	moderation_verdict: 'allow' | 'review' | 'block' | null;
+	moderation_categories: string[] | null;
+	moderation_reason: string | null;
+	moderation_model: string | null;
+	moderation_term: string | null;
+	withdrawn_at: string | null;
+	reactions: number;
+	boosts: number;
+}
 
 export type ReactionWeight = 0 | 1 | 2;
 type ReactionResult = {
@@ -219,6 +241,22 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 		/** Take the author's own public post off the wall; TNH keeps it privately. */
 		withdraw(token: string) {
 			return call<boolean>('climate_withdraw', { p_submission_key: token });
+		},
+		/** Admin only: callers must check the admin session first. */
+		admin: {
+			entries() {
+				return call<AdminEntry[]>('climate_admin_entries', {});
+			},
+			update(id: string, status: AdminStatus, publishedBody: string | null) {
+				return call<string>('climate_admin_update', {
+					p_id: id,
+					p_status: status,
+					p_published_body: publishedBody
+				});
+			},
+			remove(id: string) {
+				return call<boolean>('climate_admin_delete', { p_id: id });
+			}
 		},
 		subscribe(address: string, email: string) {
 			return call<boolean>('climate_subscribe', {

@@ -7,6 +7,7 @@ import {
 	setClimateReactor
 } from '$lib/server/climate';
 import { analyse, autoPublishEnabled, normalisedTerm } from '$lib/server/climate-ai';
+import { checkStamp, formStamp, looksAutomated, takeAiBudget } from '$lib/server/climate-guard';
 import type { Actions, PageServerLoad } from './$types';
 
 const topics = new Set(['water', 'land', 'rebuilding', 'adaptation']);
@@ -18,7 +19,13 @@ const rateLimited = 'Too many attempts. Please wait a few minutes and try again.
 
 export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 	const realtime = climateRealtimeConfig();
-	const offline = { configured: false, wall: [], reactionsEnabled: false, realtime };
+	const offline = {
+		configured: false,
+		wall: [],
+		reactionsEnabled: false,
+		realtime,
+		formStamp: formStamp()
+	};
 	const service = climateDataService(fetch);
 	if (!service) return offline;
 	setHeaders({ 'cache-control': 'private, no-store' });
@@ -27,7 +34,7 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 		const reactor = climateReactor(cookies);
 		const wallData = await service.wall(reactor);
 		if (!reactor && wallData.reactionsEnabled) setClimateReactor(cookies);
-		return { configured: true, realtime, ...wallData };
+		return { configured: true, realtime, formStamp: formStamp(), ...wallData };
 	} catch {
 		return offline;
 	}
@@ -67,9 +74,24 @@ export const actions = {
 			return fail(400, { kind, ok: false, message: 'Choose one of the listed topics.' });
 		}
 
-		// Bots fill every field; people never see this one.
-		if (form.get('website')) {
+		// Bot traps. Each answers like a success so automated senders learn nothing:
+		// a hidden field people never see, a signed page-render stamp (missing, or sent faster than
+		// anyone could type), and obvious automation user agents.
+		const stamp = checkStamp(form.get('started'));
+		if (
+			form.get('website') ||
+			stamp === 'missing' ||
+			stamp === 'too-fast' ||
+			looksAutomated(request.headers.get('user-agent'))
+		) {
 			return { kind, ok: true, published: false, message: 'Thank you.' };
+		}
+		if (stamp === 'expired') {
+			return fail(400, {
+				kind,
+				ok: false,
+				message: 'This page has been open a long time. Reload it and try again.'
+			});
 		}
 
 		try {
@@ -98,7 +120,15 @@ export const actions = {
 				}
 
 				// Only public posts are screened by AI. Private messages never leave TNH's systems.
+				if (!takeAiBudget(getClientAddress())) {
+					return fail(429, { kind, ok: false, message: rateLimited });
+				}
 				screened = { ...(await analyse(message, wall)), publish: autoPublishEnabled() };
+
+				// Hate, abuse, spam and off-topic posts are refused outright and never stored.
+				if (screened.verdict === 'block') {
+					return fail(422, { kind, ok: false, message: blockedMessage });
+				}
 			}
 			const { accepted, token } = await service.contribute(
 				getClientAddress(),
@@ -108,9 +138,6 @@ export const actions = {
 				screened
 			);
 			if (!accepted) return fail(429, { kind, ok: false, message: rateLimited });
-			if (screened?.verdict === 'block') {
-				return fail(422, { kind, ok: false, message: blockedMessage });
-			}
 
 			const published = screened?.publish === true && screened.verdict === 'allow';
 			return {
