@@ -118,12 +118,24 @@
 	.involve :where(h2, p) {
 		margin: 0;
 	}
-	.involve :where(button, input, textarea):focus {
+	/* No browser blue and no shadows: the site's Tailwind forms plugin adds a blue ring (a box
+	   shadow and a blue border) to focused fields. One burgundy ring instead, on fields while
+	   focused and on the button only for keyboard focus. */
+	.involve button:focus,
+	.involve input:focus,
+	.involve textarea:focus {
 		outline: none;
+		box-shadow: none;
 	}
-	.involve :where(button, input, textarea):focus-visible {
+	.involve button:focus-visible {
 		outline: 2px solid var(--brand);
 		outline-offset: 3px;
+	}
+	.involve input:focus,
+	.involve textarea:focus {
+		border-color: var(--brand);
+		outline: 1px solid var(--brand);
+		outline-offset: -1px;
 	}
 	h2 {
 		font: 700 clamp(1.6rem, 3.4vw, 2.1rem) / 1.15 var(--serif);
@@ -185,10 +197,6 @@
 	}
 	textarea {
 		resize: vertical;
-	}
-	textarea:focus-visible,
-	input:focus-visible {
-		outline-offset: -2px;
 	}
 	.pair {
 		display: grid;
