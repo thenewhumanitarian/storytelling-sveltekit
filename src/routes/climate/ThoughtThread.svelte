@@ -18,6 +18,8 @@
 		onposted: () => void;
 		/** Distance from the top of the field, so the panel opens below the headline. */
 		top?: number;
+		/** Too little room under the headline: cover the headline and shout bar instead. */
+		cover?: boolean;
 		panel?: HTMLElement;
 	}
 
@@ -28,6 +30,7 @@
 		onclose,
 		onposted,
 		top = 16,
+		cover = false,
 		panel = $bindable()
 	}: Props = $props();
 
@@ -241,6 +244,7 @@
 
 <div
 	class="thread"
+	class:cover
 	role="dialog"
 	aria-modal="false"
 	aria-label={`Comments on “${entry.body}”`}
@@ -338,6 +342,18 @@
 		color: #fff;
 		text-shadow: 0 1px 8px rgb(0 0 0 / 35%);
 		pointer-events: auto;
+	}
+	/* Shorter screens: a big panel from under the TNH header to just above the footer, over the
+	   headline and shout bar, so the conversation gets the room. */
+	.thread.cover {
+		position: fixed;
+		top: calc(var(--masthead-height, 4rem) + var(--edge-x, 1rem));
+		bottom: calc(2.6rem + var(--edge-x, 1rem));
+		width: min(52rem, calc(100vw - 2rem));
+		height: auto;
+		background:
+			linear-gradient(160deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 6%) 55%),
+			rgb(34 34 32 / 62%);
 	}
 	header {
 		display: flex;

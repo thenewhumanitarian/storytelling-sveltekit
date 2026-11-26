@@ -1676,6 +1676,23 @@
 		margin-top: calc(-1 * clamp(1.1rem, 4vh, 3.2rem));
 	}
 
+	/* A comment thread covering the headline and shout bar (shorter screens): lift the field above
+	   the shout bar and fade what's underneath, so only one text box shows. */
+	.intro,
+	.shout {
+		transition:
+			opacity 220ms ease,
+			visibility 220ms;
+	}
+	.scene-content:has(:global(.thread.cover)) > :global(.field) {
+		z-index: 7;
+	}
+	.scene-content:has(:global(.thread.cover)) .intro,
+	.scene-content:has(:global(.thread.cover)) .shout {
+		opacity: 0;
+		visibility: hidden;
+	}
+
 	/* Shout bar */
 	.shout {
 		position: relative;
