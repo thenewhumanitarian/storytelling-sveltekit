@@ -532,6 +532,10 @@
 	.share {
 		justify-self: start;
 	}
+	/* The share button's box sits on the text edge, like the Get in touch button on the right. */
+	.share :global(.share-trigger) {
+		margin-left: 0;
+	}
 	.wordmark img {
 		display: block;
 		width: clamp(7.5rem, 14vw, 10.3rem);
@@ -828,6 +832,10 @@
 		}
 		.cards {
 			position: static;
+		}
+		/* Line the header buttons up with the edges of the text column below. */
+		.masthead {
+			padding-inline: max(var(--pad-x), calc((100% - 42rem) / 2));
 		}
 		.scene::after {
 			background: linear-gradient(
