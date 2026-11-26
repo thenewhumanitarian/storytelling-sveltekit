@@ -97,7 +97,6 @@
 				<button class="button" type="submit" disabled={sending}>
 					{sending ? 'Sending…' : 'Send to TNH'}
 				</button>
-				<p class="hint">Goes privately to the TNH team. It is never published.</p>
 			</div>
 			{#if form && !form.ok}<p class="error" role="alert">{form.message}</p>{/if}
 		</form>
@@ -213,10 +212,6 @@
 		align-items: center;
 		gap: 0.6rem 1rem;
 		margin-top: 1rem;
-	}
-	.hint {
-		color: var(--muted);
-		font-size: 0.88rem;
 	}
 	.error {
 		margin-top: 0.5rem;
