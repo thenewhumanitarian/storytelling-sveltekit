@@ -1004,6 +1004,7 @@
 
 				<form class="shout" method="POST" action="?/contribute" use:enhance={submit('contribute')}>
 					<input type="hidden" name="visibility" value={visibility} />
+					<input type="hidden" name="started" value={data.formStamp} />
 					<input
 						class="visually-hidden"
 						type="text"
