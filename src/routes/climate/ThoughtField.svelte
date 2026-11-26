@@ -25,6 +25,9 @@
 		by: number;
 		phase: number;
 		bob: number;
+		/** The bob's own clock (ms): it only runs while the term moves, so it resumes in place. */
+		bobClock: number;
+		lastPaint: number;
 		age: number;
 		life: number;
 		state: 'in' | 'live' | 'out';
@@ -334,6 +337,8 @@
 			by: random(-4, 4),
 			phase: random(0, Math.PI * 2),
 			bob: 0,
+			bobClock: 0,
+			lastPaint: 0,
 			age: opts.age ?? 0,
 			life: random(15, 26) + Math.min(12, entry.reactions * 0.8),
 			state: 'in',
@@ -450,8 +455,12 @@
 		const node = nodes.get(body.id);
 		if (!node) return;
 		// Freeze the bob where it is on hover or grab, so the term never shifts under the pointer.
+		// Its clock stops too, so on release it carries on from there instead of jumping ahead.
+		const elapsed = body.lastPaint ? Math.min(100, Math.max(0, now - body.lastPaint)) : 0;
+		body.lastPaint = now;
 		if (!still && !body.held && !body.dragging && !body.pinned) {
-			body.bob = Math.sin(now / 1800 + body.phase) * 5;
+			body.bobClock += elapsed;
+			body.bob = Math.sin(body.bobClock / 1800 + body.phase) * 5;
 		}
 		const bob = body.bob;
 		const settle = 0.92 + 0.08 * easeOut(body.alpha);
