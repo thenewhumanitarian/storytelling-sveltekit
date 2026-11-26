@@ -2,9 +2,9 @@
 	/*
 	 * Other visitors as light on water instead of arrows. The thoughts drift differently in every
 	 * browser, so pointing at a spot means little; motion still does. Moving, a visitor draws a soft
-	 * trail of light, and their arrow rides its head on a small glowing drop. Still for a moment, the
-	 * arrow sinks with a few widening ripples and disappears. Moving again, it resurfaces with a
-	 * small ripple. Their name shows briefly each time they surface or sink.
+	 * faint trail of light with a small glowing drop at its head. Still for a moment, the drop sinks
+	 * with a few widening ripples and disappears. Moving again, it resurfaces with a small ripple.
+	 * Their name shows briefly each time they surface or sink; there is no arrow.
 	 *
 	 * One canvas, one requestAnimationFrame loop that stops itself when nothing is moving.
 	 */
@@ -46,10 +46,6 @@
 	const TRAIL_LIFE = 2400;
 	const STILL_AFTER = 900;
 	const LABEL_LIFE = 1700;
-	// The arrow from the original cursor layer, scaled to 22px wide; its tip is the pointer.
-	// Built in the browser: the server render has no Path2D.
-	let arrow: Path2D | null = null;
-	const ARROW_SCALE = 22 / 18;
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null = null;
@@ -202,8 +198,8 @@
 				const age = (now - b.t) / TRAIL_LIFE;
 				const fade = Math.pow(Math.max(0, 1 - age), 1.6);
 				const along = i / points.length;
-				ctx.strokeStyle = `rgb(${peer.tint} / ${(0.62 * fade * (0.3 + 0.7 * along)).toFixed(3)})`;
-				ctx.lineWidth = 0.8 + 3 * along * fade;
+				ctx.strokeStyle = `rgb(${peer.tint} / ${(0.34 * fade * (0.3 + 0.7 * along)).toFixed(3)})`;
+				ctx.lineWidth = 0.7 + 2.2 * along * fade;
 				ctx.beginPath();
 				ctx.moveTo(a.x, a.y);
 				ctx.lineTo(b.x, b.y);
@@ -212,8 +208,8 @@
 			// Head: a small drop of light.
 			if (peer.alpha > 0.01) {
 				const glow = ctx.createRadialGradient(peer.x, peer.y, 0, peer.x, peer.y, 16);
-				glow.addColorStop(0, `rgb(${peer.tint} / ${(0.95 * peer.alpha).toFixed(3)})`);
-				glow.addColorStop(0.2, `rgb(${peer.tint} / ${(0.55 * peer.alpha).toFixed(3)})`);
+				glow.addColorStop(0, `rgb(${peer.tint} / ${(0.6 * peer.alpha).toFixed(3)})`);
+				glow.addColorStop(0.2, `rgb(${peer.tint} / ${(0.3 * peer.alpha).toFixed(3)})`);
 				glow.addColorStop(1, `rgb(${peer.tint} / 0)`);
 				ctx.fillStyle = glow;
 				ctx.beginPath();
@@ -227,7 +223,7 @@
 			const p = (now - ring.born) / ring.life;
 			if (p < 0) continue;
 			const eased = 1 - Math.pow(1 - p, 3);
-			ctx.strokeStyle = `rgb(${ring.tint} / ${(0.7 * Math.pow(1 - p, 1.3)).toFixed(3)})`;
+			ctx.strokeStyle = `rgb(${ring.tint} / ${(0.45 * Math.pow(1 - p, 1.3)).toFixed(3)})`;
 			ctx.lineWidth = 0.5 + 1.6 * (1 - p);
 			ctx.beginPath();
 			ctx.ellipse(
@@ -243,34 +239,11 @@
 		}
 		ctx.globalCompositeOperation = 'source-over';
 
-		// Arrows and names on top, in normal blending so the dark outline and the tag stay crisp.
-		for (const peer of peers.values()) {
-			if (peer.alpha > 0.01) drawArrow(ctx, peer);
-			if (peer.label) drawLabel(ctx, peer, now);
-		}
+		// Names on top, in normal blending so the tag stays crisp.
+		for (const peer of peers.values()) if (peer.label) drawLabel(ctx, peer, now);
 	}
 
-	function drawArrow(ctx: CanvasRenderingContext2D, peer: Peer) {
-		arrow ??= new Path2D('M1.5 1.5 L16 12.2 L9.3 13.2 L5.6 20 Z');
-		ctx.save();
-		ctx.globalAlpha = peer.alpha;
-		ctx.translate(peer.x, peer.y);
-		ctx.scale(ARROW_SCALE, ARROW_SCALE);
-		ctx.translate(-1.5, -1.5);
-		ctx.shadowColor = 'rgb(0 0 0 / 55%)';
-		ctx.shadowBlur = 3 * ARROW_SCALE;
-		ctx.shadowOffsetY = 1;
-		ctx.fillStyle = `rgb(${peer.tint})`;
-		ctx.fill(arrow);
-		ctx.shadowColor = 'transparent';
-		ctx.strokeStyle = '#282828';
-		ctx.lineWidth = 1.4;
-		ctx.lineJoin = 'round';
-		ctx.stroke(arrow);
-		ctx.restore();
-	}
-
-	// The name tag: fades in beside the arrow, holds, then drifts up a little as it fades. Saying
+	// The name tag: fades in beside the drop, holds, then drifts up a little as it fades. Saying
 	// goodbye, it stays where they sank while the ripples spread.
 	function drawLabel(ctx: CanvasRenderingContext2D, peer: Peer, now: number) {
 		if (!peer.label) return;
@@ -281,8 +254,8 @@
 		const alpha = Math.max(0, Math.min(fadeIn, fadeOut));
 		if (alpha <= 0) return;
 		const rise = prefersReducedMotion.current ? 0 : (1 - Math.pow(1 - p, 2)) * 8;
-		const x = peer.x + 16;
-		const y = peer.y + 22 - rise;
+		const x = peer.x + 12;
+		const y = peer.y + 10 - rise;
 		ctx.save();
 		ctx.globalAlpha = alpha;
 		ctx.font = `700 12.5px ${fontFamily}`;
