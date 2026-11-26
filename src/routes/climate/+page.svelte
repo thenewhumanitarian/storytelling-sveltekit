@@ -1393,7 +1393,7 @@
 			<Dialog.Close class="climate-close" aria-label="Close About">
 				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" /></svg>
 			</Dialog.Close>
-			<!-- Scrolls inside the glass, so the scrollbar clears the rounded corners and the close
+			<!-- Scrolls inside the glass, so the scrollbar sits inset from the edges and the close
 			     button stays put. -->
 			<div class="dialog-body">
 				<Dialog.Title class="climate-dialog-title">About the project</Dialog.Title>
@@ -2305,9 +2305,9 @@
 		display: flex;
 		width: min(52rem, calc(100vw - 2rem));
 		overflow: hidden;
-		/* Room on the right and at the ends for the scrollbar, clear of the 1.75rem corners. */
+		/* Room on the right and at the ends, so the scrollbar sits inset from the edges. */
 		padding: 0.9rem 0.45rem 0.9rem 0;
-		border-radius: 1.75rem;
+		border-radius: 0;
 		/* Nearly solid so long text reads cleanly; just a hint of glass in the sheen and edge. */
 		background:
 			linear-gradient(160deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 2%) 55%),
@@ -2483,7 +2483,6 @@
 	.dialog-ethics {
 		margin-top: 1.4rem;
 		padding: 1rem 1.1rem;
-		border-radius: 0 0.9rem 0.9rem 0;
 		background: rgb(120 214 178 / 12%);
 		border-left: 4px solid #35b58b;
 	}

@@ -328,7 +328,7 @@
 		height: max(18rem, min(40rem, calc(100% - var(--top) - 1rem)));
 		translate: -50% 0;
 		padding: 1.4rem 1.4rem 1.2rem;
-		border-radius: 1.75rem;
+		border-radius: 0;
 		background:
 			linear-gradient(160deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 8%) 55%),
 			rgb(40 40 38 / 38%);
@@ -417,14 +417,14 @@
 		gap: 0.25rem;
 		max-width: min(80%, 30rem);
 		padding: 0.6rem 0.85rem 0.5rem;
-		border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
+		border-radius: 0;
 		background: rgb(255 255 255 / 16%);
 		box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%);
 		text-shadow: none;
 	}
 	.bubble.own {
 		align-self: flex-end;
-		border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
+		border-radius: 0;
 		background: #e3f4ec;
 		color: #1c1c1a;
 		box-shadow: 0 4px 14px rgb(0 0 0 / 20%);
