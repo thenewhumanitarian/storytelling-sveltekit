@@ -8,6 +8,12 @@
 	 * Without JavaScript, the form posts to Mailchimp in a new tab, exactly like the embed.
 	 * No API key is involved and the address never touches this site's server.
 	 */
+	interface Props {
+		/** 'dark' on the glass panels, 'light' on a light page. */
+		tone?: 'dark' | 'light';
+	}
+	let { tone = 'dark' }: Props = $props();
+
 	const account = 'https://thenewhumanitarian.us12.list-manage.com/subscribe';
 	const ids = { u: '31c0c755a8105c17c23d89842', id: 'd842d98289', f_id: '00a8c0e3f0' };
 	const query = new URLSearchParams(ids).toString();
@@ -76,6 +82,7 @@
 </script>
 
 <form
+	class={tone}
 	method="POST"
 	action={`${account}/post?${query}`}
 	target="_blank"
@@ -92,7 +99,7 @@
 			required
 			bind:value={email}
 		/>
-		<button class="climate-button" type="submit" disabled={status === 'sending'}>
+		<button class="signup-button" type="submit" disabled={status === 'sending'}>
 			{status === 'sending' ? 'Signing up…' : 'Sign up'}
 		</button>
 	</div>
@@ -132,6 +139,28 @@
 		outline: 2px solid #9f3e52;
 		outline-offset: -2px;
 	}
+	.signup-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		padding: 0.68rem 1.15rem;
+		border: 0;
+		border-radius: 0;
+		background: #9f3e52;
+		color: #fff;
+		font: 700 0.93rem/1.3 var(--sans, 'Roboto', Arial, sans-serif);
+		text-shadow: none;
+		cursor: pointer;
+		transition: background-color 150ms ease;
+	}
+	.signup-button:hover:not(:disabled) {
+		background: #803244;
+	}
+	.signup-button:disabled {
+		opacity: 0.7;
+		cursor: wait;
+	}
 	.trap {
 		position: absolute;
 		left: -5000px;
@@ -146,5 +175,15 @@
 	}
 	.field-note.error {
 		color: #ffc9d2;
+	}
+	.light .field-note {
+		color: #282828;
+	}
+	.light .field-note.error {
+		color: #9f3e52;
+		font-weight: 700;
+	}
+	.light .email-row input {
+		border-color: #8f8984;
 	}
 </style>
