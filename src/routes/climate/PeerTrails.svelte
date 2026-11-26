@@ -4,7 +4,7 @@
 	 * browser, so pointing at a spot means little; motion still does. Moving, a visitor draws a soft
 	 * faint trail of light with a small glowing drop at its head. Still for a moment, the drop sinks
 	 * with a few widening ripples and disappears. Moving again, it resurfaces with a small ripple.
-	 * Their name shows briefly each time they surface or sink; there is no arrow.
+	 * No arrow, and (for now) no name: see SHOW_NAMES.
 	 *
 	 * One canvas, one requestAnimationFrame loop that stops itself when nothing is moving.
 	 */
@@ -46,6 +46,11 @@
 	const TRAIL_LIFE = 2400;
 	const STILL_AFTER = 900;
 	const LABEL_LIFE = 1700;
+	// Visitor names when they surface and sink. Off for now: random names meant little to people.
+	const SHOW_NAMES = false;
+	function nameAt(born: number, leaving: boolean, x: number, y: number) {
+		return SHOW_NAMES ? { born, leaving, x, y } : null;
+	}
 
 	let canvas: HTMLCanvasElement;
 	let context: CanvasRenderingContext2D | null = null;
@@ -103,7 +108,7 @@
 					sunk: false,
 					gone: false,
 					trail: [],
-					label: { born: now, leaving: false, x: tx, y: ty }
+					label: nameAt(now, false, tx, ty)
 				});
 				splash(tx, ty, tint, now, 'surface');
 				continue;
@@ -115,7 +120,7 @@
 				peer.y = ty;
 				peer.trail = [];
 				peer.sunk = false;
-				peer.label = { born: now, leaving: false, x: tx, y: ty };
+				peer.label = nameAt(now, false, tx, ty);
 				splash(tx, ty, peer.tint, now, 'surface');
 			}
 			peer.tx = tx;
@@ -130,7 +135,7 @@
 				// A cursor that sat still has already sunk and said goodbye; the room drops it a few
 				// seconds later, which needs no second goodbye.
 				peer.sunk = true;
-				peer.label = { born: now, leaving: true, x: peer.x, y: peer.y };
+				peer.label = nameAt(now, true, peer.x, peer.y);
 				splash(peer.x, peer.y, peer.tint, now, 'sink');
 			}
 		}
@@ -163,7 +168,7 @@
 				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < 1;
 				if (settled && now - peer.lastMove > STILL_AFTER) {
 					peer.sunk = true;
-					peer.label = { born: now, leaving: true, x: peer.x, y: peer.y };
+					peer.label = nameAt(now, true, peer.x, peer.y);
 					if (!still) splash(peer.x, peer.y, peer.tint, now, 'sink');
 				}
 			} else {
