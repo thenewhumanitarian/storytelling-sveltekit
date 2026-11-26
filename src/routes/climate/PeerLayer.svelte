@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { prefersReducedMotion } from 'svelte/motion';
 	import { fade } from 'svelte/transition';
+	import PeerTrails from './PeerTrails.svelte';
 	import type { ClimateCursor } from './realtime';
 
 	interface Props {
@@ -12,25 +13,31 @@
 		ripples: Ripple[];
 		width: number;
 		height: number;
+		/** Draw visitors as trails of light that sink with ripples, instead of named arrows. */
+		trails?: boolean;
 	}
 
-	let { cursors, ripples, width, height }: Props = $props();
+	let { cursors, ripples, width, height, trails = false }: Props = $props();
 	const motion = $derived(prefersReducedMotion.current ? 0 : 1);
 </script>
 
 <div class="peers" aria-hidden="true">
-	{#each cursors as cursor (cursor.id)}
-		<div
-			class="cursor"
-			style:transform={`translate3d(${cursor.x * width}px, ${cursor.y * height}px, 0)`}
-			transition:fade={{ duration: 220 * motion }}
-		>
-			<svg viewBox="0 0 18 22" width="22" height="27">
-				<path d="M1.5 1.5 L16 12.2 L9.3 13.2 L5.6 20 Z" />
-			</svg>
-			<span class="tag">{cursor.name}</span>
-		</div>
-	{/each}
+	{#if trails}
+		<PeerTrails {cursors} {width} {height} />
+	{:else}
+		{#each cursors as cursor (cursor.id)}
+			<div
+				class="cursor"
+				style:transform={`translate3d(${cursor.x * width}px, ${cursor.y * height}px, 0)`}
+				transition:fade={{ duration: 220 * motion }}
+			>
+				<svg viewBox="0 0 18 22" width="22" height="27">
+					<path d="M1.5 1.5 L16 12.2 L9.3 13.2 L5.6 20 Z" />
+				</svg>
+				<span class="tag">{cursor.name}</span>
+			</div>
+		{/each}
+	{/if}
 
 	{#each ripples as ripple (ripple.key)}
 		<div class="ripple" style:left={`${ripple.x * width}px`} style:top={`${ripple.y * height}px`}>
