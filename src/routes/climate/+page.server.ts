@@ -21,7 +21,11 @@ const rateLimited = 'Too many attempts. Please wait a few minutes and try again.
 
 export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 	const realtime = climateRealtimeConfig();
+	// Picks the backdrop photo each visit starts on. Chosen here, not in the browser, so the
+	// server-rendered page, its image preload and the hydrated page all agree.
+	const photoSeed = Math.random();
 	const offline = {
+		photoSeed,
 		configured: false,
 		wall: [],
 		reactionsEnabled: false,
@@ -40,7 +44,14 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders }) => {
 			commentsOpen(service)
 		]);
 		if (!reactor && wallData.reactionsEnabled) setClimateReactor(cookies);
-		return { configured: true, realtime, formStamp: formStamp(), commentsEnabled, ...wallData };
+		return {
+			configured: true,
+			photoSeed,
+			realtime,
+			formStamp: formStamp(),
+			commentsEnabled,
+			...wallData
+		};
 	} catch {
 		return offline;
 	}

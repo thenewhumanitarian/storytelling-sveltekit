@@ -162,9 +162,13 @@
 	let showCursors = $state(true);
 	// Backdrop slideshow: `current` fades in over `previous`. Slides are mounted (and so fetched)
 	// one ahead of the one showing, and only once the one showing has loaded.
-	let current = $state(0);
+	// Each visit starts on a random photo (picked on the server, see +page.server.ts).
+	const firstPhoto = untrack(() =>
+		Math.min(photos.length - 1, Math.floor((data.photoSeed ?? 0) * photos.length))
+	);
+	let current = $state(firstPhoto);
 	let previous = $state(-1);
-	let mountedSlides = $state(1);
+	let mountedSlides = $state<boolean[]>([]);
 	let loadedSlides = $state<boolean[]>([]);
 	const photoCredit = $derived(photos[current].credit);
 	let motionPaused = $state(false);
@@ -726,10 +730,12 @@
 	// Fetch the next photo only once the one on screen has arrived, so it never competes with it.
 	$effect(() => {
 		if (!loadedSlides[current]) return;
-		const want = Math.min(photos.length, current + 2);
-		if (want <= untrack(() => mountedSlides)) return;
+		// Keep the one on screen mounted once it has moved on, so it stays under the next crossfade.
+		if (!untrack(() => mountedSlides[current])) mountedSlides[current] = true;
+		const next = (current + 1) % photos.length;
+		if (untrack(() => mountedSlides[next])) return;
 		const idle = window.requestIdleCallback ?? ((run: () => void) => setTimeout(run, 1500));
-		idle(() => (mountedSlides = Math.max(mountedSlides, want)));
+		idle(() => (mountedSlides[next] = true));
 	});
 
 	let thoughtField = $state<ReturnType<typeof ThoughtField>>();
@@ -975,7 +981,7 @@
 		rel="preload"
 		as="image"
 		type="image/avif"
-		imagesrcset={photos[0].avif}
+		imagesrcset={photos[firstPhoto].avif}
 		imagesizes={backdropSizes}
 		fetchpriority="high"
 	/>
@@ -1082,7 +1088,7 @@
 							style:--shade={photo.shade}
 						>
 							<div class="placeholder" style:background-image={`url(${photo.placeholder})`}></div>
-							{#if index < mountedSlides || index === current}
+							{#if mountedSlides[index] || index === current}
 								<picture>
 									<source type="image/avif" srcset={photo.avif} sizes={backdropSizes} />
 									<img
@@ -1094,7 +1100,7 @@
 										height={photo.height}
 										alt=""
 										decoding="async"
-										fetchpriority={index === 0 ? 'high' : 'low'}
+										fetchpriority={index === firstPhoto ? 'high' : 'low'}
 										use:slideImage={index}
 									/>
 								</picture>
