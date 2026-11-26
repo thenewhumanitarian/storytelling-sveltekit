@@ -3,8 +3,6 @@
 </script>
 
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { SubmitFunction } from '@sveltejs/kit';
 	import { onMount, untrack } from 'svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
 	import { fly } from 'svelte/transition';
@@ -53,9 +51,9 @@
 
 	interface Props {
 		entries: Entry[];
-		react: SubmitFunction;
+		/** Set this visitor's vote: -1 down, 0 none, 1 up, 2 golden boost. */
+		onvote: (id: string, weight: -1 | 0 | 1 | 2) => void;
 		canReact: boolean;
-		pendingEntry: string | null;
 		pulses: Record<string, Pulse>;
 		paused: boolean;
 		avoid?: (HTMLElement | undefined)[];
@@ -64,7 +62,6 @@
 		/** How far the canvas pans each way: as far as the backdrop image can travel. */
 		cameraLimit?: number;
 		/** Hidden easter egg: a double-click boosts a thought to +2. */
-		onboost?: (id: string) => void;
 		/** Thoughts this browser posted. They get a remove button only their author sees. */
 		isMine?: (entry: Entry) => boolean;
 		/** Author takes their thought off the wall (TNH keeps it privately). */
@@ -78,15 +75,13 @@
 
 	let {
 		entries,
-		react,
+		onvote,
 		canReact,
-		pendingEntry,
 		pulses,
 		paused,
 		avoid = [],
 		oncamera,
 		cameraLimit = Infinity,
-		onboost,
 		isMine = () => false,
 		onwithdraw,
 		commentsEnabled = false,
@@ -232,7 +227,7 @@
 	}
 
 	function popularity(entry: Entry) {
-		return 1 + Math.min(0.42, Math.log2(1 + entry.reactions) * 0.1);
+		return 1 + Math.min(0.42, Math.log2(1 + Math.max(0, entry.reactions)) * 0.1);
 	}
 
 	function measureAvoid() {
@@ -1119,27 +1114,36 @@
 		body.age = Math.min(body.age, body.life * 0.5);
 	}
 
-	let lastClick = { id: '', at: 0 };
-
 	/** Swallows the click that ends a drag, and turns a quick second click into the golden boost. */
-	function clickCapture(event: MouseEvent, id: string) {
-		const now = performance.now();
-		if (now < suppressClickUntil) {
+	/** Clicking a thought only selects it (it stops drifting); voting is on the buttons below. */
+	function clickTerm(event: MouseEvent, id: string) {
+		if (performance.now() < suppressClickUntil) {
 			event.preventDefault();
 			event.stopPropagation();
 			return;
 		}
-		// Keyboard activation (detail 0) never counts as a double-click.
-		if (event.detail > 0 && lastClick.id === id && now - lastClick.at < 380 && onboost) {
-			event.preventDefault();
-			event.stopPropagation();
-			lastClick = { id: '', at: 0 };
-			onboost(id);
-			return;
-		}
-		lastClick = { id, at: now };
-		select(id);
+		select(selectedId === id && !openId ? null : id);
 	}
+
+	let lastUp = { id: '', at: 0 };
+
+	/** + toggles your up-vote; a quick second click is the hidden golden boost (+2). */
+	function voteUp(event: MouseEvent, entry: Entry) {
+		const now = performance.now();
+		if (event.detail > 0 && lastUp.id === entry.id && now - lastUp.at < 380) {
+			lastUp = { id: '', at: 0 };
+			onvote(entry.id, 2);
+			return;
+		}
+		lastUp = { id: entry.id, at: now };
+		onvote(entry.id, entry.reacted ? 0 : 1);
+	}
+
+	function voteDown(entry: Entry) {
+		onvote(entry.id, entry.downvoted ? 0 : -1);
+	}
+
+	const score = (value: number) => (value < 0 ? `−${Math.abs(value)}` : String(value));
 
 	function setHeld(id: string, held: boolean) {
 		const body = bodies.get(id);
@@ -1169,101 +1173,119 @@
 				if (confirming === id) confirming = null;
 			}}
 		>
-			<form method="POST" action="?/react" use:enhance={react}>
-				<input type="hidden" name="entry" value={entry.id} />
-				<input type="hidden" name="weight" value={entry.reacted ? '0' : '1'} />
+			<button
+				type="button"
+				class={[
+					'word',
+					{ reacted: entry.reacted, boosted: entry.boosted, downvoted: entry.downvoted }
+				]}
+				aria-pressed={selectedId === id}
+				aria-label={`${entry.body}. Score ${entry.reactions}.`}
+				onclick={(event) => clickTerm(event, id)}
+				onpointerdown={(event) => pointerDown(event, id)}
+				onpointermove={pointerMove}
+				onpointerup={pointerUp}
+				onpointercancel={pointerUp}
+				onfocus={() => setHeld(id, true)}
+				onblur={() => setHeld(id, false)}
+			>
+				<span class="count" aria-hidden="true">
+					{#if entry.boosted}
+						<svg class="golden-leaf" viewBox="0 0 20 20" aria-hidden="true">
+							<path d="M10 1C16 5 17 13 10 19C3 13 4 5 10 1Z" />
+							<path class="vein" d="M10 17V5" />
+						</svg>
+					{/if}
+					<span class="number">
+						{#key entry.reactions}
+							<span in:fly={{ y: 10, duration: prefersReducedMotion.current ? 0 : 280 }}
+								>{score(entry.reactions)}</span
+							>
+						{/key}
+					</span>
+				</span>
+				<span class="text">{entry.body}</span>
+			</button>
+			<!-- Always-visible actions on a row under the text, starting at the text's left edge. -->
+			<div class="actions">
 				<button
-					type="submit"
-					class={['word', { reacted: entry.reacted, boosted: entry.boosted }]}
+					type="button"
+					class={['vote', 'up', { active: entry.reacted }]}
 					aria-pressed={entry.reacted}
-					aria-disabled={!canReact || pendingEntry === entry.id}
-					aria-label={`${entry.body}. ${entry.reactions} ${entry.reactions === 1 ? 'person agrees' : 'people agree'}. ${entry.reacted ? 'Remove your +1' : 'Give +1'}`}
-					onclickcapture={(event) => clickCapture(event, id)}
-					onpointerdown={(event) => pointerDown(event, id)}
-					onpointermove={pointerMove}
-					onpointerup={pointerUp}
-					onpointercancel={pointerUp}
+					aria-label={entry.reacted ? `Remove your +1 from “${entry.body}”` : `+1 “${entry.body}”`}
+					disabled={!canReact}
 					onfocus={() => setHeld(id, true)}
 					onblur={() => setHeld(id, false)}
+					onclick={(event) => voteUp(event, entry)}
 				>
-					<span class="count" aria-hidden="true">
-						{#if entry.boosted}
-							<svg class="golden-leaf" viewBox="0 0 20 20" aria-hidden="true">
-								<path d="M10 1C16 5 17 13 10 19C3 13 4 5 10 1Z" />
-								<path class="vein" d="M10 17V5" />
-							</svg>
-						{:else}
-							<svg class="plus" viewBox="0 0 12 12" aria-hidden="true">
-								<path d="M6 1v10M1 6h10" />
-							</svg>
-						{/if}
-						<span class="number">
-							{#key entry.reactions}
-								<span in:fly={{ y: 10, duration: prefersReducedMotion.current ? 0 : 280 }}
-									>{entry.reactions}</span
-								>
-							{/key}
-						</span>
-					</span>
-					<span class="text">{entry.body}</span>
+					<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12" /></svg>
 				</button>
-			</form>
-			{#if (isMine(entry) && onwithdraw) || (commentsEnabled && (selectedId === id || entry.comments > 0))}
-				<!-- Actions sit on a row under the text, starting at the text's left edge. -->
-				<div class="actions">
-					{#if isMine(entry) && onwithdraw}
-						<!-- Only the author's browser shows this, so it doubles as the "yours" marker. -->
-						<button
-							type="button"
-							class={['remove', { confirming: confirming === id }]}
-							aria-label={confirming === id
-								? `Confirm: take “${entry.body}” off the wall`
-								: `Remove your thought “${entry.body}” from the wall`}
-							title={confirming === id
-								? 'Click again to remove'
-								: 'Your thought. Remove it from the wall'}
-							onfocus={() => setHeld(id, true)}
-							onblur={() => {
-								setHeld(id, false);
-								if (confirming === id) confirming = null;
-							}}
-							onclick={() => {
-								if (confirming === id) {
-									confirming = null;
-									onwithdraw(entry);
-								} else {
-									confirming = id;
-								}
-							}}
-						>
-							<svg viewBox="0 0 20 20" aria-hidden="true">
-								<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6M9 9v5M11 9v5" />
-							</svg>
-							{#if confirming === id}<span>Remove</span>{/if}
-						</button>
-					{/if}
-					{#if commentsEnabled && (selectedId === id || entry.comments > 0)}
-						<button
-							type="button"
-							class={['comment', { expanded: selectedId === id }]}
-							aria-label={entry.comments
-								? `Open ${entry.comments} ${entry.comments === 1 ? 'comment' : 'comments'} on “${entry.body}”`
-								: `Comment on “${entry.body}”`}
-							onfocus={() => setHeld(id, true)}
-							onblur={() => setHeld(id, false)}
-							onclick={() => openThread(id)}
-						>
-							<svg viewBox="0 0 20 20" aria-hidden="true">
-								<path
-									d="M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-4 3v-3H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5Z"
-								/>
-							</svg>
-							{#if selectedId === id}<span>Comment</span>{/if}
-							{#if entry.comments}<span class="n">{entry.comments}</span>{/if}
-						</button>
-					{/if}
-				</div>
-			{/if}
+				<button
+					type="button"
+					class={['vote', 'down', { active: entry.downvoted }]}
+					aria-pressed={entry.downvoted}
+					aria-label={entry.downvoted
+						? `Remove your −1 from “${entry.body}”`
+						: `−1 “${entry.body}”`}
+					disabled={!canReact}
+					onfocus={() => setHeld(id, true)}
+					onblur={() => setHeld(id, false)}
+					onclick={() => voteDown(entry)}
+				>
+					<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12" /></svg>
+				</button>
+				{#if commentsEnabled}
+					<button
+						type="button"
+						class={['comment', { expanded: selectedId === id }]}
+						aria-label={entry.comments
+							? `Open ${entry.comments} ${entry.comments === 1 ? 'comment' : 'comments'} on “${entry.body}”`
+							: `Comment on “${entry.body}”`}
+						onfocus={() => setHeld(id, true)}
+						onblur={() => setHeld(id, false)}
+						onclick={() => openThread(id)}
+					>
+						<svg viewBox="0 0 20 20" aria-hidden="true">
+							<path
+								d="M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H9l-4 3v-3H4A1.5 1.5 0 0 1 2.5 13V6A1.5 1.5 0 0 1 4 4.5Z"
+							/>
+						</svg>
+						{#if selectedId === id}<span>Comment</span>{/if}
+						{#if entry.comments}<span class="n">{entry.comments}</span>{/if}
+					</button>
+				{/if}
+				{#if isMine(entry) && onwithdraw}
+					<!-- Only the author's browser shows this, so it doubles as the "yours" marker. -->
+					<button
+						type="button"
+						class={['remove', { confirming: confirming === id }]}
+						aria-label={confirming === id
+							? `Confirm: take “${entry.body}” off the wall`
+							: `Remove your thought “${entry.body}” from the wall`}
+						title={confirming === id
+							? 'Click again to remove'
+							: 'Your thought. Remove it from the wall'}
+						onfocus={() => setHeld(id, true)}
+						onblur={() => {
+							setHeld(id, false);
+							if (confirming === id) confirming = null;
+						}}
+						onclick={() => {
+							if (confirming === id) {
+								confirming = null;
+								onwithdraw(entry);
+							} else {
+								confirming = id;
+							}
+						}}
+					>
+						<svg viewBox="0 0 20 20" aria-hidden="true">
+							<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6M9 9v5M11 9v5" />
+						</svg>
+						{#if confirming === id}<span>Remove</span>{/if}
+					</button>
+				{/if}
+			</div>
 		</div>
 	{/each}
 
@@ -1313,9 +1335,6 @@
 	.term.long {
 		--base: clamp(1rem, 1.2vw, 1.18rem);
 		max-width: min(26rem, 80vw);
-	}
-	.term form {
-		display: contents;
 	}
 	/* Counter first, then the text; on multi-line thoughts the counter lines up with the first line. */
 	.word {
@@ -1387,9 +1406,6 @@
 			color 260ms ease;
 	}
 	/* Burgundy until you +1 it, green once you have. */
-	.word:hover .count {
-		background: #b24a60;
-	}
 	/* While its thread is open, the thought itself shows in the panel header instead. */
 	.term.open {
 		visibility: hidden;
@@ -1400,8 +1416,8 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		height: 2.3rem;
-		min-width: 2.3rem;
+		height: 2.4rem;
+		min-width: 2.4rem;
 		justify-content: center;
 		padding: 0 0.6rem;
 		border: 0;
@@ -1444,7 +1460,6 @@
 	}
 	.comment:focus {
 		outline: none;
-		box-shadow: none;
 	}
 	.comment:focus-visible {
 		outline: 2px solid #fff;
@@ -1476,8 +1491,8 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		height: 2.3rem;
-		min-width: 2.3rem;
+		height: 2.4rem;
+		min-width: 2.4rem;
 		justify-content: center;
 		padding: 0 0.5rem;
 		border: 0;
@@ -1511,7 +1526,6 @@
 	}
 	.remove:focus {
 		outline: none;
-		box-shadow: none;
 	}
 	.remove:focus-visible {
 		outline: 2px solid #fff;
@@ -1525,6 +1539,73 @@
 		stroke-width: 1.6;
 		stroke-linecap: round;
 		stroke-linejoin: round;
+	}
+	/* Your down-vote: charcoal box. */
+	.word.downvoted .count {
+		background: #282828;
+		color: #fff;
+	}
+	/* + and − sit with Comment under the text; always visible. */
+	.vote {
+		flex: none;
+		display: inline-grid;
+		place-items: center;
+		width: 2.4rem;
+		height: 2.4rem;
+		border: 0;
+		border-radius: 50%;
+		background: rgb(30 30 28 / 55%);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
+		color: #fff;
+		cursor: pointer;
+		pointer-events: auto;
+		transition:
+			background-color 160ms ease,
+			color 160ms ease,
+			transform 120ms ease;
+	}
+	.vote svg {
+		width: 1.1rem;
+		height: 1.1rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2.2;
+		stroke-linecap: round;
+	}
+	.vote:hover:not(:disabled) {
+		background: #fff;
+		color: #282828;
+	}
+	.vote:active:not(:disabled) {
+		transform: scale(0.92);
+	}
+	.vote.up.active {
+		background: #35b58b;
+		color: #282828;
+		box-shadow: none;
+	}
+	.vote.down.active {
+		background: #282828;
+		color: #fff;
+		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 45%);
+	}
+	.vote:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+	.vote:focus {
+		outline: none;
+	}
+	.vote:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.vote {
+			transition: none;
+		}
 	}
 	/* Multi-line thoughts: the counter's top edge sits on the first line's cap height. */
 	.term:global([data-lines='multi']) .word {
@@ -1584,28 +1665,6 @@
 	.word.reacted .count {
 		background: #35b58b;
 		color: #282828;
-	}
-	.word.reacted:hover .count {
-		background: #2fa37d;
-	}
-	.word:active .count {
-		background: #282828;
-	}
-	.word[aria-disabled='true'] {
-		cursor: grab;
-	}
-	.plus {
-		width: 0.8em;
-		height: 0.8em;
-		flex: none;
-		stroke: currentColor;
-		stroke-width: 2.2;
-		stroke-linecap: square;
-		fill: none;
-		transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
-	}
-	.word.reacted .plus {
-		transform: rotate(90deg);
 	}
 	.number {
 		display: inline-grid;
@@ -1750,7 +1809,6 @@
 		.term.fresh .text {
 			animation: none;
 		}
-		.plus,
 		.count,
 		.text {
 			transition: none;

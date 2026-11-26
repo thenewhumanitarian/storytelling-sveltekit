@@ -10,8 +10,10 @@ export interface WallEntry {
 	body: string;
 	reactions: number;
 	reacted: boolean;
-	/** This visitor double-clicked it: their reaction counts as +2. */
+	/** This visitor double-clicked +: their reaction counts as +2. */
 	boosted: boolean;
+	/** This visitor voted it down (−1). */
+	downvoted: boolean;
 	/** Published comments in its thread. */
 	comments: number;
 }
@@ -72,9 +74,10 @@ export interface AdminEntry {
 	boosts: number;
 }
 
-export type ReactionWeight = 0 | 1 | 2;
+export type ReactionWeight = -1 | 0 | 1 | 2;
 type ReactionResult = {
 	boosted?: boolean;
+	downvoted?: boolean;
 	outcome: 'accepted' | 'unavailable' | 'rate_limited';
 	reactions: number;
 	reacted: boolean;
@@ -204,13 +207,14 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 					}),
 					commentCounts()
 				]);
-				const wall = rows.map(({ id, topic, body, reactions, reacted, boosted }) => ({
+				const wall = rows.map(({ id, topic, body, reactions, reacted, boosted, downvoted }) => ({
 					id,
 					topic,
 					body,
 					reactions,
 					reacted,
 					boosted: boosted === true,
+					downvoted: downvoted === true,
 					comments: counts.get(id) ?? 0
 				}));
 				return { wall, reactionsEnabled: true };
@@ -226,6 +230,7 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 						reactions: 0,
 						reacted: false,
 						boosted: false,
+						downvoted: false,
 						comments: 0
 					})),
 					reactionsEnabled: false
@@ -254,7 +259,11 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 				});
 			}
 			if (!result) throw new Error('Climate reaction result was missing.');
-			return { ...result, boosted: result.boosted === true };
+			return {
+				...result,
+				boosted: result.boosted === true,
+				downvoted: result.downvoted === true
+			};
 		},
 		async contribute(
 			address: string,

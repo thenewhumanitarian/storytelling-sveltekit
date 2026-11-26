@@ -181,8 +181,8 @@ export const actions = {
 		const entry = form.get('entry');
 		const weightField = form.get('weight');
 		const weight =
-			weightField === '0' || weightField === '1' || weightField === '2'
-				? (Number(weightField) as 0 | 1 | 2)
+			weightField === '-1' || weightField === '0' || weightField === '1' || weightField === '2'
+				? (Number(weightField) as -1 | 0 | 1 | 2)
 				: null;
 		const reactor = climateReactor(cookies);
 		if (typeof entry !== 'string' || !entryId.test(entry)) {
@@ -212,7 +212,8 @@ export const actions = {
 				entry,
 				reactions: result.reactions,
 				reacted: result.reacted,
-				boosted: result.boosted
+				boosted: result.boosted,
+				downvoted: result.downvoted
 			};
 		} catch {
 			return fail(503, {

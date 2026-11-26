@@ -31,15 +31,82 @@
 		panel = $bindable()
 	}: Props = $props();
 
+	type Mine = {
+		key: string;
+		entry: string;
+		body: string;
+		at: string;
+		state: 'checking' | 'sent' | 'review' | 'blocked' | 'failed';
+		note?: string;
+	};
+
+	const mineKey = 'tnh-climate-my-comments-v1';
 	let comments = $state<Comment[]>([]);
 	let loading = $state(true);
 	let unavailable = $state(false);
 	let draft = $state('');
 	let sending = $state(false);
-	let status = $state('');
+	// Comments this browser wrote: shown on the right, and kept visible while they're checked or
+	// waiting for review, even before they appear in the published thread.
+	let mine = $state<Mine[]>([]);
 	let list = $state<HTMLOListElement>();
 	let field = $state<HTMLTextAreaElement>();
 	const motion = $derived(prefersReducedMotion.current ? 0 : 1);
+
+	const same = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+	const mineHere = $derived(mine.filter((item) => item.entry === entry.id));
+
+	type Bubble =
+		| { kind: 'comment'; key: string; at: string; body: string; own: boolean }
+		| { kind: 'mine'; key: string; at: string; body: string; own: true; item: Mine };
+
+	const bubbles = $derived.by((): Bubble[] => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- local to this derivation
+		const claimed = new Set<string>();
+		const published: Bubble[] = comments.map((comment) => {
+			const match = mineHere.find(
+				(item) => !claimed.has(item.key) && same(item.body, comment.body)
+			);
+			if (match) claimed.add(match.key);
+			return {
+				kind: 'comment',
+				key: comment.id,
+				at: comment.created_at,
+				body: comment.body,
+				own: Boolean(match)
+			};
+		});
+		// Your comments that aren't (yet) in the published thread: checking, in review, blocked.
+		const local: Bubble[] = mineHere
+			.filter((item) => !claimed.has(item.key) && item.state !== 'sent')
+			.map((item) => ({
+				kind: 'mine',
+				key: item.key,
+				at: item.at,
+				body: item.body,
+				own: true,
+				item
+			}));
+		return [...published, ...local].sort((a, b) => a.at.localeCompare(b.at));
+	});
+
+	function saveMine(next: Mine[]) {
+		mine = next.slice(-100);
+		try {
+			localStorage.setItem(mineKey, JSON.stringify(mine));
+		} catch {
+			// Still works for this visit without storage.
+		}
+	}
+
+	function updateMine(key: string, patch: Partial<Mine>) {
+		saveMine(mine.map((item) => (item.key === key ? { ...item, ...patch } : item)));
+	}
+
+	async function scrollToEnd() {
+		await tick();
+		list?.scrollTo({ top: list.scrollHeight, behavior: motion ? 'smooth' : 'auto' });
+	}
 
 	async function load() {
 		try {
@@ -48,10 +115,7 @@
 			const grew = result.comments.length > comments.length;
 			comments = result.comments;
 			unavailable = Boolean(result.unavailable);
-			if (grew) {
-				await tick();
-				list?.scrollTo({ top: list.scrollHeight, behavior: motion ? 'smooth' : 'auto' });
-			}
+			if (grew) await scrollToEnd();
 		} catch {
 			unavailable = true;
 		} finally {
@@ -60,7 +124,25 @@
 	}
 
 	onMount(() => {
-		void load();
+		try {
+			const saved: unknown = JSON.parse(localStorage.getItem(mineKey) ?? '[]');
+			if (Array.isArray(saved)) {
+				mine = saved
+					.filter(
+						(item): item is Mine =>
+							item &&
+							typeof item.key === 'string' &&
+							typeof item.entry === 'string' &&
+							typeof item.body === 'string' &&
+							typeof item.at === 'string'
+					)
+					// A check that never finished (tab closed) shows as in review.
+					.map((item) => (item.state === 'checking' ? { ...item, state: 'review' } : item));
+			}
+		} catch {
+			mine = [];
+		}
+		void load().then(scrollToEnd);
 		field?.focus({ preventScroll: true });
 		const timer = setInterval(() => {
 			if (document.visibilityState === 'visible') void load();
@@ -83,7 +165,16 @@
 		const text = draft.trim();
 		if (!text || sending) return;
 		sending = true;
-		status = 'Checking with ethical AI…';
+		// Your bubble appears at once; its label follows the check. Nothing else on the panel moves.
+		const key = crypto.randomUUID();
+		saveMine([
+			...mine,
+			{ key, entry: entry.id, body: text, at: new Date().toISOString(), state: 'checking' }
+		]);
+		draft = '';
+		if (field) field.style.height = '';
+		void scrollToEnd();
+
 		const body = new FormData();
 		body.set('entry', entry.id);
 		body.set('message', text);
@@ -97,19 +188,29 @@
 			});
 			const result = deserialize(await response.text());
 			const data = result.type === 'success' || result.type === 'failure' ? result.data : undefined;
-			status = typeof data?.message === 'string' ? data.message : 'Couldn’t post. Try again.';
+			const message = typeof data?.message === 'string' ? data.message : undefined;
 			if (result.type === 'success') {
-				draft = '';
 				if (data?.published) {
+					updateMine(key, { state: 'sent' });
 					await load();
 					onposted();
+				} else {
+					updateMine(key, { state: 'review' });
 				}
+			} else if (result.type === 'failure' && result.status === 422) {
+				updateMine(key, { state: 'blocked', note: message });
+			} else {
+				updateMine(key, { state: 'failed', note: message ?? 'Couldn’t post. Try again.' });
 			}
 		} catch {
-			status = 'Couldn’t post. Try again.';
+			updateMine(key, { state: 'failed', note: 'Couldn’t post. Try again.' });
 		} finally {
 			sending = false;
 		}
+	}
+
+	function dismiss(key: string) {
+		saveMine(mine.filter((item) => item.key !== key));
 	}
 
 	/** Grow the box with the text, up to a few lines, instead of showing a scrollbar. */
@@ -155,19 +256,36 @@
 		</button>
 	</header>
 
-	<ol class="timeline" bind:this={list} aria-live="polite">
+	<ol class="chat" bind:this={list} aria-live="polite">
 		{#if loading}
 			<li class="placeholder">Loading the thread…</li>
-		{:else if unavailable}
+		{:else if unavailable && !bubbles.length}
 			<li class="placeholder">Comments aren’t available right now.</li>
-		{:else if !comments.length}
-			<li class="placeholder">No comments yet. Start the thread.</li>
+		{:else if !bubbles.length}
+			<li class="placeholder">No comments yet. Start the conversation.</li>
 		{/if}
-		{#each comments as comment (comment.id)}
-			<li class="comment" in:fly={{ y: 12, duration: 280 * motion }}>
-				<span class="dot" aria-hidden="true"></span>
-				<time datetime={comment.created_at}>{relative(comment.created_at)}</time>
-				<p>{comment.body}</p>
+		{#each bubbles as bubble (bubble.key)}
+			<li
+				class={['bubble', { own: bubble.own }, bubble.kind === 'mine' && bubble.item.state]}
+				in:fly={{ y: 12, duration: 260 * motion }}
+			>
+				<p>{bubble.body}</p>
+				<span class="meta">
+					{#if bubble.kind === 'mine'}
+						{#if bubble.item.state === 'checking'}
+							<span class="pulse" aria-hidden="true"></span>Checking with ethical AI…
+						{:else if bubble.item.state === 'review'}
+							Waiting for a quick TNH review
+						{:else}
+							{bubble.item.note ?? 'Not posted.'}
+							<button type="button" class="dismiss" onclick={() => dismiss(bubble.key)}
+								>Dismiss</button
+							>
+						{/if}
+					{:else}
+						<time datetime={bubble.at}>{relative(bubble.at)}</time>{bubble.own ? ' · You' : ''}
+					{/if}
+				</span>
 			</li>
 		{/each}
 	</ol>
@@ -187,10 +305,9 @@
 				disabled={unavailable}
 			></textarea>
 			<button type="submit" class="send" disabled={!draft.trim() || sending || unavailable}>
-				{sending ? 'Checking' : 'Post'}
+				Post
 			</button>
 		</div>
-		<p class="status" role="status" class:empty={!status}>{status}</p>
 	</form>
 </div>
 
@@ -267,56 +384,95 @@
 		stroke: currentColor;
 		stroke-width: 1.8;
 	}
-	.timeline {
-		position: relative;
+	/* Group-chat thread: other people on the left, you on the right. */
+	.chat {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
 		margin: 0;
-		padding: 1rem 0.4rem 0.4rem 1.6rem;
+		padding: 1rem 0.2rem 0.6rem;
 		overflow-y: auto;
 		overscroll-behavior: contain;
 		list-style: none;
 		scrollbar-width: thin;
 	}
-	/* The thread line the dots sit on. */
-	.timeline:has(.comment)::before {
-		content: '';
-		position: absolute;
-		top: 1.2rem;
-		bottom: 0.4rem;
-		left: 0.45rem;
-		width: 2px;
-		background: rgb(255 255 255 / 18%);
+	.bubble {
+		align-self: flex-start;
+		display: grid;
+		gap: 0.25rem;
+		max-width: min(80%, 30rem);
+		padding: 0.6rem 0.85rem 0.5rem;
+		border-radius: 1.1rem 1.1rem 1.1rem 0.3rem;
+		background: rgb(255 255 255 / 16%);
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 22%);
+		text-shadow: none;
 	}
-	.comment {
-		position: relative;
-		padding-bottom: 0.9rem;
-	}
-	.dot {
-		position: absolute;
-		top: 0.3rem;
-		left: -1.2rem;
-		width: 0.7rem;
-		height: 0.7rem;
-		border-radius: 50%;
+	.bubble.own {
+		align-self: flex-end;
+		border-radius: 1.1rem 1.1rem 0.3rem 1.1rem;
 		background: #35b58b;
-		box-shadow: 0 0 0 3px rgb(255 255 255 / 25%);
+		color: #1c1c1a;
+		box-shadow: 0 4px 14px rgb(0 0 0 / 20%);
 	}
-	time {
-		display: block;
-		font: 700 0.72rem/1.2 var(--sans);
-		letter-spacing: 0.03em;
-		color: rgb(255 255 255 / 60%);
-		text-transform: uppercase;
+	.bubble.checking,
+	.bubble.review {
+		background: rgb(53 181 139 / 55%);
+		color: #fff;
 	}
-	.comment p {
-		margin: 0.2rem 0 0;
-		font: 400 1.05rem/1.45 var(--sans);
+	.bubble.blocked,
+	.bubble.failed {
+		background: #9f3e52;
+		color: #fff;
+	}
+	.bubble p {
+		margin: 0;
+		font: 400 1.02rem/1.4 var(--sans);
 		overflow-wrap: anywhere;
+		white-space: pre-wrap;
+	}
+	.meta {
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem;
+		font: 700 0.72rem/1.2 var(--sans);
+		letter-spacing: 0.02em;
+		opacity: 0.8;
+	}
+	.bubble.own .meta {
+		justify-self: end;
+	}
+	.pulse {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: currentColor;
+		animation: pulse 1s ease-in-out infinite;
+	}
+	@keyframes pulse {
+		50% {
+			opacity: 0.25;
+		}
+	}
+	.dismiss {
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		cursor: pointer;
+		padding: 0;
 	}
 	.placeholder {
-		margin-left: -1.6rem;
+		align-self: center;
 		padding: 1rem 0;
-		color: rgb(255 255 255 / 70%);
+		color: rgb(255 255 255 / 75%);
 		font: 400 0.95rem/1.4 var(--sans);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.pulse {
+			animation: none;
+		}
 	}
 	form {
 		padding-top: 0.9rem;
@@ -380,15 +536,6 @@
 	.send:focus-visible {
 		outline: 2px solid #fff;
 		outline-offset: 2px;
-	}
-	.status {
-		margin: 0.5rem 0 0;
-		padding-inline: 0.9rem;
-		font: 700 0.8rem/1.3 var(--sans);
-		color: rgb(255 255 255 / 85%);
-	}
-	.status.empty {
-		display: none;
 	}
 	.visually-hidden {
 		position: absolute;
