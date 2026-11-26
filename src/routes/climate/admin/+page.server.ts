@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { autoPublishEnabled } from '$lib/server/climate-ai';
-import { climateDataService, type AdminStatus } from '$lib/server/climate';
+import { climateDataService, commentsOpen, type AdminStatus } from '$lib/server/climate';
 import {
 	adminConfigured,
 	endSession,
@@ -30,11 +30,19 @@ export const load: PageServerLoad = async ({ cookies, fetch, setHeaders, depends
 	const service = climateDataService(fetch);
 	if (!service) return { state: 'no-database' as const };
 	try {
-		const [entries, settings] = await Promise.all([service.admin.entries(), service.settings()]);
+		const [entries, settings, comments] = await Promise.all([
+			service.admin.entries(),
+			service.settings(),
+			service.admin.comments()
+		]);
 		return {
 			state: 'ready' as const,
 			entries,
+			comments,
 			autoPublish: await autoPublishEnabled(service),
+			commentsEnabled: await commentsOpen(service),
+			// Null/undefined until the comments migration adds the setting.
+			commentsSetting: typeof settings?.comments_enabled === 'boolean',
 			// Null until the settings migration is applied; the switch is hidden until then.
 			settingsReady: settings !== null
 		};
@@ -94,6 +102,20 @@ export const actions = {
 		}
 	},
 
+	comments: async ({ request, cookies, fetch }) => {
+		if (!isAdmin(cookies)) return fail(401, { message: 'Your session has ended. Log in again.' });
+		const service = climateDataService(fetch);
+		if (!service) return fail(503, { message: 'The database isn’t configured.' });
+		const enabled = (await request.formData()).get('enabled') === 'true';
+		try {
+			await service.admin.setComments(enabled);
+			await service.broadcastWallChanged();
+			return { ok: true };
+		} catch {
+			return fail(503, { message: 'Couldn’t change comments. Try again.' });
+		}
+	},
+
 	autopublish: async ({ request, cookies, fetch }) => {
 		if (!isAdmin(cookies)) return fail(401, { message: 'Your session has ended. Log in again.' });
 		const service = climateDataService(fetch);
@@ -104,6 +126,33 @@ export const actions = {
 			return { ok: true };
 		} catch {
 			return fail(503, { message: 'Couldn’t change auto-publish. Try again.' });
+		}
+	},
+
+	comment: async ({ request, cookies, fetch }) => {
+		if (!isAdmin(cookies)) return fail(401, { message: 'Your session has ended. Log in again.' });
+		const service = climateDataService(fetch);
+		if (!service) return fail(503, { message: 'The database isn’t configured.' });
+		const form = await request.formData();
+		const id = form.get('id');
+		const status = form.get('status');
+		if (typeof id !== 'string' || !uuid.test(id)) return fail(400, { message: 'Unknown comment.' });
+		try {
+			if (status === 'delete') {
+				if (!(await service.admin.removeComment(id))) {
+					return fail(404, { message: 'That comment no longer exists.' });
+				}
+			} else if (status === 'pending' || status === 'published' || status === 'removed') {
+				if (!(await service.admin.updateComment(id, status))) {
+					return fail(404, { message: 'That comment no longer exists.' });
+				}
+			} else {
+				return fail(400, { message: 'Unknown action.' });
+			}
+			await service.broadcastWallChanged();
+			return { ok: true };
+		} catch {
+			return fail(503, { message: 'Couldn’t update the comment. Try again.' });
 		}
 	},
 

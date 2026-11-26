@@ -26,7 +26,8 @@
 			topic: 'water',
 			reactions: 12,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-2',
@@ -34,7 +35,8 @@
 			topic: 'rebuilding',
 			reactions: 7,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-3',
@@ -42,7 +44,8 @@
 			topic: 'land',
 			reactions: 4,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-6',
@@ -50,7 +53,8 @@
 			topic: null,
 			reactions: 1,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-4',
@@ -58,7 +62,8 @@
 			topic: 'land',
 			reactions: 2,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-5',
@@ -66,7 +71,8 @@
 			topic: 'adaptation',
 			reactions: 9,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-7',
@@ -74,7 +80,8 @@
 			topic: 'rebuilding',
 			reactions: 6,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-8',
@@ -82,7 +89,8 @@
 			topic: null,
 			reactions: 3,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-9',
@@ -90,7 +98,8 @@
 			topic: null,
 			reactions: 5,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-10',
@@ -98,7 +107,8 @@
 			topic: 'water',
 			reactions: 8,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-11',
@@ -106,7 +116,8 @@
 			topic: 'land',
 			reactions: 3,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		},
 		{
 			id: 'sample-12',
@@ -114,7 +125,8 @@
 			topic: 'rebuilding',
 			reactions: 2,
 			reacted: false,
-			boosted: false
+			boosted: false,
+			comments: 0
 		}
 	];
 
@@ -149,6 +161,10 @@
 	let reloadWall: (() => void) | undefined;
 	let snapshotVersion = 0;
 	let rippleKey = 0;
+	// Bumped on every live "wall changed" signal so an open comment thread refetches.
+	let wallTick = $state(0);
+	// Follows the editors' comments switch on each wall refresh, without a reload.
+	let commentsLive = $state<boolean | null>(null);
 	type Assist = { suggestions: string[]; matches: string[]; blocked: boolean };
 	let assist = $state<Assist>({ suggestions: [], matches: [], blocked: false });
 	let assistFor = $state('');
@@ -278,7 +294,11 @@
 					ids.add(entry.id);
 					return true;
 				})
-				.map((entry) => ({ ...entry, boosted: entry.boosted === true }));
+				.map((entry) => ({
+					...entry,
+					boosted: entry.boosted === true,
+					comments: Number.isSafeInteger(entry.comments) ? entry.comments : 0
+				}));
 		} catch {
 			return examples;
 		}
@@ -408,7 +428,10 @@
 			},
 			onPresence: (count) => (here = count),
 			onCursors: (peers) => (cursors = peers),
-			onWallChanged: () => reloadWall?.(),
+			onWallChanged: () => {
+				wallTick += 1;
+				reloadWall?.();
+			},
 			onConnection: (online) => (connected = online)
 		});
 		room = connection;
@@ -443,7 +466,8 @@
 					cache: 'no-store'
 				});
 				if (!response.ok) throw new Error('Wall refresh failed');
-				const snapshot: { wall: Entry[] } = await response.json();
+				const snapshot: { wall: Entry[]; commentsEnabled?: boolean } = await response.json();
+				if (typeof snapshot.commentsEnabled === 'boolean') commentsLive = snapshot.commentsEnabled;
 				if (!controller.signal.aborted && version === snapshotVersion) {
 					wallSnapshot = snapshot.wall;
 					wallUnavailable = false;
@@ -658,7 +682,8 @@
 	let panning = $state(false);
 	let pan: { pointer: number; lastX: number; samples: { t: number; x: number }[] } | null = null;
 	// Anything people click or type in keeps its own behaviour; the open landscape pans.
-	const ownPointer = 'a, button, input, textarea, label, form, .term, .assist, .scene-footer';
+	const ownPointer =
+		'a, button, input, textarea, label, form, .term, .assist, .scene-footer, .thread';
 
 	function panStart(event: PointerEvent & { currentTarget: HTMLElement }) {
 		if (!event.isPrimary || event.button !== 0 || pan) return;
@@ -848,7 +873,8 @@
 					topic: null,
 					reactions: 0,
 					reacted: false,
-					boosted: false
+					boosted: false,
+					comments: 0
 				},
 				...previewEntries.slice(0, 79)
 			];
@@ -998,6 +1024,13 @@
 					onboost={boost}
 					{isMine}
 					onwithdraw={withdraw}
+					commentsEnabled={data.configured && (commentsLive ?? data.commentsEnabled)}
+					formStamp={data.formStamp}
+					refreshKey={wallTick}
+					onposted={() => {
+						room?.wallChanged();
+						reloadWall?.();
+					}}
 					paused={motionPaused}
 					avoid={[intro]}
 				/>

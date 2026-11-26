@@ -12,9 +12,25 @@ export interface WallEntry {
 	reacted: boolean;
 	/** This visitor double-clicked it: their reaction counts as +2. */
 	boosted: boolean;
+	/** Published comments in its thread. */
+	comments: number;
 }
 
-type ClimateAction = 'contribute' | 'react' | 'subscribe';
+export interface ThreadComment {
+	id: string;
+	created_at: string;
+	body: string;
+}
+
+export interface AdminComment extends ThreadComment {
+	contribution_id: string;
+	status: 'pending' | 'published' | 'removed';
+	moderation_verdict: 'allow' | 'review' | 'block' | null;
+	moderation_categories: string[] | null;
+	moderation_reason: string | null;
+}
+
+type ClimateAction = 'contribute' | 'react' | 'subscribe' | 'comment';
 type ClimateProcedure =
 	| 'climate_contribute'
 	| 'climate_contribute_moderated'
@@ -28,7 +44,14 @@ type ClimateProcedure =
 	| 'climate_admin_update'
 	| 'climate_admin_delete'
 	| 'climate_settings'
-	| 'climate_admin_set_auto_publish';
+	| 'climate_admin_set_auto_publish'
+	| 'climate_admin_set_comments'
+	| 'climate_comments'
+	| 'climate_comment_counts'
+	| 'climate_add_comment'
+	| 'climate_admin_comments'
+	| 'climate_admin_update_comment'
+	| 'climate_admin_delete_comment';
 
 export type AdminStatus = 'pending' | 'published' | 'removed';
 export interface AdminEntry {
@@ -73,7 +96,17 @@ export function setClimateReactor(cookies: Cookies) {
 	});
 }
 
-let settingsCache: { at: number; value: { auto_publish?: boolean } } | null = null;
+export type ClimateSettings = { auto_publish?: boolean; comments_enabled?: boolean };
+let settingsCache: { at: number; value: ClimateSettings } | null = null;
+
+/** Comments are on unless an editor switched them off (or the comments migration isn't applied). */
+export async function commentsOpen(service: { settings: () => Promise<ClimateSettings | null> }) {
+	try {
+		return (await service.settings())?.comments_enabled !== false;
+	} catch {
+		return true;
+	}
+}
 
 export function climateRealtimeConfig() {
 	const key = publicEnv.PUBLIC_CLIMATE_SUPABASE_PUBLISHABLE_KEY;
@@ -149,19 +182,36 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 		return fingerprint(['climate-rate', action, String(window), address]);
 	}
 
+	/** Published comment counts per thought; empty before the comments migration. */
+	async function commentCounts() {
+		try {
+			const rows = await call<{ contribution_id: string; comments: number }[]>(
+				'climate_comment_counts',
+				{}
+			);
+			return new Map(rows.map((row) => [row.contribution_id, row.comments]));
+		} catch {
+			return new Map<string, number>();
+		}
+	}
+
 	return {
 		async wall(reactorToken: string | null) {
 			try {
-				const rows = await call<WallEntry[]>('climate_wall_with_reactions', {
-					p_reactor_key: reactorToken ? fingerprint(['climate-reactor', reactorToken]) : null
-				});
+				const [rows, counts] = await Promise.all([
+					call<WallEntry[]>('climate_wall_with_reactions', {
+						p_reactor_key: reactorToken ? fingerprint(['climate-reactor', reactorToken]) : null
+					}),
+					commentCounts()
+				]);
 				const wall = rows.map(({ id, topic, body, reactions, reacted, boosted }) => ({
 					id,
 					topic,
 					body,
 					reactions,
 					reacted,
-					boosted: boosted === true
+					boosted: boosted === true,
+					comments: counts.get(id) ?? 0
 				}));
 				return { wall, reactionsEnabled: true };
 			} catch (error) {
@@ -175,7 +225,8 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 						body,
 						reactions: 0,
 						reacted: false,
-						boosted: false
+						boosted: false,
+						comments: 0
 					})),
 					reactionsEnabled: false
 				};
@@ -261,16 +312,57 @@ export function climateDataService(fetch: typeof globalThis.fetch) {
 			remove(id: string) {
 				return call<boolean>('climate_admin_delete', { p_id: id });
 			},
+			async comments() {
+				try {
+					return await call<AdminComment[]>('climate_admin_comments', {});
+				} catch {
+					return [];
+				}
+			},
+			updateComment(id: string, status: AdminComment['status']) {
+				return call<boolean>('climate_admin_update_comment', { p_id: id, p_status: status });
+			},
+			removeComment(id: string) {
+				return call<boolean>('climate_admin_delete_comment', { p_id: id });
+			},
+			setComments(enabled: boolean) {
+				settingsCache = null;
+				return call<boolean>('climate_admin_set_comments', { p_enabled: enabled });
+			},
 			setAutoPublish(enabled: boolean) {
 				settingsCache = null;
 				return call<boolean>('climate_admin_set_auto_publish', { p_enabled: enabled });
 			}
 		},
+		/** Published comments in a thought's thread, oldest first. */
+		comments(entry: string) {
+			return call<ThreadComment[]>('climate_comments', { p_contribution_id: entry });
+		},
+		/** Returns 'ok', 'rate_limited' or 'unavailable'. */
+		addComment(
+			address: string,
+			entry: string,
+			body: string,
+			moderation: Moderation & { publish: boolean }
+		) {
+			const key = clientKey('comment', address);
+			return call<string>('climate_add_comment', {
+				p_contribution_id: entry,
+				p_body: body,
+				p_submission_key: fingerprint(['climate-comment', key, entry, body]),
+				p_client_key: key,
+				p_verdict: moderation.verdict,
+				p_categories: moderation.categories,
+				p_reason: moderation.reason,
+				p_model: moderation.model,
+				p_publish: moderation.publish
+			});
+		},
 		/** Runtime settings from the database, cached briefly. Null before the settings migration. */
-		async settings(): Promise<{ auto_publish?: boolean } | null> {
+		async settings(): Promise<ClimateSettings | null> {
 			if (settingsCache && Date.now() - settingsCache.at < 5000) return settingsCache.value;
 			try {
-				const value = await call<{ auto_publish?: boolean }>('climate_settings', {});
+				const value = await call<ClimateSettings>('climate_settings', {});
 				settingsCache = { at: Date.now(), value };
 				return value;
 			} catch (error) {
