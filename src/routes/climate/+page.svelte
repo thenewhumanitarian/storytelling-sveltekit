@@ -232,8 +232,11 @@
 		cursors: 'tnh-climate-cursors-v1',
 		motion: 'tnh-climate-motion-v1',
 		wall: 'tnh-climate-preview-wall-v2',
-		mine: 'tnh-climate-mine-v1'
+		mine: 'tnh-climate-mine-v1',
+		about: 'tnh-climate-about-seen-v1'
 	};
+	// About opens by itself on a first visit, once per browser.
+	let aboutOpen = $state(false);
 
 	// What this browser posted: preview entry ids, and the (AI-condensed) terms of live posts,
 	// which is all the browser knows about a post once an editor publishes it. Each live term
@@ -366,6 +369,11 @@
 			showCursors = localStorage.getItem(storageKeys.cursors) !== 'off';
 			motionPaused = localStorage.getItem(storageKeys.motion) === 'paused';
 			if (preview) previewEntries = restoreWall(localStorage.getItem(storageKeys.wall));
+			if (!localStorage.getItem(storageKeys.about)) {
+				persist(storageKeys.about, 'seen');
+				// A moment later, so the scene shows first and the box arrives over it.
+				setTimeout(() => (aboutOpen = true), 600);
+			}
 			const savedMine = JSON.parse(localStorage.getItem(storageKeys.mine) ?? 'null');
 			if (Array.isArray(savedMine?.ids) && Array.isArray(savedMine?.terms)) {
 				const tokens: Record<string, string> = {};
@@ -1040,7 +1048,7 @@
 	/>
 </svelte:head>
 
-<Dialog.Root>
+<Dialog.Root bind:open={aboutOpen}>
 	<div
 		class="climate"
 		class:keyboard-open={keyboardViewportHeight !== undefined}
@@ -1384,33 +1392,60 @@
 			</Dialog.Close>
 			<Dialog.Title class="climate-dialog-title">About the project</Dialog.Title>
 			<Dialog.Description class="climate-description">
-				How does conflict damage the climate, and what does that mean for the people living with the
-				consequences?
+				War carries a climate cost that extends far beyond the battlefield and persists long after
+				the fighting ends.
 			</Dialog.Description>
 			<p>
-				Researchers estimate that militaries account for around 5.5 per cent of global greenhouse
-				gas emissions, before counting the impact of fighting itself. The damage can last long after
-				the fighting ends, from poisoned water and ruined farmland to barriers to climate
-				adaptation.
+				Researchers estimate that militaries account for
+				<a
+					href="https://www.sgr.org.uk/publications/estimating-military-s-global-greenhouse-gas-emissions"
+					>around 5.5 per cent of global greenhouse gas emissions</a
+				>, before counting the impact of fighting itself.
 			</p>
 			<p>
-				The New Humanitarian brings together research, data, on-the-ground reporting and
-				conversations with climate, humanitarian and peacebuilding experts. We ask what we know,
-				where the gaps are, and what communities affected by conflict want the world to pay
-				attention to.
+				Yet emissions are only part of the picture. Before a war starts, the defence industry
+				consumes vast natural resources to manufacture weapons, build fortifications and move troops
+				and equipment. Once fighting begins, war destroys forests and other carbon stores, damages
+				water systems and farmland, disrupts climate adaptation and diverts public money from
+				climate action. When it ends, debris, unexploded munitions and toxic waste leave pollutants
+				in soil and water for years. Rebuilding then adds further emissions.
+			</p>
+			<p>
+				We often hear how climate change drives conflict. Far less is known about how conflict
+				damages the climate. The New Humanitarian is bringing this hidden toll into view. Our
+				project combines data, on-the-ground reporting and conversations among climate, humanitarian
+				and peacebuilding experts to show what conflict is doing to the planet and to the people
+				living with the consequences. Here’s what we bring:
+			</p>
+			<ul class="bring">
+				<li>
+					<strong>Data and human stories, together.</strong> Bringing data and evidence together with
+					first-hand accounts from affected communities.
+				</li>
+				<li>
+					<strong>Beyond the headline wars.</strong> Most research focuses on a few high-profile conflicts.
+					We draw on our reporting from crises that rarely make the news.
+				</li>
+				<li>
+					<strong>Beyond carbon.</strong> We look at the harms that outlast the fighting: poisoned water,
+					ruined farmland, displacement and land left unusable for years.
+				</li>
+				<li>
+					<strong>Making sense of scattered evidence.</strong> We bring the research together to show
+					what we know, what remains unknown and where action is most needed.
+				</li>
+			</ul>
+			<p>
+				<strong>Get involved.</strong> The project is just getting started. If you work in this
+				space, or have research, stories or ideas to share, we’d love to hear from you.
+				<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch</a>.
 			</p>
 			<ul class="project-links" aria-label="Project links">
 				<li><a href={eventUrl} target="_blank" rel="noopener">Register for the webinar</a></li>
-				<li>
-					<a
-						href="https://www.sgr.org.uk/publications/estimating-military-s-global-greenhouse-gas-emissions"
-						>Read the military emissions research</a
-					>
-				</li>
-				<li>
-					<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch with TNH</a>
-				</li>
+				<!-- Placeholder until the op-ed is published. -->
+				<li><span class="soon">Tammam’s op-ed <em>coming soon</em></span></li>
 			</ul>
+			<Dialog.Close class="climate-button enter-button">Join the conversation</Dialog.Close>
 			<section class="dialog-updates" aria-labelledby="updates-title">
 				<h2 id="updates-title">Stay engaged</h2>
 				<p>Get updates on TNH’s reporting, research and events.</p>
@@ -1543,7 +1578,7 @@
 		box-shadow: none;
 	}
 	:global(.climate-dialog) :where(a, button, input):focus-visible {
-		outline: 2px solid var(--brand);
+		outline: 2px solid #fff;
 		outline-offset: 3px;
 	}
 	.climate a {
@@ -2258,33 +2293,48 @@
 		white-space: nowrap;
 	}
 
-	/* About dialog */
+	/* About dialog: the same liquid glass and frame as the big thread panel, between the TNH
+	   header and the footer, so the two read as one family. It is portalled out of .climate, so it
+	   repeats the header measurements. */
 	:global(.climate-overlay) {
 		position: fixed;
 		inset: 0;
 		z-index: 90;
-		background: rgb(19 17 15 / 55%);
-		backdrop-filter: blur(14px) saturate(120%);
-		-webkit-backdrop-filter: blur(14px) saturate(120%);
+		background: rgb(19 17 15 / 38%);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
 	}
 	:global(.climate-overlay[data-state='open']) {
 		animation: overlay-in 260ms ease-out;
 	}
 	:global(.climate-dialog) {
+		--masthead-height: clamp(3.5rem, 8svh, 4.5rem);
+		--edge-x: max(0.5rem, calc((var(--masthead-height) - 2.75rem) / 2));
 		position: fixed;
 		z-index: 91;
-		top: 50%;
+		top: calc(var(--masthead-height) + var(--edge-x));
+		bottom: calc(2.6rem + var(--edge-x));
 		left: 50%;
-		transform: translate(-50%, -50%);
-		width: min(calc(100% - 2rem), 48rem);
-		max-height: calc(100dvh - 2rem);
+		translate: -50% 0;
+		width: min(52rem, calc(100vw - 2rem));
 		overflow: auto;
 		overscroll-behavior: contain;
-		padding: clamp(1.2rem, 4.5vw, 2.9rem);
-		background: #fffdf8;
-		color: var(--ink);
-		border-top: 5px solid var(--brand);
-		box-shadow: 0 18px 70px rgb(0 0 0 / 30%);
+		scrollbar-width: thin;
+		scrollbar-color: rgb(255 255 255 / 30%) transparent;
+		padding: clamp(1.3rem, 4vw, 2.6rem);
+		border-radius: 1.75rem;
+		background:
+			linear-gradient(160deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 6%) 55%),
+			rgb(34 34 32 / 66%);
+		backdrop-filter: blur(28px) saturate(170%);
+		-webkit-backdrop-filter: blur(28px) saturate(170%);
+		box-shadow:
+			inset 0 1px 0 rgb(255 255 255 / 50%),
+			inset 0 -1px 1px rgb(255 255 255 / 12%),
+			0 30px 80px rgb(0 0 0 / 45%),
+			0 2px 8px rgb(0 0 0 / 25%);
+		color: #fff;
+		text-shadow: 0 1px 8px rgb(0 0 0 / 35%);
 	}
 	:global(.climate-dialog[data-state='open']) {
 		animation: dialog-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -2297,62 +2347,95 @@
 	@keyframes dialog-in {
 		from {
 			opacity: 0;
-			transform: translate(-50%, calc(-50% + 18px)) scale(0.98);
+			translate: -50% 18px;
+			scale: 0.98;
 		}
 	}
 	:global(.climate-dialog-title) {
 		margin: 0 2.6rem 0 0;
-		font: 700 clamp(2rem, 4.4vw, 3.4rem) / 1.02 var(--serif);
+		font: 700 clamp(2rem, 4.4vw, 3.2rem) / 1.02 var(--serif);
 		letter-spacing: -0.025em;
 	}
 	:global(.climate-dialog .climate-description) {
 		margin-top: 0.9rem;
 		font-weight: 700;
+		font-size: 1.1rem;
+		line-height: 1.45;
 	}
 	:global(.climate-dialog) > p {
 		margin-top: 1rem;
 	}
+	:global(.climate-dialog) a {
+		color: #fff;
+		font-weight: 700;
+		text-decoration: underline;
+		text-decoration-color: rgb(255 255 255 / 40%);
+		text-underline-offset: 0.22em;
+	}
+	:global(.climate-dialog) a:hover {
+		text-decoration-color: #fff;
+	}
+	.bring {
+		display: grid;
+		gap: 0.6rem;
+		margin: 1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.bring li {
+		padding-left: 1rem;
+		border-left: 3px solid var(--brand);
+	}
 	:global(.climate-close) {
 		position: absolute;
-		top: 0.6rem;
-		right: 0.65rem;
+		top: 1rem;
+		right: 1rem;
 		display: grid;
 		place-items: center;
-		width: 44px;
-		height: 44px;
+		width: 2.2rem;
+		height: 2.2rem;
 		border: 0;
-		background: none;
-		color: var(--ink);
+		border-radius: 50%;
+		background: rgb(255 255 255 / 12%);
+		color: #fff;
 		cursor: pointer;
 	}
 	:global(.climate-close svg) {
-		width: 20px;
-		height: 20px;
+		width: 1rem;
+		height: 1rem;
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 1.8;
 	}
 	:global(.climate-close:hover) {
-		background: #f4e8e7;
+		background: rgb(255 255 255 / 22%);
 	}
 	.project-links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.45rem 1.2rem;
-		margin: 1.3rem 0;
+		align-items: baseline;
+		gap: 0.45rem 1.4rem;
+		margin: 1.3rem 0 0;
 		padding: 0;
 		list-style: none;
 	}
-	/* TNH link style (base/_forms.scss): burgundy, bold, underlined only on hover. */
-	.project-links a {
-		color: var(--brand);
+	.soon {
 		font-weight: 700;
-		text-decoration: none;
-		text-underline-offset: 0.22em;
+		color: rgb(255 255 255 / 70%);
 	}
-	.project-links a:hover,
-	.project-links a:focus-visible {
-		text-decoration: underline;
+	.soon em {
+		margin-left: 0.35rem;
+		padding: 0.1rem 0.4rem;
+		background: rgb(255 255 255 / 14%);
+		font: 700 0.72rem/1 var(--sans);
+		font-style: normal;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		vertical-align: 0.12em;
+	}
+	:global(.climate-dialog .enter-button) {
+		margin: 1.4rem 0 1.6rem;
+		text-shadow: none;
 	}
 	.credits :global(.ethical-link:focus) {
 		outline: none;
@@ -2365,12 +2448,12 @@
 	.dialog-photos {
 		margin-top: 1.4rem;
 		font-size: 0.85rem;
-		color: #5c5550;
+		color: rgb(255 255 255 / 72%);
 	}
 	.dialog-photos h2 {
 		margin: 0 0 0.35rem;
 		font: 700 1rem/1.2 var(--serif);
-		color: #282828;
+		color: #fff;
 	}
 	.dialog-photos ul {
 		display: grid;
@@ -2379,18 +2462,11 @@
 		padding: 0;
 		list-style: none;
 	}
-	.dialog-photos a {
-		color: #9f3e52;
-		font-weight: 700;
-		text-decoration: none;
-	}
-	.dialog-photos a:hover {
-		text-decoration: underline;
-	}
 	.dialog-ethics {
 		margin-top: 1.4rem;
 		padding: 1rem 1.1rem;
-		background: #eef8f3;
+		border-radius: 0 0.9rem 0.9rem 0;
+		background: rgb(120 214 178 / 12%);
 		border-left: 4px solid #35b58b;
 	}
 	.dialog-ethics h2 {
@@ -2400,16 +2476,8 @@
 	.dialog-ethics p + p {
 		margin-top: 0.5rem;
 	}
-	.dialog-ethics a {
-		color: var(--brand);
-		font-weight: 700;
-		text-decoration: none;
-	}
-	.dialog-ethics a:hover {
-		text-decoration: underline;
-	}
 	.dialog-updates {
-		border-top: 1px solid #dcd1ca;
+		border-top: 1px solid rgb(255 255 255 / 15%);
 		padding-top: 1.15rem;
 	}
 	.dialog-updates h2 {
@@ -2424,7 +2492,7 @@
 	}
 	.field-note {
 		margin-top: 0.5rem;
-		color: var(--ink);
+		color: rgb(255 255 255 / 80%);
 		font-size: 0.875rem;
 	}
 	.form-feedback:empty {
@@ -2441,12 +2509,14 @@
 		border: 1px solid #cdc7c0;
 		border-radius: 0;
 		background: #fff;
+		color: var(--ink);
 		padding-inline: 0.65rem;
 	}
 	.email-row input:focus {
 		border-color: #cdc7c0;
 		box-shadow: none;
 		outline: 2px solid var(--brand);
+		text-shadow: none;
 		outline-offset: -2px;
 	}
 
@@ -2546,14 +2616,30 @@
 		display: none;
 	}
 
+	@keyframes sheet-in {
+		from {
+			opacity: 0;
+			translate: 0 18px;
+		}
+	}
 	/* Phones: a calmer About dialog with smaller headings and more room for text. */
 	@media (max-width: 650px) {
+		/* Like the thread sheet on phones: full width under the TNH header. */
 		:global(.climate-dialog) {
-			width: calc(100% - 1rem);
-			max-height: calc(100dvh - 1rem);
-			padding: 1.25rem 1.1rem 1.5rem;
+			top: var(--masthead-height);
+			bottom: 0;
+			left: 0;
+			translate: none;
+			width: 100%;
+			padding: 1.25rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom));
+			border-radius: 0;
+			background:
+				linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 3%)), rgb(28 28 26 / 88%);
+			box-shadow: none;
 			font-size: 0.95rem;
-			scrollbar-width: thin;
+		}
+		:global(.climate-dialog[data-state='open']) {
+			animation-name: sheet-in;
 		}
 		:global(.climate-dialog-title) {
 			margin-right: 2.4rem;
@@ -2564,8 +2650,8 @@
 			line-height: 1.4;
 		}
 		:global(.climate-close) {
-			top: 0.4rem;
-			right: 0.4rem;
+			top: 0.9rem;
+			right: 0.9rem;
 		}
 		.dialog-updates h2 {
 			font-size: 1.35rem;
