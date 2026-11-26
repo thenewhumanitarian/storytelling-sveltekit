@@ -9,6 +9,7 @@
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
 	import SharePopover from './SharePopover.svelte';
+	import { backdrops as photos, backdropSizes } from './backdrops';
 	import { connectClimateRoom, handleFor, type ClimateCursor } from './realtime';
 	import type { PageProps } from './$types';
 
@@ -159,13 +160,18 @@
 	let here = $state(0);
 	let connected = $state(false);
 	let showCursors = $state(true);
-	let showAlternate = $state(false);
+	// Backdrop slideshow: `current` fades in over `previous`. Slides are mounted (and so fetched)
+	// one ahead of the one showing, and only once the one showing has loaded.
+	let current = $state(0);
+	let previous = $state(-1);
+	let mountedSlides = $state(1);
+	let loadedSlides = $state<boolean[]>([]);
+	const photoCredit = $derived(photos[current].credit);
 	let motionPaused = $state(false);
 	let keyboardViewportHeight = $state<number>();
 	let sceneWidth = $state(0);
 	let sceneHeight = $state(0);
 	let pulses = $state<Record<string, Pulse>>({});
-	let alternateImage: HTMLImageElement;
 	let intro = $state<HTMLElement>();
 	let wordmark: HTMLElement;
 	let shoutBar: HTMLElement;
@@ -377,13 +383,15 @@
 		document.addEventListener('focusin', scheduleFit);
 		document.addEventListener('focusout', scheduleFit);
 		const timer = setInterval(() => {
+			const next = (current + 1) % photos.length;
 			if (
-				alternateImage?.naturalWidth &&
+				loadedSlides[next] &&
 				!prefersReducedMotion.current &&
 				!motionPaused &&
 				document.visibilityState === 'visible'
 			) {
-				showAlternate = !showAlternate;
+				previous = current;
+				current = next;
 			}
 		}, 30_000);
 
@@ -704,6 +712,26 @@
 		if (entry) void setReaction(entry, weight);
 	}
 
+	/** Marks a slide loaded, including an image that finished before hydration. */
+	function slideImage(img: HTMLImageElement, index: number) {
+		const done = () => {
+			if (!img.naturalWidth) return;
+			loadedSlides[index] = true;
+		};
+		if (img.complete) done();
+		img.addEventListener('load', done);
+		return { destroy: () => img.removeEventListener('load', done) };
+	}
+
+	// Fetch the next photo only once the one on screen has arrived, so it never competes with it.
+	$effect(() => {
+		if (!loadedSlides[current]) return;
+		const want = Math.min(photos.length, current + 2);
+		if (want <= untrack(() => mountedSlides)) return;
+		const idle = window.requestIdleCallback ?? ((run: () => void) => setTimeout(run, 1500));
+		idle(() => (mountedSlides = Math.max(mountedSlides, want)));
+	});
+
 	let thoughtField = $state<ReturnType<typeof ThoughtField>>();
 	let backdrops: HTMLElement;
 	let panning = $state(false);
@@ -945,6 +973,21 @@
 	<title>The climate cost of conflict | The New Humanitarian</title>
 	<link
 		rel="preload"
+		as="image"
+		type="image/avif"
+		imagesrcset={photos[0].avif}
+		imagesizes={backdropSizes}
+		fetchpriority="high"
+	/>
+	<noscript
+		><style>
+			.backdrop img {
+				opacity: 1 !important;
+			}
+		</style></noscript
+	>
+	<link
+		rel="preload"
 		href="/fonts/GT-Sectra-Fine-Bold.woff2"
 		as="font"
 		type="font/woff2"
@@ -1025,22 +1068,39 @@
 		>
 			<div class="backdrops" aria-hidden="true" bind:this={backdrops}>
 				<div class="breathe">
-					<img
-						class={['backdrop', { showing: ready && !showAlternate }]}
-						src="/images/climate/aerial-illustration.jpg"
-						alt=""
-						fetchpriority="high"
-					/>
-					<img
-						class={[
-							'backdrop backdrop-alternate',
-							{ visible: showAlternate, showing: ready && showAlternate }
-						]}
-						src="/images/climate/river-floodplain.webp"
-						alt=""
-						fetchpriority="low"
-						bind:this={alternateImage}
-					/>
+					{#each photos as photo, index (photo.slug)}
+						<div
+							class={[
+								'backdrop',
+								{
+									current: index === current,
+									previous: index === previous,
+									showing: ready && index === current
+								}
+							]}
+							style:--focus={photo.focus}
+							style:--shade={photo.shade}
+						>
+							<div class="placeholder" style:background-image={`url(${photo.placeholder})`}></div>
+							{#if index < mountedSlides || index === current}
+								<picture>
+									<source type="image/avif" srcset={photo.avif} sizes={backdropSizes} />
+									<img
+										class:loaded={loadedSlides[index]}
+										srcset={photo.webp}
+										sizes={backdropSizes}
+										src={photo.src}
+										width={photo.width}
+										height={photo.height}
+										alt=""
+										decoding="async"
+										fetchpriority={index === 0 ? 'high' : 'low'}
+										use:slideImage={index}
+									/>
+								</picture>
+							{/if}
+						</div>
+					{/each}
 				</div>
 			</div>
 
@@ -1247,7 +1307,15 @@
 								>Ethical AI</span
 							></Dialog.Trigger
 						>
-						<span><span class="long-credit">AI-generated</span> aerial illustrations</span>
+						<!-- Credit for the photo on screen; the About dialog lists them all. -->
+						<span class="photo-credit">
+							Photo:
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href={photoCredit.profile} target="_blank" rel="noopener">{photoCredit.name}</a>
+							/
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href={photoCredit.page} target="_blank" rel="noopener">{photoCredit.source}</a>
+						</span>
 						<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
 					</div>
 				</footer>
@@ -1350,6 +1418,21 @@
 					flags.
 				</p>
 				<p>Private messages to TNH are never sent to any AI.</p>
+			</section>
+			<section class="dialog-photos" aria-labelledby="photos-title">
+				<h2 id="photos-title">Photos</h2>
+				<ul>
+					{#each photos as photo (photo.slug)}
+						<li>
+							{photo.alt}:
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href={photo.credit.profile} target="_blank" rel="noopener">{photo.credit.name}</a>
+							on
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href={photo.credit.page} target="_blank" rel="noopener">{photo.credit.source}</a>
+						</li>
+					{/each}
+				</ul>
 			</section>
 		</Dialog.Content>
 	</Dialog.Portal>
@@ -1561,13 +1644,51 @@
 		z-index: -2;
 		overflow: hidden;
 	}
+	/* One slide per photo, stacked. The current one fades in over the previous one, which stays
+	   opaque underneath, so the crossfade never dips through to the background colour. */
 	.backdrop {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		opacity: 0;
+		transition: opacity 4s ease-in-out;
+	}
+	.backdrop.previous {
+		z-index: 1;
+		opacity: 1;
+		transition: none;
+	}
+	.backdrop.current {
+		z-index: 2;
+		opacity: 1;
+	}
+	/* Blur-up: a 24px preview, blurred, until the real image has decoded. */
+	.placeholder {
+		position: absolute;
+		inset: -6%;
+		background-position: var(--focus);
+		background-size: cover;
+		filter: blur(22px);
+	}
+	.backdrop img {
 		position: absolute;
 		inset: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: 53% center;
+		object-position: var(--focus);
+		opacity: 0;
+		transition: opacity 700ms ease;
+	}
+	.backdrop img.loaded {
+		opacity: 1;
+	}
+	/* Per-photo shade, so bright daylight shots sit in the page's dark palette with the dusk ones. */
+	.backdrop::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: rgb(18 18 14 / calc(var(--shade, 0) * 100%));
 	}
 	/* One slow zoom for both images, so a crossfade never looks like the motion restarting. */
 	.breathe {
@@ -1575,13 +1696,6 @@
 		inset: 0;
 		transform-origin: 55% 50%;
 		animation: breathe 70s ease-in-out infinite alternate;
-	}
-	.backdrop-alternate {
-		opacity: 0;
-		transition: opacity 4s ease-in-out;
-	}
-	.backdrop-alternate.visible {
-		opacity: 1;
 	}
 	.scene.still .breathe {
 		animation-play-state: paused;
@@ -2203,6 +2317,31 @@
 		outline: 2px solid #fff;
 		outline-offset: 3px;
 	}
+	.dialog-photos {
+		margin-top: 1.4rem;
+		font-size: 0.85rem;
+		color: #5c5550;
+	}
+	.dialog-photos h2 {
+		margin: 0 0 0.35rem;
+		font: 700 1rem/1.2 var(--serif);
+		color: #282828;
+	}
+	.dialog-photos ul {
+		display: grid;
+		gap: 0.2rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.dialog-photos a {
+		color: #9f3e52;
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.dialog-photos a:hover {
+		text-decoration: underline;
+	}
 	.dialog-ethics {
 		margin-top: 1.4rem;
 		padding: 1rem 1.1rem;
@@ -2276,9 +2415,6 @@
 				rgb(20 20 20 / 82%)
 			);
 		}
-		.backdrop {
-			object-position: 58% center;
-		}
 		.intro h1 {
 			font-size: clamp(2.2rem, 10vw, 3.4rem);
 		}
@@ -2315,7 +2451,6 @@
 		.notes:has(.status:not(:empty)) #visibility-note {
 			display: none;
 		}
-		.long-credit,
 		.credits > span {
 			display: none;
 		}
@@ -2420,6 +2555,11 @@
 				opacity 4s ease-in-out,
 				transform 34s linear;
 		}
+		/* Keep drifting while the next photo fades in over it; reset only once it's hidden. */
+		.backdrop.previous {
+			transform: translateX(7%);
+			transition: transform 34s linear;
+		}
 	}
 
 	@media (max-height: 560px) {
@@ -2462,7 +2602,8 @@
 		.breathe {
 			animation: none;
 		}
-		.backdrop-alternate {
+		.backdrop,
+		.backdrop img {
 			transition: none;
 		}
 		.presence.live .dot::after,
