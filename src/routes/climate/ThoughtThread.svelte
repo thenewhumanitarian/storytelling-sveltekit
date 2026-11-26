@@ -333,7 +333,6 @@
 			linear-gradient(160deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 8%) 55%),
 			rgb(40 40 38 / 38%);
 		backdrop-filter: blur(28px) saturate(170%);
-		-webkit-backdrop-filter: blur(28px) saturate(170%);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 50%),
 			inset 0 -1px 1px rgb(255 255 255 / 12%),

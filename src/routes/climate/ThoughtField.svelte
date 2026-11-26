@@ -1464,7 +1464,6 @@
 		border-radius: 100vmax;
 		background: rgb(30 30 28 / 55%);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
 		color: #fff;
 		font: 700 0.85rem/1 var(--sans);
@@ -1539,7 +1538,6 @@
 		border-radius: 100vmax;
 		background: rgb(30 30 28 / 55%);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
 		color: #fff;
 		font: 700 0.85rem/1 var(--sans);
@@ -1596,7 +1594,6 @@
 		border-radius: 50%;
 		background: rgb(30 30 28 / 55%);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 25%);
 		color: #fff;
 		cursor: pointer;

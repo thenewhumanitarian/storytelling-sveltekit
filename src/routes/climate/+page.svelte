@@ -1890,7 +1890,6 @@
 		background:
 			linear-gradient(180deg, rgb(255 255 255 / 26%), rgb(255 255 255 / 10%)), rgb(40 40 40 / 16%);
 		backdrop-filter: blur(22px) saturate(170%);
-		-webkit-backdrop-filter: blur(22px) saturate(170%);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 45%),
 			inset 0 -1px 1px rgb(255 255 255 / 10%),
@@ -2066,7 +2065,6 @@
 		background:
 			linear-gradient(180deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 10%)), rgb(40 40 40 / 30%);
 		backdrop-filter: blur(16px) saturate(160%);
-		-webkit-backdrop-filter: blur(16px) saturate(160%);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 40%),
 			0 8px 24px rgb(0 0 0 / 30%);
@@ -2130,7 +2128,6 @@
 		background:
 			linear-gradient(180deg, rgb(255 255 255 / 24%), rgb(255 255 255 / 10%)), rgb(40 40 40 / 30%);
 		backdrop-filter: blur(16px) saturate(160%);
-		-webkit-backdrop-filter: blur(16px) saturate(160%);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 40%),
 			0 8px 24px rgb(0 0 0 / 30%);
@@ -2292,7 +2289,6 @@
 		z-index: 90;
 		background: rgb(19 17 15 / 60%);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 	}
 	:global(.climate-overlay[data-state='open']) {
 		animation: overlay-in 260ms ease-out;
@@ -2317,7 +2313,6 @@
 			linear-gradient(160deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 2%) 55%),
 			rgb(30 30 28 / 92%);
 		backdrop-filter: blur(28px) saturate(170%);
-		-webkit-backdrop-filter: blur(28px) saturate(170%);
 		box-shadow:
 			inset 0 1px 0 rgb(255 255 255 / 50%),
 			inset 0 -1px 1px rgb(255 255 255 / 12%),
