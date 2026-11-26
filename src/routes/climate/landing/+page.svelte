@@ -498,10 +498,12 @@
 		justify-content: space-between;
 		align-items: start;
 		gap: 2.5rem clamp(2rem, 5vw, 5rem);
-		padding: clamp(2rem, 6vh, 4.5rem) var(--pad-x) 1.5rem;
+		padding: clamp(1.25rem, 3.5vh, 2.5rem) var(--pad-x) 1.5rem;
 		text-shadow: 0 1px 10px rgb(0 0 0 / 35%);
 	}
 	h1 {
+		/* Pull the large type up by its built-in top space, so the letters line up with the first card. */
+		margin-top: -0.12em;
 		font: 700 clamp(2.6rem, 6vw, 4.6rem) / 1 var(--serif);
 		letter-spacing: -0.025em;
 		text-wrap: balance;
