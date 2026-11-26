@@ -856,6 +856,18 @@
 		});
 	}
 
+	/** Briefly show another visitor's vote colour on the box, then fade back to its own. */
+	function flashColour(count: HTMLElement, background: string, color: string) {
+		count.animate(
+			[
+				{ backgroundColor: background, color },
+				{ backgroundColor: background, color, offset: 0.65 },
+				{}
+			],
+			{ duration: 1700, easing: 'ease-out' }
+		);
+	}
+
 	/** Rays of light fan out from the counter: the sun comes out. */
 	function sunburst(host: HTMLElement, rays: number) {
 		const sun = document.createElement('span');
@@ -982,6 +994,8 @@
 		if (pulse.liked && pulse.boost) {
 			goldenBoost(count, word, pulse.remote);
 		} else if (pulse.liked) {
+			// Someone else's +1: the box glows mint while it grows, then settles back to its colour.
+			if (pulse.remote) flashColour(count, '#35b58b', '#282828');
 			// The counter springs, a seedling grows out of it and leaves lift away.
 			count.animate(
 				[
@@ -1024,6 +1038,7 @@
 				duration: 420,
 				easing: 'ease-out'
 			});
+			if (pulse.remote) flashColour(count, '#282828', '#ffffff');
 			wilt(count);
 		}
 
