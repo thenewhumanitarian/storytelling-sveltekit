@@ -9,6 +9,7 @@
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
 	import SharePopover from './SharePopover.svelte';
+	import NewsletterSignup from './NewsletterSignup.svelte';
 	import { backdrops as photos, backdropSizes } from './backdrops';
 	import { connectClimateRoom, handleFor, type ClimateCursor } from './realtime';
 	import type { PageProps } from './$types';
@@ -18,7 +19,7 @@
 
 	type Entry = PageProps['data']['wall'][number];
 	type Visibility = 'public' | 'private';
-	type FormKind = 'contribute' | 'subscribe';
+	type FormKind = 'contribute';
 	type Launch = { key: number; text: string; kind: Visibility; from: DOMRect };
 
 	const examples: Entry[] = [
@@ -152,7 +153,7 @@
 	let ready = $state(false);
 	let pendingForm = $state<FormKind | null>(null);
 	let pendingEntry = $state<string | null>(null);
-	let feedback = $state({ contribute: '', subscribe: '', vote: '' });
+	let feedback = $state({ contribute: '', vote: '' });
 	let wallUnavailable = $state(false);
 	let cursors = $state<ClimateCursor[]>([]);
 	// Local experiment: visitors as trails of light that sink with ripples when still. On for the
@@ -585,7 +586,7 @@
 
 	const submit =
 		(kind: FormKind): SubmitFunction =>
-		({ cancel, formData, formElement }) => {
+		({ cancel, formData }) => {
 			if (!interactive || pendingForm) {
 				cancel();
 				return;
@@ -598,11 +599,6 @@
 
 			if (preview) {
 				cancel();
-				if (kind === 'subscribe') {
-					feedback.subscribe = 'Signup previewed. This address was not saved.';
-					formElement.reset();
-					return;
-				}
 				const body = draft?.trim();
 				if (!body || submitted === null) return;
 				const duplicate =
@@ -625,7 +621,7 @@
 			checking = kind === 'contribute' && submitted === 'public';
 			return async ({ result, update }) => {
 				try {
-					await update({ reset: kind === 'subscribe', invalidateAll: false });
+					await update({ reset: false, invalidateAll: false });
 					if (
 						result.type === 'success' &&
 						result.data?.ok === true &&
@@ -1459,34 +1455,7 @@
 				<section class="dialog-updates" aria-labelledby="updates-title">
 					<h2 id="updates-title">Stay engaged</h2>
 					<p>Get updates on TNH’s reporting, research and events.</p>
-					<form method="POST" action="?/subscribe" use:enhance={submit('subscribe')}>
-						<label for="updates-email">Email address</label>
-						<div class="email-row">
-							<input
-								id="updates-email"
-								name="email"
-								type="email"
-								autocomplete="email"
-								readonly={!interactive}
-								required
-							/>
-							<button
-								class="climate-button"
-								type="submit"
-								disabled={!interactive || pendingForm !== null}
-							>
-								{pendingForm === 'subscribe' ? 'Saving…' : 'Sign up'}
-							</button>
-						</div>
-						{#if !data.configured}<p class="field-note">
-								{preview
-									? 'Preview only. Use a sample address.'
-									: 'Signups are temporarily unavailable.'}
-							</p>{/if}
-						<p class="field-note form-feedback" role="status">
-							{preview ? feedback.subscribe : form?.kind === 'subscribe' ? form.message : ''}
-						</p>
-					</form>
+					<NewsletterSignup />
 				</section>
 				<section class="dialog-ethics" aria-labelledby="ethics-title">
 					<h2 id="ethics-title">Moderated with ethical AI</h2>
@@ -2321,9 +2290,9 @@
 		position: fixed;
 		inset: 0;
 		z-index: 90;
-		background: rgb(19 17 15 / 38%);
-		backdrop-filter: blur(6px);
-		-webkit-backdrop-filter: blur(6px);
+		background: rgb(19 17 15 / 60%);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 	}
 	:global(.climate-overlay[data-state='open']) {
 		animation: overlay-in 260ms ease-out;
@@ -2343,9 +2312,10 @@
 		/* Room on the right and at the ends for the scrollbar, clear of the 1.75rem corners. */
 		padding: 0.9rem 0.45rem 0.9rem 0;
 		border-radius: 1.75rem;
+		/* Nearly solid so long text reads cleanly; just a hint of glass in the sheen and edge. */
 		background:
-			linear-gradient(160deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 6%) 55%),
-			rgb(34 34 32 / 66%);
+			linear-gradient(160deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 2%) 55%),
+			rgb(30 30 28 / 92%);
 		backdrop-filter: blur(28px) saturate(170%);
 		-webkit-backdrop-filter: blur(28px) saturate(170%);
 		box-shadow:
@@ -2536,42 +2506,6 @@
 	.dialog-updates h2 {
 		font: 700 1.8rem/1.1 var(--serif);
 	}
-	.dialog-updates form {
-		margin-top: 0.8rem;
-	}
-	.dialog-updates label {
-		font-weight: 700;
-		font-size: 0.9rem;
-	}
-	.field-note {
-		margin-top: 0.5rem;
-		color: rgb(255 255 255 / 80%);
-		font-size: 0.875rem;
-	}
-	.form-feedback:empty {
-		display: none;
-	}
-	.email-row {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		gap: 0.6rem;
-		margin-top: 0.3rem;
-	}
-	.email-row input {
-		min-width: 0;
-		border: 1px solid #cdc7c0;
-		border-radius: 0;
-		background: #fff;
-		color: var(--ink);
-		padding-inline: 0.65rem;
-	}
-	.email-row input:focus {
-		border-color: #cdc7c0;
-		box-shadow: none;
-		outline: 2px solid var(--brand);
-		text-shadow: none;
-		outline-offset: -2px;
-	}
 
 	@media (max-width: 650px) {
 		.scene::before {
@@ -2687,7 +2621,7 @@
 			padding: 0.6rem 0.25rem env(safe-area-inset-bottom) 0;
 			border-radius: 0;
 			background:
-				linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 3%)), rgb(28 28 26 / 88%);
+				linear-gradient(180deg, rgb(255 255 255 / 8%), rgb(255 255 255 / 2%)), rgb(28 28 26 / 95%);
 			box-shadow: none;
 			font-size: 0.95rem;
 		}

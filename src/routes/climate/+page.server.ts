@@ -319,26 +319,5 @@ export const actions = {
 		} catch {
 			return fail(503, { kind, ok: false, message: unavailable });
 		}
-	},
-	subscribe: async ({ request, fetch, getClientAddress }) => {
-		const service = climateDataService(fetch);
-		const kind = 'subscribe' as const;
-		if (!service) return fail(503, { kind, ok: false, message: unavailable });
-
-		const form = await request.formData();
-		const emailField = form.get('email');
-		const email = typeof emailField === 'string' ? emailField.trim().toLowerCase() : '';
-		if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-			return fail(400, { kind, ok: false, message: 'Enter a valid email address.' });
-		}
-
-		try {
-			const accepted = await service.subscribe(getClientAddress(), email);
-			if (!accepted) return fail(429, { kind, ok: false, message: rateLimited });
-
-			return { kind, ok: true, message: 'Thank you. Your signup for project updates is recorded.' };
-		} catch {
-			return fail(503, { kind, ok: false, message: unavailable });
-		}
 	}
 } satisfies Actions;
