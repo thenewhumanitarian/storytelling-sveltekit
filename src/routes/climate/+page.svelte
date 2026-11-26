@@ -1809,12 +1809,12 @@
 			linear-gradient(180deg, rgb(255 255 255 / 34%), rgb(255 255 255 / 16%)), rgb(40 40 40 / 25%);
 	}
 	.chip.match {
-		background: #35b58b;
+		background: #8ed9bd;
 		color: var(--ink);
 		box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
 	}
 	.chip.match:hover {
-		background: #2fa37d;
+		background: #7fd3b4;
 	}
 	.chip-label {
 		font: 700 0.7rem/1 var(--sans);
