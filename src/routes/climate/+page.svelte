@@ -27,7 +27,8 @@
 			reactions: 12,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-2',
@@ -36,7 +37,8 @@
 			reactions: 7,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-3',
@@ -45,7 +47,8 @@
 			reactions: 4,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-6',
@@ -54,7 +57,8 @@
 			reactions: 1,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-4',
@@ -63,7 +67,8 @@
 			reactions: 2,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-5',
@@ -72,7 +77,8 @@
 			reactions: 9,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-7',
@@ -81,7 +87,8 @@
 			reactions: 6,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-8',
@@ -90,7 +97,8 @@
 			reactions: 3,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-9',
@@ -99,7 +107,8 @@
 			reactions: 5,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-10',
@@ -108,7 +117,8 @@
 			reactions: 8,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-11',
@@ -117,7 +127,8 @@
 			reactions: 3,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		},
 		{
 			id: 'sample-12',
@@ -126,7 +137,8 @@
 			reactions: 2,
 			reacted: false,
 			boosted: false,
-			comments: 0
+			comments: 0,
+			downvoted: false
 		}
 	];
 
@@ -297,7 +309,8 @@
 				.map((entry) => ({
 					...entry,
 					boosted: entry.boosted === true,
-					comments: Number.isSafeInteger(entry.comments) ? entry.comments : 0
+					comments: Number.isSafeInteger(entry.comments) ? entry.comments : 0,
+					downvoted: entry.downvoted === true
 				}));
 		} catch {
 			return examples;
@@ -598,11 +611,20 @@
 			};
 		};
 
-	type Weight = 0 | 1 | 2;
-	const weightOf = (entry: Entry): Weight => (entry.boosted ? 2 : entry.reacted ? 1 : 0);
+	type Weight = -1 | 0 | 1 | 2;
+	const weightOf = (entry: Entry): Weight =>
+		entry.boosted ? 2 : entry.reacted ? 1 : entry.downvoted ? -1 : 0;
 	const withWeight = (list: Entry[], id: string, weight: Weight, reactions: number) =>
 		list.map((item) =>
-			item.id === id ? { ...item, reactions, reacted: weight > 0, boosted: weight === 2 } : item
+			item.id === id
+				? {
+						...item,
+						reactions,
+						reacted: weight > 0,
+						boosted: weight === 2,
+						downvoted: weight === -1
+					}
+				: item
 		);
 
 	/**
@@ -616,7 +638,14 @@
 		const optimistic = Math.max(0, entry.reactions - before + weight);
 		const liked = weight > 0;
 		pulse(entry.id, { remote: false, liked, boost: weight === 2 });
-		feedback.vote = weight === 2 ? 'Golden boost: +2' : liked ? '+1 added' : '+1 removed';
+		feedback.vote =
+			weight === 2
+				? 'Golden boost: +2'
+				: weight === 1
+					? '+1 added'
+					: weight === -1
+						? '−1 added'
+						: 'Vote removed';
 
 		if (preview) {
 			previewEntries = withWeight(previewEntries, entry.id, weight, optimistic);
@@ -642,7 +671,8 @@
 				throw new Error(typeof data?.message === 'string' ? data.message : 'Not saved');
 			}
 			if (version === snapshotVersion) {
-				const saved: Weight = data.boosted === true ? 2 : data.reacted === true ? 1 : 0;
+				const saved: Weight =
+					data.boosted === true ? 2 : data.reacted === true ? 1 : data.downvoted === true ? -1 : 0;
 				snapshotVersion += 1;
 				wallSnapshot = withWeight(wall, entry.id, saved, data.reactions);
 			}
@@ -656,25 +686,17 @@
 			feedback.vote =
 				error instanceof Error && error.message !== 'Not saved'
 					? error.message
-					: 'Your +1 could not be saved. Try again.';
+					: 'Your vote could not be saved. Try again.';
 		} finally {
 			if (pendingEntry === entry.id) pendingEntry = null;
 			reloadWall?.();
 		}
 	}
 
-	// Without JavaScript the forms post normally; with it, every reaction goes through setReaction.
-	const react: SubmitFunction = ({ cancel, formData }) => {
-		cancel();
-		const entry = wall.find((item) => item.id === formData.get('entry'));
-		const weight = formData.get('weight');
-		if (entry && (weight === '0' || weight === '1'))
-			void setReaction(entry, Number(weight) as Weight);
-	};
-
-	function boost(id: string) {
+	/** The + / − buttons under each thought (and double-click + for the golden boost). */
+	function vote(id: string, weight: Weight) {
 		const entry = wall.find((item) => item.id === id);
-		if (entry) void setReaction(entry, 2);
+		if (entry) void setReaction(entry, weight);
 	}
 
 	let thoughtField = $state<ReturnType<typeof ThoughtField>>();
@@ -874,7 +896,8 @@
 					reactions: 0,
 					reacted: false,
 					boosted: false,
-					comments: 0
+					comments: 0,
+					downvoted: false
 				},
 				...previewEntries.slice(0, 79)
 			];
@@ -1017,11 +1040,9 @@
 					oncamera={moveBackdrop}
 					{cameraLimit}
 					entries={wall}
-					{react}
+					onvote={vote}
 					{canReact}
-					{pendingEntry}
 					{pulses}
-					onboost={boost}
 					{isMine}
 					onwithdraw={withdraw}
 					commentsEnabled={data.configured && (commentsLive ?? data.commentsEnabled)}
