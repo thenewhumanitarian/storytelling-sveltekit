@@ -1308,20 +1308,23 @@
 						{#if wallUnavailable}<span>Reconnecting…</span>{/if}
 					</div>
 					<div class="credits">
+						<!-- Credit for the photo on screen (the About dialog lists them all). It sits first, so
+						     a longer or shorter name never shifts the links to its right. -->
+						{#key current}
+							<span class="photo-credit">
+								Photo:
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a href={photoCredit.profile} target="_blank" rel="noopener">{photoCredit.name}</a>
+								/
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a href={photoCredit.page} target="_blank" rel="noopener">{photoCredit.source}</a>
+							</span>
+						{/key}
 						<Dialog.Trigger class="ethical-link"
 							><span class="long-ethics">Moderated with ethical AI</span><span class="short-ethics"
 								>Ethical AI</span
 							></Dialog.Trigger
 						>
-						<!-- Credit for the photo on screen; the About dialog lists them all. -->
-						<span class="photo-credit">
-							Photo:
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href={photoCredit.profile} target="_blank" rel="noopener">{photoCredit.name}</a>
-							/
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href={photoCredit.page} target="_blank" rel="noopener">{photoCredit.source}</a>
-						</span>
 						<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
 					</div>
 				</footer>
@@ -2149,6 +2152,15 @@
 		gap: clamp(0.6rem, 1.6vw, 1.2rem);
 		min-width: 0;
 	}
+	/* The credit fades in with each new photo. */
+	.photo-credit {
+		animation: credit-in 900ms ease;
+	}
+	@keyframes credit-in {
+		from {
+			opacity: 0;
+		}
+	}
 	.room button,
 	.credits a,
 	.credits :global(.ethical-link) {
@@ -2611,6 +2623,9 @@
 		.backdrop,
 		.backdrop img {
 			transition: none;
+		}
+		.photo-credit {
+			animation: none;
 		}
 		.presence.live .dot::after,
 		.assist,
