@@ -2439,6 +2439,8 @@
 	}
 	:global(.climate-close) {
 		position: absolute;
+		/* Above the scrolling text: its fade mask makes it a layer that would otherwise take the click. */
+		z-index: 1;
 		top: 1rem;
 		right: 1rem;
 		display: grid;
