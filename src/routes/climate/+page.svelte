@@ -710,6 +710,8 @@
 
 	function panStart(event: PointerEvent & { currentTarget: HTMLElement }) {
 		if (!event.isPrimary || event.button !== 0 || pan) return;
+		// Phones don't pan the canvas: the backdrop drifts on its own instead.
+		if (matchMedia('(max-width: 650px)').matches) return;
 		if ((event.target as Element).closest(ownPointer)) return;
 		try {
 			event.currentTarget.setPointerCapture(event.pointerId);
@@ -1016,13 +1018,16 @@
 			<div class="backdrops" aria-hidden="true" bind:this={backdrops}>
 				<div class="breathe">
 					<img
-						class="backdrop"
+						class={['backdrop', { showing: ready && !showAlternate }]}
 						src="/images/climate/aerial-illustration.jpg"
 						alt=""
 						fetchpriority="high"
 					/>
 					<img
-						class={['backdrop backdrop-alternate', { visible: showAlternate }]}
+						class={[
+							'backdrop backdrop-alternate',
+							{ visible: showAlternate, showing: ready && showAlternate }
+						]}
 						src="/images/climate/river-floodplain.webp"
 						alt=""
 						fetchpriority="low"
@@ -2313,6 +2318,62 @@
 	}
 	.credits :global(.short-ethics) {
 		display: none;
+	}
+
+	/* Phones: a calmer About dialog with smaller headings and more room for text. */
+	@media (max-width: 650px) {
+		:global(.climate-dialog) {
+			width: calc(100% - 1rem);
+			max-height: calc(100dvh - 1rem);
+			padding: 1.25rem 1.1rem 1.5rem;
+			font-size: 0.95rem;
+			scrollbar-width: thin;
+		}
+		:global(.climate-dialog-title) {
+			margin-right: 2.4rem;
+			font-size: 1.65rem;
+		}
+		:global(.climate-dialog .climate-description) {
+			font-size: 0.98rem;
+			line-height: 1.4;
+		}
+		:global(.climate-close) {
+			top: 0.4rem;
+			right: 0.4rem;
+		}
+		.dialog-updates h2 {
+			font-size: 1.35rem;
+		}
+		.dialog-ethics h2 {
+			font-size: 1.1rem;
+		}
+		.project-links {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+	}
+
+	/* Phones: no panning. Each image glides slowly left to right while it shows, then crossfades;
+	   it slides back while hidden, so the drift never visibly jumps. */
+	@media (max-width: 650px) {
+		.scene {
+			touch-action: manipulation;
+			cursor: auto;
+		}
+	}
+	@media (max-width: 650px) and (prefers-reduced-motion: no-preference) {
+		.backdrop {
+			transform: translateX(-7%);
+			transition:
+				opacity 4s ease-in-out,
+				transform 0s linear 4s;
+		}
+		.backdrop.showing {
+			transform: translateX(7%);
+			transition:
+				opacity 4s ease-in-out,
+				transform 34s linear;
+		}
 	}
 
 	@media (max-height: 560px) {
