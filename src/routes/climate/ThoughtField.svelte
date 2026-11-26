@@ -1617,10 +1617,11 @@
 		color: #282828;
 		box-shadow: none;
 	}
+	/* Your down-vote: TNH red, as the + turns mint for an up-vote. */
 	.vote.down.active {
-		background: #282828;
+		background: #9f3e52;
 		color: #fff;
-		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 45%);
+		box-shadow: none;
 	}
 	.vote:disabled {
 		opacity: 0.5;
