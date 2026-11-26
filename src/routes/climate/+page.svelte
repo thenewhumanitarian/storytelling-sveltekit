@@ -8,7 +8,7 @@
 	import { prefersReducedMotion } from 'svelte/motion';
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
-	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
+	import SharePopover from './SharePopover.svelte';
 	import { connectClimateRoom, handleFor, type ClimateCursor } from './realtime';
 	import type { PageProps } from './$types';
 
@@ -176,20 +176,7 @@
 	let rippleKey = 0;
 	const shareTitle = 'The climate cost of conflict | The New Humanitarian';
 	const shareMessage = 'The climate cost of conflict: join the conversation';
-	let shareOpen = $state(false);
 
-	/** Phones: the native share sheet where there is one, else the same icon row as desktop. */
-	async function shareNative() {
-		if (navigator.share) {
-			try {
-				await navigator.share({ title: shareTitle, text: shareMessage, url: location.href });
-			} catch {
-				// Dismissed by the user.
-			}
-			return;
-		}
-		shareOpen = !shareOpen;
-	}
 	// Bumped on every live "wall changed" signal so an open comment thread refetches.
 	let wallTick = $state(0);
 	// Follows the editors' comments switch on each wall refresh, without a reload.
@@ -991,41 +978,8 @@
 	>
 		<header class="masthead">
 			<div class="share">
-				<!-- Desktop: the same white share icons as the event pages. -->
-				<ShareIcons
-					title={shareTitle}
-					message={shareMessage}
-					initiallyExpanded={true}
-					showMobileLabel={false}
-					class="share-row"
-					iconClass="text-white/75 transition-colors hover:text-white"
-				/>
-				<!-- Phones: one plain icon that opens the phone's share sheet (WhatsApp, email…). -->
-				<button
-					type="button"
-					class="share-mobile"
-					aria-label="Share this page"
-					aria-expanded={shareOpen}
-					onclick={shareNative}
-				>
-					<svg viewBox="0 0 20 20" aria-hidden="true">
-						<circle cx="15" cy="4.5" r="2.2" />
-						<circle cx="5" cy="10" r="2.2" />
-						<circle cx="15" cy="15.5" r="2.2" />
-						<path d="M7 8.9 13 5.6M7 11.1l6 3.3" />
-					</svg>
-				</button>
-				{#if shareOpen}
-					<div class="share-popover">
-						<ShareIcons
-							title={shareTitle}
-							message={shareMessage}
-							initiallyExpanded={true}
-							showMobileLabel={false}
-							iconClass="text-white transition-colors hover:text-white/75"
-						/>
-					</div>
-				{/if}
+				<!-- One plain share icon that opens a small share menu. -->
+				<SharePopover title={shareTitle} message={shareMessage} />
 			</div>
 			<a
 				class="wordmark"
@@ -1353,18 +1307,6 @@
 					<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch with TNH</a>
 				</li>
 			</ul>
-			<section class="dialog-ethics" aria-labelledby="ethics-title">
-				<h2 id="ethics-title">Moderated with ethical AI</h2>
-				<p>
-					Public thoughts and comments are checked by
-					<a href="https://thaura.ai" target="_blank" rel="noopener">Thaura</a>, an ethical AI. It
-					runs an open-weights model on its own servers in Finland, powered largely by renewable
-					energy, and it never trains on or keeps what you write. It only screens out hate,
-					harassment, threats and spam, and suggests shorter wording. TNH editors review anything it
-					flags.
-				</p>
-				<p>Private messages to TNH are never sent to any AI.</p>
-			</section>
 			<section class="dialog-updates" aria-labelledby="updates-title">
 				<h2 id="updates-title">Stay engaged</h2>
 				<p>Get updates on TNH’s reporting, research and events.</p>
@@ -1396,6 +1338,18 @@
 						{preview ? feedback.subscribe : form?.kind === 'subscribe' ? form.message : ''}
 					</p>
 				</form>
+			</section>
+			<section class="dialog-ethics" aria-labelledby="ethics-title">
+				<h2 id="ethics-title">Moderated with ethical AI</h2>
+				<p>
+					Public thoughts and comments are checked by
+					<a href="https://thaura.ai" target="_blank" rel="noopener">Thaura</a>, an ethical AI. It
+					runs an open-weights model on its own servers in Finland, powered largely by renewable
+					energy, and it never trains on or keeps what you write. It only screens out hate,
+					harassment, threats and spam, and suggests shorter wording. TNH editors review anything it
+					flags.
+				</p>
+				<p>Private messages to TNH are never sent to any AI.</p>
 			</section>
 		</Dialog.Content>
 	</Dialog.Portal>
@@ -1503,7 +1457,8 @@
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
-		padding-inline: clamp(1rem, 4vw, 4rem);
+		/* Side inset matches the gap above and below the 2.75rem header buttons. */
+		padding-inline: max(0.5rem, calc((var(--masthead-height) - 2.75rem) / 2));
 		gap: 0.75rem;
 		background: var(--ink);
 		color: #fff;
@@ -1518,41 +1473,6 @@
 		justify-self: start;
 		display: flex;
 		align-items: center;
-	}
-	.share :global(.share-row svg) {
-		width: 1.35rem;
-		height: 1.35rem;
-	}
-	.share-mobile {
-		display: none;
-		place-items: center;
-		width: 2.75rem;
-		height: 2.75rem;
-		margin-left: -0.6rem;
-		border: 0;
-		background: none;
-		color: #fff;
-		cursor: pointer;
-	}
-	.share-mobile svg {
-		width: 1.35rem;
-		height: 1.35rem;
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 1.6;
-	}
-	.share-popover {
-		position: absolute;
-		top: calc(100% + 0.4rem);
-		left: -0.4rem;
-		z-index: 20;
-		padding: 0.6rem 0.8rem;
-		background: var(--ink);
-		box-shadow: 0 10px 30px rgb(0 0 0 / 40%);
-	}
-	.climate .share-mobile:focus-visible {
-		outline: 2px solid #fff;
-		outline-offset: 2px;
 	}
 	.wordmark img {
 		display: block;
@@ -1576,13 +1496,10 @@
 	:global(.about-icon .dot) {
 		fill: currentColor;
 	}
-	/* Phones: plain share and info icons, no boxes. */
+	/* Phones: plain info icon, no box. */
 	@media (max-width: 650px) {
-		.share :global(.share-row) {
-			display: none;
-		}
-		.share-mobile {
-			display: grid;
+		.masthead {
+			padding-inline: 1rem;
 		}
 		:global(.about-trigger) {
 			width: 2.75rem;
@@ -2266,7 +2183,7 @@
 		outline-offset: 3px;
 	}
 	.dialog-ethics {
-		margin-bottom: 1.3rem;
+		margin-top: 1.4rem;
 		padding: 1rem 1.1rem;
 		background: #eef8f3;
 		border-left: 4px solid #35b58b;
