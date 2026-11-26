@@ -35,8 +35,8 @@
 		sunk: boolean;
 		gone: boolean;
 		trail: Point[];
-		/** When the name tag appeared, and whether it is saying hello or goodbye. */
-		label: { born: number; leaving: boolean } | null;
+		/** The name, pinned where they surfaced or sank: when, where, and hello or goodbye. */
+		label: { born: number; leaving: boolean; x: number; y: number } | null;
 	};
 	type Ring = { x: number; y: number; born: number; life: number; radius: number; tint: string };
 
@@ -103,7 +103,7 @@
 					sunk: false,
 					gone: false,
 					trail: [],
-					label: { born: now, leaving: false }
+					label: { born: now, leaving: false, x: tx, y: ty }
 				});
 				splash(tx, ty, tint, now, 'surface');
 				continue;
@@ -115,7 +115,7 @@
 				peer.y = ty;
 				peer.trail = [];
 				peer.sunk = false;
-				peer.label = { born: now, leaving: false };
+				peer.label = { born: now, leaving: false, x: tx, y: ty };
 				splash(tx, ty, peer.tint, now, 'surface');
 			}
 			peer.tx = tx;
@@ -130,7 +130,7 @@
 				// A cursor that sat still has already sunk and said goodbye; the room drops it a few
 				// seconds later, which needs no second goodbye.
 				peer.sunk = true;
-				peer.label = { born: now, leaving: true };
+				peer.label = { born: now, leaving: true, x: peer.x, y: peer.y };
 				splash(peer.x, peer.y, peer.tint, now, 'sink');
 			}
 		}
@@ -163,7 +163,7 @@
 				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < 1;
 				if (settled && now - peer.lastMove > STILL_AFTER) {
 					peer.sunk = true;
-					peer.label = { born: now, leaving: true };
+					peer.label = { born: now, leaving: true, x: peer.x, y: peer.y };
 					if (!still) splash(peer.x, peer.y, peer.tint, now, 'sink');
 				}
 			} else {
@@ -243,8 +243,7 @@
 		for (const peer of peers.values()) if (peer.label) drawLabel(ctx, peer, now);
 	}
 
-	// The name: fades in beside the drop, holds, then drifts up a little as it fades. Saying
-	// goodbye, it stays where they sank while the ripples spread.
+	// The name: fades in on the spot, holds, then drifts up a little as it fades.
 	function drawLabel(ctx: CanvasRenderingContext2D, peer: Peer, now: number) {
 		if (!peer.label) return;
 		const age = now - peer.label.born;
@@ -254,11 +253,13 @@
 		const alpha = Math.max(0, Math.min(fadeIn, fadeOut));
 		if (alpha <= 0) return;
 		const rise = prefersReducedMotion.current ? 0 : (1 - Math.pow(1 - p, 2)) * 8;
-		const x = peer.x + 12;
-		const y = peer.y + 10 - rise;
+		// Centred on the spot where they surfaced or sank, inside the ripples.
+		const { x } = peer.label;
+		const y = peer.label.y - rise;
 		ctx.save();
 		ctx.globalAlpha = alpha;
 		ctx.font = `700 13px ${fontFamily}`;
+		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillStyle = '#fff';
 		// Just the name in white: a wide soft shadow lifts it off the photo, a tight one sharpens it.

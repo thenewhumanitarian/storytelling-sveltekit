@@ -43,9 +43,9 @@ export function simulatePeers(count: number, onCursors: (cursors: ClimateCursor[
 				walker.awayUntil = now + 3000 + Math.random() * 3000;
 				continue;
 			}
-			// Now and then, stop for a couple of seconds so the sink-and-resurface shows.
-			if (Math.random() < 0.012) {
-				walker.pauseUntil = now + 1500 + Math.random() * 2500;
+			// Like a real visitor: move in short bursts, then rest a while (and sink) before moving on.
+			if (Math.random() < 0.05) {
+				walker.pauseUntil = now + 3000 + Math.random() * 6000;
 				continue;
 			}
 			walker.angle += (Math.random() - 0.5) * 0.7;
