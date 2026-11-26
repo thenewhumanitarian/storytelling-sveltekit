@@ -300,7 +300,7 @@
 				maxlength="300"
 				rows="1"
 				use:grow
-				placeholder="Add to the conversation…"
+				placeholder="Add a comment…"
 				onkeydown={sendOnEnter}
 				disabled={unavailable}
 			></textarea>
@@ -468,6 +468,39 @@
 		padding: 1rem 0;
 		color: rgb(255 255 255 / 75%);
 		font: 400 0.95rem/1.4 var(--sans);
+	}
+	/* Phones: a full-width sheet under the TNH header, sized to the visible screen (keyboard too). */
+	@media (max-width: 640px) {
+		.thread {
+			position: fixed;
+			top: var(--masthead-height, 3.5rem);
+			left: 0;
+			bottom: auto;
+			z-index: 60;
+			width: 100%;
+			height: calc(var(--keyboard-viewport, 100dvh) - var(--masthead-height, 3.5rem));
+			translate: none;
+			padding: 1rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+			border-radius: 0;
+			background:
+				linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 3%)), rgb(28 28 26 / 88%);
+			box-shadow: none;
+		}
+		h2 {
+			font-size: 1.3rem;
+		}
+		.chat {
+			scrollbar-width: none;
+		}
+		.chat::-webkit-scrollbar {
+			display: none;
+		}
+		.bubble {
+			max-width: 85%;
+		}
+		.send {
+			min-width: 4.4rem;
+		}
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.pulse {

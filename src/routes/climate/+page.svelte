@@ -356,7 +356,8 @@
 		function fitComposerToKeyboard() {
 			keyboardViewportHeight =
 				viewport?.scale === 1 &&
-				document.activeElement?.id === 'climate-message' &&
+				(document.activeElement?.id === 'climate-message' ||
+					Boolean(document.activeElement?.closest('.thread'))) &&
 				window.innerHeight - viewport.height > 100
 					? viewport.height
 					: undefined;
@@ -983,7 +984,14 @@
 					height="44"
 				/>
 			</a>
-			<Dialog.Trigger class="climate-button about-trigger">About</Dialog.Trigger>
+			<Dialog.Trigger class="climate-button about-trigger" aria-label="About the project">
+				<svg class="about-icon" viewBox="0 0 20 20" aria-hidden="true">
+					<circle cx="10" cy="10" r="7.5" />
+					<path d="M10 9v5" />
+					<circle class="dot" cx="10" cy="6.2" r="0.6" />
+				</svg>
+				<span class="about-label">About</span>
+			</Dialog.Trigger>
 		</header>
 
 		<main
@@ -1200,7 +1208,12 @@
 							<span class="dot" aria-hidden="true"></span>{presenceLabel}
 						</span>
 						{#if connected}
-							<button type="button" aria-pressed={showCursors} onclick={toggleCursors}>
+							<button
+								class="cursor-toggle"
+								type="button"
+								aria-pressed={showCursors}
+								onclick={toggleCursors}
+							>
 								{showCursors ? 'Hide cursors' : 'Show cursors'}
 							</button>
 						{/if}
@@ -1216,7 +1229,11 @@
 						{#if wallUnavailable}<span>Reconnecting…</span>{/if}
 					</div>
 					<div class="credits">
-						<Dialog.Trigger class="ethical-link">Moderated with ethical AI</Dialog.Trigger>
+						<Dialog.Trigger class="ethical-link"
+							><span class="long-ethics">Moderated with ethical AI</span><span class="short-ethics"
+								>Ethical AI</span
+							></Dialog.Trigger
+						>
 						<span><span class="long-credit">AI-generated</span> aerial illustrations</span>
 						<a href="https://www.thenewhumanitarian.org/legal/privacy-policy">Privacy</a>
 					</div>
@@ -1444,6 +1461,36 @@
 	:global(.about-trigger) {
 		grid-column: 3;
 		justify-self: end;
+	}
+	:global(.about-icon) {
+		display: none;
+		width: 1.35rem;
+		height: 1.35rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+	}
+	:global(.about-icon .dot) {
+		fill: currentColor;
+	}
+	/* Phones: a square red box with an info icon instead of the word. */
+	@media (max-width: 650px) {
+		:global(.about-trigger) {
+			width: 2.75rem;
+			min-height: 2.75rem;
+			padding: 0;
+		}
+		:global(.about-icon) {
+			display: block;
+		}
+		:global(.about-label) {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+		}
 	}
 	/* Bits UI renders this button, so the scoped focus rule above never reaches it. Without this the
 	   browser draws its own two-tone ring; use the same single white ring as everything else. */
@@ -1696,6 +1743,9 @@
 	}
 	textarea::placeholder {
 		color: rgb(255 255 255 / 85%);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.climate textarea:focus {
 		border: 0;
@@ -1809,12 +1859,12 @@
 			linear-gradient(180deg, rgb(255 255 255 / 34%), rgb(255 255 255 / 16%)), rgb(40 40 40 / 25%);
 	}
 	.chip.match {
-		background: #8ed9bd;
+		background: #35b58b;
 		color: var(--ink);
 		box-shadow: 0 8px 24px rgb(0 0 0 / 30%);
 	}
 	.chip.match:hover {
-		background: #7fd3b4;
+		background: #2fa37d;
 	}
 	.chip-label {
 		font: 700 0.7rem/1 var(--sans);
@@ -2218,6 +2268,51 @@
 		.credits > span {
 			display: none;
 		}
+		/* Phone footer: no cursors on touch, and a short link so nothing overprints. */
+		.room .cursor-toggle {
+			display: none;
+		}
+		/* An open comment thread is a full-screen sheet: lift it above the shout bar and footer,
+		   and hide those so only one text box is on screen. */
+		.scene-content:has(:global(.thread)) > :global(.field) {
+			z-index: 7;
+		}
+		.scene-content:has(:global(.thread)) .shout,
+		.scene-content:has(:global(.thread)) .scene-footer {
+			visibility: hidden;
+		}
+		.credits :global(.ethical-link .long-ethics) {
+			display: none;
+		}
+		.credits :global(.ethical-link .short-ethics) {
+			display: inline;
+		}
+		.scene-footer {
+			gap: 0.6rem;
+			font-size: 0.75rem;
+		}
+		/* Round icon-only Public/Private and Send, so the text gets the room. */
+		.mode,
+		.send {
+			width: calc(var(--bar-h) - 2 * var(--bar-pad));
+			min-width: 0;
+			padding: 0;
+			justify-content: center;
+		}
+		.send-label {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+		}
+		textarea {
+			font-size: 1rem;
+			padding-inline: 0.4rem;
+		}
+	}
+	.credits :global(.short-ethics) {
+		display: none;
 	}
 
 	@media (max-height: 560px) {
