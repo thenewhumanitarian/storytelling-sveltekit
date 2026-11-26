@@ -232,10 +232,9 @@
 		cursors: 'tnh-climate-cursors-v1',
 		motion: 'tnh-climate-motion-v1',
 		wall: 'tnh-climate-preview-wall-v2',
-		mine: 'tnh-climate-mine-v1',
-		about: 'tnh-climate-about-seen-v1'
+		mine: 'tnh-climate-mine-v1'
 	};
-	// About opens by itself on a first visit, once per browser.
+	// About opens by itself on every load for now. Later: only until the visitor has closed it once.
 	let aboutOpen = $state(false);
 
 	// What this browser posted: preview entry ids, and the (AI-condensed) terms of live posts,
@@ -369,11 +368,6 @@
 			showCursors = localStorage.getItem(storageKeys.cursors) !== 'off';
 			motionPaused = localStorage.getItem(storageKeys.motion) === 'paused';
 			if (preview) previewEntries = restoreWall(localStorage.getItem(storageKeys.wall));
-			if (!localStorage.getItem(storageKeys.about)) {
-				persist(storageKeys.about, 'seen');
-				// A moment later, so the scene shows first and the box arrives over it.
-				setTimeout(() => (aboutOpen = true), 600);
-			}
 			const savedMine = JSON.parse(localStorage.getItem(storageKeys.mine) ?? 'null');
 			if (Array.isArray(savedMine?.ids) && Array.isArray(savedMine?.terms)) {
 				const tokens: Record<string, string> = {};
@@ -390,6 +384,8 @@
 			// The defaults support private and sandboxed browsing.
 		}
 		ready = true;
+		// A moment after load, so the scene shows first and the box arrives over it.
+		const openAbout = setTimeout(() => (aboutOpen = true), 600);
 
 		function syncPreview(event: StorageEvent) {
 			if (preview && event.key === storageKeys.wall) previewEntries = restoreWall(event.newValue);
@@ -435,6 +431,7 @@
 			document.removeEventListener('focusin', scheduleFit);
 			document.removeEventListener('focusout', scheduleFit);
 			clearInterval(timer);
+			clearTimeout(openAbout);
 		};
 	});
 
@@ -1390,121 +1387,126 @@
 			<Dialog.Close class="climate-close" aria-label="Close About">
 				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" /></svg>
 			</Dialog.Close>
-			<Dialog.Title class="climate-dialog-title">About the project</Dialog.Title>
-			<Dialog.Description class="climate-description">
-				War carries a climate cost that extends far beyond the battlefield and persists long after
-				the fighting ends.
-			</Dialog.Description>
-			<p>
-				Researchers estimate that militaries account for
-				<a
-					href="https://www.sgr.org.uk/publications/estimating-military-s-global-greenhouse-gas-emissions"
-					>around 5.5 per cent of global greenhouse gas emissions</a
-				>, before counting the impact of fighting itself.
-			</p>
-			<p>
-				Yet emissions are only part of the picture. Before a war starts, the defence industry
-				consumes vast natural resources to manufacture weapons, build fortifications and move troops
-				and equipment. Once fighting begins, war destroys forests and other carbon stores, damages
-				water systems and farmland, disrupts climate adaptation and diverts public money from
-				climate action. When it ends, debris, unexploded munitions and toxic waste leave pollutants
-				in soil and water for years. Rebuilding then adds further emissions.
-			</p>
-			<p>
-				We often hear how climate change drives conflict. Far less is known about how conflict
-				damages the climate. The New Humanitarian is bringing this hidden toll into view. Our
-				project combines data, on-the-ground reporting and conversations among climate, humanitarian
-				and peacebuilding experts to show what conflict is doing to the planet and to the people
-				living with the consequences. Here’s what we bring:
-			</p>
-			<ul class="bring">
-				<li>
-					<strong>Data and human stories, together.</strong> Bringing data and evidence together with
-					first-hand accounts from affected communities.
-				</li>
-				<li>
-					<strong>Beyond the headline wars.</strong> Most research focuses on a few high-profile conflicts.
-					We draw on our reporting from crises that rarely make the news.
-				</li>
-				<li>
-					<strong>Beyond carbon.</strong> We look at the harms that outlast the fighting: poisoned water,
-					ruined farmland, displacement and land left unusable for years.
-				</li>
-				<li>
-					<strong>Making sense of scattered evidence.</strong> We bring the research together to show
-					what we know, what remains unknown and where action is most needed.
-				</li>
-			</ul>
-			<p>
-				<strong>Get involved.</strong> The project is just getting started. If you work in this
-				space, or have research, stories or ideas to share, we’d love to hear from you.
-				<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch</a>.
-			</p>
-			<ul class="project-links" aria-label="Project links">
-				<li><a href={eventUrl} target="_blank" rel="noopener">Register for the webinar</a></li>
-				<!-- Placeholder until the op-ed is published. -->
-				<li><span class="soon">Tammam’s op-ed <em>coming soon</em></span></li>
-			</ul>
-			<Dialog.Close class="climate-button enter-button">Join the conversation</Dialog.Close>
-			<section class="dialog-updates" aria-labelledby="updates-title">
-				<h2 id="updates-title">Stay engaged</h2>
-				<p>Get updates on TNH’s reporting, research and events.</p>
-				<form method="POST" action="?/subscribe" use:enhance={submit('subscribe')}>
-					<label for="updates-email">Email address</label>
-					<div class="email-row">
-						<input
-							id="updates-email"
-							name="email"
-							type="email"
-							autocomplete="email"
-							readonly={!interactive}
-							required
-						/>
-						<button
-							class="climate-button"
-							type="submit"
-							disabled={!interactive || pendingForm !== null}
-						>
-							{pendingForm === 'subscribe' ? 'Saving…' : 'Sign up'}
-						</button>
-					</div>
-					{#if !data.configured}<p class="field-note">
-							{preview
-								? 'Preview only. Use a sample address.'
-								: 'Signups are temporarily unavailable.'}
-						</p>{/if}
-					<p class="field-note form-feedback" role="status">
-						{preview ? feedback.subscribe : form?.kind === 'subscribe' ? form.message : ''}
-					</p>
-				</form>
-			</section>
-			<section class="dialog-ethics" aria-labelledby="ethics-title">
-				<h2 id="ethics-title">Moderated with ethical AI</h2>
+			<!-- Scrolls inside the glass, so the scrollbar clears the rounded corners and the close
+			     button stays put. -->
+			<div class="dialog-body">
+				<Dialog.Title class="climate-dialog-title">About the project</Dialog.Title>
+				<Dialog.Description class="climate-description">
+					War carries a climate cost that extends far beyond the battlefield and persists long after
+					the fighting ends.
+				</Dialog.Description>
 				<p>
-					Public thoughts and comments are checked by
-					<a href="https://thaura.ai" target="_blank" rel="noopener">Thaura</a>, an ethical AI. It
-					runs an open-weights model on its own servers in Finland, powered largely by renewable
-					energy, and it never trains on or keeps what you write. It only screens out hate,
-					harassment, threats and spam, and suggests shorter wording. TNH editors review anything it
-					flags.
+					Researchers estimate that militaries account for
+					<a
+						href="https://www.sgr.org.uk/publications/estimating-military-s-global-greenhouse-gas-emissions"
+						>around 5.5 per cent of global greenhouse gas emissions</a
+					>, before counting the impact of fighting itself.
 				</p>
-				<p>Private messages to TNH are never sent to any AI.</p>
-			</section>
-			<section class="dialog-photos" aria-labelledby="photos-title">
-				<h2 id="photos-title">Photos</h2>
-				<ul>
-					{#each photos as photo (photo.slug)}
-						<li>
-							{photo.alt}:
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href={photo.credit.profile} target="_blank" rel="noopener">{photo.credit.name}</a>
-							on
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href={photo.credit.page} target="_blank" rel="noopener">{photo.credit.source}</a>
-						</li>
-					{/each}
+				<p>
+					Yet emissions are only part of the picture. Before a war starts, the defence industry
+					consumes vast natural resources to manufacture weapons, build fortifications and move
+					troops and equipment. Once fighting begins, war destroys forests and other carbon stores,
+					damages water systems and farmland, disrupts climate adaptation and diverts public money
+					from climate action. When it ends, debris, unexploded munitions and toxic waste leave
+					pollutants in soil and water for years. Rebuilding then adds further emissions.
+				</p>
+				<p>
+					We often hear how climate change drives conflict. Far less is known about how conflict
+					damages the climate. The New Humanitarian is bringing this hidden toll into view. Our
+					project combines data, on-the-ground reporting and conversations among climate,
+					humanitarian and peacebuilding experts to show what conflict is doing to the planet and to
+					the people living with the consequences. Here’s what we bring:
+				</p>
+				<ul class="bring">
+					<li>
+						<strong>Data and human stories, together.</strong> Bringing data and evidence together with
+						first-hand accounts from affected communities.
+					</li>
+					<li>
+						<strong>Beyond the headline wars.</strong> Most research focuses on a few high-profile conflicts.
+						We draw on our reporting from crises that rarely make the news.
+					</li>
+					<li>
+						<strong>Beyond carbon.</strong> We look at the harms that outlast the fighting: poisoned water,
+						ruined farmland, displacement and land left unusable for years.
+					</li>
+					<li>
+						<strong>Making sense of scattered evidence.</strong> We bring the research together to show
+						what we know, what remains unknown and where action is most needed.
+					</li>
 				</ul>
-			</section>
+				<p>
+					<strong>Get involved.</strong> The project is just getting started. If you work in this
+					space, or have research, stories or ideas to share, we’d love to hear from you.
+					<a href="https://www.thenewhumanitarian.org/about-us/contact-us">Get in touch</a>.
+				</p>
+				<ul class="project-links" aria-label="Project links">
+					<li><a href={eventUrl} target="_blank" rel="noopener">Register for the webinar</a></li>
+					<!-- Placeholder until the op-ed is published. -->
+					<li><span class="soon">Tammam’s op-ed <em>coming soon</em></span></li>
+				</ul>
+				<Dialog.Close class="climate-button enter-button">Join the conversation</Dialog.Close>
+				<section class="dialog-updates" aria-labelledby="updates-title">
+					<h2 id="updates-title">Stay engaged</h2>
+					<p>Get updates on TNH’s reporting, research and events.</p>
+					<form method="POST" action="?/subscribe" use:enhance={submit('subscribe')}>
+						<label for="updates-email">Email address</label>
+						<div class="email-row">
+							<input
+								id="updates-email"
+								name="email"
+								type="email"
+								autocomplete="email"
+								readonly={!interactive}
+								required
+							/>
+							<button
+								class="climate-button"
+								type="submit"
+								disabled={!interactive || pendingForm !== null}
+							>
+								{pendingForm === 'subscribe' ? 'Saving…' : 'Sign up'}
+							</button>
+						</div>
+						{#if !data.configured}<p class="field-note">
+								{preview
+									? 'Preview only. Use a sample address.'
+									: 'Signups are temporarily unavailable.'}
+							</p>{/if}
+						<p class="field-note form-feedback" role="status">
+							{preview ? feedback.subscribe : form?.kind === 'subscribe' ? form.message : ''}
+						</p>
+					</form>
+				</section>
+				<section class="dialog-ethics" aria-labelledby="ethics-title">
+					<h2 id="ethics-title">Moderated with ethical AI</h2>
+					<p>
+						Public thoughts and comments are checked by
+						<a href="https://thaura.ai" target="_blank" rel="noopener">Thaura</a>, an ethical AI. It
+						runs an open-weights model on its own servers in Finland, powered largely by renewable
+						energy, and it never trains on or keeps what you write. It only screens out hate,
+						harassment, threats and spam, and suggests shorter wording. TNH editors review anything
+						it flags.
+					</p>
+					<p>Private messages to TNH are never sent to any AI.</p>
+				</section>
+				<section class="dialog-photos" aria-labelledby="photos-title">
+					<h2 id="photos-title">Photos</h2>
+					<ul>
+						{#each photos as photo (photo.slug)}
+							<li>
+								{photo.alt}:
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a href={photo.credit.profile} target="_blank" rel="noopener">{photo.credit.name}</a
+								>
+								on
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a href={photo.credit.page} target="_blank" rel="noopener">{photo.credit.source}</a>
+							</li>
+						{/each}
+					</ul>
+				</section>
+			</div>
 		</Dialog.Content>
 	</Dialog.Portal>
 </Dialog.Root>
@@ -2316,12 +2318,11 @@
 		bottom: calc(2.6rem + var(--edge-x));
 		left: 50%;
 		translate: -50% 0;
+		display: flex;
 		width: min(52rem, calc(100vw - 2rem));
-		overflow: auto;
-		overscroll-behavior: contain;
-		scrollbar-width: thin;
-		scrollbar-color: rgb(255 255 255 / 30%) transparent;
-		padding: clamp(1.3rem, 4vw, 2.6rem);
+		overflow: hidden;
+		/* Room on the right and at the ends for the scrollbar, clear of the 1.75rem corners. */
+		padding: 0.9rem 0.45rem 0.9rem 0;
 		border-radius: 1.75rem;
 		background:
 			linear-gradient(160deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 6%) 55%),
@@ -2336,8 +2337,39 @@
 		color: #fff;
 		text-shadow: 0 1px 8px rgb(0 0 0 / 35%);
 	}
+	/* Bits UI focuses the box itself on open; that needs no ring. Controls inside keep theirs. */
+	:global(.climate-dialog:focus),
+	:global(.climate-dialog:focus-visible) {
+		outline: none;
+	}
 	:global(.climate-dialog[data-state='open']) {
 		animation: dialog-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+	.dialog-body {
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		/* The top band is the close button's row: text fades out there as it scrolls under it. */
+		--fade-top: 2.4rem;
+		padding: var(--fade-top) clamp(0.85rem, 3.6vw, 2.15rem) clamp(0.4rem, 3vw, 1.7rem);
+		scrollbar-width: thin;
+		scrollbar-color: rgb(255 255 255 / 28%) transparent;
+		scrollbar-gutter: stable;
+		/* Text fades out at the top and bottom edges instead of being cut off. */
+		mask-image: linear-gradient(
+			transparent,
+			#000 var(--fade-top),
+			#000 calc(100% - 1rem),
+			transparent
+		);
+	}
+	.dialog-body::-webkit-scrollbar {
+		width: 6px;
+	}
+	.dialog-body::-webkit-scrollbar-thumb {
+		border-radius: 3px;
+		background: rgb(255 255 255 / 28%);
 	}
 	@keyframes overlay-in {
 		from {
@@ -2362,7 +2394,7 @@
 		font-size: 1.1rem;
 		line-height: 1.45;
 	}
-	:global(.climate-dialog) > p {
+	.dialog-body > p {
 		margin-top: 1rem;
 	}
 	:global(.climate-dialog) a {
@@ -2631,7 +2663,7 @@
 			left: 0;
 			translate: none;
 			width: 100%;
-			padding: 1.25rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom));
+			padding: 0.6rem 0.25rem env(safe-area-inset-bottom) 0;
 			border-radius: 0;
 			background:
 				linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 3%)), rgb(28 28 26 / 88%);
@@ -2640,6 +2672,10 @@
 		}
 		:global(.climate-dialog[data-state='open']) {
 			animation-name: sheet-in;
+		}
+		.dialog-body {
+			--fade-top: 2.7rem;
+			padding: var(--fade-top) 0.85rem 1.5rem 1.1rem;
 		}
 		:global(.climate-dialog-title) {
 			margin-right: 2.4rem;
