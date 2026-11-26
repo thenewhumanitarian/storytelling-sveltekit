@@ -133,11 +133,23 @@
 		text-shadow: none;
 		padding-inline: 0.65rem;
 	}
+	/* One burgundy ring, replacing the blue ring and shadow from the Tailwind forms plugin. */
 	.email-row input:focus {
-		border-color: #cdc7c0;
+		border-color: #9f3e52;
 		box-shadow: none;
-		outline: 2px solid #9f3e52;
-		outline-offset: -2px;
+		outline: 1px solid #9f3e52;
+		outline-offset: -1px;
+	}
+	.signup-button:focus {
+		outline: none;
+		box-shadow: none;
+	}
+	.signup-button:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+	.light .signup-button:focus-visible {
+		outline-color: #9f3e52;
 	}
 	.signup-button {
 		display: inline-flex;

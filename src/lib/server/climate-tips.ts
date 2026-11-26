@@ -8,6 +8,7 @@ import { checkStamp, looksAutomated } from '$lib/server/climate-guard';
 const unavailable = 'This form is temporarily unavailable. Please try again later.';
 // Leaves room for the "From:" line under the 1000-character limit on private messages.
 const maxMessage = 780;
+const thanks = 'Thank you. We’ll get back to you as soon as possible.';
 
 export async function tipAction({
 	request,
@@ -48,7 +49,7 @@ export async function tipAction({
 		stamp === 'too-fast' ||
 		looksAutomated(request.headers.get('user-agent'))
 	) {
-		return { ok: true, values: null, message: 'Thank you.' };
+		return { ok: true, values: null, message: thanks };
 	}
 	if (stamp === 'expired') {
 		return fail(400, {
@@ -73,7 +74,7 @@ export async function tipAction({
 		return {
 			ok: true,
 			values: null,
-			message: 'Thank you. Your message went privately to the TNH team.'
+			message: thanks
 		};
 	} catch {
 		return fail(503, { ok: false, values, message: unavailable });
