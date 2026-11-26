@@ -8,6 +8,7 @@
 	import { prefersReducedMotion } from 'svelte/motion';
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
+	import ShareIcons from '$lib/components/icons/ShareIcons.svelte';
 	import { connectClimateRoom, handleFor, type ClimateCursor } from './realtime';
 	import type { PageProps } from './$types';
 
@@ -173,6 +174,22 @@
 	let reloadWall: (() => void) | undefined;
 	let snapshotVersion = 0;
 	let rippleKey = 0;
+	const shareTitle = 'The climate cost of conflict | The New Humanitarian';
+	const shareMessage = 'The climate cost of conflict: join the conversation';
+	let shareOpen = $state(false);
+
+	/** Phones: the native share sheet where there is one, else the same icon row as desktop. */
+	async function shareNative() {
+		if (navigator.share) {
+			try {
+				await navigator.share({ title: shareTitle, text: shareMessage, url: location.href });
+			} catch {
+				// Dismissed by the user.
+			}
+			return;
+		}
+		shareOpen = !shareOpen;
+	}
 	// Bumped on every live "wall changed" signal so an open comment thread refetches.
 	let wallTick = $state(0);
 	// Follows the editors' comments switch on each wall refresh, without a reload.
@@ -973,6 +990,43 @@
 		style:--keyboard-viewport={keyboardViewportHeight ? `${keyboardViewportHeight}px` : undefined}
 	>
 		<header class="masthead">
+			<div class="share">
+				<!-- Desktop: the same white share icons as the event pages. -->
+				<ShareIcons
+					title={shareTitle}
+					message={shareMessage}
+					initiallyExpanded={true}
+					showMobileLabel={false}
+					class="share-row"
+					iconClass="text-white/75 transition-colors hover:text-white"
+				/>
+				<!-- Phones: one plain icon that opens the phone's share sheet (WhatsApp, email…). -->
+				<button
+					type="button"
+					class="share-mobile"
+					aria-label="Share this page"
+					aria-expanded={shareOpen}
+					onclick={shareNative}
+				>
+					<svg viewBox="0 0 20 20" aria-hidden="true">
+						<circle cx="15" cy="4.5" r="2.2" />
+						<circle cx="5" cy="10" r="2.2" />
+						<circle cx="15" cy="15.5" r="2.2" />
+						<path d="M7 8.9 13 5.6M7 11.1l6 3.3" />
+					</svg>
+				</button>
+				{#if shareOpen}
+					<div class="share-popover">
+						<ShareIcons
+							title={shareTitle}
+							message={shareMessage}
+							initiallyExpanded={true}
+							showMobileLabel={false}
+							iconClass="text-white transition-colors hover:text-white/75"
+						/>
+					</div>
+				{/if}
+			</div>
 			<a
 				class="wordmark"
 				href="https://www.thenewhumanitarian.org/"
@@ -1457,6 +1511,49 @@
 	.wordmark {
 		grid-column: 2;
 	}
+	.share {
+		position: relative;
+		grid-column: 1;
+		grid-row: 1;
+		justify-self: start;
+		display: flex;
+		align-items: center;
+	}
+	.share :global(.share-row svg) {
+		width: 1.35rem;
+		height: 1.35rem;
+	}
+	.share-mobile {
+		display: none;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		margin-left: -0.6rem;
+		border: 0;
+		background: none;
+		color: #fff;
+		cursor: pointer;
+	}
+	.share-mobile svg {
+		width: 1.35rem;
+		height: 1.35rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.6;
+	}
+	.share-popover {
+		position: absolute;
+		top: calc(100% + 0.4rem);
+		left: -0.4rem;
+		z-index: 20;
+		padding: 0.6rem 0.8rem;
+		background: var(--ink);
+		box-shadow: 0 10px 30px rgb(0 0 0 / 40%);
+	}
+	.climate .share-mobile:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
 	.wordmark img {
 		display: block;
 		width: clamp(120px, 14vw, 165px);
@@ -1479,12 +1576,23 @@
 	:global(.about-icon .dot) {
 		fill: currentColor;
 	}
-	/* Phones: a square red box with an info icon instead of the word. */
+	/* Phones: plain share and info icons, no boxes. */
 	@media (max-width: 650px) {
+		.share :global(.share-row) {
+			display: none;
+		}
+		.share-mobile {
+			display: grid;
+		}
 		:global(.about-trigger) {
 			width: 2.75rem;
 			min-height: 2.75rem;
+			margin-right: -0.6rem;
 			padding: 0;
+			background: none;
+		}
+		:global(.about-trigger:hover:not(:disabled)) {
+			background: rgb(255 255 255 / 10%);
 		}
 		:global(.about-icon) {
 			display: block;
