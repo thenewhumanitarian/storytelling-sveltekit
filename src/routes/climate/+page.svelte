@@ -1731,7 +1731,7 @@
 			0 8px 24px rgb(0 0 0 / 30%);
 		flex: none;
 		color: #fff;
-		font: 400 1.02rem/1.15 var(--serif);
+		font: 400 0.95rem/1.15 var(--sans);
 		text-align: left;
 		white-space: nowrap;
 		cursor: pointer;
