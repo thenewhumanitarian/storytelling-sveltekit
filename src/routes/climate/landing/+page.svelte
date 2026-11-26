@@ -136,7 +136,6 @@
 
 		<main class="content">
 			<section class="intro">
-				<p class="eyebrow">A New Humanitarian project</p>
 				<h1>The climate cost of conflict</h1>
 				<p class="lead">
 					War carries a climate cost that extends far beyond the battlefield and persists long after
@@ -439,15 +438,7 @@
 		padding: clamp(2rem, 6vh, 4.5rem) var(--pad-x) 3rem;
 		text-shadow: 0 1px 10px rgb(0 0 0 / 35%);
 	}
-	.eyebrow {
-		color: rgb(255 255 255 / 80%);
-		font-size: 0.8rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
 	h1 {
-		margin-top: 0.5rem;
 		font: 700 clamp(2.6rem, 6vw, 4.6rem) / 1 var(--serif);
 		letter-spacing: -0.025em;
 		text-wrap: balance;
