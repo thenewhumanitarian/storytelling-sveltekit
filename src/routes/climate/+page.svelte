@@ -9,6 +9,7 @@
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
 	import SharePopover from './SharePopover.svelte';
+	import ProjectPoints from './ProjectPoints.svelte';
 	import NewsletterSignup from './NewsletterSignup.svelte';
 	import { backdrops as photos, backdropSizes } from './backdrops';
 	import { connectClimateRoom, handleFor, type ClimateCursor } from './realtime';
@@ -156,9 +157,9 @@
 	let feedback = $state({ contribute: '', vote: '' });
 	let wallUnavailable = $state(false);
 	let cursors = $state<ClimateCursor[]>([]);
-	// Local experiment: visitors as trails of light that sink with ripples when still. On for the
-	// dev server only; the preview and production builds keep the named arrows.
-	const trailCursors = dev;
+	// Visitors as faint trails of light, without names, that sink with ripples when still or
+	// leaving and resurface with a ripple. Set to false to bring back the named arrows.
+	const trailCursors = true;
 	let simulatedCursors = $state<ClimateCursor[]>([]);
 	const shownCursors = $derived(
 		simulatedCursors.length ? [...cursors, ...simulatedCursors] : cursors
@@ -1437,24 +1438,7 @@
 					humanitarian and peacebuilding experts to show what conflict is doing to the planet and to
 					the people living with the consequences. Here’s what we bring:
 				</p>
-				<ul class="bring">
-					<li>
-						<strong>Data and human stories, together.</strong> Bringing data and evidence together with
-						first-hand accounts from affected communities.
-					</li>
-					<li>
-						<strong>Beyond the headline wars.</strong> Most research focuses on a few high-profile conflicts.
-						We draw on our reporting from crises that rarely make the news.
-					</li>
-					<li>
-						<strong>Beyond carbon.</strong> We look at the harms that outlast the fighting: poisoned water,
-						ruined farmland, displacement and land left unusable for years.
-					</li>
-					<li>
-						<strong>Making sense of scattered evidence.</strong> We bring the research together to show
-						what we know, what remains unknown and where action is most needed.
-					</li>
-				</ul>
+				<ProjectPoints />
 				<p>
 					<strong>Get involved.</strong> The project is just getting started. If you work in this
 					space, or have research, stories or ideas to share, we’d love to hear from you.
@@ -2407,17 +2391,6 @@
 	}
 	:global(.climate-dialog) a:hover {
 		text-decoration-color: #fff;
-	}
-	.bring {
-		display: grid;
-		gap: 0.6rem;
-		margin: 1rem 0 0;
-		padding: 0;
-		list-style: none;
-	}
-	.bring li {
-		padding-left: 1rem;
-		border-left: 3px solid var(--brand);
 	}
 	:global(.climate-close) {
 		position: absolute;
