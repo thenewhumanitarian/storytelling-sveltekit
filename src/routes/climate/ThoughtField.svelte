@@ -50,6 +50,9 @@
 		offsetY: number;
 		samples: { t: number; x: number; y: number }[];
 		moved: boolean;
+		/** Touch or pen: a swipe that starts on a thought pans the whole field instead of dragging it. */
+		pans: boolean;
+		lastX: number;
 	};
 
 	interface Props {
@@ -1108,7 +1111,9 @@
 			offsetX: event.clientX - origin.left - body.x,
 			offsetY: event.clientY - origin.top - body.y,
 			samples: [{ t: performance.now(), x: event.clientX, y: event.clientY }],
-			moved: false
+			moved: false,
+			pans: event.pointerType !== 'mouse',
+			lastX: event.clientX
 		};
 	}
 
@@ -1119,6 +1124,17 @@
 		if (!grab.moved && Math.hypot(event.clientX - grab.startX, event.clientY - grab.startY) < 6) {
 			return;
 		}
+		const now = performance.now();
+		if (grab.pans) {
+			// On touch screens thoughts aren't dragged around: a swipe slides the whole field.
+			if (!grab.moved) startPan();
+			grab.moved = true;
+			panBy(event.clientX - grab.lastX);
+			grab.lastX = event.clientX;
+			grab.samples.push({ t: now, x: event.clientX, y: event.clientY });
+			while (grab.samples.length > 2 && now - grab.samples[0].t > 100) grab.samples.shift();
+			return;
+		}
 		grab.moved = true;
 		body.dragging = true;
 		const origin = field.getBoundingClientRect();
@@ -1126,7 +1142,6 @@
 		body.y = event.clientY - origin.top - grab.offsetY;
 		body.vx = 0;
 		body.vy = 0;
-		const now = performance.now();
 		grab.samples.push({ t: now, x: event.clientX, y: event.clientY });
 		while (grab.samples.length > 2 && now - grab.samples[0].t > 110) grab.samples.shift();
 	}
@@ -1143,6 +1158,12 @@
 		suppressClickUntil = performance.now() + 300;
 		const first = released.samples[0];
 		const last = released.samples[released.samples.length - 1];
+		if (released.pans) {
+			// Let go of a swipe: the field glides on and slows down, as with a mouse pan.
+			const idle = performance.now() - last.t > 80;
+			endPan(idle ? 0 : ((last.x - first.x) / Math.max(16, last.t - first.t)) * 1000);
+			return;
+		}
 		const elapsed = Math.max(16, last.t - first.t) / 1000;
 		// A dropped thought stays roughly where it lands: just a hint of the release, then it
 		// rejoins the slow drift. No long slides across the screen.
@@ -1861,18 +1882,35 @@
 		text-shadow: 0 2px 14px rgb(0 0 0 / 70%);
 	}
 
+	/* Phones: smaller thoughts and buttons, so a few fit with room to swipe between them. */
 	@media (max-width: 640px) {
 		.term {
-			--base: clamp(1.25rem, 5.6vw, 1.7rem);
+			--base: clamp(1.05rem, 4.6vw, 1.35rem);
 		}
 		.term.mid {
-			--base: clamp(1.05rem, 4.4vw, 1.3rem);
+			--base: clamp(0.95rem, 3.9vw, 1.12rem);
 		}
 		.term.long {
-			--base: 0.98rem;
+			--base: 0.9rem;
 		}
 		.word {
-			--count-fs: 1rem;
+			--count-fs: 0.88rem;
+		}
+		.actions {
+			gap: 0.3rem;
+		}
+		.vote {
+			width: 2.05rem;
+			height: 2.05rem;
+		}
+		.vote svg {
+			width: 0.95rem;
+			height: 0.95rem;
+		}
+		.comment {
+			height: 2.05rem;
+			min-width: 2.05rem;
+			padding: 0 0.5rem;
 		}
 	}
 
