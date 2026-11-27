@@ -805,8 +805,6 @@
 
 	function panStart(event: PointerEvent & { currentTarget: HTMLElement }) {
 		if (!event.isPrimary || event.button !== 0 || pan) return;
-		// Phones don't pan the canvas: the backdrop drifts on its own instead.
-		if (matchMedia('(max-width: 650px)').matches) return;
 		if ((event.target as Element).closest(ownPointer)) return;
 		try {
 			event.currentTarget.setPointerCapture(event.pointerId);
@@ -846,9 +844,13 @@
 	// The backdrop moves at a fraction of the canvas speed (parallax). It is 24% wider than the
 	// scene; 10 of those 12 points each side are travel, the rest absorbs the rubber-band overshoot.
 	const parallax = 0.18;
-	const cameraLimit = $derived((sceneWidth * 1.24 * 0.1) / parallax);
+	// Phones: the photo keeps its own slow drift and doesn't follow a swipe, so the thoughts can be
+	// swiped on without end, bringing in new ones from the side.
+	const phone = $derived(sceneWidth > 0 && sceneWidth <= 650);
+	const cameraLimit = $derived(phone ? Infinity : (sceneWidth * 1.24 * 0.1) / parallax);
 
 	function moveBackdrop(x: number) {
+		if (phone) return backdrops?.style.removeProperty('transform');
 		backdrops?.style.setProperty('transform', `translate3d(${(x * parallax).toFixed(1)}px, 0, 0)`);
 	}
 
@@ -2706,11 +2708,12 @@
 		}
 	}
 
-	/* Phones: no panning. Each image glides slowly left to right while it shows, then crossfades;
-	   it slides back while hidden, so the drift never visibly jumps. */
+	/* Phones: a sideways swipe slides the thoughts (the photo stays put); other gestures, such as
+	   pinch-zoom, stay with the browser. Each image glides slowly left to right while it shows, then
+	   crossfades; it slides back while hidden, so the drift never visibly jumps. */
 	@media (max-width: 650px) {
 		.scene {
-			touch-action: manipulation;
+			touch-action: pan-y pinch-zoom;
 			cursor: auto;
 		}
 	}
