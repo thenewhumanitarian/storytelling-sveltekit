@@ -3,7 +3,7 @@
 	 * Other visitors as light on water instead of arrows. The thoughts drift differently in every
 	 * browser, so pointing at a spot means little; motion still does. Moving, a visitor draws a soft
 	 * faint trail of light with a small glowing drop at its head. Still for a moment, the drop sinks
-	 * with a few widening ripples and disappears. Moving again, it resurfaces with a small ripple.
+	 * with one faint ripple and disappears. Moving again, it resurfaces with a faint ripple.
 	 * No arrow, and (for now) no name: see SHOW_NAMES.
 	 *
 	 * Over a thought, a visitor's light sits on this screen's copy of that thought and follows it as
@@ -47,7 +47,16 @@
 		/** The name, pinned where they surfaced or sank: when, where, and hello or goodbye. */
 		label: { born: number; leaving: boolean; x: number; y: number } | null;
 	};
-	type Ring = { x: number; y: number; born: number; life: number; radius: number; tint: string };
+	type Ring = {
+		x: number;
+		y: number;
+		born: number;
+		life: number;
+		radius: number;
+		tint: string;
+		/** Starting opacity, fading to 0. */
+		alpha: number;
+	};
 
 	// Soft white, TNH mint, warm sand, pale sky: calm on the dark photos, different enough to tell
 	// two visitors apart.
@@ -80,18 +89,17 @@
 		return tints[hash % tints.length];
 	}
 
+	// Quiet on purpose: one faint ring when a light sinks or surfaces, a hint rather than a splash.
 	function splash(x: number, y: number, tint: string, now: number, strength: 'sink' | 'surface') {
-		const count = strength === 'sink' ? 3 : 1;
-		for (let i = 0; i < count; i++) {
-			rings.push({
-				x,
-				y,
-				born: now + i * 200,
-				life: strength === 'sink' ? 1500 + i * 150 : 900,
-				radius: strength === 'sink' ? 26 + i * 20 : 18,
-				tint
-			});
-		}
+		rings.push({
+			x,
+			y,
+			born: now,
+			life: strength === 'sink' ? 1300 : 900,
+			radius: strength === 'sink' ? 20 : 14,
+			tint,
+			alpha: strength === 'sink' ? 0.16 : 0.2
+		});
 	}
 
 	/** Where a thought spot is on this screen, in canvas pixels; null if it isn't on screen. */
@@ -304,8 +312,8 @@
 			const p = (now - ring.born) / ring.life;
 			if (p < 0) continue;
 			const eased = 1 - Math.pow(1 - p, 3);
-			ctx.strokeStyle = `rgb(${ring.tint} / ${(0.45 * Math.pow(1 - p, 1.3)).toFixed(3)})`;
-			ctx.lineWidth = 0.5 + 1.6 * (1 - p);
+			ctx.strokeStyle = `rgb(${ring.tint} / ${(ring.alpha * Math.pow(1 - p, 1.3)).toFixed(3)})`;
+			ctx.lineWidth = 0.5 + 1 * (1 - p);
 			ctx.beginPath();
 			ctx.ellipse(
 				ring.x,
