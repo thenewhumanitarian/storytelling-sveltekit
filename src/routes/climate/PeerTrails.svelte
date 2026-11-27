@@ -9,6 +9,11 @@
 	 * Over a thought, a visitor's light sits on this screen's copy of that thought and follows it as
 	 * it drifts (see cursorAnchor.ts). If this screen isn't showing that thought, the light sinks.
 	 *
+	 * Moving onto a thought, off it into open sky, or to another thought, the light's spot here can
+	 * jump a long way, since every screen lays the thoughts out differently. So it doesn't jump: it
+	 * keeps making the visitor's own moves from where it was, and glides over to its true spot as it
+	 * goes (see Peer.blend).
+	 *
 	 * One canvas, one requestAnimationFrame loop that stops itself when nothing is moving.
 	 */
 	import { onMount } from 'svelte';
@@ -24,8 +29,7 @@
 
 	let { cursors, width, height }: Props = $props();
 
-	/** `gap`: no line from the point before (the light hopped there). */
-	type Point = { x: number; y: number; t: number; gap?: boolean };
+	type Point = { x: number; y: number; t: number };
 	type Peer = {
 		id: string;
 		name: string;
@@ -42,8 +46,12 @@
 		sunk: boolean;
 		gone: boolean;
 		trail: Point[];
-		/** Start the next trail point without a line from the last one. */
-		breakTrail?: boolean;
+		/**
+		 * After a jump in where the visitor is on this screen: the gap (pixels) between the spot the
+		 * light was heading for and the new one. It is added to the new spot and eased away over
+		 * `duration` ms, so the light glides across instead of jumping.
+		 */
+		blend: { x: number; y: number; start: number; duration: number } | null;
 		/** The name, pinned where they surfaced or sank: when, where, and hello or goodbye. */
 		label: { born: number; leaving: boolean; x: number; y: number } | null;
 	};
@@ -63,9 +71,10 @@
 	const tints = ['255 255 255', '120 214 178', '242 214 168', '190 210 255'];
 	const TRAIL_LIFE = 2400;
 	const STILL_AFTER = 900;
-	// A light moving onto another thought, or between a thought and open sky, hops instead of
-	// streaking across the screen when the new spot is further than this (pixels).
-	const HOP_OVER = 90;
+	// How long the glide to a new spot takes: a short hop quickly, a long way a little longer.
+	const BLEND_MIN = 350;
+	const BLEND_PER_PIXEL = 1.1;
+	const BLEND_MAX = 1100;
 	const LABEL_LIFE = 1700;
 	// Visitor names when they surface and sink. Off for now: random names meant little to people.
 	const SHOW_NAMES = false;
@@ -107,6 +116,36 @@
 		return canvas ? locateAnchor(anchor, canvas.getBoundingClientRect()) : null;
 	}
 
+	/** What is left of the glide's gap at `now` (eased in and out), clearing it once done. */
+	function blendLeft(peer: Peer, now: number) {
+		const blend = peer.blend;
+		if (!blend) return { x: 0, y: 0 };
+		const progress = (now - blend.start) / blend.duration;
+		if (progress >= 1) {
+			peer.blend = null;
+			return { x: 0, y: 0 };
+		}
+		const left = 0.5 + 0.5 * Math.cos(Math.PI * Math.max(0, progress));
+		return { x: blend.x * left, y: blend.y * left };
+	}
+
+	/** The visitor's spot here jumped to (tx, ty): glide there from where the light was heading. */
+	function glideTo(peer: Peer, tx: number, ty: number, now: number) {
+		const left = blendLeft(peer, now);
+		const x = peer.tx + left.x - tx;
+		const y = peer.ty + left.y - ty;
+		const distance = Math.hypot(x, y);
+		peer.blend =
+			distance < 2 || prefersReducedMotion.current
+				? null
+				: {
+						x,
+						y,
+						start: now,
+						duration: Math.min(BLEND_MAX, BLEND_MIN + distance * BLEND_PER_PIXEL)
+					};
+	}
+
 	function sink(peer: Peer, now: number) {
 		peer.sunk = true;
 		peer.label = nameAt(now, true, peer.x, peer.y);
@@ -143,6 +182,7 @@
 						sunk: true,
 						gone: false,
 						trail: [],
+						blend: null,
 						label: null
 					});
 				} else {
@@ -171,6 +211,7 @@
 					sunk: false,
 					gone: false,
 					trail: [],
+					blend: null,
 					label: nameAt(now, false, tx, ty)
 				});
 				splash(tx, ty, tint, now, 'surface');
@@ -181,22 +222,19 @@
 				cursor.on?.part === peer.anchor?.part &&
 				cursor.on?.fx === peer.anchor?.fx &&
 				cursor.on?.fy === peer.anchor?.fy;
-			const switched = (cursor.on?.entryId ?? '') !== (peer.anchor?.entryId ?? '');
+			// Onto a thought, off it, to another thought or another part of it: the spot is now measured
+			// from somewhere else, which on this screen can be far away.
+			const switched =
+				(cursor.on?.entryId ?? '') !== (peer.anchor?.entryId ?? '') ||
+				cursor.on?.part !== peer.anchor?.part;
 			peer.anchor = cursor.on;
 			if (Math.hypot(tx - peer.tx, ty - peer.ty) < 0.5 && (sameSpot || !peer.sunk)) continue;
-			if (!peer.sunk && switched && Math.hypot(tx - peer.x, ty - peer.y) > HOP_OVER) {
-				// Each screen places the thoughts differently, so the way between two spots means
-				// nothing here: fade in at the new spot, and let the old trail fade where it is.
-				peer.x = tx;
-				peer.y = ty;
-				peer.alpha = 0;
-				peer.breakTrail = true;
-				splash(tx, ty, peer.tint, now, 'surface');
-			}
+			if (!peer.sunk && switched) glideTo(peer, tx, ty, now);
 			if (peer.sunk) {
 				// Resurface where they are now, without a streak from where they sank.
 				peer.x = tx;
 				peer.y = ty;
+				peer.blend = null;
 				peer.trail = [];
 				peer.sunk = false;
 				peer.label = nameAt(now, false, tx, ty);
@@ -243,16 +281,18 @@
 				}
 			}
 			if (!peer.sunk) {
-				peer.x += (peer.tx - peer.x) * Math.min(1, dt * (still ? 60 : 9));
-				peer.y += (peer.ty - peer.y) * Math.min(1, dt * (still ? 60 : 9));
+				const left = blendLeft(peer, now);
+				const tx = peer.tx + left.x;
+				const ty = peer.ty + left.y;
+				peer.x += (tx - peer.x) * Math.min(1, dt * (still ? 60 : 9));
+				peer.y += (ty - peer.y) * Math.min(1, dt * (still ? 60 : 9));
 				const tail = peer.trail[peer.trail.length - 1];
 				if (!still && (!tail || Math.hypot(peer.x - tail.x, peer.y - tail.y) > 1.5)) {
-					peer.trail.push({ x: peer.x, y: peer.y, t: now, gap: peer.breakTrail });
-					peer.breakTrail = false;
+					peer.trail.push({ x: peer.x, y: peer.y, t: now });
 				}
 				peer.alpha = Math.min(1, peer.alpha + dt * 3);
 				// On a drifting thought the light trails it by a pixel or two, which still counts as settled.
-				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < (peer.anchor ? 6 : 1);
+				const settled = !peer.blend && Math.hypot(tx - peer.x, ty - peer.y) < (peer.anchor ? 6 : 1);
 				if (settled && now - peer.lastMove > STILL_AFTER) sink(peer, now);
 			} else {
 				peer.alpha = Math.max(0, peer.alpha - dt * (still ? 60 : 2.2));
@@ -283,7 +323,6 @@
 			for (let i = 1; i < points.length; i++) {
 				const a = points[i - 1];
 				const b = points[i];
-				if (b.gap) continue;
 				const age = (now - b.t) / TRAIL_LIFE;
 				const fade = Math.pow(Math.max(0, 1 - age), 1.6);
 				const along = i / points.length;
