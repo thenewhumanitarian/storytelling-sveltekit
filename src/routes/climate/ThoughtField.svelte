@@ -276,6 +276,7 @@
 	// Physics state changes every frame, so it deliberately lives outside Svelte's reactivity.
 	/* eslint-disable svelte/prefer-svelte-reactivity */
 	const bodies = new Map<string, Body>();
+
 	const nodes = new Map<string, HTMLElement>();
 	const lastShown = new Map<string, number>();
 	const seenPulses = new Map<string, number>();
@@ -283,6 +284,20 @@
 	const queue: { id: string; mode: Mode }[] = [];
 	let knownIds: Set<string> | null = null;
 	let avoidRects: { x: number; y: number; w: number; h: number }[] = [];
+
+	// The page learns it is on a phone only after the opening thoughts have spawned, so those turn
+	// to join the stream when `flow` arrives (any thought spawned later starts with it).
+	$effect(() => {
+		const direction = flow;
+		if (!direction) return;
+		untrack(() => {
+			for (const body of bodies.values()) {
+				body.bx = direction * Math.abs(body.bx);
+				// A thought gliding in from a pan keeps its glide and turns once it settles.
+				if (!body.entering) body.vx = direction * Math.abs(body.vx);
+			}
+		});
+	});
 
 	const byId = $derived(new Map(entries.map((entry) => [entry.id, entry])));
 	const shown = $derived(
