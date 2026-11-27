@@ -3,7 +3,8 @@
 // Open /climate?peers=sim on the dev server.
 // Now and then a visitor goes to a thought and hovers its text or a button, the way real cursors
 // are tied to thoughts (cursorAnchor.ts). Some of those visits are to a thought this screen isn't
-// showing, so the light sinks out of view as it would for a real visitor.
+// showing, so the light sinks out of view as it would for a real visitor. Going to a thought (and,
+// half the time, leaving it) the spot jumps, as it does between real screens.
 import { anchorParts, type CursorAnchor } from './cursorAnchor';
 import { handleFor, type ClimateCursor } from './realtime';
 
@@ -80,7 +81,10 @@ export function simulatePeers(count: number, onCursors: (cursors: ClimateCursor[
 					}
 					continue;
 				}
-				const from = scenePosition(walker.visit.on);
+				// Half the time, carry on from the thought. Otherwise carry on from where the walk was, as
+				// a real visitor would whose screen lays the thoughts out elsewhere: here the light
+				// then has to make its way from the thought back to them.
+				const from = Math.random() < 0.5 ? scenePosition(walker.visit.on) : null;
 				if (from) Object.assign(walker, { x: from.x, y: from.y });
 				walker.visit = null;
 			}
