@@ -798,7 +798,7 @@
 	let thoughtField = $state<ReturnType<typeof ThoughtField>>();
 	let backdrops: HTMLElement;
 	let panning = $state(false);
-	let pan: { pointer: number; lastX: number; samples: { t: number; x: number }[] } | null = null;
+	let pan: { pointer: number; lastX: number; lastY: number } | null = null;
 	// Anything people click or type in keeps its own behaviour; the open landscape pans.
 	const ownPointer =
 		'a, button, input, textarea, label, form, .term, .assist, .scene-footer, .thread';
@@ -811,32 +811,21 @@
 		} catch {
 			// Synthetic pointers can't be captured; panning still follows the moves we get.
 		}
-		pan = {
-			pointer: event.pointerId,
-			lastX: event.clientX,
-			samples: [{ t: performance.now(), x: event.clientX }]
-		};
+		pan = { pointer: event.pointerId, lastX: event.clientX, lastY: event.clientY };
 		panning = true;
 		thoughtField?.startPan();
 	}
 
 	function panMove(event: PointerEvent) {
 		if (!pan || event.pointerId !== pan.pointer) return;
-		const dx = event.clientX - pan.lastX;
+		thoughtField?.swipeBy(event.clientX - pan.lastX, event.clientY - pan.lastY);
 		pan.lastX = event.clientX;
-		thoughtField?.panBy(dx);
-		const now = performance.now();
-		pan.samples.push({ t: now, x: event.clientX });
-		while (pan.samples.length > 2 && now - pan.samples[0].t > 100) pan.samples.shift();
+		pan.lastY = event.clientY;
 	}
 
 	function panEnd(event: PointerEvent) {
 		if (!pan || event.pointerId !== pan.pointer) return;
-		const first = pan.samples[0];
-		const last = pan.samples[pan.samples.length - 1];
-		const idle = performance.now() - last.t > 80;
-		const velocity = idle ? 0 : ((last.x - first.x) / Math.max(16, last.t - first.t)) * 1000;
-		thoughtField?.endPan(velocity);
+		thoughtField?.endPan();
 		pan = null;
 		panning = false;
 	}
@@ -1206,6 +1195,8 @@
 					bind:this={thoughtField}
 					oncamera={moveBackdrop}
 					{cameraLimit}
+					flow={phone ? -1 : 0}
+					swipeVertically={phone}
 					entries={wall}
 					onvote={vote}
 					{canReact}
@@ -2708,12 +2699,13 @@
 		}
 	}
 
-	/* Phones: a sideways swipe slides the thoughts (the photo stays put); other gestures, such as
-	   pinch-zoom, stay with the browser. Each image glides slowly left to right while it shows, then
-	   crossfades; it slides back while hidden, so the drift never visibly jumps. */
+	/* Phones: a swipe in any direction slides the thoughts sideways (the photo stays put); up and
+	   down too, so scrolling carries on through them. Pinch-zoom stays with the browser. Each image
+	   glides slowly left to right while it shows, then crossfades; it slides back while hidden, so
+	   the drift never visibly jumps. */
 	@media (max-width: 650px) {
 		.scene {
-			touch-action: pan-y pinch-zoom;
+			touch-action: pinch-zoom;
 			cursor: auto;
 		}
 	}
