@@ -1214,6 +1214,7 @@
 		>
 			<button
 				type="button"
+				data-part="word"
 				class={[
 					'word',
 					{ reacted: entry.reacted, boosted: entry.boosted, downvoted: entry.downvoted }
@@ -1249,6 +1250,7 @@
 			<div class="actions">
 				<button
 					type="button"
+					data-part="up"
 					class={['vote', 'up', { active: entry.reacted }]}
 					aria-pressed={entry.reacted}
 					aria-label={entry.reacted ? `Remove your +1 from “${entry.body}”` : `+1 “${entry.body}”`}
@@ -1261,6 +1263,7 @@
 				</button>
 				<button
 					type="button"
+					data-part="down"
 					class={['vote', 'down', { active: entry.downvoted }]}
 					aria-pressed={entry.downvoted}
 					aria-label={entry.downvoted
@@ -1276,6 +1279,7 @@
 				{#if commentsEnabled}
 					<button
 						type="button"
+						data-part="comment"
 						class={['comment', { expanded: selectedId === id }]}
 						aria-label={entry.comments
 							? `Open ${entry.comments} ${entry.comments === 1 ? 'comment' : 'comments'} on “${entry.body}”`

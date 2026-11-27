@@ -9,6 +9,7 @@
 	import PeerLayer, { type Ripple } from './PeerLayer.svelte';
 	import ThoughtField, { type Pulse } from './ThoughtField.svelte';
 	import SharePopover from './SharePopover.svelte';
+	import { anchorAt, locateAnchor, type CursorAnchor } from './cursorAnchor';
 	import ProjectPoints from './ProjectPoints.svelte';
 	import NewsletterSignup from './NewsletterSignup.svelte';
 	import { backdrops as photos, backdropSizes } from './backdrops';
@@ -165,6 +166,7 @@
 		simulatedCursors.length ? [...cursors, ...simulatedCursors] : cursors
 	);
 	let ripples = $state<Ripple[]>([]);
+	let sceneElement = $state<HTMLElement>();
 	let launches = $state<Launch[]>([]);
 	let here = $state(0);
 	let connected = $state(false);
@@ -460,6 +462,14 @@
 		pulses[id] = { ...detail, n: (pulses[id]?.n ?? 0) + 1 };
 	}
 
+	/** A thought spot as a share of the scene, if this screen shows that thought. */
+	function sceneSpot(anchor: CursorAnchor) {
+		const frame = sceneElement?.getBoundingClientRect();
+		if (!frame?.width || !frame.height) return null;
+		const spot = locateAnchor(anchor, frame);
+		return spot && { x: spot.x / frame.width, y: spot.y / frame.height };
+	}
+
 	function addRipple(x: number, y: number, name: string, label?: string) {
 		if (prefersReducedMotion.current) return;
 		const key = (rippleKey += 1);
@@ -479,11 +489,18 @@
 			allowSampleReactions: localPreview,
 			onReaction: ({ entryId, peerId, liked, boost }) => {
 				pulse(entryId, { remote: true, liked, boost, by: handleFor(peerId) });
+				// The ripple goes on this screen's copy of the thought, on the button they pressed. Not
+				// showing that thought: no ripple, since anywhere else would point at the wrong thing.
+				const spot = sceneSpot({ entryId, part: liked ? 'up' : 'down', fx: 0.5, fy: 0.5 });
 				const cursor = cursors.find((item) => item.id === peerId);
-				if (cursor) addRipple(cursor.x, cursor.y, cursor.name);
+				if (spot) addRipple(spot.x, spot.y, handleFor(peerId));
+				else if (cursor && !trailCursors) addRipple(cursor.x, cursor.y, cursor.name);
 			},
 			onTap: (tap) => {
-				if (showCursors) addRipple(tap.x, tap.y, tap.name);
+				if (!showCursors) return;
+				if (!tap.on) return addRipple(tap.x, tap.y, tap.name);
+				const spot = sceneSpot(tap.on);
+				if (spot) addRipple(spot.x, spot.y, tap.name);
 			},
 			onPresence: (count) => (here = count),
 			onCursors: (peers) => (cursors = peers),
@@ -1088,16 +1105,21 @@
 
 		<main
 			class={['scene', { still: motionPaused, panning }]}
+			bind:this={sceneElement}
 			bind:clientWidth={sceneWidth}
 			bind:clientHeight={sceneHeight}
 			onpointermove={(event) => {
 				panMove(event);
 				const point = showCursors ? scenePoint(event) : null;
-				if (point) room?.move(point.x, point.y);
+				// Over a thought, also say which one, so others see the cursor on their own copy of it.
+				// Not while dragging: the dragged thought only moves on this screen.
+				const on = event.buttons ? undefined : anchorAt(event.target, event.clientX, event.clientY);
+				if (point) room?.move(point.x, point.y, on);
 			}}
 			onpointerdown={(event) => {
 				const point = showCursors ? scenePoint(event) : null;
-				if (point) room?.tap(point.x, point.y);
+				if (point)
+					room?.tap(point.x, point.y, anchorAt(event.target, event.clientX, event.clientY));
 				panStart(event);
 			}}
 			onpointerup={panEnd}
