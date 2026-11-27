@@ -6,10 +6,14 @@
 	 * with a few widening ripples and disappears. Moving again, it resurfaces with a small ripple.
 	 * No arrow, and (for now) no name: see SHOW_NAMES.
 	 *
+	 * Over a thought, a visitor's light sits on this screen's copy of that thought and follows it as
+	 * it drifts (see cursorAnchor.ts). If this screen isn't showing that thought, the light sinks.
+	 *
 	 * One canvas, one requestAnimationFrame loop that stops itself when nothing is moving.
 	 */
 	import { onMount } from 'svelte';
 	import { prefersReducedMotion } from 'svelte/motion';
+	import { locateAnchor, type CursorAnchor } from './cursorAnchor';
 	import type { ClimateCursor } from './realtime';
 
 	interface Props {
@@ -30,6 +34,8 @@
 		tx: number;
 		ty: number;
 		lastMove: number;
+		/** The thought spot they are on, followed every frame; none in open sky. */
+		anchor: CursorAnchor | undefined;
 		/** Head visibility, 0–1. */
 		alpha: number;
 		sunk: boolean;
@@ -82,7 +88,19 @@
 		}
 	}
 
-	// Follow the incoming cursors (normalised 0–1) as targets in pixels.
+	/** Where a thought spot is on this screen, in canvas pixels; null if it isn't on screen. */
+	function spotOf(anchor: CursorAnchor) {
+		return canvas ? locateAnchor(anchor, canvas.getBoundingClientRect()) : null;
+	}
+
+	function sink(peer: Peer, now: number) {
+		peer.sunk = true;
+		peer.label = nameAt(now, true, peer.x, peer.y);
+		if (!prefersReducedMotion.current) splash(peer.x, peer.y, peer.tint, now, 'sink');
+	}
+
+	// Follow the incoming cursors as targets in pixels: on a thought, that thought's spot on this
+	// screen; in open sky, the same share of the screen (normalised 0–1).
 	$effect(() => {
 		const now = performance.now();
 		// Plain on purpose: read only by the canvas loop, never by the template.
@@ -90,9 +108,39 @@
 		const seen = new Set<string>();
 		for (const cursor of cursors) {
 			seen.add(cursor.id);
-			const tx = cursor.x * width;
-			const ty = cursor.y * height;
+			const spot = cursor.on ? spotOf(cursor.on) : { x: cursor.x * width, y: cursor.y * height };
 			const peer = peers.get(cursor.id);
+			if (!spot) {
+				// On a thought this screen isn't showing: nowhere true to draw them, so out of sight.
+				if (!peer) {
+					const x = cursor.x * width;
+					const y = cursor.y * height;
+					peers.set(cursor.id, {
+						id: cursor.id,
+						name: cursor.name,
+						tint: tintFor(cursor.id),
+						x,
+						y,
+						tx: x,
+						ty: y,
+						lastMove: now,
+						anchor: cursor.on,
+						alpha: 0,
+						sunk: true,
+						gone: false,
+						trail: [],
+						label: null
+					});
+				} else {
+					if (!peer.sunk) sink(peer, now);
+					peer.anchor = cursor.on;
+					peer.lastMove = now;
+					peer.gone = false;
+				}
+				continue;
+			}
+			const tx = spot.x;
+			const ty = spot.y;
 			if (!peer) {
 				const tint = tintFor(cursor.id);
 				peers.set(cursor.id, {
@@ -104,6 +152,7 @@
 					tx,
 					ty,
 					lastMove: now,
+					anchor: cursor.on,
 					alpha: 0,
 					sunk: false,
 					gone: false,
@@ -113,7 +162,13 @@
 				splash(tx, ty, tint, now, 'surface');
 				continue;
 			}
-			if (Math.hypot(tx - peer.tx, ty - peer.ty) < 0.5) continue;
+			const sameSpot =
+				cursor.on?.entryId === peer.anchor?.entryId &&
+				cursor.on?.part === peer.anchor?.part &&
+				cursor.on?.fx === peer.anchor?.fx &&
+				cursor.on?.fy === peer.anchor?.fy;
+			peer.anchor = cursor.on;
+			if (Math.hypot(tx - peer.tx, ty - peer.ty) < 0.5 && (sameSpot || !peer.sunk)) continue;
 			if (peer.sunk) {
 				// Resurface where they are now, without a streak from where they sank.
 				peer.x = tx;
@@ -131,13 +186,9 @@
 		for (const peer of peers.values()) {
 			if (seen.has(peer.id) || peer.gone) continue;
 			peer.gone = true;
-			if (!peer.sunk) {
-				// A cursor that sat still has already sunk and said goodbye; the room drops it a few
-				// seconds later, which needs no second goodbye.
-				peer.sunk = true;
-				peer.label = nameAt(now, true, peer.x, peer.y);
-				splash(peer.x, peer.y, peer.tint, now, 'sink');
-			}
+			// A cursor that sat still has already sunk and said goodbye; the room drops it a few
+			// seconds later, which needs no second goodbye.
+			if (!peer.sunk) sink(peer, now);
 		}
 		start();
 	});
@@ -157,6 +208,16 @@
 		let busy = rings.length > 0;
 
 		for (const peer of peers.values()) {
+			if (!peer.sunk && peer.anchor) {
+				// Ride along with the thought as it drifts on this screen; sink if it leaves the screen.
+				const spot = spotOf(peer.anchor);
+				if (spot) {
+					peer.tx = spot.x;
+					peer.ty = spot.y;
+				} else {
+					sink(peer, now);
+				}
+			}
 			if (!peer.sunk) {
 				peer.x += (peer.tx - peer.x) * Math.min(1, dt * (still ? 60 : 9));
 				peer.y += (peer.ty - peer.y) * Math.min(1, dt * (still ? 60 : 9));
@@ -165,12 +226,9 @@
 					peer.trail.push({ x: peer.x, y: peer.y, t: now });
 				}
 				peer.alpha = Math.min(1, peer.alpha + dt * 3);
-				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < 1;
-				if (settled && now - peer.lastMove > STILL_AFTER) {
-					peer.sunk = true;
-					peer.label = nameAt(now, true, peer.x, peer.y);
-					if (!still) splash(peer.x, peer.y, peer.tint, now, 'sink');
-				}
+				// On a drifting thought the light trails it by a pixel or two, which still counts as settled.
+				const settled = Math.hypot(peer.tx - peer.x, peer.ty - peer.y) < (peer.anchor ? 6 : 1);
+				if (settled && now - peer.lastMove > STILL_AFTER) sink(peer, now);
 			} else {
 				peer.alpha = Math.max(0, peer.alpha - dt * (still ? 60 : 2.2));
 			}

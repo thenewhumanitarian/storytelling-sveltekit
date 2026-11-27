@@ -1,3 +1,5 @@
+import { isAnchorPart, type CursorAnchor } from './cursorAnchor';
+
 const topic = 'tnh-climate-cloud-v1';
 const cursorLifetime = 6500;
 // Background tabs (Zoom in front) still count, and browsers throttle their timers to ~1/min.
@@ -38,7 +40,8 @@ export function handleFor(peerId: string) {
 	return handles[parseInt(peerId.slice(0, 6), 16) % handles.length];
 }
 
-export type ClimateCursor = { id: string; x: number; y: number; name: string };
+/** `on`: the thought spot under the cursor, so others can draw it on their own copy of it. */
+export type ClimateCursor = { id: string; x: number; y: number; name: string; on?: CursorAnchor };
 export type ClimateTap = ClimateCursor;
 export type ClimateReaction = { entryId: string; peerId: string; liked: boolean; boost: boolean };
 
@@ -71,6 +74,13 @@ function isCoordinate(value: unknown): value is number {
 
 const round = (value: number) => Math.round(value * 1000) / 1000;
 
+function sameAnchor(a: CursorAnchor | undefined, b: CursorAnchor | undefined) {
+	return (
+		a === b ||
+		(!!a && !!b && a.entryId === b.entryId && a.part === b.part && a.fx === b.fx && a.fy === b.fy)
+	);
+}
+
 export function connectClimateRoom(options: RoomOptions) {
 	const samplesAllowed = options.preview || options.allowSampleReactions === true;
 	const id = Array.from(crypto.getRandomValues(new Uint8Array(12)), (byte) =>
@@ -88,7 +98,7 @@ export function connectClimateRoom(options: RoomOptions) {
 	let lastWallSentAt = -Infinity;
 	let lastWallReceivedAt = -Infinity;
 	let lastPresence = -1;
-	let queuedPosition: { x: number; y: number } | undefined;
+	let queuedPosition: { x: number; y: number; on?: CursorAnchor } | undefined;
 	let cursorTimer: ReturnType<typeof setTimeout> | undefined;
 	let heartbeatTimer: ReturnType<typeof setInterval> | undefined;
 	let expiryTimer: ReturnType<typeof setInterval> | undefined;
@@ -140,6 +150,16 @@ export function connectClimateRoom(options: RoomOptions) {
 		);
 	}
 
+	/** Accept a thought spot only if it is well formed and names a thought this room allows. */
+	function readAnchor(value: unknown): CursorAnchor | undefined {
+		if (!value || typeof value !== 'object') return undefined;
+		const { entryId, part, fx, fy } = value as Record<string, unknown>;
+		if (!isEntryId(entryId) || !isAnchorPart(part) || !isCoordinate(fx) || !isCoordinate(fy)) {
+			return undefined;
+		}
+		return { entryId, part, fx, fy };
+	}
+
 	function receive(event: unknown, payload: unknown) {
 		if (closed || !connected || !payload || typeof payload !== 'object') return;
 		const now = Date.now();
@@ -155,6 +175,7 @@ export function connectClimateRoom(options: RoomOptions) {
 			id: peerId,
 			x,
 			y,
+			on: rawAnchor,
 			entryId,
 			liked,
 			boost
@@ -162,10 +183,12 @@ export function connectClimateRoom(options: RoomOptions) {
 			id?: unknown;
 			x?: unknown;
 			y?: unknown;
+			on?: unknown;
 			entryId?: unknown;
 			liked?: unknown;
 			boost?: unknown;
 		};
+		const on = readAnchor(rawAnchor);
 		if (typeof peerId !== 'string' || !peerIdPattern.test(peerId) || peerId === id) return;
 
 		if (event === 'bye') {
@@ -189,7 +212,7 @@ export function connectClimateRoom(options: RoomOptions) {
 		}
 		if (event === 'tap') {
 			if (isCoordinate(x) && isCoordinate(y)) {
-				options.onTap?.({ id: peerId, x, y, name: handleFor(peerId) });
+				options.onTap?.({ id: peerId, x, y, name: handleFor(peerId), on });
 			}
 			return;
 		}
@@ -199,8 +222,17 @@ export function connectClimateRoom(options: RoomOptions) {
 		const previous = peers.get(peerId);
 		if (previous && now - previous.lastSeen < 40) return;
 		if (!previous && peers.size >= maxCursors) return;
-		peers.set(peerId, { cursor: { id: peerId, x, y, name: handleFor(peerId) }, lastSeen: now });
-		if (previous?.cursor.x !== x || previous.cursor.y !== y) publishCursors();
+		peers.set(peerId, {
+			cursor: { id: peerId, x, y, name: handleFor(peerId), on },
+			lastSeen: now
+		});
+		if (
+			previous?.cursor.x !== x ||
+			previous.cursor.y !== y ||
+			!sameAnchor(previous.cursor.on, on)
+		) {
+			publishCursors();
+		}
 	}
 
 	function leave() {
@@ -276,9 +308,9 @@ export function connectClimateRoom(options: RoomOptions) {
 	return {
 		id,
 		name: handleFor(id),
-		move(x: number, y: number) {
+		move(x: number, y: number, on?: CursorAnchor) {
 			if (!connected || !isCoordinate(x) || !isCoordinate(y)) return;
-			queuedPosition = { x: round(x), y: round(y) };
+			queuedPosition = { x: round(x), y: round(y), ...(on && { on }) };
 			if (cursorTimer !== undefined) return;
 
 			// Broadcast is billed on delivery. Slow updates as the visible room gets busier.
@@ -295,13 +327,13 @@ export function connectClimateRoom(options: RoomOptions) {
 				Math.max(0, spacing - (Date.now() - lastCursorAt))
 			);
 		},
-		tap(x: number, y: number) {
+		tap(x: number, y: number, on?: CursorAnchor) {
 			const now = Date.now();
 			if (!connected || !isCoordinate(x) || !isCoordinate(y) || now - lastTapSentAt < tapInterval) {
 				return;
 			}
 			lastTapSentAt = now;
-			send?.('tap', { id, x: round(x), y: round(y) });
+			send?.('tap', { id, x: round(x), y: round(y), ...(on && { on }) });
 		},
 		leave,
 		reaction(entryId: string, liked: boolean, boost = false) {
