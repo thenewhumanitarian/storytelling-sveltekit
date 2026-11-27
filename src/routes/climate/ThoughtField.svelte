@@ -1462,20 +1462,20 @@
 		max-width: min(30rem, 82vw);
 		will-change: transform;
 		pointer-events: auto;
-		--base: clamp(1.3rem, 2.05vw, 2.25rem);
+		--base: clamp(1.15rem, 1.75vw, 1.9rem);
 	}
 	.term.mid {
-		--base: clamp(1.1rem, 1.55vw, 1.6rem);
+		--base: clamp(1rem, 1.35vw, 1.4rem);
 		max-width: min(24rem, 78vw);
 	}
 	.term.long {
-		--base: clamp(1rem, 1.2vw, 1.18rem);
+		--base: clamp(0.95rem, 1.08vw, 1.08rem);
 		max-width: min(26rem, 80vw);
 	}
 	/* Counter first, then the text; on multi-line thoughts the counter lines up with the first line. */
 	.word {
 		--fs: calc(var(--base) * var(--pop, 1));
-		--count-fs: max(1.02rem, calc(var(--fs) * 0.5));
+		--count-fs: max(0.92rem, calc(var(--fs) * 0.5));
 		display: flex;
 		align-items: center;
 		gap: 0.5em;
@@ -1552,10 +1552,10 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		height: 2.4rem;
-		min-width: 2.4rem;
+		height: 2.1rem;
+		min-width: 2.1rem;
 		justify-content: center;
-		padding: 0 0.6rem;
+		padding: 0 0.55rem;
 		border: 0;
 		border-radius: 100vmax;
 		background: rgb(30 30 28 / 55%);
@@ -1578,8 +1578,8 @@
 		color: #282828;
 	}
 	.comment svg {
-		width: 1.15rem;
-		height: 1.15rem;
+		width: 1.02rem;
+		height: 1.02rem;
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 1.6;
@@ -1618,7 +1618,7 @@
 	}
 	.actions {
 		display: flex;
-		gap: 0.4rem;
+		gap: 0.35rem;
 		margin: 0.1rem 0 0 var(--text-indent, 0px);
 	}
 	.remove {
@@ -1626,10 +1626,10 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		height: 2.4rem;
-		min-width: 2.4rem;
+		height: 2.1rem;
+		min-width: 2.1rem;
 		justify-content: center;
-		padding: 0 0.5rem;
+		padding: 0 0.45rem;
 		border: 0;
 		border-radius: 100vmax;
 		background: rgb(30 30 28 / 55%);
@@ -1666,8 +1666,8 @@
 		outline-offset: 2px;
 	}
 	.remove svg {
-		width: 1.2rem;
-		height: 1.2rem;
+		width: 1.05rem;
+		height: 1.05rem;
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 1.6;
@@ -1684,8 +1684,8 @@
 		flex: none;
 		display: inline-grid;
 		place-items: center;
-		width: 2.4rem;
-		height: 2.4rem;
+		width: 2.1rem;
+		height: 2.1rem;
 		border: 0;
 		border-radius: 50%;
 		background: rgb(30 30 28 / 55%);
@@ -1700,8 +1700,8 @@
 			transform 120ms ease;
 	}
 	.vote svg {
-		width: 1.1rem;
-		height: 1.1rem;
+		width: 0.98rem;
+		height: 0.98rem;
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 2.2;
@@ -1978,7 +1978,8 @@
 			width: 0.95rem;
 			height: 0.95rem;
 		}
-		.comment {
+		.comment,
+		.remove {
 			height: 2.05rem;
 			min-width: 2.05rem;
 			padding: 0 0.5rem;
