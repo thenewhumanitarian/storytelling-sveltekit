@@ -1633,6 +1633,35 @@
 		color: #fff;
 		box-shadow: none;
 	}
+	/* Someone else just pressed this button (set by the wall page): a quick press in mint for +1,
+	   TNH red for −1, with a ring that spreads out from it. */
+	.vote.up:global([data-remote-press]) {
+		--press: 53 181 139;
+		animation: remote-press 850ms ease-out;
+	}
+	.vote.down:global([data-remote-press]) {
+		--press: 159 62 82;
+		animation: remote-press 850ms ease-out;
+	}
+	@keyframes remote-press {
+		0% {
+			transform: scale(1);
+			box-shadow: 0 0 0 0 rgb(var(--press) / 70%);
+		}
+		20% {
+			transform: scale(0.86);
+			background: rgb(var(--press));
+			color: #fff;
+		}
+		55% {
+			transform: scale(1.04);
+			background: rgb(var(--press));
+		}
+		100% {
+			transform: scale(1);
+			box-shadow: 0 0 0 14px rgb(var(--press) / 0%);
+		}
+	}
 	.vote:disabled {
 		opacity: 0.5;
 		cursor: default;
