@@ -157,9 +157,9 @@
 	let feedback = $state({ contribute: '', vote: '' });
 	let wallUnavailable = $state(false);
 	let cursors = $state<ClimateCursor[]>([]);
-	// Local experiment: visitors as trails of light that sink with ripples when still. On for the
-	// dev server only; the preview and production builds keep the named arrows.
-	const trailCursors = dev;
+	// Visitors as faint trails of light, without names, that sink with ripples when still or
+	// leaving and resurface with a ripple. Set to false to bring back the named arrows.
+	const trailCursors = true;
 	let simulatedCursors = $state<ClimateCursor[]>([]);
 	const shownCursors = $derived(
 		simulatedCursors.length ? [...cursors, ...simulatedCursors] : cursors
