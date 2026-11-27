@@ -53,6 +53,7 @@
 		/** Touch or pen: a swipe that starts on a thought pans the whole field instead of dragging it. */
 		pans: boolean;
 		lastX: number;
+		lastY: number;
 	};
 
 	interface Props {
@@ -67,6 +68,13 @@
 		oncamera?: (x: number) => void;
 		/** How far the canvas pans each way: as far as the backdrop image can travel. */
 		cameraLimit?: number;
+		/**
+		 * Phones: every thought drifts the same way (-1 left, 1 right) instead of each picking its
+		 * own, so they read as one stream floating across the screen. 0: each picks its own.
+		 */
+		flow?: -1 | 0 | 1;
+		/** Phones: an up or down swipe slides the field sideways too, like scrolling through it. */
+		swipeVertically?: boolean;
 		/** Hidden easter egg: a double-click boosts a thought to +2. */
 		/** Thoughts this browser posted. They get a remove button only their author sees. */
 		isMine?: (entry: Entry) => boolean;
@@ -88,6 +96,8 @@
 		avoid = [],
 		oncamera,
 		cameraLimit = Infinity,
+		flow = 0,
+		swipeVertically = false,
 		isMine = () => false,
 		onwithdraw,
 		commentsEnabled = false,
@@ -130,13 +140,60 @@
 		oncamera?.(camera);
 	}
 
+	/**
+	 * The gesture moving the canvas. With swipeVertically, its first 6px decide whether it runs
+	 * sideways or up and down; either way it slides the canvas sideways. Swiping up moves the
+	 * thoughts left, so scrolling down the page carries on in the direction they float on phones.
+	 */
+	let swipe: {
+		axis: 'x' | 'y' | null;
+		pendingX: number;
+		pendingY: number;
+		travel: number;
+		samples: { t: number; p: number }[];
+	} | null = null;
+
 	export function startPan() {
 		panning = true;
 		panVelocity = 0;
+		swipe = {
+			axis: swipeVertically ? null : 'x',
+			pendingX: 0,
+			pendingY: 0,
+			travel: 0,
+			samples: [{ t: performance.now(), p: 0 }]
+		};
 	}
 
-	/** Let go of the canvas: it glides on and slows down. */
-	export function endPan(velocity: number) {
+	/** The pointer moved by (dx, dy) during a pan. */
+	export function swipeBy(dx: number, dy: number) {
+		if (!swipe) return;
+		let delta: number;
+		if (!swipe.axis) {
+			swipe.pendingX += dx;
+			swipe.pendingY += dy;
+			if (Math.hypot(swipe.pendingX, swipe.pendingY) < 6) return;
+			swipe.axis = Math.abs(swipe.pendingY) > Math.abs(swipe.pendingX) ? 'y' : 'x';
+			delta = swipe.axis === 'y' ? swipe.pendingY : swipe.pendingX;
+		} else delta = swipe.axis === 'y' ? dy : dx;
+		if (!delta) return;
+		swipe.travel += delta;
+		const now = performance.now();
+		swipe.samples.push({ t: now, p: swipe.travel });
+		while (swipe.samples.length > 2 && now - swipe.samples[0].t > 100) swipe.samples.shift();
+		panBy(delta);
+	}
+
+	/** Let go of the canvas: it glides on at the speed of the last 100ms, and slows down. */
+	export function endPan() {
+		let velocity = 0;
+		if (swipe) {
+			const first = swipe.samples[0];
+			const last = swipe.samples[swipe.samples.length - 1];
+			const idle = performance.now() - last.t > 80;
+			if (!idle) velocity = ((last.p - first.p) / Math.max(16, last.t - first.t)) * 1000;
+		}
+		swipe = null;
 		panning = false;
 		panVelocity = prefersReducedMotion.current ? 0 : Math.max(-1300, Math.min(1300, velocity));
 	}
@@ -304,7 +361,7 @@
 			let x: number;
 			let y = random(0, maxY);
 			if (body.mode === 'edge') {
-				x = body.bx > 0 ? -w - 12 : width + 12;
+				x = body.vx > 0 ? -w - 12 : width + 12;
 			} else if (body.mode === 'rise') {
 				x = width / 2 - w / 2 + random(-0.22, 0.22) * width;
 				y = maxY;
@@ -312,7 +369,7 @@
 				x = random(0, maxX);
 			}
 			// Score edge entrants as if they were already inside, so their lane is clear.
-			const probeX = body.mode === 'edge' ? (body.bx > 0 ? 0 : maxX) : x;
+			const probeX = body.mode === 'edge' ? (body.vx > 0 ? 0 : maxX) : x;
 			const score = overlapScore(probeX, y, w, h, body.id);
 			if (score > best.score) best = { x, y, score };
 		}
@@ -326,6 +383,8 @@
 		const entry = byId.get(id);
 		if (!entry || bodies.has(id)) return;
 		const speed = random(9, 22);
+		// Which way it drifts: the shared stream on phones, its own pick elsewhere.
+		const heading = () => flow || sign();
 		const body: Body = {
 			id,
 			mode,
@@ -353,16 +412,17 @@
 			pinned: false
 		};
 		if (mode === 'edge') {
-			// side: +1 enters from the left heading right, -1 from the right heading left.
-			body.bx = (opts.side ?? sign()) * random(16, 32);
+			// side: +1 enters from the left heading right, -1 from the right heading left. In a shared
+			// stream it still drifts with the stream once it has glided in.
+			body.bx = (flow || opts.side || sign()) * random(16, 32);
 			body.by = random(-9, 9);
 			// Revealed by a pan: glide in briskly, then settle into the gentle drift.
 			if (opts.side) body.vx = opts.side * random(110, 170);
 		} else if (mode === 'rise') {
-			body.bx = sign() * random(4, 12);
+			body.bx = heading() * random(4, 12);
 			body.by = -random(3, 7);
 			body.vy = -random(80, 120);
-		} else body.bx = sign() * speed;
+		} else body.bx = heading() * speed;
 		if (!(mode === 'edge' && opts.side)) body.vx = body.bx;
 		bodies.set(id, body);
 		lastShown.set(id, performance.now());
@@ -1113,7 +1173,8 @@
 			samples: [{ t: performance.now(), x: event.clientX, y: event.clientY }],
 			moved: false,
 			pans: event.pointerType !== 'mouse',
-			lastX: event.clientX
+			lastX: event.clientX,
+			lastY: event.clientY
 		};
 	}
 
@@ -1129,10 +1190,9 @@
 			// On touch screens thoughts aren't dragged around: a swipe slides the whole field.
 			if (!grab.moved) startPan();
 			grab.moved = true;
-			panBy(event.clientX - grab.lastX);
+			swipeBy(event.clientX - grab.lastX, event.clientY - grab.lastY);
 			grab.lastX = event.clientX;
-			grab.samples.push({ t: now, x: event.clientX, y: event.clientY });
-			while (grab.samples.length > 2 && now - grab.samples[0].t > 100) grab.samples.shift();
+			grab.lastY = event.clientY;
 			return;
 		}
 		grab.moved = true;
@@ -1156,14 +1216,10 @@
 		body.held = event.pointerType === 'mouse' && event.type === 'pointerup';
 		if (!released.moved) return;
 		suppressClickUntil = performance.now() + 300;
+		// Let go of a swipe: the field glides on and slows down, as with a mouse pan.
+		if (released.pans) return endPan();
 		const first = released.samples[0];
 		const last = released.samples[released.samples.length - 1];
-		if (released.pans) {
-			// Let go of a swipe: the field glides on and slows down, as with a mouse pan.
-			const idle = performance.now() - last.t > 80;
-			endPan(idle ? 0 : ((last.x - first.x) / Math.max(16, last.t - first.t)) * 1000);
-			return;
-		}
 		const elapsed = Math.max(16, last.t - first.t) / 1000;
 		// A dropped thought stays roughly where it lands: just a hint of the release, then it
 		// rejoins the slow drift. No long slides across the screen.
