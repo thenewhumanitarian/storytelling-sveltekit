@@ -167,6 +167,8 @@
 	);
 	let ripples = $state<Ripple[]>([]);
 	let sceneElement = $state<HTMLElement>();
+	/** The thought this visitor's cursor is at, kept a little way past its edge (cursorAnchor.ts). */
+	let heldThought: string | undefined;
 	let launches = $state<Launch[]>([]);
 	let here = $state(0);
 	let connected = $state(false);
@@ -470,6 +472,19 @@
 		return spot && { x: spot.x / frame.width, y: spot.y / frame.height };
 	}
 
+	/** Someone else pressed + or − on a thought: show the press on this screen's copy of the button. */
+	function pressedRemotely(entryId: string, liked: boolean) {
+		const button = document.querySelector<HTMLElement>(
+			`[data-term="${CSS.escape(entryId)}"] [data-part="${liked ? 'up' : 'down'}"]`
+		);
+		if (!button || prefersReducedMotion.current) return;
+		// Restart the animation if it is already running.
+		delete button.dataset.remotePress;
+		void button.offsetWidth;
+		button.dataset.remotePress = '';
+		setTimeout(() => delete button.dataset.remotePress, 900);
+	}
+
 	function addRipple(x: number, y: number, name: string, label?: string) {
 		if (prefersReducedMotion.current) return;
 		const key = (rippleKey += 1);
@@ -492,6 +507,7 @@
 				// The ripple goes on this screen's copy of the thought, on the button they pressed. Not
 				// showing that thought: no ripple, since anywhere else would point at the wrong thing.
 				const spot = sceneSpot({ entryId, part: liked ? 'up' : 'down', fx: 0.5, fy: 0.5 });
+				if (spot) pressedRemotely(entryId, liked);
 				const cursor = cursors.find((item) => item.id === peerId);
 				if (spot) addRipple(spot.x, spot.y, handleFor(peerId));
 				else if (cursor && !trailCursors) addRipple(cursor.x, cursor.y, cursor.name);
@@ -1113,13 +1129,17 @@
 				const point = showCursors ? scenePoint(event) : null;
 				// Over a thought, also say which one, so others see the cursor on their own copy of it.
 				// Not while dragging: the dragged thought only moves on this screen.
-				const on = event.buttons ? undefined : anchorAt(event.target, event.clientX, event.clientY);
+				const on = event.buttons
+					? undefined
+					: anchorAt(event.target, event.clientX, event.clientY, heldThought);
+				heldThought = on?.entryId;
 				if (point) room?.move(point.x, point.y, on);
 			}}
 			onpointerdown={(event) => {
 				const point = showCursors ? scenePoint(event) : null;
-				if (point)
+				if (point) {
 					room?.tap(point.x, point.y, anchorAt(event.target, event.clientX, event.clientY));
+				}
 				panStart(event);
 			}}
 			onpointerup={panEnd}
@@ -1169,12 +1189,15 @@
 				<div class="intro" bind:this={intro}>
 					<h1>The climate cost of conflict</h1>
 					<p class="deck">War carries a climate cost that extends far beyond the battlefield.</p>
-					<a class="event-link" href={eventUrl} target="_blank" rel="noopener">
-						Register for the webinar
-						<svg viewBox="0 0 16 16" aria-hidden="true"
-							><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg
-						>
-					</a>
+					<div class="intro-links">
+						<a class="event-link" href={eventUrl} target="_blank" rel="noopener">
+							Register for the webinar
+							<svg viewBox="0 0 16 16" aria-hidden="true"
+								><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg
+							>
+						</a>
+						<Dialog.Trigger class="about-link">Read more about the project</Dialog.Trigger>
+					</div>
 				</div>
 
 				<ThoughtField
@@ -1827,7 +1850,8 @@
 		padding-bottom: 0.5rem;
 		pointer-events: none;
 	}
-	.intro a {
+	.intro a,
+	.intro :global(button) {
 		pointer-events: auto;
 	}
 	.intro h1 {
@@ -1841,16 +1865,36 @@
 		font-size: clamp(0.98rem, 1.6vw, 1.25rem);
 		text-shadow: 0 1px 12px rgb(0 0 0 / 50%);
 	}
-	.event-link {
+	.intro-links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.2rem 1.4rem;
+		margin-top: 0.45rem;
+	}
+	.event-link,
+	.intro-links :global(.about-link) {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		margin-top: 0.45rem;
 		font-size: 0.93rem;
 		font-weight: 700;
 		text-decoration: underline;
 		text-decoration-thickness: 1px;
 		text-underline-offset: 0.27em;
+	}
+	/* Bits UI renders the About link as a button: make it read as the text link beside it. */
+	.intro-links :global(.about-link) {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font-family: inherit;
+		line-height: inherit;
+		cursor: pointer;
+	}
+	.intro-links :global(.about-link:hover) {
+		text-decoration-thickness: 2px;
 	}
 	.event-link svg {
 		width: 1rem;

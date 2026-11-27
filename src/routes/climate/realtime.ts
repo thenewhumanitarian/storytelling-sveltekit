@@ -1,4 +1,4 @@
-import { isAnchorPart, type CursorAnchor } from './cursorAnchor';
+import { isAnchorFraction, isAnchorPart, type CursorAnchor } from './cursorAnchor';
 
 const topic = 'tnh-climate-cloud-v1';
 const cursorLifetime = 6500;
@@ -154,7 +154,12 @@ export function connectClimateRoom(options: RoomOptions) {
 	function readAnchor(value: unknown): CursorAnchor | undefined {
 		if (!value || typeof value !== 'object') return undefined;
 		const { entryId, part, fx, fy } = value as Record<string, unknown>;
-		if (!isEntryId(entryId) || !isAnchorPart(part) || !isCoordinate(fx) || !isCoordinate(fy)) {
+		if (
+			!isEntryId(entryId) ||
+			!isAnchorPart(part) ||
+			!isAnchorFraction(part, fx) ||
+			!isAnchorFraction(part, fy)
+		) {
 			return undefined;
 		}
 		return { entryId, part, fx, fy };

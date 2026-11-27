@@ -24,7 +24,8 @@
 
 	let { cursors, width, height }: Props = $props();
 
-	type Point = { x: number; y: number; t: number };
+	/** `gap`: no line from the point before (the light hopped there). */
+	type Point = { x: number; y: number; t: number; gap?: boolean };
 	type Peer = {
 		id: string;
 		name: string;
@@ -41,6 +42,8 @@
 		sunk: boolean;
 		gone: boolean;
 		trail: Point[];
+		/** Start the next trail point without a line from the last one. */
+		breakTrail?: boolean;
 		/** The name, pinned where they surfaced or sank: when, where, and hello or goodbye. */
 		label: { born: number; leaving: boolean; x: number; y: number } | null;
 	};
@@ -51,6 +54,9 @@
 	const tints = ['255 255 255', '120 214 178', '242 214 168', '190 210 255'];
 	const TRAIL_LIFE = 2400;
 	const STILL_AFTER = 900;
+	// A light moving onto another thought, or between a thought and open sky, hops instead of
+	// streaking across the screen when the new spot is further than this (pixels).
+	const HOP_OVER = 90;
 	const LABEL_LIFE = 1700;
 	// Visitor names when they surface and sink. Off for now: random names meant little to people.
 	const SHOW_NAMES = false;
@@ -167,8 +173,18 @@
 				cursor.on?.part === peer.anchor?.part &&
 				cursor.on?.fx === peer.anchor?.fx &&
 				cursor.on?.fy === peer.anchor?.fy;
+			const switched = (cursor.on?.entryId ?? '') !== (peer.anchor?.entryId ?? '');
 			peer.anchor = cursor.on;
 			if (Math.hypot(tx - peer.tx, ty - peer.ty) < 0.5 && (sameSpot || !peer.sunk)) continue;
+			if (!peer.sunk && switched && Math.hypot(tx - peer.x, ty - peer.y) > HOP_OVER) {
+				// Each screen places the thoughts differently, so the way between two spots means
+				// nothing here: fade in at the new spot, and let the old trail fade where it is.
+				peer.x = tx;
+				peer.y = ty;
+				peer.alpha = 0;
+				peer.breakTrail = true;
+				splash(tx, ty, peer.tint, now, 'surface');
+			}
 			if (peer.sunk) {
 				// Resurface where they are now, without a streak from where they sank.
 				peer.x = tx;
@@ -223,7 +239,8 @@
 				peer.y += (peer.ty - peer.y) * Math.min(1, dt * (still ? 60 : 9));
 				const tail = peer.trail[peer.trail.length - 1];
 				if (!still && (!tail || Math.hypot(peer.x - tail.x, peer.y - tail.y) > 1.5)) {
-					peer.trail.push({ x: peer.x, y: peer.y, t: now });
+					peer.trail.push({ x: peer.x, y: peer.y, t: now, gap: peer.breakTrail });
+					peer.breakTrail = false;
 				}
 				peer.alpha = Math.min(1, peer.alpha + dt * 3);
 				// On a drifting thought the light trails it by a pixel or two, which still counts as settled.
@@ -258,6 +275,7 @@
 			for (let i = 1; i < points.length; i++) {
 				const a = points[i - 1];
 				const b = points[i];
+				if (b.gap) continue;
 				const age = (now - b.t) / TRAIL_LIFE;
 				const fade = Math.pow(Math.max(0, 1 - age), 1.6);
 				const along = i / points.length;
