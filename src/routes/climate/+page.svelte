@@ -1066,7 +1066,16 @@
 					height="44"
 				/>
 			</a>
-			<Dialog.Trigger class="climate-button about-trigger" aria-label="About the project">
+			<!-- Bits UI's trigger only opens; while About is open, the header button closes it. -->
+			<Dialog.Trigger
+				class="climate-button about-trigger"
+				aria-label="About the project"
+				onclick={(event) => {
+					if (!aboutOpen) return;
+					event.preventDefault();
+					aboutOpen = false;
+				}}
+			>
 				<svg class="about-icon" viewBox="0 0 20 20" aria-hidden="true">
 					<circle cx="10" cy="10" r="7.5" />
 					<path d="M10 9v5" />
@@ -1389,6 +1398,11 @@
 				event.preventDefault();
 				aboutBox?.focus({ preventScroll: true });
 			}}
+			onInteractOutside={(event) => {
+				// The header's About button closes the box itself (it toggles); without this the outside
+				// press would close it first and the click would open it again.
+				if ((event.target as Element | null)?.closest?.('.about-trigger')) event.preventDefault();
+			}}
 		>
 			<Dialog.Close class="climate-close" aria-label="Close About">
 				<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15" /></svg>
@@ -1600,6 +1614,8 @@
 	.masthead {
 		position: relative;
 		z-index: 10;
+		/* Bits UI blocks pointer events on the page while About is open; the header stays usable. */
+		pointer-events: auto;
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
@@ -2283,9 +2299,10 @@
 	/* About dialog: the same liquid glass and frame as the big thread panel, between the TNH
 	   header and the footer, so the two read as one family. It is portalled out of .climate, so it
 	   repeats the header measurements. */
+	/* Starts below the header, so the TNH bar and its buttons stay clear and usable while About is open. */
 	:global(.climate-overlay) {
 		position: fixed;
-		inset: 0;
+		inset: clamp(3.5rem, 8svh, 4.5rem) 0 0;
 		z-index: 90;
 		background: rgb(19 17 15 / 60%);
 		backdrop-filter: blur(10px);
